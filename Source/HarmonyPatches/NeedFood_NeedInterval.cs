@@ -23,7 +23,6 @@ namespace Maux36.Rimbody
                 var restneed = pawn.needs.rest;
                 var frozenProperty = typeof(Need).GetProperty("IsFrozen", BindingFlags.NonPublic | BindingFlags.Instance);
                 var isFoodFrozen = (bool)frozenProperty.GetValue(__instance);
-                Log.Message($"{pawn.Name}'s food need is frozen? {isFoodFrozen}");
                 if (isFoodFrozen)
                 {
                     return;
@@ -119,7 +118,7 @@ namespace Maux36.Rimbody
 
                 if (pawn.needs.rest != null)
                 {
-                    //Gains
+                    //Grow on sleep
                     if (curJob.defName == "LayDown" || curJob.defName == "LayDownResting" || curJob.defName == "LayDownAwake")
                     {
                         var swol = 2f;
@@ -128,31 +127,30 @@ namespace Maux36.Rimbody
                             swol = 1.5f;
                         }
                         var rrm = pawn.GetStatValue(StatDefOf.RestRateMultiplier);
-                        var bre = pawn.CurrentBed()?.GetStatValue(StatDefOf.BedRestEffectiveness) ?? 1f;
+                        var bre = pawn.CurrentBed()?.GetStatValue(StatDefOf.BedRestEffectiveness) ?? 0.8f;
                         var recoveryFactor = swol * rrm * bre;
 
-                        if (compPhysique.gain > 0f)
+                        if (compPhysique.gain - recoveryFactor > 0f)
                         {
-                            if (compPhysique.gain - recoveryFactor > 0f)
-                            {
-                                compPhysique.gain -= recoveryFactor;
-                                muscleDelta += (RimbodySettings.rateFactor / 400f) * recoveryFactor;
-                            }
-                            else
-                            {
-                                muscleDelta += (RimbodySettings.rateFactor / 400f) * compPhysique.gain;
-                                compPhysique.gain = 0f;
-                            }
+                            compPhysique.gain -= recoveryFactor;
+                            muscleDelta += (RimbodySettings.rateFactor / 400f) * recoveryFactor;
+                        }
+                        else if (compPhysique.gain > 0f)
+                        {
+                            muscleDelta += (RimbodySettings.rateFactor / 400f) * compPhysique.gain;
+                            compPhysique.gain = 0f;
                         }
                     }
+                    //Store gain
                     else
                     {
                         compPhysique.gain = Mathf.Clamp(compPhysique.gain + (strengthFactor * compPhysique.MuscleGainFactor * muscleGain), 0f, ((3f * compPhysique.MuscleMass) + 75f));
                     }
                 }
+                //Sleepless pawns.
                 else
                 {
-                    muscleDelta = (RimbodySettings.rateFactor / 400f) * (strengthFactor * compPhysique.MuscleGainFactor * muscleGain);
+                    muscleDelta += (RimbodySettings.rateFactor / 400f) * (strengthFactor * compPhysique.MuscleGainFactor * muscleGain);
                 }
 
                 muscleDelta -= (RimbodySettings.rateFactor / 400f) * compPhysique.MuscleLoseFactor * muscleLoss;

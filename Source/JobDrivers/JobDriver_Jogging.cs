@@ -9,6 +9,7 @@ namespace Maux36.Rimbody
     public class JobDriver_Jogging : JobDriver
     {
         private bool recorded = false;
+        private int ticksLeft = 1500;
 
         private static readonly IntRange WaitTicksRange = new IntRange(10, 50);
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -16,6 +17,8 @@ namespace Maux36.Rimbody
             AddEndCondition(() =>
             {
                 if (pawn?.timetable?.CurrentAssignment != DefOf_Rimbody.Rimbody_Workout)
+                    return JobCondition.Succeeded;
+                if (ticksLeft <= 0)
                     return JobCondition.Succeeded;
                 return JobCondition.Ongoing;
             });
@@ -59,13 +62,24 @@ namespace Maux36.Rimbody
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             Toil findInterestingThing = FindInterestingThing();
             yield return findInterestingThing;
+
+
             Toil toil = Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell);
+            toil.AddPreTickAction(delegate
+            {
+                ticksLeft--;
+            });
+            toil.AddFinishAction(delegate
+            {
+                AddMemory();
+            });
             yield return toil;
+
+
             Toil wait = ToilMaker.MakeToil("MakeNewToils");
             
             wait.initAction = delegate
             {
-                AddMemory();
                 wait.actor.pather.StopDead();
             };
             wait.tickAction = delegate
