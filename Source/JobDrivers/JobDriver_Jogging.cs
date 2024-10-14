@@ -9,7 +9,7 @@ namespace Maux36.Rimbody
     public class JobDriver_Jogging : JobDriver
     {
         private bool recorded = false;
-        private int ticksLeft = 1500;
+        private int ticksLeft = 2500;
 
         private static readonly IntRange WaitTicksRange = new IntRange(10, 50);
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -55,6 +55,12 @@ namespace Maux36.Rimbody
                 }
                 Log.Message("Memory Added");
             }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref ticksLeft, "ticksLeft", 0);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
