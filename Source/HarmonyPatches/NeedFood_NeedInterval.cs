@@ -20,21 +20,20 @@ namespace Maux36.Rimbody
             if (pawn != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony))
             {
 
-                var restneed = pawn.needs.rest;
+                var compPhysique = pawn.TryGetComp<CompPhysique>();
+                if (compPhysique == null || compPhysique.BodyFat <= -1 || compPhysique.MuscleMass <= -1){
+                    return;
+                }
+
                 var frozenProperty = typeof(Need).GetProperty("IsFrozen", BindingFlags.NonPublic | BindingFlags.Instance);
-                var isFoodFrozen = (bool)frozenProperty.GetValue(__instance);
-                if (isFoodFrozen)
+                var isFoodNeedFrozen = (bool)frozenProperty.GetValue(__instance);
+                if (isFoodNeedFrozen)
                 {
                     return;
                 }
 
                 var curFood = pawn.needs.food.CurLevel;
                 var curJob = pawn.CurJobDef;
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
-                if (compPhysique == null || compPhysique.BodyFat == -1 || compPhysique.MuscleMass == -1){
-                    return;
-                }
-
                 var checkFlag = false;
                 float newBodyFat;
                 float newMuscleMass;
@@ -156,58 +155,49 @@ namespace Maux36.Rimbody
                 muscleDelta -= (RimbodySettings.rateFactor / 400f) * compPhysique.MuscleLoseFactor * muscleLoss;
                 newMuscleMass = Mathf.Clamp(compPhysique.MuscleMass + muscleDelta, 0f, 50f);
 
-                //HAR race Exception
-                if (HARCompat.Active && HARCompat.thingDef_AlienRace.IsInstanceOfType(pawn.def))
+                if (fatDelta > 0f)
                 {
-                    //pass the Body update check
+                    if (compPhysique.BodyFat < RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod && newBodyFat >= RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod)
+                    {
+                        checkFlag = true;
+                    }
+                    else if (compPhysique.BodyFat < RimbodySettings.fatThresholdFat + RimbodySettings.gracePeriod && newBodyFat >= RimbodySettings.fatThresholdFat + RimbodySettings.gracePeriod)
+                    {
+                        checkFlag = true;
+                    }
                 }
-                else
+                else if (fatDelta < 0f)
                 {
-                    //Body update check
-                    if (fatDelta > 0f)
+                    if (compPhysique.BodyFat > RimbodySettings.fatThresholdThin - RimbodySettings.gracePeriod && newBodyFat <= RimbodySettings.fatThresholdThin - RimbodySettings.gracePeriod)
                     {
-                        if (compPhysique.BodyFat < RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod && newBodyFat >= RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
-                        else if (compPhysique.BodyFat < RimbodySettings.fatThresholdFat + RimbodySettings.gracePeriod && newBodyFat >= RimbodySettings.fatThresholdFat + RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
+                        checkFlag = true;
                     }
-                    else if (fatDelta < 0f)
+                    else if (compPhysique.BodyFat > RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod && newBodyFat <= RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod)
                     {
-                        if (compPhysique.BodyFat > RimbodySettings.fatThresholdThin - RimbodySettings.gracePeriod && newBodyFat <= RimbodySettings.fatThresholdThin - RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
-                        else if (compPhysique.BodyFat > RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod && newBodyFat <= RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
+                        checkFlag = true;
                     }
+                }
 
-                    if (muscleDelta > 0f)
+                if (muscleDelta > 0f)
+                {
+                    if (compPhysique.MuscleMass < RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod && newMuscleMass >= RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod)
                     {
-                        if (compPhysique.MuscleMass < RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod && newMuscleMass >= RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
-                        else if (compPhysique.MuscleMass < RimbodySettings.muscleThresholdHulk + RimbodySettings.gracePeriod && newMuscleMass >= RimbodySettings.muscleThresholdHulk + RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
+                        checkFlag = true;
                     }
-                    else if (muscleDelta < 0f)
+                    else if (compPhysique.MuscleMass < RimbodySettings.muscleThresholdHulk + RimbodySettings.gracePeriod && newMuscleMass >= RimbodySettings.muscleThresholdHulk + RimbodySettings.gracePeriod)
                     {
-                        if (compPhysique.MuscleMass > RimbodySettings.muscleThresholdThin - RimbodySettings.gracePeriod && newMuscleMass <= RimbodySettings.muscleThresholdThin - RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
-                        else if (compPhysique.MuscleMass > RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod && newMuscleMass <= RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod)
-                        {
-                            checkFlag = true;
-                        }
+                        checkFlag = true;
+                    }
+                }
+                else if (muscleDelta < 0f)
+                {
+                    if (compPhysique.MuscleMass > RimbodySettings.muscleThresholdThin - RimbodySettings.gracePeriod && newMuscleMass <= RimbodySettings.muscleThresholdThin - RimbodySettings.gracePeriod)
+                    {
+                        checkFlag = true;
+                    }
+                    else if (compPhysique.MuscleMass > RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod && newMuscleMass <= RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod)
+                    {
+                        checkFlag = true;
                     }
                 }
 

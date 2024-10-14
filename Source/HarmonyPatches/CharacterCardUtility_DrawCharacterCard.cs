@@ -38,6 +38,12 @@ namespace Maux36.Rimbody
                 return;
             }
 
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique == null || compPhysique.MuscleMass <= -1 || compPhysique.BodyFat <= -1)
+            {
+                return;
+            }
+
             //IF Individuality loaded then return the modified one.
 
             TipSignal tip = "RimbodyTooltip".Translate();

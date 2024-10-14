@@ -157,6 +157,11 @@ namespace Maux36.Rimbody
 
         public void PhysiqueValueSetup(Pawn pawn)
         {
+            if (HARCompat.Active && pawn != null && pawn.def.defName!="Human")
+            {
+                BodyFat = -2f;
+                MuscleMass = -2f;
+            }
 
             if (pawn != null && (BodyFat == -1f || MuscleMass == -1f))
             {
