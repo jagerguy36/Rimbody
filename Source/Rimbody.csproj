@@ -81,10 +81,8 @@
     <Compile Include="HarmonyPatches\ThinkNode_GetPriority.cs" />
     <Compile Include="HarmonyPatches\TimeAssignmentSelector_DrawTimeTable.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthBuilding.cs" />
-    <Compile Include="JobDrivers\JobDriver_GoDoPushUps.cs" />
     <Compile Include="JobDrivers\JobDriver_Jogging.cs" />
     <Compile Include="JobGivers\JobGiver_DoStrengthBuilding.cs" />
-    <Compile Include="JobGivers\JobGiver_GoDoPushUps.cs" />
     <Compile Include="JobGivers\JobGiver_Jogging.cs" />
     <Compile Include="ModExtentionRimbodyJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

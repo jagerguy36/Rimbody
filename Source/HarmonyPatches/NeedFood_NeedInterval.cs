@@ -1,6 +1,8 @@
 ﻿
 using HarmonyLib;
 using RimWorld;
+using System;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Verse;
@@ -11,13 +13,15 @@ namespace Maux36.Rimbody
     [HarmonyPatch(typeof(Need_Food), "NeedInterval")]
     public class NeedFood_NeedInterval
     {
+
+        private static GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
         public static void Postfix(Need_Food __instance)
         {
             var pawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
             var pawn = (Pawn)pawnField.GetValue(__instance);
 
 
-            if (pawn != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony))
+            if (pawn != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony))
             {
 
                 var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -31,6 +35,8 @@ namespace Maux36.Rimbody
                 {
                     return;
                 }
+                var stringified = string.Join(", ", compPhysique.memory);
+                Log.Message($"{pawn.Name}'s memory: {stringified}");
 
                 var curFood = pawn.needs.food.CurLevel;
                 var curJob = pawn.CurJobDef;
@@ -68,15 +74,15 @@ namespace Maux36.Rimbody
 
                     }
                 }
+                //Get factors from dedicated Rimbody buildings
                 else if (curJob.defName == "Rimbody_DoStrengthBuilding" || curJob.defName == "Rimbody_DoBalanceBuilding" || curJob.defName == "Rimbody_DoCardioBuilding")
                 {
-                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Gain);
                     var curjobTarget = pawn.CurJob.targetA;
                     var buildingExtention = curjobTarget.Thing.def.GetModExtension<ModExtentionRimbodyBuilding>();
                     if (buildingExtention != null)
                     {
-                        cardioFactor = jobExtension.cardio;
-                        strengthFactor = jobExtension.strength;
+                        cardioFactor = buildingExtention.cardio;
+                        strengthFactor = buildingExtention.strength;
                     }
 
                 }
@@ -86,6 +92,13 @@ namespace Maux36.Rimbody
                     strengthFactor = jobExtension.strength;
                 }
 
+
+                if (RimbodySettings.showFleck && strengthFactor >= 2)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Gain);
+                }
+
+                //Tiredness reduces gain
                 if (pawn.needs.rest != null)
                 {
                     switch (pawn.needs.rest.CurCategory)
@@ -104,10 +117,51 @@ namespace Maux36.Rimbody
                     }
                 }
 
+
+                //Age Factors in
+                var fatgainF = compPhysique.FatGainFactor;
+                var fatloseF = compPhysique.FatLoseFactor;
+                var musclegainF = compPhysique.MuscleGainFactor;
+                var muscleloseF = compPhysique.MuscleLoseFactor;
+
+                switch (pawn.ageTracker?.CurLifeStage?.developmentalStage)
+                {
+                    case DevelopmentalStage.None:
+                        break;
+
+                    case DevelopmentalStage.Newborn:
+                        fatgainF -= 0.15f;
+                        fatloseF += 0.25f;
+                        break;
+
+                    case DevelopmentalStage.Baby:
+                        fatgainF -= 0.15f;
+                        fatloseF += 0.25f;
+                        break;
+
+                    case DevelopmentalStage.Child:
+                        fatgainF -= 0.12f;
+                        fatloseF += 0.12f;
+                        break;
+
+                    case DevelopmentalStage.Adult:
+                        if (NonSenescent !=null && pawn.genes.HasActiveGene(NonSenescent))
+                        {
+                            fatgainF += (Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000;
+                            fatloseF -= (Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000;
+                        }
+                        else
+                        {
+                            fatgainF += (pawn.ageTracker.AgeBiologicalYears - 25) / 1000;
+                            fatloseF -= (pawn.ageTracker.AgeBiologicalYears - 25) / 1000;
+                        }
+                        break;
+                }
+
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
                 float fatLoss = (compPhysique.BodyFat + 100f) / (190f) * cardioFactor;
-                float fatDelta = RimbodySettings.rateFactor/400f*(fatGain * compPhysique.FatGainFactor - fatLoss * compPhysique.FatLoseFactor);
+                float fatDelta = RimbodySettings.rateFactor/400f*(fatGain * fatgainF - fatLoss * fatloseF);
                 newBodyFat = Mathf.Clamp(compPhysique.BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
@@ -143,16 +197,16 @@ namespace Maux36.Rimbody
                     //Store gain
                     else
                     {
-                        compPhysique.gain = Mathf.Clamp(compPhysique.gain + (strengthFactor * compPhysique.MuscleGainFactor * muscleGain), 0f, ((3f * compPhysique.MuscleMass) + 75f));
+                        compPhysique.gain = Mathf.Clamp(compPhysique.gain + (strengthFactor * musclegainF * muscleGain), 0f, ((3f * compPhysique.MuscleMass) + 75f));
                     }
                 }
                 //Sleepless pawns.
                 else
                 {
-                    muscleDelta += (RimbodySettings.rateFactor / 400f) * (strengthFactor * compPhysique.MuscleGainFactor * muscleGain);
+                    muscleDelta += (RimbodySettings.rateFactor / 400f) * (strengthFactor * musclegainF * muscleGain);
                 }
 
-                muscleDelta -= (RimbodySettings.rateFactor / 400f) * compPhysique.MuscleLoseFactor * muscleLoss;
+                muscleDelta -= (RimbodySettings.rateFactor / 400f) * muscleloseF * muscleLoss;
                 newMuscleMass = Mathf.Clamp(compPhysique.MuscleMass + muscleDelta, 0f, 50f);
 
                 if (fatDelta > 0f)

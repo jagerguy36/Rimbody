@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse.AI;
 using Verse;
+using System.Security.Cryptography;
 
 namespace Maux36.Rimbody
 {
     internal class JobGiver_DoBalanceBuilding : ThinkNode_JobGiver
     {
-        private static List<Thing> tmpCandidates = [];
-        private static List<Thing> freshCandidates = [];
+        public List<Thing> tmpCandidates = [];
+        public List<Thing> freshCandidates = [];
 
         public override float GetPriority(Pawn pawn)
         {
@@ -105,6 +106,14 @@ namespace Maux36.Rimbody
             }
             return null;
         }
+        public override ThinkNode DeepCopy(bool resolve = true)
+        {
+            JobGiver_DoBalanceBuilding obj = (JobGiver_DoBalanceBuilding)base.DeepCopy(resolve);
+            obj.tmpCandidates = tmpCandidates;
+            obj.freshCandidates = freshCandidates;
+            return obj;
+        }
+
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
             if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))

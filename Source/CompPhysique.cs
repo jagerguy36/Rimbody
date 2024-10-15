@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -9,14 +10,20 @@ namespace Maux36.Rimbody
     public class CompPhysique : ThingComp
     {
         public float BodyFat = -1f;
-        public float MuscleMass = -1f;
         public float FatGainFactor = 1f;
         public float FatLoseFactor = 1f;
+        public float Fatgoal = -1f;
+
+        public float MuscleMass = -1f;
         public float MuscleGainFactor = 1f;
         public float MuscleLoseFactor = 1f;
+        public float MuscleGoal = -1f;
+
         public float gain = 0f;
-        public int lastWorkoutTick = 0;
+
         public string lastMemory = string.Empty;
+        public int lastWorkoutTick = 0;
+
         public Queue<string> memory = [];
 
         public CompProperties_Physique Props => (CompProperties_Physique)props;
@@ -55,15 +62,22 @@ namespace Maux36.Rimbody
         {
             base.PostExposeData();
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);
-            Scribe_Values.Look(ref MuscleMass, "Physique_MuscleMass", -1f);
-            Scribe_Values.Look(ref gain, "Physique_gain", 0f);
             Scribe_Values.Look(ref FatGainFactor, "Physique_FatGainFactor", 1f);
             Scribe_Values.Look(ref FatLoseFactor, "Physique_FatLoseFactor", 1f);
+            Scribe_Values.Look(ref Fatgoal, "Physique_Fatgoal", -1f);
+
+            Scribe_Values.Look(ref MuscleMass, "Physique_MuscleMass", -1f);
             Scribe_Values.Look(ref MuscleGainFactor, "Physique_MuscleGainFactor", 1f);
             Scribe_Values.Look(ref MuscleLoseFactor, "Physique_MuscleLoseFactor", 1f);
-            Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
+            Scribe_Values.Look(ref MuscleGoal, "Physique_MuscleGoal", -1f);
+
+
+            Scribe_Values.Look(ref gain, "Physique_gain", 0f);
             Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
-            Scribe_Collections.Look(ref memory, "Physique_memory", LookMode.Value);
+            List<string> tempList = memory.ToList();
+            Scribe_Collections.Look(ref tempList, "Physique_memory", LookMode.Value);
+            memory = new Queue<string>(tempList);
+            Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
         }
 
         public void ResetBody(Pawn pawn)
@@ -143,14 +157,14 @@ namespace Maux36.Rimbody
                 return (-1f, -1f);
             }
 
-            var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(30f, 40f), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(10f, 20f), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, 10f), 0.1f) :
-                GenMath.RoundTo(Rand.Range(15f, 30f), 0.1f);
+            var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.1f) :
+                pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.1f) :
+                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.1f) :
+                GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.1f);
 
-            var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(30f, 40f), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, 10f), 0.1f) :
-                GenMath.RoundTo(Rand.Range(15f, 30f), 0.1f);
+            var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.1f) :
+                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.1f) :
+                GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin+RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk-RimbodySettings.gracePeriod), 0.1f);
 
             return (Mathf.Clamp(fat, 0f, 40f), Mathf.Clamp(muscle, 0f, 40f));
         }
