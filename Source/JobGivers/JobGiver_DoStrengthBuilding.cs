@@ -9,8 +9,6 @@ namespace Maux36.Rimbody
 {
     internal class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
     {
-        public List<Thing> tmpCandidates = [];
-        public List<Thing> freshCandidates = [];
 
         public override float GetPriority(Pawn pawn)
         {
@@ -47,6 +45,8 @@ namespace Maux36.Rimbody
 
         protected override Job TryGiveJob(Pawn pawn)
         {
+            List<Thing> tmpCandidates = [];
+            List<Thing> freshCandidates = [];
             if (pawn.Downed || pawn.Drafted)
             {
                 return null;
@@ -107,13 +107,7 @@ namespace Maux36.Rimbody
             }
             return null;
         }
-        public override ThinkNode DeepCopy(bool resolve = true)
-        {
-            JobGiver_DoBalanceBuilding obj = (JobGiver_DoBalanceBuilding)base.DeepCopy(resolve);
-            obj.tmpCandidates = tmpCandidates;
-            obj.freshCandidates = freshCandidates;
-            return obj;
-        }
+
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
             if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
