@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+
+	<ThinkTreeDef>
+		<defName>Rimbody_Workout</defName>
+		<insertTag>Humanlike_PostMain</insertTag>
+		<insertPriority>10</insertPriority>
+		<thinkRoot Class="Maux36.Rimbody.ThinkNode_WorkoutCondition">
+			<subNodes>
+				<li Class="ThinkNode_PrioritySorter">
+					<subNodes>
+						<li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
+						<li Class="Maux36.Rimbody.JobGiver_Jogging"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
+					</subNodes>
+				</li>
+			</subNodes>
+		</thinkRoot>
+	</ThinkTreeDef>
+	
+</Defs>

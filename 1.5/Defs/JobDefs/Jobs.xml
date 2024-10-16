@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <JobDef>
+        <defName>Rimbody_Jogging</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_Jogging</driverClass>
+        <reportString>Jogging.</reportString>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                  <cardio>1.6</cardio>
+                  <strength>0.4</strength>
+              </li>
+        </modExtensions>
+    </JobDef>
+    <JobDef>
+        <defName>Rimbody_DoStrengthBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoStrengthBuilding</driverClass>
+        <reportString>Working out.</reportString>
+        <joyKind>Gaming_WorkingOut</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                  <cardio>1</cardio>
+                  <strength>2.0</strength>
+              </li>
+        </modExtensions>
+    </JobDef>
+    <JobDef>
+        <defName>Rimbody_DoBalanceBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoBalanceBuilding</driverClass>
+        <reportString>Working out.</reportString>
+        <joyKind>Gaming_WorkingOut</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                  <cardio>1.2</cardio>
+                  <strength>1.0</strength>
+              </li>
+        </modExtensions>
+    </JobDef>
+    <JobDef>
+        <defName>Rimbody_DoCardioBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoCardioBuilding</driverClass>
+        <reportString>Working out.</reportString>
+        <joyKind>Gaming_WorkingOut</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                  <cardio>1.6</cardio>
+                  <strength>0.4</strength>
+              </li>
+        </modExtensions>
+    </JobDef>
+</Defs>

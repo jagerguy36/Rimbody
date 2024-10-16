@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <TimeAssignmentDef>
+    <defName>Rimbody_Workout</defName>
+    <label>Workout</label>
+    <color>(185,85,85)</color>
+    <allowRest>false</allowRest>
+    <allowJoy>false</allowJoy>
+  </TimeAssignmentDef>
+</Defs>
