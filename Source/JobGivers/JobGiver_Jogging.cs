@@ -19,6 +19,11 @@ namespace Maux36.Rimbody
             }
 
             float result = 5f;
+            TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
+            if(pawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+            {
+                result += 0.6f; //always 0.1 higher than machine
+            }
 
             if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {

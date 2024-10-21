@@ -14,19 +14,37 @@ namespace Maux36.Rimbody
     {
         public static bool Active;
 
-        public static bool EnforceRestrictions = true;
+        private static bool EnforceRestrictions = true;
 
-        public static Type thingDef_AlienRace;
+        private static Type thingDef_AlienRace;
 
-        public static AccessTools.FieldRef<object, object> alienRace;
+        private static AccessTools.FieldRef<object, object> alienRace;
 
-        public static AccessTools.FieldRef<object, object> alienPartGenerator;
+        private static AccessTools.FieldRef<object, object> alienPartGenerator;
 
-        public static AccessTools.FieldRef<object, object> generalSettings;
+        private static AccessTools.FieldRef<object, object> generalSettings;
 
-        public static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
+        private static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
 
-        public static string Name = "Humanoid Alien Races";
+        private static HashSet<BodyTypeDef> expectedBodyTypes = ModsConfig.BiotechActive? new HashSet<BodyTypeDef>
+        {
+            BodyTypeDefOf.Baby,
+            BodyTypeDefOf.Child,
+            BodyTypeDefOf.Male,
+            BodyTypeDefOf.Female,
+            BodyTypeDefOf.Hulk,
+            BodyTypeDefOf.Fat
+        }: new HashSet<BodyTypeDef>
+        {
+            BodyTypeDefOf.Male,
+            BodyTypeDefOf.Female,
+            BodyTypeDefOf.Hulk,
+            BodyTypeDefOf.Fat
+        };
+
+        private static float[] expectedLifestages = ModsConfig.BiotechActive? new float[] { 0f, 1f, 3f, 9f, 13f, 18f } : new float[] { 0f, 3f, 13f, 18f };
+
+        private static string Name = "Humanoid Alien Races";
 
         [UsedImplicitly]
         public static void Activate()
@@ -69,18 +87,9 @@ namespace Maux36.Rimbody
         public static bool CompatibleRace(Pawn pawn)
         {
             var allowedBodyTypes = AllowedBodyTypes(pawn).ToHashSet();
-            var expectedBodyTypes = new HashSet<BodyTypeDef>
-            {
-                BodyTypeDefOf.Baby,
-                BodyTypeDefOf.Child,
-                BodyTypeDefOf.Male,
-                BodyTypeDefOf.Female,
-                BodyTypeDefOf.Hulk,
-                BodyTypeDefOf.Fat
-            };
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
+
             var lifestages = pawn.RaceProps.lifeStageAges.Select(b => b.minAge);
-            var expectedLifestages = new[] { 0f, 1f, 3f, 9f, 13f, 18f };
             bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
             return allPresent && ageEqual;
         }
