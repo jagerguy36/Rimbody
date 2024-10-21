@@ -9,7 +9,6 @@ namespace Maux36.Rimbody
 {
     internal class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
     {
-
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -20,16 +19,15 @@ namespace Maux36.Rimbody
 
             float result = 5.5f;
 
-            if (pawn.gender == Gender.Male)
+            if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
             {
-                result += 0.05f;
+                result += 2f + ((compPhysique.MuscleGoal - compPhysique.MuscleMass)/100f);
             }
-            if (pawn.story.bodyType == BodyTypeDefOf.Thin)
+
+            if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
             {
-                result += 1f;
+                result -= 4f;
             }
-            //TODO
-            //Put Reserve into consideration
 
             return result;
         }

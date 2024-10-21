@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse.AI;
 using Verse;
-using System.Security.Cryptography;
 
 namespace Maux36.Rimbody
 {
@@ -22,13 +21,9 @@ namespace Maux36.Rimbody
 
             if (!compPhysique.memory.Any(s => s.Split('|')[0] == "balance"))
             {
-                result += 1.5f;
+                result += 2.05f;
             }
 
-            if (pawn.gender == Gender.Female)
-            {
-                result += 0.05f;
-            }
             return result;
         }
 
@@ -45,7 +40,6 @@ namespace Maux36.Rimbody
         {
             List<Thing> tmpCandidates = [];
             List<Thing> freshCandidates = [];
-
             if (pawn.Downed || pawn.Drafted)
             {
                 return null;

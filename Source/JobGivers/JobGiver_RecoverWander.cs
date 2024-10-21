@@ -1,10 +1,4 @@
-﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verse;
+﻿using Verse;
 using Verse.AI;
 
 namespace Maux36.Rimbody
@@ -13,7 +7,7 @@ namespace Maux36.Rimbody
     {
         public override float GetPriority(Pawn pawn)
         {
-            return 0f;
+            return 0.5f;
         }
         public JobGiver_RecoverWander()
         {

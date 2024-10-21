@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -53,7 +52,6 @@ namespace Maux36.Rimbody
                     compPhysique.AddNewMemory("cardio|jogging");
                     recorded = true;
                 }
-                Log.Message("Memory Added");
             }
         }
 
@@ -131,36 +129,14 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                CellRect checkNearbyRegionsTouchingArea = r.extentsClose.ExpandedBy(15);
-                bool foundNearbyRegionWithBuildings = false;
-                RegionTraverser.BreadthFirstTraverse(r, (Region from, Region to) => to.extentsClose.Overlaps(checkNearbyRegionsTouchingArea), delegate (Region region)
+                if (r.Room != null) // Check if it's an indoor room
                 {
-                    if (tmpRegionContainsOwnedBuildingCache_jogging.TryGetValue(region, out var value))
+                    if (!r.Room.PsychologicallyOutdoors && r.Room.CellCount <= 400) // Ensure room size is larger than 400
                     {
-                        if (value)
-                        {
-                            foundNearbyRegionWithBuildings = true;
-                            return true;
-                        }
                         return false;
                     }
-                    foreach (Thing item in region.ListerThings.ThingsInGroup(ThingRequestGroup.BuildingArtificial))
-                    {
-                        if (item.Faction != null)
-                        {
-                            foundNearbyRegionWithBuildings = true;
-                            tmpRegionContainsOwnedBuildingCache_jogging[region] = true;
-                            return true;
-                        }
-                    }
-                    tmpRegionContainsOwnedBuildingCache_jogging[region] = false;
-                    return false;
-                });
-                if (foundNearbyRegionWithBuildings)
-                {
-                    return false;
                 }
-                if (r.TryFindRandomCellInRegion(CellValidator, out var result) && (!bfsTarget.IsValid || searcher.Position.DistanceTo(bfsTarget.Cell) > searcher.Position.DistanceTo(result)))
+                if (r.TryFindRandomCellInRegion(CellValidator, out var result) && (!bfsTarget.IsValid || searcher.Position.DistanceTo(bfsTarget.Cell) != searcher.Position.DistanceTo(result)))
                 {
                     bfsTarget = result;
                 }
@@ -174,7 +150,8 @@ namespace Maux36.Rimbody
                 TerrainDef terrain = c.GetTerrain(searcher.Map);
                 if (!terrain.avoidWander)
                 {
-                    return terrain.natural;
+                    //return terrain.natural;
+                    return true;
                 }
                 return false;
             }

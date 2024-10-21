@@ -1,15 +1,9 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse.AI;
 using Verse;
 using Verse.Sound;
-using UnityEngine.Profiling;
 using System.Reflection;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Maux36.Rimbody
 {
@@ -17,7 +11,6 @@ namespace Maux36.Rimbody
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-
             if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
             {
                 return false;
@@ -50,7 +43,6 @@ namespace Maux36.Rimbody
                 }
             }
         }
-
         protected void WatchTickAction(Thing building)
         {
             var ext = building.def.GetModExtension<ModExtentionRimbodyBuilding>();
@@ -61,8 +53,8 @@ namespace Maux36.Rimbody
                     RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map, false));
                 }
                 pawn.Drawer.Notify_MeleeAttackOn(building);
-
             }
+            pawn.needs?.joy?.GainJoy(1.0f * building.def.GetStatValueAbstract(StatDefOf.JoyGainFactor) * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
         }
 
         private void AddMemory(ThingDef buildingdef)

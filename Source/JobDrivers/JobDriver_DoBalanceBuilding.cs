@@ -1,13 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse.AI;
 using Verse;
 using Verse.Sound;
-using UnityEngine.Profiling;
 using System.Reflection;
 
 namespace Maux36.Rimbody
@@ -48,7 +43,7 @@ namespace Maux36.Rimbody
                 }
             }
         }
-                protected void WatchTickAction(Thing building)
+        protected void WatchTickAction(Thing building)
         {
             var ext = building.def.GetModExtension<ModExtentionRimbodyBuilding>();
             if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
@@ -59,6 +54,7 @@ namespace Maux36.Rimbody
                 }
                 pawn.Drawer.Notify_MeleeAttackOn(building);
             }
+            pawn.needs?.joy?.GainJoy(1.0f * building.def.GetStatValueAbstract(StatDefOf.JoyGainFactor) * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
         }
 
         private void AddMemory(ThingDef buildingdef)

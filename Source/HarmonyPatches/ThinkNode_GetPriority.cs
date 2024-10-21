@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,59 @@ namespace Maux36.Rimbody
             }
 
             return true;
+        }
+
+        [HarmonyPatch(typeof(JobGiver_GetFood), "GetPriority")]
+        public class GetRestPriorityPatch
+        {
+            public static bool Prefix(Pawn pawn, ref float __result)
+            {
+                if (pawn == null)
+                {
+                    return true;
+                }
+
+                var compPhysique = pawn.TryGetComp<CompPhysique>();
+                Need_Food food = pawn.needs.food;
+
+                if (compPhysique?.useFatgoal==true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
+                {
+
+                    //If Both not satisfied
+                    if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal)
+                    {
+                        return true; //return normal behavior
+                    }
+
+                    //Muscle goal is satisfied: only fat goal matters
+                    if((int)food.CurCategory < (int)HungerCategory.UrgentlyHungry)
+                    {
+                        __result = 0f;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                //Fat goal is satisfied already
+                else if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal) //Fat goal satisfied and Muscle goal not satisfied
+                {
+                    if (food.CurLevelPercentage < 0.5f)
+                    {
+                        __result = 9.5f;
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                //Both satisfied
+                return true;
+            }
         }
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="CompPhysique.cs" />
     <Compile Include="CompProperties_Physique.cs" />
     <Compile Include="CompToHumanlikes.cs" />
+    <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />

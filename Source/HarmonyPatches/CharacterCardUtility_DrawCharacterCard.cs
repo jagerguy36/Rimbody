@@ -59,14 +59,7 @@ namespace Maux36.Rimbody
                 ? new Color(0.25f, 0.59f, 0.75f)
                 : new Color(1f, 1f, 1f);
 
-            if (Rimbody.IndividualityLoaded)
-            {
-                GUI.DrawTexture(rect2, ContentFinder<Texture2D>.Get("Buttons/Individuality"));
-            }
-            else
-            {
-                GUI.DrawTexture(rect2, ContentFinder<Texture2D>.Get("Buttons/Rimbody"));
-            }
+            GUI.DrawTexture(rect2, ContentFinder<Texture2D>.Get("Buttons/Rimbody"));
             TooltipHandler.TipRegion(rect2, tip);
             if (Widgets.ButtonInvisible(rect2))
             {

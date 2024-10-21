@@ -1,9 +1,4 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -29,18 +24,17 @@ namespace Maux36.Rimbody
                 StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("WeightBench", true));
                 StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("Barbell", true));
                 StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("PullupBars", true));
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("Rack", true));
+                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("SpinningDummy", true));
+
+                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("BalanceBeam", true));
+                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("YogaBall", true));
 
                 CardioBuilding.Add(DefDatabase<ThingDef>.GetNamed("Treadmill", true));
                 CardioBuilding.Add(DefDatabase<ThingDef>.GetNamed("ExerciseBike", true));
 
-                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("YogaBall", true));
-                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("BalanceBeam", true));
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("SpinningDummy", true));
-
                 WorkoutBuilding.AddRange(StrengthBuilding);
-                WorkoutBuilding.AddRange(CardioBuilding);
                 WorkoutBuilding.AddRange(BalanceBuilding);
+                WorkoutBuilding.AddRange(CardioBuilding);
 
             }
         }

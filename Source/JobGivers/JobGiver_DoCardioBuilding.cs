@@ -9,9 +9,6 @@ namespace Maux36.Rimbody
 {
     internal class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
     {
-        public List<Thing> tmpCandidates = [];
-        public List<Thing> freshCandidates = [];
-
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -22,14 +19,11 @@ namespace Maux36.Rimbody
 
             float result = 5.5f;
 
-            if (pawn.gender == Gender.Female)
+            if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {
-                result += 0.05f;
+                result += 2f + (compPhysique.BodyFat - compPhysique.FatGoal)/100f;
             }
-            if (pawn.story.bodyType == BodyTypeDefOf.Fat)
-            {
-                result += 1f;
-            }
+
             return result;
         }
 

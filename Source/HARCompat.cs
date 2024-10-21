@@ -3,6 +3,8 @@ using JetBrains.Annotations;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -16,13 +18,13 @@ namespace Maux36.Rimbody
 
         public static Type thingDef_AlienRace;
 
-        private static AccessTools.FieldRef<object, object> alienRace;
+        public static AccessTools.FieldRef<object, object> alienRace;
 
-        private static AccessTools.FieldRef<object, object> alienPartGenerator;
+        public static AccessTools.FieldRef<object, object> alienPartGenerator;
 
-        private static AccessTools.FieldRef<object, object> generalSettings;
+        public static AccessTools.FieldRef<object, object> generalSettings;
 
-        private static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
+        public static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
 
         public static string Name = "Humanoid Alien Races";
 
@@ -59,6 +61,28 @@ namespace Maux36.Rimbody
                 return bodyTypes(obj);
             }
             return null;
+        }
+        public static bool IsHAR(this Pawn pawn)
+        {
+            return pawn.def.GetType().ToString().StartsWith("AlienRace");
+        }
+        public static bool CompatibleRace(Pawn pawn)
+        {
+            var allowedBodyTypes = AllowedBodyTypes(pawn).ToHashSet();
+            var expectedBodyTypes = new HashSet<BodyTypeDef>
+            {
+                BodyTypeDefOf.Baby,
+                BodyTypeDefOf.Child,
+                BodyTypeDefOf.Male,
+                BodyTypeDefOf.Female,
+                BodyTypeDefOf.Hulk,
+                BodyTypeDefOf.Fat
+            };
+            bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
+            var lifestages = pawn.RaceProps.lifeStageAges.Select(b => b.minAge);
+            var expectedLifestages = new[] { 0f, 1f, 3f, 9f, 13f, 18f };
+            bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
+            return allPresent && ageEqual;
         }
 
     }

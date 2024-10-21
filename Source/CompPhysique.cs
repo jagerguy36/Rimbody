@@ -9,15 +9,20 @@ namespace Maux36.Rimbody
 {
     public class CompPhysique : ThingComp
     {
+        public bool PostGen = false;
+        public bool forceRest = false; //For mod compatibility.
+
         public float BodyFat = -1f;
         public float FatGainFactor = 1f;
         public float FatLoseFactor = 1f;
-        public float Fatgoal = -1f;
+        public bool useFatgoal = false;
+        public float FatGoal = 25f;
 
         public float MuscleMass = -1f;
         public float MuscleGainFactor = 1f;
         public float MuscleLoseFactor = 1f;
-        public float MuscleGoal = -1f;
+        public bool useMuscleGoal = false;
+        public float MuscleGoal = 25f;
 
         public float gain = 0f;
 
@@ -25,8 +30,13 @@ namespace Maux36.Rimbody
         public int lastWorkoutTick = 0;
 
         public Queue<string> memory = [];
-
         public CompProperties_Physique Props => (CompProperties_Physique)props;
+
+        private static readonly GeneDef GeneBodyFat = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Fat", true) : null;
+        private static readonly GeneDef GeneBodyThin = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Thin", true) : null;
+        private static readonly GeneDef GeneBodyHulk = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Hulk", true) : null;
+        private static readonly GeneDef GeneBodyStandard = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Standard", true) : null;
+
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
@@ -38,7 +48,6 @@ namespace Maux36.Rimbody
         {
             if (signal == "bodyTypeSelected" && parent is Pawn pawn)
             {
-                Log.Message($"Body Type Selected for {pawn.Name}");
                 if (BodyFat == -1f || MuscleMass == -1f)
                 {
                     (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
@@ -61,15 +70,20 @@ namespace Maux36.Rimbody
         public override void PostExposeData()
         {
             base.PostExposeData();
+            Scribe_Values.Look(ref PostGen, "Physique_PostGen", true);
+            Scribe_Values.Look(ref forceRest, "Physique_boarded", false);
+
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);
             Scribe_Values.Look(ref FatGainFactor, "Physique_FatGainFactor", 1f);
             Scribe_Values.Look(ref FatLoseFactor, "Physique_FatLoseFactor", 1f);
-            Scribe_Values.Look(ref Fatgoal, "Physique_Fatgoal", -1f);
+            Scribe_Values.Look(ref useFatgoal, "Physique_useFatgoal", false);
+            Scribe_Values.Look(ref FatGoal, "Physique_Fatgoal", 25f);
 
             Scribe_Values.Look(ref MuscleMass, "Physique_MuscleMass", -1f);
             Scribe_Values.Look(ref MuscleGainFactor, "Physique_MuscleGainFactor", 1f);
             Scribe_Values.Look(ref MuscleLoseFactor, "Physique_MuscleLoseFactor", 1f);
-            Scribe_Values.Look(ref MuscleGoal, "Physique_MuscleGoal", -1f);
+            Scribe_Values.Look(ref useMuscleGoal, "Physique_useMuscleGoal", false);
+            Scribe_Values.Look(ref MuscleGoal, "Physique_MuscleGoal", 25f);
 
 
             Scribe_Values.Look(ref gain, "Physique_gain", 0f);
@@ -82,17 +96,25 @@ namespace Maux36.Rimbody
 
         public void ResetBody(Pawn pawn)
         {
+            if (BodyFat<0 || MuscleMass  < 0) return;
+
             pawn.story.bodyType = GetValidBody(pawn);
             pawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
         public virtual BodyTypeDef GetValidBody(Pawn pawn)
         {
-            if (BodyFat > RimbodySettings.fatThresholdFat)
+            var fatE = 0.0f;
+            if(RimbodySettings.genderDifference && (pawn.gender == Gender.Female))
+            {
+                fatE = Mathf.Min(RimbodySettings.femaleFatThreshold, 50f-RimbodySettings.fatThresholdFat);
+            }
+
+            if (BodyFat > RimbodySettings.fatThresholdFat+ fatE)
             {
                 return BodyTypeDefOf.Fat;
             }
-            else if (MuscleMass > RimbodySettings.muscleThresholdHulk && RimbodySettings.fatThresholdFat >= BodyFat)
+            else if (MuscleMass > RimbodySettings.muscleThresholdHulk)
             {
                 return BodyTypeDefOf.Hulk;
             }
@@ -157,28 +179,31 @@ namespace Maux36.Rimbody
                 return (-1f, -1f);
             }
 
-            var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.1f) :
-                GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.1f);
+            var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
+                pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.01f) :
+                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.01f) :
+                GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.01f);
 
-            var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.1f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.1f) :
-                GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin+RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk-RimbodySettings.gracePeriod), 0.1f);
+            var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.01f) :
+                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.01f) :
+                GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin+RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk-RimbodySettings.gracePeriod), 0.01f);
 
             return (Mathf.Clamp(fat, 0f, 40f), Mathf.Clamp(muscle, 0f, 40f));
         }
 
         public void PhysiqueValueSetup(Pawn pawn)
         {
-            if (HARCompat.Active && pawn != null && pawn.def.defName!="Human")
+
+            if (HARCompat.Active && pawn != null && !HARCompat.CompatibleRace(pawn))
             {
+                Log.Message($"{pawn.Name} is not compatible");
                 BodyFat = -2f;
                 MuscleMass = -2f;
             }
 
             if (pawn != null && (BodyFat == -1f || MuscleMass == -1f))
             {
+                Log.Message($"{pawn.Name} is compatible");
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
             }
         }
@@ -192,6 +217,41 @@ namespace Maux36.Rimbody
             }
             memory.Enqueue(workout);
         }
+
+        public void ApplyGene(Pawn pawn)
+        {
+            if (!ModsConfig.BiotechActive)
+            {
+                return;
+            }
+
+            if (pawn.genes.HasActiveGene(GeneBodyFat))
+            {
+                FatGainFactor = 1.25f;
+                FatLoseFactor = 0.85f;
+            }
+            else if (pawn.genes.HasActiveGene(GeneBodyThin))
+            {
+                FatGainFactor = 0.75f;
+                FatLoseFactor = 1.15f;
+            }
+            else if (pawn.genes.HasActiveGene(GeneBodyHulk))
+            {
+                MuscleGainFactor = 1.25f;
+                MuscleLoseFactor = 0.85f;
+            }
+            else if (pawn.genes.HasActiveGene(GeneBodyStandard))
+            {
+                MuscleGainFactor = 1.15f;
+                FatGainFactor = 0.85f;
+            }
+            else
+            {
+                MuscleGainFactor = 1.0f;
+                FatGainFactor = 1.0f;
+            }
+        }
+
     }
 
 

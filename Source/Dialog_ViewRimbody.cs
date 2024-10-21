@@ -1,9 +1,4 @@
 ﻿using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
@@ -11,7 +6,7 @@ namespace Maux36.Rimbody
 {
     public class Dialog_ViewRimobdy(Pawn editFor) : Window
     {
-        public override Vector2 InitialSize => new Vector2(350f, Rimbody.IndividualityLoaded? 330f : 250f);
+        public override Vector2 InitialSize => new Vector2(350f, Rimbody.IndividualityLoaded? 380f : 290f);
 
         public override void DoWindowContents(Rect inRect)
         {

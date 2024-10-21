@@ -17,30 +17,18 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
-            //if (PawnUtility.WillSoonHaveBasicNeed(pawn))
-            //{
-            //    return 0f;
-            //}
 
             float result = 5f;
 
-            if (pawn.gender == Gender.Female)
+            if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {
-                result += 0.05f;
+                result += 2f + ((compPhysique.BodyFat - compPhysique.FatGoal) / 100f);
             }
-            if (pawn.story.bodyType == BodyTypeDefOf.Fat)
-            {
-                result += 1f;
-            }
-            //if (compPhysique?.lastMemory!="" && compPhysique.lastMemory.Split('|')[0] != "cardio")
-            //{
-            //    result += 0.05f;
-            //}
+
             return result;
         }
         protected override Job TryGiveJob(Pawn pawn)
         {
-            Log.Message("Try give job jogging");
             if (pawn.Downed || pawn.Drafted)
             {
                 return null;
@@ -54,8 +42,6 @@ namespace Maux36.Rimbody
                 return null;
             }
 
-            //Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging);
-            //return job;
             Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
             job.locomotionUrgency = LocomotionUrgency.Sprint;
             return job;

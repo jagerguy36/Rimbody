@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using System.Collections.Generic;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -20,6 +19,9 @@ namespace Maux36.Rimbody
         public static ThoughtDef WorkedOutInImpressiveGym;
 
         public static FleckDef Mote_Gain;
+        public static FleckDef Mote_Cardio;
+
+        public static JoyKindDef Rimbody_WorkoutJoy;
 
         static DefOf_Rimbody()
         {

@@ -30,32 +30,7 @@ namespace Maux36.Rimbody
                 {
                     __result = compPhysique.GetValidBody(pawn);
                 }
-
-                //TODO: set musclegain factor and fatgain factor to adjust for genes.
-                //if (ModsConfig.BiotechActive && pawn.genes != null)
-                //{
-                //    List<Gene> genesListForReading = pawn.genes.GenesListForReading;
-                //    for (int i = 0; i < genesListForReading.Count; i++)
-                //    {
-                //        if (genesListForReading[i].def.bodyType.HasValue)
-                //        {
-                //            tmpBodyTypes.Add(genesListForReading[i].def.bodyType.Value.ToBodyType(pawn));
-                //        }
-                //    }
-
-                //    if (tmpBodyTypes.TryRandomElement(out var result))
-                //    {
-                //        return result;
-                //    }
-                //}
-
-                //if (pawn.story.Adulthood != null)
-                //{
-                //    return pawn.story.Adulthood.BodyTypeFor(pawn.gender);
-                //}
             }
         }
     }
 }
-
-

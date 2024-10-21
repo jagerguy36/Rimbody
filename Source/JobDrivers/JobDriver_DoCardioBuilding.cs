@@ -1,13 +1,8 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse.AI;
 using Verse;
 using Verse.Sound;
-using UnityEngine.Profiling;
 using System.Reflection;
 
 namespace Maux36.Rimbody
@@ -48,18 +43,19 @@ namespace Maux36.Rimbody
                 }
             }
         }
+        protected void WatchTickAction(Thing building)
+        {
+            //var ext = buildingdef.GetModExtension<ModExtentionRimbodyBuilding>();
+            //if (ext != null && ext.isMetal)
+            //{
+            //    //if (pawn.IsHashIntervalTick(800 + Rand.Range(0, 200)))
+            //    //{
+            //    //    RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map, false));
+            //    //}
+            //}
 
-        //protected void WatchTickAction(ThingDef buildingdef)
-        //{
-        //    //var ext = buildingdef.GetModExtension<ModExtentionRimbodyBuilding>();
-        //    //if (ext != null && ext.isMetal)
-        //    //{
-        //    //    //if (pawn.IsHashIntervalTick(800 + Rand.Range(0, 200)))
-        //    //    //{
-        //    //    //    RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map, false));
-        //    //    //}
-        //    //}
-        //}
+            pawn.needs?.joy?.GainJoy(1.0f * building.def.GetStatValueAbstract(StatDefOf.JoyGainFactor) * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+        }
 
         private void AddMemory(ThingDef buildingdef)
         {
@@ -87,10 +83,10 @@ namespace Maux36.Rimbody
             {
                 GetInPosition(TargetThingA);
             };
-            //workout.AddPreTickAction(delegate
-            //{
-            //    WatchTickAction(TargetThingA.def);
-            //});
+            workout.AddPreTickAction(delegate
+            {
+                WatchTickAction(TargetThingA);
+            });
             workout.AddFinishAction(delegate
             {
                 TryGainGymThought();
