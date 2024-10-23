@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+    
     <JobDef>
         <defName>Rimbody_Jogging</defName>
         <driverClass>Maux36.Rimbody.JobDriver_Jogging</driverClass>
         <reportString>Jogging.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                   <cardio>1.6</cardio>
@@ -11,11 +13,12 @@
               </li>
         </modExtensions>
     </JobDef>
+
     <JobDef>
         <defName>Rimbody_DoStrengthBuilding</defName>
         <driverClass>Maux36.Rimbody.JobDriver_DoStrengthBuilding</driverClass>
-        <reportString>Working out.</reportString>
-        <joyKind>Gaming_WorkingOut</joyKind>
+        <reportString>Doing strength work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                   <cardio>1</cardio>
@@ -23,11 +26,12 @@
               </li>
         </modExtensions>
     </JobDef>
+
     <JobDef>
         <defName>Rimbody_DoBalanceBuilding</defName>
         <driverClass>Maux36.Rimbody.JobDriver_DoBalanceBuilding</driverClass>
-        <reportString>Working out.</reportString>
-        <joyKind>Gaming_WorkingOut</joyKind>
+        <reportString>Doing balanced work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                   <cardio>1.2</cardio>
@@ -35,11 +39,12 @@
               </li>
         </modExtensions>
     </JobDef>
+
     <JobDef>
         <defName>Rimbody_DoCardioBuilding</defName>
         <driverClass>Maux36.Rimbody.JobDriver_DoCardioBuilding</driverClass>
-        <reportString>Working out.</reportString>
-        <joyKind>Gaming_WorkingOut</joyKind>
+        <reportString>Doing cardio work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                   <cardio>1.6</cardio>
@@ -47,4 +52,5 @@
               </li>
         </modExtensions>
     </JobDef>
+
 </Defs>

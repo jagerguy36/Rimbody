@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -52,10 +53,6 @@ namespace Maux36.Rimbody
                 {
                     (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
                 }
-                //else if (!IsValidBodyType(pawn)){
-                //    Log.Message("Invalid BodyType. Resetting.");
-                //    ResetBody(pawn);
-                //}
 
             }
         }
@@ -88,10 +85,8 @@ namespace Maux36.Rimbody
 
             Scribe_Values.Look(ref gain, "Physique_gain", 0f);
             Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
-            List<string> tempList = memory.ToList();
-            Scribe_Collections.Look(ref tempList, "Physique_memory", LookMode.Value);
-            memory = new Queue<string>(tempList);
             Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
+            Scribe_Collections.Look(ref memory, "Physique_memory", LookMode.Reference);
         }
 
         public void ResetBody(Pawn pawn)
@@ -196,14 +191,12 @@ namespace Maux36.Rimbody
 
             if (HARCompat.Active && pawn != null && !HARCompat.CompatibleRace(pawn))
             {
-                Log.Message($"{pawn.Name} is not compatible");
                 BodyFat = -2f;
                 MuscleMass = -2f;
             }
 
             if (pawn != null && (BodyFat == -1f || MuscleMass == -1f))
             {
-                Log.Message($"{pawn.Name} is compatible");
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
             }
         }
@@ -217,6 +210,16 @@ namespace Maux36.Rimbody
             }
             memory.Enqueue(workout);
         }
+
+        public bool InMemory(string workoutName)
+        {
+            return memory.Any(item =>
+            {
+                var parts = item.Split('|');
+                return parts.Length > 1 && parts[1] == workoutName;
+            });
+        }
+
 
         public void ApplyGene(Pawn pawn)
         {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimbodyWindow>림바디 정보</RimbodyWindow>
+  <RimbodyTooltip>림바디 정보 보기</RimbodyTooltip>
+  <RimbodyBodyFat>지방량</RimbodyBodyFat>
+  <RimbodyFatTooltip>몸을 차지하는 지방량.</RimbodyFatTooltip>
+  <RimbodyMuscleMass>근육량</RimbodyMuscleMass>
+  <RimbodyMuscleTooltip>몸을 차지하는 근육량. 위쪽의 작은 바는 득근량을 의미합니다. 휴식을 취할 때 서서히 근육으로 전환됩니다.</RimbodyMuscleTooltip>
+  <Rimbody_EditModeTooltip>좌클릭시 증가, 우클릭시 감소</Rimbody_EditModeTooltip>
+  <Rimbody_EditModeOn>수정 모드 켜기</Rimbody_EditModeOn>
+  <Rimbody_EditModeOff>수정 모드 끄기</Rimbody_EditModeOff>
+  <RimbodyGoal>목표치</RimbodyGoal>
+  <RimbodySettingCategory>림바디</RimbodySettingCategory>
+  <RimbodyGeneralSetting>림바디 일반 설정</RimbodyGeneralSetting>
+  <RimbodyRateFactor>배속</RimbodyRateFactor>
+  <RimbodyGenderDifference>남녀 차이 옵션 사용</RimbodyGenderDifference>
+  <RimbodyGenderDifferenceTooltip>남성림은 좀 더 쉽게 근육을 얻습니다. 여성림은 남성림에 비해 뚱뚱한 체형을 가지기 위해 1.5의 지방량이 더 필요합니다.</RimbodyGenderDifferenceTooltip>
+  <RimbodyShowFleck>운동 아이콘 보기</RimbodyShowFleck>
+  <RimbodyShowFleckTooltip>림이 운동을 하고 있을 때 아이콘을 보여줍니다.</RimbodyShowFleckTooltip>
+  <RimbodyRateFactorTooltip>배속은 얼마나 빨리 근육량과 지방량이 변할지 설정합니다. 2로 세팅하면 2배 빠르게 변화합니다. 0.5로 세팅하면 절반의 속도로 변화합니다.</RimbodyRateFactorTooltip>
+  <RimbodyThreshholdSetting>임계치 설정</RimbodyThreshholdSetting>
+  <RimbodyFatThreshholdFat>지방 임계치 - 뚱뚱함</RimbodyFatThreshholdFat>
+  <RimbodyFatThreshholdFatTooltip>이 이상의 지방량을 가진 림들은 뚱뚱한 체형을 가집니다.</RimbodyFatThreshholdFatTooltip>
+  <RimbodyFatThresholdThin>지방 임계치 - 마른</RimbodyFatThresholdThin>
+  <RimbodyFatThresholdThinTooltip>이 이하의 지방량을 가져야 마른 체형을 가질 수 있습니다.</RimbodyFatThresholdThinTooltip>
+  <RimbodyMuscleThresholdHulk>근육 임계치 - 근육질</RimbodyMuscleThresholdHulk>
+  <RimbodyMuscleThresholdHulkTooltip>이 이상의 근육량을 가져야 근육질 체형을 가질 수 있습니다.</RimbodyMuscleThresholdHulkTooltip>
+  <RimbodyMuscleThresholdThin>근육 임계치 - 마른</RimbodyMuscleThresholdThin>
+  <RimbodyMuscleThresholdThinTooltip>이 이하의 근육량을 가져야 마른 체형을 가질 수 있습니다.</RimbodyMuscleThresholdThinTooltip>
+  <RimbodyGracePeriod>유예기간</RimbodyGracePeriod>
+  <RimbodyGracePeriodTooltip>림은 임계치보다 이만큼의 근육/지방량이 더 혹은 덜 있어야 체형이 변화합니다.</RimbodyGracePeriodTooltip>
+  <RimbodyNonSenescentpoint>장생 한계점</RimbodyNonSenescentpoint>
+  <RimbodyNonSenescentpointTooltip>장생 유전자를 가지는 림이 이 이상의 나이를 가질 경우 이 신체나이를 가진 것으로 간주합니다.</RimbodyNonSenescentpointTooltip>
+  <RimbodyDefaultSetting>기존 세팅으로</RimbodyDefaultSetting>
+  <RimbodyDefaultSettingTooltip>세팅을 기존 세팅으로 돌립니다.</RimbodyDefaultSettingTooltip>
+</LanguageData>

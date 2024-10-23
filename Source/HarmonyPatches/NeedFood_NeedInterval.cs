@@ -24,7 +24,7 @@ namespace Maux36.Rimbody
             "Rimbody_DoCardioBuilding",
         };
 
-        //private static readonly float _sprintC = 2.0f;
+        //private static readonly float _sprintC = 2.0f; 1.8 when limited
         //private static readonly float _hardworkC = 1.0f; construction, smoothing, mining, replanting, extractTrees
         //private static readonly float _workC = 0.85f; harvesting, repairing, empty wasters, clean pollutions
         //private static readonly float _joggingC = 0.8f;
@@ -33,7 +33,7 @@ namespace Maux36.Rimbody
         //private static readonly float _baseC = 0.3f; sedentary works, standing
         //private static readonly float _sleepC = 0.2f; laying down
 
-        //private static readonly float _workoutS = 2.0f;
+        //private static readonly float _workoutS = 2.0f;  1.8 when limited
         //private static readonly float _hardworkS = 1.2f;
         //private static readonly float _workS = 0.8f;
         //private static readonly float _sprintS = 0.25f;
@@ -65,7 +65,6 @@ namespace Maux36.Rimbody
 
                 var curFood = Mathf.Clamp(pawn.needs.food.CurLevel, 0f, 1f);
                 var curDriver = pawn.jobs?.curDriver;
-                var curToil = curDriver?.CurToilString;
                 var checkFlag = false;
 
                 var pawnCaravan = pawn.GetCaravan();
@@ -128,7 +127,7 @@ namespace Maux36.Rimbody
                         }
                     }
                     //Special cases: Lying down
-                    else if (curToil == "LayDown")
+                    else if (curDriver?.CurToilString == "LayDown")
                     {
                         cardioFactor = 0.2f;
                         strengthFactor = 0.0f;
@@ -136,12 +135,18 @@ namespace Maux36.Rimbody
                     //Get factors from dedicated Rimbody buildings
                     else if (RimbodyJobs.Contains(curJob.defName))
                     {
-                        var curjobTarget = pawn.CurJob.targetA;
-                        var buildingExtention = curjobTarget.Thing.def.GetModExtension<ModExtentionRimbodyBuilding>();
+                        var curjobTargetDef = pawn.CurJob.targetA.Thing.def;
+                        var curjobName = curjobTargetDef.defName;
+                        var buildingExtention = curjobTargetDef.GetModExtension<ModExtentionRimbodyBuilding>();
                         if (buildingExtention != null)
                         {
                             cardioFactor = buildingExtention.cardio;
                             strengthFactor = buildingExtention.strength;
+                            if (compPhysique.InMemory(curjobName))
+                            {
+                                cardioFactor = cardioFactor * 0.9f;
+                                strengthFactor = strengthFactor * 0.9f;
+                            }
                         }
 
                     }
@@ -158,15 +163,6 @@ namespace Maux36.Rimbody
                     strengthFactor = 0.0f;
                 }
 
-                //UI
-                if (RimbodySettings.showFleck && strengthFactor >= 2f)
-                {
-                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Gain);
-                }
-                if (RimbodySettings.showFleck && cardioFactor >= 2f)
-                {
-                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Cardio);
-                }
                 //Tiredness reduces gain
                 if (pawn.needs.rest != null)
                 {
@@ -185,6 +181,7 @@ namespace Maux36.Rimbody
                             break;
                     }
                 }
+
                 //Gain and Lose Factor
                 var fatgainF = compPhysique.FatGainFactor;
                 var fatloseF = compPhysique.FatLoseFactor;
@@ -211,18 +208,27 @@ namespace Maux36.Rimbody
                         break;
 
                     case DevelopmentalStage.Newborn:
-                        fatgainF -= 0.15f;
-                        fatloseF += 0.25f;
+                        fatgainF -= 0.015f;
+                        fatloseF += 0.025f;
+
+                        musclegainF -= 0.125f;
+                        muscleloseF += 0.125f;
                         break;
 
                     case DevelopmentalStage.Baby:
-                        fatgainF -= 0.15f;
-                        fatloseF += 0.25f;
+                        fatgainF -= 0.015f;
+                        fatloseF += 0.025f;
+
+                        musclegainF -= 0.125f;
+                        muscleloseF += 0.125f;
                         break;
 
                     case DevelopmentalStage.Child:
-                        fatgainF -= 0.12f;
-                        fatloseF += 0.12f;
+                        fatgainF -= 0.012f;
+                        fatloseF += 0.012f;
+
+                        musclegainF -= 0.06f;
+                        muscleloseF += 0.06f;
                         break;
 
                     case DevelopmentalStage.Adult:
@@ -230,23 +236,29 @@ namespace Maux36.Rimbody
                         {
                             fatgainF += (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000f;
                             fatloseF -= (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000f;
+
+                            musclegainF += (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
+                            muscleloseF -= (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
                         }
                         else
                         {
                             fatgainF += (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, 125) - 25) / 1000f;
                             fatloseF -= (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, 125) - 25) / 1000f;
+
+                            musclegainF += (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
+                            muscleloseF -= (float)(Math.Min(pawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
                         }
                         break;
                 }
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
-                float fatLoss = (compPhysique.BodyFat + 100f) / (190f) * cardioFactor;
+                float fatLoss = (compPhysique.BodyFat + 60f) / (50f) * cardioFactor;
                 float fatDelta = RimbodySettings.rateFactor/400f*(fatGain * fatgainF - fatLoss * fatloseF);
                 newBodyFat = Mathf.Clamp(compPhysique.BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.25f * ((compPhysique.MuscleMass + 75f) / (compPhysique.MuscleMass - 75f) + 5f);
-                float muscleLoss = 0.75f * ((compPhysique.MuscleMass + 100f)/ 190f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
+                float muscleGain = 0.4f * ((compPhysique.MuscleMass + 75f) / (compPhysique.MuscleMass - 75f) + 5f);
+                float muscleLoss = ((compPhysique.MuscleMass + 60f)/ 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
                 if (pawn.needs.rest != null)
@@ -329,8 +341,31 @@ namespace Maux36.Rimbody
                         checkFlag = true;
                     }
                 }
-                Log.Message($"{pawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
+                //Log.Message($"{pawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
+
+                //UI
+                if (RimbodySettings.showFleck && (compPhysique.gain == (2f * compPhysique.MuscleMass * musclegainF) + 100f))
+                {
+
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_MaxGain);
+                }
+                else if (RimbodySettings.showFleck && strengthFactor >= 2f)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Gain);
+                }
+                else if (RimbodySettings.showFleck && strengthFactor >= 1.8f)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_GainLimited);
+                }
+                else if (RimbodySettings.showFleck && cardioFactor >= 2f)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Cardio);
+                }
+                else if (RimbodySettings.showFleck && cardioFactor >= 1.8f)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_CardioLimited);
+                }
 
                 //Apply New Values
                 compPhysique.BodyFat = newBodyFat;

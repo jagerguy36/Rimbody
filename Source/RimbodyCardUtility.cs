@@ -41,7 +41,7 @@ namespace Maux36.Rimbody
             Text.Font = GameFont.Small;
             num += rect3.height + 10f;
 
-            //Rimbody Info
+            //=======================Rimbody Info========================================
             var rect8 = new Rect(0f, num, rect.width - 10f, 24f);
             Widgets.Label(new Rect(10f, num + 2f, rect.width - 60f, 24f),
                  "RimbodyMuscleMass".Translate() + ": ");
@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
 
             Rect reservebackground = new Rect(160f, num + 1f, rect.width - 180f, 2f);
             Widgets.DrawBoxSolid(reservebackground, BackgroundColor);
-            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * (compPhysique.gain / ((2f * compPhysique.MuscleMass * (compPhysique.MuscleGainFactor + (RimbodySettings.genderDifference&&(pawn.gender==Gender.Male)?0.01f:0f))) + 100f)), reservebackground.height);
+            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * Mathf.Clamp(compPhysique.gain / ((2f * compPhysique.MuscleMass * (compPhysique.MuscleGainFactor + (RimbodySettings.genderDifference&&(pawn.gender==Gender.Male)?0.01f:0f))) + 100f), 0f, 1f), reservebackground.height);
             Widgets.DrawBoxSolid(reservefilledbar, reserveColor);
 
 
@@ -171,6 +171,7 @@ namespace Maux36.Rimbody
                 TooltipHandler.TipRegion(refreshRect, refreshTip);
             }
 
+            //==================================================================================================
             var rect13 = new Rect((rect.width / 2f) - 90f, num, 180f, 40f);
             if (Event.current.type == EventType.KeyDown)
             {

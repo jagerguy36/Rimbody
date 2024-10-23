@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RimbodyWindow>RimBody Info</RimbodyWindow>
+  <RimbodyTooltip>Show Body Info</RimbodyTooltip>
+  <RimbodyBodyFat>Body Fat</RimbodyBodyFat>
+  <RimbodyFatTooltip>The amount of Fat.</RimbodyFatTooltip>
+  <RimbodyMuscleMass>Muscle Mass</RimbodyMuscleMass>
+  <RimbodyMuscleTooltip>The amount of muscle. The bar above shows how much muscle the pawn has gained. When they rest, the gain will convert into muscle.</RimbodyMuscleTooltip>
+  <Rimbody_EditModeTooltip>Left-click a field to increase, right-click to decrease</Rimbody_EditModeTooltip>
+  <Rimbody_EditModeOn>Enable edit mode</Rimbody_EditModeOn>
+  <Rimbody_EditModeOff>Disable edit mode</Rimbody_EditModeOff>
+  <RimbodyGoal>Goal</RimbodyGoal>
+  <RimbodySettingCategory>Rimbody</RimbodySettingCategory>
+  <RimbodyGeneralSetting>Rimbody General Settings</RimbodyGeneralSetting>
+  <RimbodyRateFactor>Rate Factor</RimbodyRateFactor>
+  <RimbodyGenderDifference>Use Gender difference</RimbodyGenderDifference>
+  <RimbodyGenderDifferenceTooltip>Male pawns are more likely to gain muscle. Female pawns takes 1.5 more fat to appear fat than male pawns.</RimbodyGenderDifferenceTooltip>
+  <RimbodyShowFleck>Show fleck icon</RimbodyShowFleck>
+  <RimbodyShowFleckTooltip>Show fleck icon when pawns are doing strength or cardio workouts.</RimbodyShowFleckTooltip>
+  <RimbodyRateFactorTooltip>The rate factor determines how quickly muscle and fat change. Setting it to 2 will make them change twice as fast, while setting it to 0.5 will halve the speed.</RimbodyRateFactorTooltip>
+  <RimbodyThreshholdSetting>Threshold Settings</RimbodyThreshholdSetting>
+  <RimbodyFatThreshholdFat>Fat Threshold - Fat</RimbodyFatThreshholdFat>
+  <RimbodyFatThreshholdFatTooltip>Above this amount of fat, a pawn will have the Fat body type.</RimbodyFatThreshholdFatTooltip>
+  <RimbodyFatThresholdThin>Fat Threshold - Thin</RimbodyFatThresholdThin>
+  <RimbodyFatThresholdThinTooltip>Below this amount of fat, a pawn will have the Thin body type.</RimbodyFatThresholdThinTooltip>
+  <RimbodyMuscleThresholdHulk>Muscle Threshold - Hulk</RimbodyMuscleThresholdHulk>
+  <RimbodyMuscleThresholdHulkTooltip>Above this amount of muscle, a pawn will have the Hulk body type.</RimbodyMuscleThresholdHulkTooltip>
+  <RimbodyMuscleThresholdThin>Muscle Threshold - Thin</RimbodyMuscleThresholdThin>
+  <RimbodyMuscleThresholdThinTooltip>Below this amount of muscle, a pawn will have the Thin body type.</RimbodyMuscleThresholdThinTooltip>
+  <RimbodyGracePeriod>Grace Period</RimbodyGracePeriod>
+  <RimbodyGracePeriodTooltip>A pawn should have this much muscle/fat more or less than the threshold for their body type to change.</RimbodyGracePeriodTooltip>
+  <RimbodyNonSenescentpoint>Non-senescent Point</RimbodyNonSenescentpoint>
+  <RimbodyNonSenescentpointTooltip>Pawns with Non-senescent genes past this age will be considered having a body of this age.</RimbodyNonSenescentpointTooltip>
+  <RimbodyDefaultSetting>Default Setting</RimbodyDefaultSetting>
+  <RimbodyDefaultSettingTooltip>Reset the settings to their default values.</RimbodyDefaultSettingTooltip>
+</LanguageData>

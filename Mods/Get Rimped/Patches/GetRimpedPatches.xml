@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<!-- Use Own Joy-->
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]</xpath>
+	</Operation>
+
+	<!-- Move away from Misc.Training -->
+    <Operation Class="PatchOperationRemove">
+    	<xpath>Defs/ThingDef[@Name="BuildingBase_MiscTraining"]</xpath>
+	</Operation>
+
+
+	<Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/graphicData/drawSize</xpath>
+			<value>
+				<drawSize>(2.85,1.95)</drawSize>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/costList</xpath>
+			<value>
+				<costList>
+					<Cloth>20</Cloth>
+					<Steel>25</Steel>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>100</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="Barbell"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Barbell"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Barbell"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/graphicData/drawSize</xpath>
+			<value>
+				<drawSize>(2.7,0.9)</drawSize>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/graphicData/texPath</xpath>
+			<value>
+				<texPath>Things/Building/Gym_Rimbody/Barbell</texPath>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/uiIconPath</xpath>
+			<value>
+				<uiIconPath>Things/Building/Gym_Rimbody/Barbell_menu</uiIconPath>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/size</xpath>
+			<value>
+				<size>(3,1)</size>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/building/watchBuildingStandDistanceRange/min</xpath>
+		  <value>
+		    <min>0</min>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/building/watchBuildingStandDistanceRange/max</xpath>
+		  <value>
+		    <max>0</max>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/costList</xpath>
+			<value>
+				<costList>
+					<Steel>25</Steel>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Barbell"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>25</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="PullupBars"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/passability</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/building/watchBuildingStandDistanceRange/min</xpath>
+		  <value>
+		    <min>0</min>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/building/watchBuildingStandDistanceRange/max</xpath>
+		  <value>
+		    <max>0</max>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/costList</xpath>
+			<value>
+				<costList>
+					<Steel>25</Steel>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>100</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="BalanceBeam"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/passability</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/graphicData/texPath</xpath>
+			<value>
+				<texPath>Things/Building/Gym_Rimbody/BalanceBeam</texPath>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/uiIconPath</xpath>
+			<value>
+				<uiIconPath>Things/Building/Gym_Rimbody/BalanceBeam_menu</uiIconPath>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/graphicData/drawSize</xpath>
+			<value>
+				<drawSize>(2,1)</drawSize>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/size</xpath>
+			<value>
+				<size>(2,1)</size>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/building/watchBuildingStandDistanceRange/min</xpath>
+		  <value>
+		    <min>0</min>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/building/watchBuildingStandDistanceRange/max</xpath>
+		  <value>
+		    <max>0</max>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/building/watchBuildingStandRectWidth</xpath>
+		  <value>
+		    <watchBuildingStandRectWidth>2</watchBuildingStandRectWidth>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/costList</xpath>
+			<value>
+				<costList>
+					<Cloth>25</Cloth>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>50</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="SpinningDummy"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/passability</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/researchPrerequisites</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/placeWorkers</xpath>
+		  <value>
+		    <placeWorkers>
+		    	<li>PlaceWorker_WatchArea</li>
+			</placeWorkers>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>70</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/costList</xpath>
+			<value>
+				<costList>
+					<ComponentIndustrial>1</ComponentIndustrial>
+					<Cloth>20</Cloth>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>150</costStuffCount>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
+			<value>
+				<passability>Standable</passability>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="ExerciseBike"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/costList</xpath>
+			<value>
+				<costList>
+					<ComponentIndustrial>1</ComponentIndustrial>
+					<Cloth>20</Cloth>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>100</costStuffCount>
+			</value>
+	</Operation>
+
+
+    <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="YogaBall"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/building/joyKind</xpath>
+			<value>
+				<joyKind>Rimbody_WorkoutJoy</joyKind>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/building/watchBuildingStandDistanceRange/min</xpath>
+		  <value>
+		    <min>0</min>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/building/watchBuildingStandDistanceRange/max</xpath>
+		  <value>
+		    <max>0</max>
+		  </value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/costList</xpath>
+			<value>
+				<costList>
+					<Steel>10</Steel>
+				</costList>
+			</value>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/costStuffCount</xpath>
+			<value>
+				<costStuffCount>50</costStuffCount>
+			</value>
+	</Operation>
+
+
+<!--     <Operation Class="PatchOperationAttributeSet">
+    	<xpath>Defs/ThingDef[defName="Rack"]</xpath>
+  			<attribute>ParentName</attribute>
+  			<value>BuildingBase_RimbodyWorkout</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Rack"]/thingClass</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Rack"]/placeWorkers</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Rack"]/passability</xpath>
+	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="Rack"]/pathCost</xpath>
+			<value>
+				<pathCost>10</pathCost>
+			</value>
+	</Operation> -->
+
+
+	<!-- Remove itemified buildings -->
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Rack"]</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Dumbbells"]</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="JumpRope"]</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Kettlebell"]</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="HandGrip"]</xpath>
+	</Operation>
+</Patch>

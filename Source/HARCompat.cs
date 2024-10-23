@@ -14,8 +14,6 @@ namespace Maux36.Rimbody
     {
         public static bool Active;
 
-        private static bool EnforceRestrictions = true;
-
         private static Type thingDef_AlienRace;
 
         private static AccessTools.FieldRef<object, object> alienRace;
@@ -26,25 +24,7 @@ namespace Maux36.Rimbody
 
         private static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
 
-        private static HashSet<BodyTypeDef> expectedBodyTypes = ModsConfig.BiotechActive? new HashSet<BodyTypeDef>
-        {
-            BodyTypeDefOf.Baby,
-            BodyTypeDefOf.Child,
-            BodyTypeDefOf.Male,
-            BodyTypeDefOf.Female,
-            BodyTypeDefOf.Hulk,
-            BodyTypeDefOf.Fat
-        }: new HashSet<BodyTypeDef>
-        {
-            BodyTypeDefOf.Male,
-            BodyTypeDefOf.Female,
-            BodyTypeDefOf.Hulk,
-            BodyTypeDefOf.Fat
-        };
-
-        private static float[] expectedLifestages = ModsConfig.BiotechActive? new float[] { 0f, 1f, 3f, 9f, 13f, 18f } : new float[] { 0f, 3f, 13f, 18f };
-
-        private static string Name = "Humanoid Alien Races";
+        private static Dictionary<string, bool> _cache = new Dictionary<string, bool>();
 
         [UsedImplicitly]
         public static void Activate()
@@ -80,18 +60,49 @@ namespace Maux36.Rimbody
             }
             return null;
         }
-        public static bool IsHAR(this Pawn pawn)
-        {
-            return pawn.def.GetType().ToString().StartsWith("AlienRace");
-        }
         public static bool CompatibleRace(Pawn pawn)
         {
+
+            if(_cache.TryGetValue(pawn.def.defName, out bool cachedResult))
+            {
+                return cachedResult;
+            }
+
+            HashSet<BodyTypeDef> expectedBodyTypes = ModsConfig.BiotechActive ? new HashSet<BodyTypeDef>
+            {
+                BodyTypeDefOf.Baby,
+                BodyTypeDefOf.Child,
+                BodyTypeDefOf.Male,
+                BodyTypeDefOf.Female,
+                BodyTypeDefOf.Thin,
+                BodyTypeDefOf.Hulk,
+                BodyTypeDefOf.Fat,
+            } : new HashSet<BodyTypeDef>
+            {
+                BodyTypeDefOf.Male,
+                BodyTypeDefOf.Female,
+                BodyTypeDefOf.Hulk,
+                BodyTypeDefOf.Fat,
+                BodyTypeDefOf.Thin
+            };
+
+            var human = DefDatabase<ThingDef>.GetNamed("Human", true);
+            var expectedLifestages = human.race.lifeStageAges;
+
             var allowedBodyTypes = AllowedBodyTypes(pawn).ToHashSet();
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
 
-            var lifestages = pawn.RaceProps.lifeStageAges.Select(b => b.minAge);
+            var lifestages = pawn.RaceProps.lifeStageAges;
             bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
-            return allPresent && ageEqual;
+
+            bool isValid = allPresent && ageEqual;
+            _cache[pawn.def.defName] = isValid;
+            //string shower = string.Join(", ", allowedBodyTypes.Select(thingDef => thingDef.defName));
+            //Log.Message(shower);
+            //string shower2 = string.Join(", ", expectedBodyTypes.Select(thingDef => thingDef.defName));
+            //Log.Message(shower2);
+            //Log.Message($"{pawn.Name} bodytypes yes: {allPresent}, life yes: {ageEqual}");
+            return isValid;
         }
 
     }

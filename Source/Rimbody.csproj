@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Maux36.Rimbody</RootNamespace>
     <AssemblyName>Rimbody</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <LangVersion>12.0</LangVersion>
@@ -34,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net472\0Harmony.dll</HintPath>
+      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
@@ -67,6 +68,7 @@
     <Compile Include="CompProperties_Physique.cs" />
     <Compile Include="CompToHumanlikes.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
+    <Compile Include="HarmonyPatches\Pawn_Notify_AddBedThoughts.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="RimbodySettings.cs" />
     <Compile Include="RoomRoleWorker_Gym.cs" />
     <Compile Include="ThinkNodes\ThinkNode_WorkoutCondition.cs" />
+    <Compile Include="ThoughtWorker\ThoughtWorker_RunnerHigh.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

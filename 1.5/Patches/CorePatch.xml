@@ -1,0 +1,1906 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cardio Values -->
+<!-- _sprintC = 2.0f; -->
+<!-- _hardworkC = 1.0f; -->
+<!-- _workC = 0.85f; -->
+<!-- _joggingC = 0.8f; -->
+<!-- _walkingC = 0.4f; -->
+<!-- _ambleC = 0.35f; -->
+<!-- _baseC = 0.3f; (default)-->
+<!-- _sleepC = 0.2f; -->
+
+<!-- Strength Values -->
+<!-- _workoutS = 2.0f; -->
+<!-- _hardworkS = 1.2f; -->
+<!-- _workS = 0.8f; -->
+<!-- _sprintS = 0.25f; -->
+<!-- _movingS = 0.2f; -->
+<!-- _ambleS = 0.15f; -->
+<!-- _sedentaryS = 0.1f; (default)-->
+<!-- _lyingS = 0.0f; -->
+
+<Patch>
+
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Nuzzle"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Mate"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="LayEgg"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PredatorHunt"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Maintain"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrepareCaravan_GatherItems"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrepareCaravan_GatherAnimals"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrepareCaravan_CollectAnimals"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrepareCaravan_GatherDownedPawns"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ReturnedCaravan_PenAnimals"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="MarryAdjacentPawn"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="SpectateCeremony"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="StandAndBeSociallyActive"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GiveSpeech"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Skygaze"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Meditate"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Pray"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GoForWalk"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="BuildSnowman"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="VisitGrave"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ViewArt"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="SocialRelax"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="VisitSickPawn"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_Horseshoes"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_Hoopstone"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_GameOfUr"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_Chess"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_Billiards"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_Poker"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="WatchTelevision"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseTelescope"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Play_MusicalInstrument"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="IdleWhileDespawned"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Goto"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PickupToHold"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Follow"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FollowClose"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FollowRoper"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GotoSafeTemperature"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GotoWander"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="StandAndStare"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_MaintainPosture"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_Asleep"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_AsleepDormancy"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_Downed"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_SafeTemperature"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_Wander"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wait_Combat"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="AttackStatic"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="AttackMelee"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="SocialFight"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseVerbOnThing"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseVerbOnThingStatic"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseVerbOnThingStaticReserve"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastJump"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastAbilityOnThing"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastAbilityTouch"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastAbilityOnThingUninterruptible"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastAbilityOnThingMelee"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CastAbilityOnWorldTile"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Equip"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeInventory"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GiveToPackAnimal"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Wear"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemoveApparel"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DropEquipment"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Strip"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Open"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RearmTurret"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RearmTurretAtomic"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Refuel"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RefuelAtomic"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Reload"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FillFermentingBarrel"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeBeerOutOfFermentingBarrel"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ApplyTechprint"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UnloadInventory"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UnloadYourInventory"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HaulToTransporter"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HaulToPortal"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ManTurret"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="EnterCryptosleepCasket"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseNeurotrainer"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseArtifact"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseItem"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TriggerObject"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ClearSnow"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Vomit"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Flick"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TradeWithPawn"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DismissTrader"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Flee"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FleeAndCower"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="EnterTransporter"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Resurrect"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Insult"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HaulCorpseToPublicPlace"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="InducePrisonerToEscape"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="OfferHelp"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="EmptyThingContainer"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="InteractThing"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DeliverToCell"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DeliverToBed"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeCountToInventory"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeFromOtherInventory"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Carried"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Reading"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="EnterPortal"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Ignite"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="BeatFire"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ExtinguishSelf"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ExtinguishFiresNearby"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Ingest"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="LayDown"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="LayDownAwake"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="LayDownResting"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Lovin"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GotoMindControlled"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HaulToCell"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HaulToContainer"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Steal"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Kidnap"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryDownedPawnToExit"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryDownedPawnToPortal"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Rescue"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryToCryptosleepCasket"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Capture"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Arrest"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ReleasePrisoner"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="EscortPrisonerToBed"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeWoundedPrisonerToBed"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeToBedToOperate"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TakeDownedPawnToBedDrafted"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryDownedPawnDrafted"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryToCryptosleepCasketDrafted"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CarryToPrisonerBedDrafted"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Slaughter"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Milk"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Shear"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Tame"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Train"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RopeToPen"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RopeRoamerToUnenclosedPen"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RopeRoamerToHitchingPost"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Unrope"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ReleaseAnimalToWild"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PlaceNoCostFrame"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Replant"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FinishFrame"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Deconstruct"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Uninstall"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ExtractTree"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Repair"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FixBrokenDownBuilding"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="BuildRoof"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemoveRoof"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PaintBuilding"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PaintFloor"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemovePaintBuilding"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemovePaintFloor"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="FeedPatient"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="TendPatient"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DeliverFood"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="DoBill"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="OperateDeepDrill"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="OperateScanner"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Clean"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.4</cardio>
+                <strength>0.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Research"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Hunt"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="UseCommsConsole"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Mine"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="SmoothFloor"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RemoveFloor"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="SmoothWall"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>1.0</cardio>
+                <strength>1.2</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Sow"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="Harvest"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="HarvestDesignated"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CutPlant"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="CutPlantDesignated"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrisonerAttemptRecruit"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PrisonerExecution"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="GuiltyColonistExecution"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="PlantSeed"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>0.85</cardio>
+                <strength>0.8</strength>
+            </li>
+        </value>
+    </Operation>
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="StudyItem"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ExtractSkull"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="StudyInteract"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+    <!-- <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="AnalyzeItem"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+                <cardio>_</cardio>
+                <strength>_</strength>
+            </li>
+        </value>
+    </Operation> -->
+
+
+</Patch>

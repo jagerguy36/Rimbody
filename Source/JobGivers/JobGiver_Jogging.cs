@@ -38,10 +38,10 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-            {
-                return null;
-            }
+            //if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+            //{
+            //    return null;
+            //}
             if (!JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
             {
                 return null;

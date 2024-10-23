@@ -9,6 +9,7 @@ namespace Maux36.Rimbody
 {
     internal class JobGiver_DoBalanceBuilding : ThinkNode_JobGiver
     {
+        private static List<Thing> tmpCandidates = [];
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -38,8 +39,6 @@ namespace Maux36.Rimbody
 
         protected override Job TryGiveJob(Pawn pawn)
         {
-            List<Thing> tmpCandidates = [];
-            List<Thing> freshCandidates = [];
             if (pawn.Downed || pawn.Drafted)
             {
                 return null;
@@ -61,8 +60,6 @@ namespace Maux36.Rimbody
                 return null;
             }
 
-            freshCandidates = tmpCandidates.Where(thing => !compPhysique.memory.Contains("balance|" + thing.def.defName)).ToList();
-
             Predicate<Thing> predicate = delegate (Thing t)
             {
                 if (!pawn.CanReserve(t))
@@ -77,17 +74,26 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
+                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                {
+                    return false;
+                }
+                LocalTargetInfo target = result;
+                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+                {
+                    return false;
+                }
                 return !TooTired(pawn) && (t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true);
             };
-            Predicate<Thing> predicate2 = predicate;
-            Thing thing = null;
-            if (freshCandidates.Count != 0)
+
+            float scoreFunc(Thing t)
             {
-                thing = GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, freshCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 25f, predicate2);
-                freshCandidates.Clear();
+                string key = "balance|" + t.def.defName;
+                return compPhysique.memory.Contains(key) ? 1f : 2f;
             }
 
-            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate2);
+            Thing thing = null;
+            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
             tmpCandidates.Clear();
 
             if (thing != null)
@@ -107,7 +113,12 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceBuilding, t, result, chair);
+            LocalTargetInfo target = result;
+            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+            {
+                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceBuilding, t, result, chair);
+            }
+            return null;
         }
 
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)

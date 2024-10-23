@@ -8,11 +8,18 @@ namespace Maux36.Rimbody
     public class JobDriver_Jogging : JobDriver
     {
         private bool recorded = false;
+        private bool jogger = false;
         private int ticksLeft = 2500;
+        
+        private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
 
         private static readonly IntRange WaitTicksRange = new IntRange(10, 50);
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
+            if(pawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+            {
+                jogger = true;
+            }
             AddEndCondition(() =>
             {
                 if (pawn?.timetable?.CurrentAssignment != DefOf_Rimbody.Rimbody_Workout)
@@ -59,6 +66,8 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref ticksLeft, "ticksLeft", 0);
+            Scribe_Values.Look(ref recorded, "recorded", false);
+            Scribe_Values.Look(ref jogger, "jogger", false);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -76,6 +85,10 @@ namespace Maux36.Rimbody
             toil.AddFinishAction(delegate
             {
                 AddMemory();
+                if (ticksLeft < 5 && jogger)
+                {
+                    pawn?.needs?.mood?.thoughts?.memories?.TryGainMemory(DefOf_Rimbody.Rimbody_GoodRun);
+                }
             });
             yield return toil;
 

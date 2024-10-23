@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>true</faceaway>
+		      	  <isMetal>true</isMetal>
+		      	  <cardio>0.4</cardio>
+		      	  <strength>2.0</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="Barbell"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>true</faceaway>
+		      	  <isMetal>true</isMetal>
+		      	  <cardio>0.4</cardio>
+		      	  <strength>2.0</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="PullupBars"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>0.4</cardio>
+		      	  <strength>2.0</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="SpinningDummy"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>0.4</cardio>
+		      	  <strength>2.0</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="BalanceBeam"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>1.5</cardio>
+		      	  <strength>1.2</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>2.0</cardio>
+		      	  <strength>0.25</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="ExerciseBike"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>2.0</cardio>
+		      	  <strength>0.25</strength>
+		      </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/ThingDef[defName="YogaBall"]</xpath>
+        <value>
+		      <li Class="Maux36.Rimbody.ModExtentionRimbodyBuilding">
+		      	  <faceaway>false</faceaway>
+		      	  <isMetal>false</isMetal>
+		      	  <cardio>1.5</cardio>
+		      	  <strength>1.2</strength>
+		      </li>
+        </value>
+    </Operation>
+
+</Patch>
