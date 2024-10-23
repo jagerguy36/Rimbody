@@ -14,7 +14,11 @@ Pawns who do not use their bodies as much will need to spend time working out to
 
 ## Rimbody
 Rimbody assigns fat and muscle to every pawn. The fat and muscle of your colonists, prisoners, and slaves change based on their diet and activities, while enemies and guests will have fixed amounts of fat and muscle.<br/>
-You can view information about a pawn's fat and muscle in the Rimbody window.
+You can view information about a pawn's fat and muscle in the Rimbody window. You can find Rimbody Button in your pawn's Bio tab
+
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyButton.png?raw=true" alt="RimbodyButton" width="400"/> [Rimbody Button]
+
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyWindow.png?raw=true" alt="RimbodyWindow" width="400"/> [Rimbody Window]
 
 ### Body Fat
 Body fat represents how fat a pawn is relative to their size.<br/>
@@ -50,7 +54,9 @@ You can set goals for a pawn, and they will strive to achieve them.
 
 ### BodyType Change
 A pawn's body type is determined by their fat and muscle levels. The body shape corresponding to their fat and muscle is shown below.
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyChart.png?raw=true" alt="RimbodyChart" width="500"/>
 
+    
 There is a grace period around the thresholds. Your pawns need to have 0.5 (configurable in settings) more or less fat/muscle than the threshold for their body type to change.<br/>
 For example, if the fat threshold for Fat bodytype is set to 35, a standard pawn needs to reach 36.5 fat for their bodytype to change, while a fat pawn needs to drop to 34.5 fat for their bodytype to change to Standard.
 
@@ -61,25 +67,29 @@ Male pawns find it easier to gain muscle, while female pawns require a bit more 
 
 ## FAQ
 
-<br/>Is this mod compatibile with [Insert Mode Name Here]?
+<br/>Q: Is this mod compatibile with [Insert Mode Name Here]?
 * Probably? However, mods that modify how a pawn gains rest or food needs may cause issues.
 * HAR races do not get Rimbody values unless they share the exact same lifestages and bodytype as vanilla pawns. Biotech Xenotypes should be compatible.
 * Please keep in mind that I haven't been able to test all mods, so report any incompatibilities you encounter.
 
-<br/>How performance heavy is this mod?
+<br/>Q: How performance heavy is this mod?
 * This mod piggybacks on food needs and doesn’t have its own ticking methods for tracking pawns' fat and muscle, so one less ticking for you.
 * There are some inevitable condition checks added to food needs as a result, but these mostly involve checking for null values. I’ve aimed to keep the calculations as light as possible, primarily relying on elementary arithmetic. You can see the detailed calculations in the Detailed Mechanism section below.
+* Below is the comparison of food need calculation with this mod off and on. Of course, this can differ with your mod lists, but it should have a minimal impact, hopefully.
+
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/norimbody.png?raw=true" alt="RimbodyChart" width="800"/> [No Rimbody]
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/rimbody.png?raw=true" alt="RimbodyChart" width="800"/> [With Rimbody]
 
 <br/>Stuffs like jumpropes disappeared from Get Rimped after installing this mod! Where did they go?
 * Some of the Get Rimped items, such as barbells and jumpropes, are better suited as items rather than buildings. I plan to make them available soon; you can find more details in the Planned Features section. For now, I’ve disabled them to avoid confusion.
 
-<br/>Ideology Content?
+<br/>Q: Ideology Content?
 * Unlikely. Since I do not own the Ideology expansion, I can't dev/test it.
 
-<br/>Is this mod save game compatible?
+<br/>Q: Is this mod save game compatible?
 * If your saved game includes any buildings from GetRimped, you should deconstruct them before adding this mod. You may encounter a one-time error when first loading if you had GetRimped before, but otherwise, you should be good to go.
 
-<br/>Can I remove it from an existing save?
+<br/>Q: Can I remove it from an existing save?
 * If you have any buildings from the GetRimped mod, you should deconstruct them before removing this mod. You may encounter a one-time error on the first load.
 * You will still be left with any body type changes made by this mod (for example, pawns with the Hulking body gene whose body type changed to Standard will still have the Standard body type).
 * Other than that, this mod is mostly self-contained and should leave little to no effect. However, removing a mod mid-save is generally not recommended, and I cannot guarantee that no issues will arise.
