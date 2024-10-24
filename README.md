@@ -43,7 +43,10 @@ You can set a pawn's schedule to "work out" to make them exercise. There are thr
 
 Even when doing the same type of workout, pawns will try to diversify their routines.<br/>
 Using the same machine multiple times will reduce workout efficiency, so it's a good idea to provide a variety of workout machines.<br/>
-[Pawns getting Full benefit img] [Pawns getting reduced benefit img]
+
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/FullBenefit.png?raw=true" alt="RimbodyButton" width="200"/> [Pawns getting Full benefit]
+
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/ReducedBenefit.png?raw=true" alt="RimbodyWindow" width="200"/> [Pawns getting reduced benefit img]
 
 ### Goals
 You can set goals for a pawn, and they will strive to achieve them.
@@ -54,6 +57,7 @@ You can set goals for a pawn, and they will strive to achieve them.
 
 ### BodyType Change
 A pawn's body type is determined by their fat and muscle levels. The body shape corresponding to their fat and muscle is shown below.
+
 <img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyChart.png?raw=true" alt="RimbodyChart" width="500"/>
 
     
@@ -152,6 +156,8 @@ Protein shake, Diet pills, Steroids, etc. for your pawns
 
 BodyFat and MuscleMass are updated when your pawn's FoodNeed is updated. This means that if your pawn has no Food Need, fat and muscle levels will not be updated. This is by design, as body changes require food intake and a functioning metabolism.
 
+Gain and Loss Factor are adjusted by agefactor, which is (age-25)/1000 for fat and (age-25)/200 for muscle.
+
 ### Fat
 Fat change is calculated as below
 
@@ -168,7 +174,7 @@ Muscle change is calculated as below
     MuscleGain = 0.4  * ( 5 + (CurrentMuscle+75) / (CurrentMuscle-75) )
     ReserveMax = 2*CurrentMuscle+100
     Stored = MuscleGain * GainFactor * StrengthFactor
-    MuscleLoss = ( (CurrentMuscle+60) / 125) * ( (FoodNeed+12.5) / 12.5 )^(1/2)
+    MuscleLoss = ( (CurrentMuscle+60) / 125) * ( (FoodNeed+12.5) / 12.5 )^(-1/2)
     MuscleChange (awake) = - MuscleLoss * LossFactor
     MuscleChange (resting) = SwolFactor * RestEffectiveness (subtracted from Reserve) - MuscleLoss * LossFactor
 
