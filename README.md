@@ -68,6 +68,10 @@ A pawn's body type is determined by their fat and muscle levels. The body shape 
 There is a grace period around the thresholds. Your pawns need to have 0.5 (configurable in settings) more or less fat/muscle than the threshold for their body type to change.<br/>
 For example, if the fat threshold for Fat bodytype is set to 35, a standard pawn needs to reach 36.5 fat for their bodytype to change, while a fat pawn needs to drop to 34.5 fat for their bodytype to change to Standard.
 
+### Refresh button
+If due to mod conflicts or some reason your pawn ended up with a bodytype that doesn't match their current bodyfat and muscle level, you can click the refresh button to set their bodytype back.
+Refresh button only appears in Edit mode.
+
 ### Other factors
 Young pawns (aged 13–25) will gain muscle and lose fat more easily. As pawns age, it becomes more difficult for them to stay fit.
 
