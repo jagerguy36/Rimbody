@@ -192,7 +192,7 @@ Muscle change is calculated as below
 * StrengthFactor takes into account the job your pawn is doing. Strength workouts have a factor of 2.0, while hard labor activities like mining and construction have a factor of 1.3. Moving gives a factor of 0.4, and other stationary work provides a factor of 0.2.
 
 
-References
+## References
 
 <a href="https://www.flaticon.com/free-icons/strong" title="strong icons">Strong icons created by DinosoftLabs - Flaticon</a><br/>
 <a href="https://www.flaticon.com/free-icons/cardio" title="cardio icons">Cardio icons created by meaicon - Flaticon</a><br/>
