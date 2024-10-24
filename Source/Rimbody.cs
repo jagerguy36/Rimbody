@@ -11,7 +11,8 @@ namespace Maux36.Rimbody
         public static RimbodySettings settings;
         public static bool BodyChangeActive;
         public static bool StaminaActive;
-        public static bool IndividualityLoaded;
+        public static bool IndividualityLoaded = false;
+        public static bool WayBetterRomanceLoaded = false;
 
         public Rimbody(ModContentPack content) : base(content)
         {
@@ -27,6 +28,11 @@ namespace Maux36.Rimbody
             if (ModsConfig.IsActive("mlie.syrindividuality"))
             {
                 IndividualityLoaded = true;
+            }
+
+            if (ModsConfig.IsActive("divinederivative.romance"))
+            {
+                WayBetterRomanceLoaded = true;
             }
         }
 

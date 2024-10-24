@@ -12,7 +12,7 @@ namespace Maux36.Rimbody
     //Code referenced from Character Editor by ISOREX
     public static class HARCompat
     {
-        public static bool Active;
+        public static bool Active = false;
 
         private static Type thingDef_AlienRace;
 
