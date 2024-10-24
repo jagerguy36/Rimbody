@@ -7,7 +7,7 @@
 * Strength, Balance, Cardio workouts
 
 ## Description
-Rimbody allows your pawns to gain or lose muscle and fat based on their diet and activities, and change their body type accordingly. This mod includes a patch for GetRimped that fixes its bugs and enables your pawns to use workout machines to actually get ripped. I highly recommend using it, as Rimbody currently does not offer any strength training on its own.
+Rimbody allows your pawns to gain or lose muscle and fat based on their diet and activities, and change their body type accordingly. This mod includes a patch for GetRimped that fixes its bugs and enables your pawns to use workout machines to actually get ripped. I highly recommend using it, as Rimbody currently does not offer any bodyweight strength training.
 
 The aim of this mod is not to accurately emulate real life, but to add consequences to the type of work pawns do by creating tangible differences between pawns who mostly sit around all day and those who engage in hard manual labor.
 Pawns who do not use their bodies as much will need to spend time working out to compensate for their lack of activity in order to stay fit.
