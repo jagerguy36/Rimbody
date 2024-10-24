@@ -3,7 +3,7 @@
   <RimbodyWindow>림바디 정보</RimbodyWindow>
   <RimbodyTooltip>림바디 정보 보기</RimbodyTooltip>
   <RimbodyBodyFat>지방량</RimbodyBodyFat>
-  <RimbodyFatTooltip>몸을 차지하는 지방량.</RimbodyFatTooltip>
+  <RimbodyFatTooltip>몸을 차지하는 지방량. 몸을 움직이는 활동은 림의 지방을 소모합니다. 앉아서 하는 일은 그렇지 않죠.</RimbodyFatTooltip>
   <RimbodyMuscleMass>근육량</RimbodyMuscleMass>
   <RimbodyMuscleTooltip>몸을 차지하는 근육량. 위쪽의 작은 바는 득근량을 의미합니다. 휴식을 취할 때 서서히 근육으로 전환됩니다.</RimbodyMuscleTooltip>
   <Rimbody_EditModeTooltip>좌클릭시 증가, 우클릭시 감소</Rimbody_EditModeTooltip>
@@ -33,4 +33,7 @@
   <RimbodyNonSenescentpointTooltip>장생 유전자를 가지는 림이 이 이상의 나이를 가질 경우 이 신체나이를 가진 것으로 간주합니다.</RimbodyNonSenescentpointTooltip>
   <RimbodyDefaultSetting>기존 세팅으로</RimbodyDefaultSetting>
   <RimbodyDefaultSettingTooltip>세팅을 기존 세팅으로 돌립니다.</RimbodyDefaultSettingTooltip>
+  <RimbodyRefreshTooltip>다른 모드로 인해 근육량/지방량과 맞지 않는 체형을 가지게 된 경우 이 버튼으로 새로고침할 수 있습니다.</RimbodyRefreshTooltip>
+  <RimbodyGainGoalTooltip>목표치가 근육량 보다 높으면 림은 더 자주 식사하고 근력 운동을 주로 합니다.</RimbodyGainGoalTooltip>
+  <RimbodyDietGoalTooltip>목표치가 지방량보다 낮으면 림은 배고플 때만 식사를 하고 유산소 운동을 주로 합니다.</RimbodyDietGoalTooltip>
 </LanguageData>

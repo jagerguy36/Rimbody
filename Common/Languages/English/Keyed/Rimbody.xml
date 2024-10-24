@@ -3,7 +3,7 @@
   <RimbodyWindow>RimBody Info</RimbodyWindow>
   <RimbodyTooltip>Show Body Info</RimbodyTooltip>
   <RimbodyBodyFat>Body Fat</RimbodyBodyFat>
-  <RimbodyFatTooltip>The amount of Fat.</RimbodyFatTooltip>
+  <RimbodyFatTooltip>The amount of Fat. Physical activities will help pawns lose fat. Sedentary jobs, not so much.</RimbodyFatTooltip>
   <RimbodyMuscleMass>Muscle Mass</RimbodyMuscleMass>
   <RimbodyMuscleTooltip>The amount of muscle. The bar above shows how much muscle the pawn has gained. When they rest, the gain will convert into muscle.</RimbodyMuscleTooltip>
   <Rimbody_EditModeTooltip>Left-click a field to increase, right-click to decrease</Rimbody_EditModeTooltip>
@@ -33,4 +33,7 @@
   <RimbodyNonSenescentpointTooltip>Pawns with Non-senescent genes past this age will be considered having a body of this age.</RimbodyNonSenescentpointTooltip>
   <RimbodyDefaultSetting>Default Setting</RimbodyDefaultSetting>
   <RimbodyDefaultSettingTooltip>Reset the settings to their default values.</RimbodyDefaultSettingTooltip>
+  <RimbodyRefreshTooltip>Use this if to refresh the bodytype in case there is a mismatch between muscle/fat and bodytype due to other mods.</RimbodyRefreshTooltip>
+  <RimbodyGainGoalTooltip>When gain goal exceeds their muscle level, pawns will eat more often and focus on strength exercises.</RimbodyGainGoalTooltip>
+  <RimbodyDietGoalTooltip>When diet goal is below their fat level, pawns will only eat when hungry and will focus on cardio exercises.</RimbodyDietGoalTooltip>
 </LanguageData>
