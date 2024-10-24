@@ -16,9 +16,11 @@ Pawns who do not use their bodies as much will need to spend time working out to
 Rimbody assigns fat and muscle to every pawn. The fat and muscle of your colonists, prisoners, and slaves change based on their diet and activities, while enemies and guests will have fixed amounts of fat and muscle.<br/>
 You can view information about a pawn's fat and muscle in the Rimbody window. You can find Rimbody Button in your pawn's Bio tab
 
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyButton.png?raw=true" alt="RimbodyButton" width="400"/> [Rimbody Button]
+[Rimbody Button]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyButton.png?raw=true" alt="RimbodyButton" width="400"/> 
 
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyWindow.png?raw=true" alt="RimbodyWindow" width="400"/> [Rimbody Window]
+[Rimbody Window]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/RimbodyWindow.png?raw=true" alt="RimbodyWindow" width="400"/> 
 
 ### Body Fat
 Body fat represents how fat a pawn is relative to their size.<br/>
@@ -44,9 +46,11 @@ You can set a pawn's schedule to "work out" to make them exercise. There are thr
 Even when doing the same type of workout, pawns will try to diversify their routines.<br/>
 Using the same machine multiple times will reduce workout efficiency, so it's a good idea to provide a variety of workout machines.<br/>
 
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/FullBenefit.png?raw=true" alt="RimbodyButton" width="200"/> [Pawns getting Full benefit]
+[Pawns getting Full benefit]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/FullBenefit.png?raw=true" alt="RimbodyButton" width="200"/> 
 
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/ReducedBenefit.png?raw=true" alt="RimbodyWindow" width="200"/> [Pawns getting reduced benefit img]
+[Pawns getting reduced benefit]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/ReducedBenefit.png?raw=true" alt="RimbodyWindow" width="200"/> 
 
 ### Goals
 You can set goals for a pawn, and they will strive to achieve them.
@@ -80,9 +84,12 @@ Male pawns find it easier to gain muscle, while female pawns require a bit more 
 * This mod piggybacks on food needs and doesn’t have its own ticking methods for tracking pawns' fat and muscle, so one less ticking for you.
 * There are some inevitable condition checks added to food needs as a result, but these mostly involve checking for null values. I’ve aimed to keep the calculations as light as possible, primarily relying on elementary arithmetic. You can see the detailed calculations in the Detailed Mechanism section below.
 * Below is the comparison of food need calculation with this mod off and on. Of course, this can differ with your mod lists, but it should have a minimal impact, hopefully.
+ 
+[No Rimbody]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/norimbody.png?raw=true" alt="RimbodyChart" width="800"/>
 
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/norimbody.png?raw=true" alt="RimbodyChart" width="800"/> [No Rimbody]
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/rimbody.png?raw=true" alt="RimbodyChart" width="800"/> [With Rimbody]
+[With Rimbody]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/rimbody.png?raw=true" alt="RimbodyChart" width="800"/> 
 
 <br/>Stuffs like jumpropes disappeared from Get Rimped after installing this mod! Where did they go?
 * Some of the Get Rimped items, such as barbells and jumpropes, are better suited as items rather than buildings. I plan to make them available soon; you can find more details in the Planned Features section. For now, I’ve disabled them to avoid confusion.
