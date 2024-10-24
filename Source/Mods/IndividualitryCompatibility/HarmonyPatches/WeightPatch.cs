@@ -204,7 +204,10 @@ namespace Rimbody.Individuality
 
             if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
             {
-                Widgets.Label(new Rect(10f, num + 2f, rect.width - 60f, 24f), "└ " + "RimbodyGoal".Translate());
+                var gaingoalrect = new Rect(10f, num + 2f, 80f, 24f);
+                Widgets.Label(gaingoalrect, "└ " + "RimbodyGoal".Translate());
+                TipSignal gaingoaltip = "RimbodyGainGoalTooltip".Translate();
+                TooltipHandler.TipRegion(gaingoalrect, gaingoaltip);
                 Rect checkboxRect1 = new Rect(75f, num + 4f, 14f, 14f);
                 Widgets.Checkbox(checkboxRect1.x, checkboxRect1.y, ref compPhysique.useMuscleGoal, 14f);
 
@@ -252,7 +255,10 @@ namespace Rimbody.Individuality
             var rect11 = new Rect(0f, num, rect.width - 10f, 24f);
             if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
             {
-                Widgets.Label(new Rect(10f, num + 2f, rect.width - 60f, 24f), "└ " + "RimbodyGoal".Translate());
+                var dietgoalrect = new Rect(10f, num + 2f, 80f, 24f);
+                Widgets.Label(dietgoalrect, "└ " + "RimbodyGoal".Translate());
+                TipSignal dietgoaltip = "RimbodyDietGoalTooltip".Translate();
+                TooltipHandler.TipRegion(dietgoalrect, dietgoaltip);
                 Rect checkboxRect2 = new Rect(75f, num + 4f, 14f, 14f);
                 Widgets.Checkbox(checkboxRect2.x, checkboxRect2.y, ref compPhysique.useFatgoal, 14f);
 

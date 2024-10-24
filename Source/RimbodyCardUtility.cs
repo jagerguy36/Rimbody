@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
 
             Rect reservebackground = new Rect(160f, num + 1f, rect.width - 180f, 2f);
             Widgets.DrawBoxSolid(reservebackground, BackgroundColor);
-            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * Mathf.Clamp(compPhysique.gain / ((2f * compPhysique.MuscleMass * (compPhysique.MuscleGainFactor + (RimbodySettings.genderDifference&&(pawn.gender==Gender.Male)?0.01f:0f))) + 100f), 0f, 1f), reservebackground.height);
+            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * Mathf.Clamp(compPhysique.gain / ((2f * compPhysique.MuscleMass * (compPhysique.MuscleGainFactor + (RimbodySettings.genderDifference && (pawn.gender == Gender.Male) ? 0.01f : 0f))) + 100f), 0f, 1f), reservebackground.height);
             Widgets.DrawBoxSolid(reservefilledbar, reserveColor);
 
 
@@ -67,7 +67,10 @@ namespace Maux36.Rimbody
 
             if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
             {
-                Widgets.Label(new Rect(10f, num + 2f, rect.width - 60f, 24f), "└ " + "RimbodyGoal".Translate());
+                var gaingoalrect = new Rect(10f, num + 2f, 80f, 24f);
+                Widgets.Label(gaingoalrect, "└ " + "RimbodyGoal".Translate());
+                TipSignal gaingoaltip = "RimbodyGainGoalTooltip".Translate();
+                TooltipHandler.TipRegion(gaingoalrect, gaingoaltip);
                 Rect checkboxRect1 = new Rect(75f, num + 4f, 14f, 14f);
                 Widgets.Checkbox(checkboxRect1.x, checkboxRect1.y, ref compPhysique.useMuscleGoal, 14f);
 
@@ -115,7 +118,10 @@ namespace Maux36.Rimbody
             var rect11 = new Rect(0f, num, rect.width - 10f, 24f);
             if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
             {
-                Widgets.Label(new Rect(10f, num + 2f, rect.width - 60f, 24f), "└ " + "RimbodyGoal".Translate());
+                var dietgoalrect = new Rect(10f, num + 2f, 80f, 24f);
+                Widgets.Label(dietgoalrect, "└ " + "RimbodyGoal".Translate());
+                TipSignal dietgoaltip = "RimbodyDietGoalTooltip".Translate();
+                TooltipHandler.TipRegion(dietgoalrect, dietgoaltip);
                 Rect checkboxRect2 = new Rect(75f, num + 4f, 14f, 14f);
                 Widgets.Checkbox(checkboxRect2.x, checkboxRect2.y, ref compPhysique.useFatgoal, 14f);
 
