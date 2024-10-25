@@ -348,6 +348,16 @@
 		<xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
 			<value>
 				<passability>Standable</passability>
+			        <comps>
+			        	<li Class="CompProperties_Power">
+				                <compClass>CompPowerTrader</compClass>
+				                <basePowerConsumption>300</basePowerConsumption>
+				                <shortCircuitInRain>true</shortCircuitInRain>
+			        	</li>
+			        	<li Class="CompProperties_Breakdownable"/>
+			        	<li Class="CompProperties_Flickable"/>
+			        </comps>
+			        <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
 			</value>
 	</Operation>
 
