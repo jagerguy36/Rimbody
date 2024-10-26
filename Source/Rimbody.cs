@@ -38,7 +38,6 @@ namespace Maux36.Rimbody
 
             if (ModsConfig.IsActive("aoba.exosuit.framework"))
             {
-                Log.Message("Exoshit loaded");
                 ExosuitFrameworkLoaded = true;
             }
         }

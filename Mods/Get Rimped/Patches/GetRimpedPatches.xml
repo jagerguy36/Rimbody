@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Patch>
-	<!-- Use Own Joy-->
-	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]</xpath>
+	<!-- Fix Double def-->
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	  </mods>
+	  <nomatch Class="PatchOperationRemove">
+    	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]</xpath>
+	  </nomatch>
 	</Operation>
-
+	
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	  </mods>
+	  <match Class="PatchOperationReplace">
+    	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]/thingDefs</xpath>
+			<value>
+				<thingDefs>
+					<li>MartialArtsTarget</li>
+				</thingDefs>
+			</value>
+	  </match>
+	</Operation>
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	  </mods>
+	  <match Class="PatchOperationReplace">
+    	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]/joyKind</xpath>
+			<value>
+				<joyKind>Gaming_MartialArts</joyKind>
+			</value>
+	  </match>
+	</Operation>
+	
 	<Operation Class="PatchOperationAttributeSet">
     	<xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
   			<attribute>ParentName</attribute>
