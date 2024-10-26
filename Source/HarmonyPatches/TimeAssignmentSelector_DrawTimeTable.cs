@@ -11,12 +11,13 @@ namespace Maux36.Rimbody
     {
         public static void Postfix(Rect rect)
         {
-            rect.yMax -= 2f;
             Rect rect2 = rect;
             rect2.xMax = rect2.center.x;
             rect2.yMax = rect2.center.y;
             rect2.x += (4 + 0) * rect2.width;
             if (ModsConfig.RoyaltyActive)
+                rect2.x += rect2.width;
+            if (Rimbody.ExosuitFrameworkLoaded)
                 rect2.x += rect2.width;
             DrawTimeAssignmentSelectorFor(rect2, DefOf_Rimbody.Rimbody_Workout);
         }

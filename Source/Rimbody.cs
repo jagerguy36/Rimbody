@@ -13,6 +13,7 @@ namespace Maux36.Rimbody
         public static bool StaminaActive;
         public static bool IndividualityLoaded = false;
         public static bool WayBetterRomanceLoaded = false;
+        public static bool ExosuitFrameworkLoaded = false;
 
         public Rimbody(ModContentPack content) : base(content)
         {
@@ -33,6 +34,12 @@ namespace Maux36.Rimbody
             if (ModsConfig.IsActive("divinederivative.romance"))
             {
                 WayBetterRomanceLoaded = true;
+            }
+
+            if (ModsConfig.IsActive("aoba.exosuit.framework"))
+            {
+                Log.Message("Exoshit loaded");
+                ExosuitFrameworkLoaded = true;
             }
         }
 
