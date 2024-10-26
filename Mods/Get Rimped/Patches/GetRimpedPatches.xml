@@ -5,12 +5,6 @@
 		<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]</xpath>
 	</Operation>
 
-	<!-- Move away from Misc.Training -->
-    <Operation Class="PatchOperationRemove">
-    	<xpath>Defs/ThingDef[@Name="BuildingBase_MiscTraining"]</xpath>
-	</Operation>
-
-
 	<Operation Class="PatchOperationAttributeSet">
     	<xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
   			<attribute>ParentName</attribute>
