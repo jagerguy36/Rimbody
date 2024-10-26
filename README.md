@@ -122,7 +122,7 @@ Big and Small - Framework | Androgynous body is correctly tracked. Mimic will ta
 Toddlers | Baby wiggling and toddler play are considered strength and balance activities.
 Human Power Generator Mod | Cycling is classified as a cardio activity.
 Quary | Quarrying is considered hard manual labor.
-Rimfeller | Deep drilling is classified as hard manual labor.
+Rimfeller | Deep drilling is classified as manual labor.
 Misc. Training | Martial Art practice is classified as manual labor.
 
 If there are any other mod-added jobs that you think should be recognized as manual labor, please suggest them in the Suggestions Discussion.
