@@ -115,7 +115,7 @@ Male pawns find it easier to gain muscle, while female pawns require a bit more 
 
 Mod | Content
 --- | ---
-Biotech |  If your pawn has a specific gene that enforces a certain body type, the gain/loss rate of fat and muscle will be adjusted accordingly. This means a pawn with a thin-bodytype gene CAN have standard bodyType, but they will most likeyl revert back to thin very soon. Non-senescent pawns' bodies will be considered to be at age 25 (configurable in settings) if they get past this age. Pawns who do not need sleep will gain muscle without requiring rest.
+Biotech |  If your pawn has a specific gene that enforces a certain body type, the gain/loss rate of fat and muscle will be adjusted accordingly. This means a pawn with a thin-bodytype gene CAN have standard bodyType, but they will most likely revert back to thin very soon. Non-senescent pawns' bodies will be considered to be at age 25 (configurable in settings) if they get past this age. Pawns who do not need sleep will gain muscle without requiring rest.
 GetRimped | Pawns will use workout equipment during their workout schedule. Also fixes its bugs and Misc. Training compatibility problems when loaded together
 SYR Individuality [Continued] | The Rimbody window is merged with the Individuality window. Body weight now depends on muscle and fat.
 Big and Small - Framework | Androgynous body is correctly tracked. Mimic will take on the fat and muscle of the target.
