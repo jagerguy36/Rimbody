@@ -99,6 +99,18 @@ namespace Maux36.Rimbody
 
         public virtual BodyTypeDef GetValidBody(Pawn pawn)
         {
+            if (ModsConfig.BiotechActive && pawn.DevelopmentalStage.Juvenile())
+            {
+                if (pawn.DevelopmentalStage.Baby())
+                {
+                    return BodyTypeDefOf.Baby;
+                }
+
+                if (pawn.DevelopmentalStage.Child())
+                {
+                    return BodyTypeDefOf.Child;
+                }
+            }
             var fatE = 0.0f;
             if(RimbodySettings.genderDifference && (pawn.gender == Gender.Female))
             {
@@ -131,6 +143,10 @@ namespace Maux36.Rimbody
         {
             if (pawn?.story?.bodyType != null)
             {
+                if (pawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult)
+                {
+                    return true;
+                }
                 if (pawn.story.bodyType == BodyTypeDefOf.Fat)
                 {
                     if (BodyFat > RimbodySettings.fatThresholdFat)

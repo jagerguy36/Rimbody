@@ -34,6 +34,17 @@
 			</value>
 	  </match>
 	</Operation>
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	  </mods>
+	  <match Class="PatchOperationReplace">
+    	<xpath>Defs/JobDef[defName="UseMartialArtsTarget"]/joyKind</xpath>
+			<value>
+				<joyKind>Gaming_MartialArts</joyKind>
+			</value>
+	  </match>
+	</Operation>
 	
 	<Operation Class="PatchOperationAttributeSet">
     	<xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
