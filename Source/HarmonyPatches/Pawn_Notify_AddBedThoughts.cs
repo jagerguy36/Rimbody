@@ -18,10 +18,7 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn __instance)
         {
             var compPhysique = __instance.TryGetComp<CompPhysique>();
-            string result = string.Join(", ", compPhysique.memory);
             compPhysique.memory.Clear();
-
-            string result2 = string.Join(", ", compPhysique.memory);
         }
     }
 }

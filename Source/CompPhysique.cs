@@ -211,7 +211,7 @@ namespace Maux36.Rimbody
                 MuscleMass = -2f;
             }
 
-            if (pawn != null && (BodyFat == -1f || MuscleMass == -1f))
+            else if (pawn != null && (BodyFat == -1f || MuscleMass == -1f))
             {
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
             }
