@@ -188,21 +188,20 @@ namespace Maux36.Rimbody
 
         public (float, float) RandomCompPhysiqueByBodyType(Pawn pawn)
         {
-            if (pawn?.story?.bodyType == null)
+            if (pawn?.story?.bodyType != null)
             {
-                return (-1f, -1f);
+                var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
+                    pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f) :
+                    pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.01f) :
+                    GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f);
+
+                var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.01f) :
+                    pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.01f) :
+                    GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod), 0.01f);
+
+                return (Mathf.Clamp(fat, 0f, 40f), Mathf.Clamp(muscle, 0f, 40f));
             }
-
-            var fat = pawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
-                pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.01f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.01f) :
-                GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat-RimbodySettings.gracePeriod), 0.01f);
-
-            var muscle = pawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.01f) :
-                pawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.01f) :
-                GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin+RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk-RimbodySettings.gracePeriod), 0.01f);
-
-            return (Mathf.Clamp(fat, 0f, 40f), Mathf.Clamp(muscle, 0f, 40f));
+            return (-1f, -1f);
         }
 
         public void PhysiqueValueSetup(Pawn pawn)

@@ -257,7 +257,7 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(compPhysique.BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.4f * ((compPhysique.MuscleMass + 75f) / (compPhysique.MuscleMass - 75f) + 5f);
+                float muscleGain = 0.45f * ((compPhysique.MuscleMass + 75f) / (compPhysique.MuscleMass - 75f) + 5f);
                 float muscleLoss = ((compPhysique.MuscleMass + 60f)/ 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
