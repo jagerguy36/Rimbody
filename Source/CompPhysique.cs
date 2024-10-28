@@ -242,7 +242,7 @@ namespace Maux36.Rimbody
 
         public void ApplyGene(Pawn pawn)
         {
-            if (!ModsConfig.BiotechActive && pawn != null)
+            if (!ModsConfig.BiotechActive || pawn is null)
             {
                 return;
             }
