@@ -93,8 +93,11 @@ namespace Maux36.Rimbody
         {
             if (BodyFat<0 || MuscleMass  < 0) return;
 
-            pawn.story.bodyType = GetValidBody(pawn);
-            pawn.Drawer.renderer.SetAllGraphicsDirty();
+            if(pawn?.story?.bodyType != null)
+            {
+                pawn.story.bodyType = GetValidBody(pawn);
+                pawn.Drawer.renderer.SetAllGraphicsDirty();
+            }
         }
 
         public virtual BodyTypeDef GetValidBody(Pawn pawn)
@@ -239,10 +242,11 @@ namespace Maux36.Rimbody
 
         public void ApplyGene(Pawn pawn)
         {
-            if (!ModsConfig.BiotechActive)
+            if (!ModsConfig.BiotechActive && pawn != null)
             {
                 return;
             }
+            if (pawn.genes is null) return;
 
             if (pawn.genes.HasActiveGene(GeneBodyFat))
             {
