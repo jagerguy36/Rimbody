@@ -258,7 +258,7 @@ namespace Maux36.Rimbody
 
                 //Muscle
                 float muscleGain = 0.45f * ((compPhysique.MuscleMass + 75f) / (compPhysique.MuscleMass - 75f) + 5f);
-                float muscleLoss = ((compPhysique.MuscleMass + 60f)/ 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
+                float muscleLoss = ((compPhysique.MuscleMass + 50f)/ 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
                 if (pawn.needs.rest != null)
