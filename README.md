@@ -5,6 +5,7 @@
 * Dynamic Bodytype based on muscle and fat
 * Workout schedule
 * Strength, Balance, Cardio workouts
+* Performance friendly. Also offers performance options
 
 ## Description
 Rimbody allows your pawns to gain or lose muscle and fat based on their diet and activities, and change their body type accordingly. This mod includes a patch for GetRimped that fixes its bugs and enables your pawns to use workout machines to actually get ripped. I highly recommend using it, as Rimbody currently does not offer any bodyweight strength training.
@@ -31,10 +32,10 @@ Muscle mass represents how muscular a pawn is relative to their size.<br/>
 Pawns lose muscle passively, particularly if they are already bulky or when they are hungry. Pawns gain muscle based on their current activities, but this gain is not applied directly to them; instead, it is stored in a "reserve."
 
 ### Reserve
-When your pawns rest, the gains stored in the reserve are slowly converted into muscle.<br/>
+The gains stored in the reserve are slowly converted into muscle. This process occurs gradually when your pawn is awake, and it speeds up significantly while your pawn is resting.<br/>
 The maximum amount of reserve depends on how much muscle your pawn already has, so scrawny pawns will fill their reserve faster than hulking pawns.<br/>
 A tired or drowsy pawn will lose the gains stored in the reserve, so be sure they get enough rest! (6 to 7 hours of sleep is sufficient, even for hulking bodybuilder pawns.)<br/>
-Pawns that do not need sleep will not utilize the reserve mechanics; instead, they will gain muscle immediately.
+Pawns that do not need sleep will always convert their reserve into muscle at the same speed as if they were resting.
 
 ### Workout
 You can set a pawn's schedule to "work out" to make them exercise. There are three types of workouts:
