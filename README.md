@@ -86,17 +86,26 @@ Male pawns find it easier to gain muscle, while female pawns require a bit more 
 * Please keep in mind that I haven't been able to test all mods, so report any incompatibilities you encounter.
 
 <br/>Q: How performance heavy is this mod?
-* This mod piggybacks on food needs and doesn’t have its own ticking methods for tracking pawns' fat and muscle, so one less ticking for you.
-* There are some inevitable condition checks added to food needs as a result, but these mostly involve checking for null values. I’ve aimed to keep the calculations as light as possible, primarily relying on elementary arithmetic. You can see the detailed calculations in the Detailed Mechanism section below.
-* Below is the comparison of food need calculation with this mod off and on. Of course, this can differ with your mod lists, but it should have a minimal impact, hopefully.
+* ~~This mod piggybacks on food needs and doesn’t have its own ticking methods for tracking pawns' fat and muscle, so one less ticking for you.~~ Since this mod barely used any resources piggybacking on needs (calculation every 150 ticks), I decided to give options to use more resource in exchange for greater precision.
+* This mod offers four different modes for performance: Performance(default), Optimized, Precision(recommended), Ultra. Each mode updates Rimbody info every 150 / 75 / 30 / 15 ticks.
+* Performance mode is the same as the original method that piggybacked on food need, and is very light. But it may occationally fail to recognize short actions.
+* Precision mode efficiently registers actions with just the amount of performance needed for vanilla food need.
+* Below is the comparison of the four modes.
+* You may change between the modes anytime you wish.
  
-[No Rimbody]<br/>
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/norimbody.png?raw=true" alt="RimbodyChart" width="800"/>
+[1.Performance]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/1.Performance.png?raw=true" alt="RimbodyChart" width="800"/>
 
-[With Rimbody]<br/>
-<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/rimbody.png?raw=true" alt="RimbodyChart" width="800"/> 
+[2.Optimized]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/2.Optimized.png?raw=true" alt="RimbodyChart" width="800"/> 
 
-<br/>Stuffs like jumpropes disappeared from Get Rimped after installing this mod! Where did they go?
+[3.Precision]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/3.Precision.png?raw=true" alt="RimbodyChart" width="800"/> 
+
+[4.Ultra]<br/>
+<img src="https://github.com/jagerguy36/Rimbody/blob/main/Images/4.Ultra.png?raw=true" alt="RimbodyChart" width="800"/> 
+
+<br/>Q: Stuffs like jumpropes disappeared from Get Rimped after installing this mod! Where did they go?
 * Some of the Get Rimped items, such as barbells and jumpropes, are better suited as items rather than buildings. I plan to make them available soon; you can find more details in the Planned Features section. For now, I’ve disabled them to avoid confusion.
 
 <br/>Q: Ideology Content?
@@ -125,6 +134,7 @@ Human Power Generator Mod | Cycling is classified as a cardio activity.
 Quary | Quarrying is considered hard manual labor.
 Rimfeller | Deep drilling is classified as manual labor.
 Misc. Training | Martial Art practice is classified as manual labor.
+Combat Extended | Hauling job strength factor correctly recognizes CE weight capacity.
 
 If there are any other mod-added jobs that you think should be recognized as manual labor, please suggest them in the Suggestions Discussion.
 
