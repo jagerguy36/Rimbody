@@ -24,9 +24,9 @@
   <RimbodyModeOptimized>최적화 모드</RimbodyModeOptimized>
   <RimbodyModeTooltipOptimized>림바디 정보가 75틱마다 계산됩니다. 이 모드는 성능에 거의 영향을 주지 않으면서 나쁘지 않은 정확도를 보여줍니다.</RimbodyModeTooltipOptimized>
   <RimbodyModePrecision>정확도 모드 (추천)</RimbodyModePrecision>
-  <RimbodyModeTooltipPrecision>림바디 정보가 30틱마다 계산됩니다. 매우 정확하고 좋은 성능을 보여줍니다. 식사 욕구의 계산량과 유사한 정도의 계산량을 필요로합니다.</RimbodyModeTooltipPrecision>
+  <RimbodyModeTooltipPrecision>림바디 정보가 30틱마다 계산됩니다. 매우 정확하고 좋은 성능을 보여줍니다.</RimbodyModeTooltipPrecision>
   <RimbodyModeUltra>울트라 모드</RimbodyModeUltra>
-  <RimbodyModeTooltipUltra>림바디 정보가 15틱마다 계산됩니다. 극도로 정밀하게 림들의 행동을 감지합니다. 미관 욕구의 계산량과 유사한 정도의 계산량을 필요로합니다.</RimbodyModeTooltipUltra>
+  <RimbodyModeTooltipUltra>림바디 정보가 15틱마다 계산됩니다. 극도로 정밀하게 림들의 행동을 감지하지만 약간의 틱을 먹을 수 있습니다.</RimbodyModeTooltipUltra>
   <RimbodyThreshholdSetting>임계치 설정</RimbodyThreshholdSetting>
   <RimbodyFatThreshholdFat>지방 임계치 - 뚱뚱함</RimbodyFatThreshholdFat>
   <RimbodyFatThreshholdFatTooltip>이 이상의 지방량을 가진 림들은 뚱뚱한 체형을 가집니다.</RimbodyFatThreshholdFatTooltip>

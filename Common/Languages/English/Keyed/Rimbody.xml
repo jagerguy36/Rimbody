@@ -20,13 +20,13 @@
   <RimbodyShowFleckTooltip>Show fleck icon when pawns are doing strength or cardio workouts.</RimbodyShowFleckTooltip>
   <RimbodyPerformanceSetting>Rimbody Performance Settings</RimbodyPerformanceSetting>
   <RimbodyModePerformance>Performance (default)</RimbodyModePerformance>
-  <RimbodyModeTooltipPerformance>Rimbody info is updated every 150 ticks, just like needs. It has almost no impact on performance, but may lead to some inaccuracies in detecting pawns' actions.</RimbodyModeTooltipPerformance>
+  <RimbodyModeTooltipPerformance>Rimbody info is updated every 150 ticks, just like needs. It is extremely light, but may lead to some inaccuracies in detecting pawns' actions.</RimbodyModeTooltipPerformance>
   <RimbodyModeOptimized>Optimized</RimbodyModeOptimized>
   <RimbodyModeTooltipOptimized>Rimbody info is updated every 75 ticks. This mode offers better detection than Performance mode with almost no effect on performance.</RimbodyModeTooltipOptimized>
   <RimbodyModePrecision>Precision (Recommended)</RimbodyModePrecision>
-  <RimbodyModeTooltipPrecision>Rimbody info is updated every 30 ticks. Very accurate with decent performance, comparable to having an additional food need.</RimbodyModeTooltipPrecision>
+  <RimbodyModeTooltipPrecision>Rimbody info is updated every 30 ticks. Very accurate while maintaining decent performance.</RimbodyModeTooltipPrecision>
   <RimbodyModeUltra>Ultra Precision</RimbodyModeUltra>
-  <RimbodyModeTooltipUltra>Rimbody info is updated every 15 ticks. Extremely accurate, comparable to having an additional beauty need.</RimbodyModeTooltipUltra>
+  <RimbodyModeTooltipUltra>Rimbody info is updated every 15 ticks. It is extremely accurate, though it may impact performance.</RimbodyModeTooltipUltra>
   <RimbodyThreshholdSetting>Threshold Settings</RimbodyThreshholdSetting>
   <RimbodyFatThreshholdFat>Fat Threshold - Fat</RimbodyFatThreshholdFat>
   <RimbodyFatThreshholdFatTooltip>Above this amount of fat, a pawn will have the Fat body type.</RimbodyFatThreshholdFatTooltip>
