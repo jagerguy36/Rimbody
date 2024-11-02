@@ -8,7 +8,7 @@ using SyrTraits;
 using RimWorld;
 using Verse.Sound;
 
-namespace Rimbody.Individuality
+namespace Maux36.Rimbody_Individuality
 {
     [HarmonyPatch]
     public class WeightPatch
@@ -19,10 +19,10 @@ namespace Rimbody.Individuality
             return AccessTools.Method(classType, "PhysiqueValueSetup");
         }
 
-        static void Postfix(Pawn pawn)
+        static void Postfix(CompPhysique __instance)
         {
-            var compIndividuality = pawn.TryGetComp<CompIndividuality>();
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = __instance;
+            var compIndividuality = compPhysique.parent.TryGetComp<CompIndividuality>();
             if (compIndividuality != null && (compPhysique.BodyFat != -2))
             {
                 compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
@@ -31,19 +31,32 @@ namespace Rimbody.Individuality
     }
 
 
-    [HarmonyPatch(typeof(Need_Food), "NeedInterval")]
-    public class NeedTickPatch
+    //[HarmonyPatch(typeof(Need_Food), "NeedInterval")]
+    //public class NeedTickPatch
+    //{
+    //    [HarmonyAfter(["rimworld.mod.Maux.Rimbody"])]
+    //    public static void Postfix(Need_Food __instance)
+    //    {
+    //        var pawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+    //        var pawn = (Pawn)pawnField.GetValue(__instance);
+    //        var compIndividuality = pawn.TryGetComp<CompIndividuality>();
+    //        var compPhysique = pawn.TryGetComp<CompPhysique>();
+    //        if (compIndividuality != null && compPhysique.BodyFat != -2)
+    //        {
+    //            compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
+    //        }
+    //    }
+    //}
+
+    [HarmonyPatch(typeof(CompPhysique), "PhysiqueTick")]
+    public class CompPhysiqueTickPatch
     {
-        [HarmonyAfter(["rimworld.mod.Maux.Rimbody"])]
-        public static void Postfix(Need_Food __instance)
+        public static void Postfix(CompPhysique __instance)
         {
-            var pawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
-            var pawn = (Pawn)pawnField.GetValue(__instance);
-            var compIndividuality = pawn.TryGetComp<CompIndividuality>();
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
-            if (compIndividuality != null && compPhysique.BodyFat != -2)
+            var compIndividuality = __instance.parent.TryGetComp<CompIndividuality>();
+            if (compIndividuality != null && __instance.BodyFat >= 0 && __instance.MuscleMass >= 0)
             {
-                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
+                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (__instance.BodyFat + __instance.MuscleMass)) - 20f);
             }
         }
     }
@@ -308,7 +321,7 @@ namespace Rimbody.Individuality
                 if (Widgets.ButtonImage(refreshRect, refreshTexture))
                 {
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera();
-                    compPhysique.ResetBody(pawn);
+                    compPhysique.ResetBody();
                 }
                 TipSignal refreshTip = "RimbodyRefreshTooltip".Translate();
                 TooltipHandler.TipRegion(refreshRect, refreshTip);
@@ -380,7 +393,7 @@ namespace Rimbody.Individuality
                     compPhysique.MuscleMass = 0;
                 }
                 compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
             else if (ScrolledUp(rect8, true) || RightClicked(rect8))
             {
@@ -391,7 +404,7 @@ namespace Rimbody.Individuality
                     compPhysique.MuscleMass = 50;
                 }
                 compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
 
             else if (ScrolledDown(rect10, true) || LeftClicked(rect10))
@@ -403,7 +416,7 @@ namespace Rimbody.Individuality
                     compPhysique.BodyFat = 0;
                 }
                 compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
             else if (ScrolledUp(rect10, true) || RightClicked(rect10))
             {
@@ -414,7 +427,7 @@ namespace Rimbody.Individuality
                     compPhysique.BodyFat = 50;
                 }
                 compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
 
             return false;

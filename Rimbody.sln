@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleFrameworkCompatibili
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigAndSmallCompatibility", "Source\Mods\BigAndSmallCompatibility\BigAndSmallCompatibility.csproj", "{08B2029C-3932-425A-98D0-DEAF6B04FEE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombatExtended", "Source\Mods\CombatExtended\CombatExtended.csproj", "{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{08B2029C-3932-425A-98D0-DEAF6B04FEE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08B2029C-3932-425A-98D0-DEAF6B04FEE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08B2029C-3932-425A-98D0-DEAF6B04FEE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

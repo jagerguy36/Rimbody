@@ -171,7 +171,7 @@ namespace Maux36.Rimbody
                 if (Widgets.ButtonImage(refreshRect, refreshTexture))
                 {
                     SoundDefOf.Tick_Low.PlayOneShotOnCamera();
-                    compPhysique.ResetBody(pawn);
+                    compPhysique.ResetBody();
                 }
                 TipSignal refreshTip = "RimbodyRefreshTooltip".Translate();
                 TooltipHandler.TipRegion(refreshRect, refreshTip);
@@ -224,7 +224,7 @@ namespace Maux36.Rimbody
                 {
                     compPhysique.MuscleMass = 0;
                 }
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
             else if (ScrolledUp(rect8, true) || RightClicked(rect8))
             {
@@ -234,7 +234,7 @@ namespace Maux36.Rimbody
                 {
                     compPhysique.MuscleMass = 50;
                 }
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
 
             else if (ScrolledDown(rect10, true) || LeftClicked(rect10))
@@ -245,7 +245,7 @@ namespace Maux36.Rimbody
                 {
                     compPhysique.BodyFat = 0;
                 }
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
             else if (ScrolledUp(rect10, true) || RightClicked(rect10))
             {
@@ -255,7 +255,7 @@ namespace Maux36.Rimbody
                 {
                     compPhysique.BodyFat = 50;
                 }
-                compPhysique.ResetBody(pawn);
+                compPhysique.ResetBody();
             }
         }
 

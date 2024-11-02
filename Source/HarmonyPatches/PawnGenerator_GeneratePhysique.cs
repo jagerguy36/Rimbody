@@ -13,7 +13,10 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (pawn != null && compPhysique != null)
             {
-                pawn.BroadcastCompSignal("bodyTypeSelected for "+pawn.Name);
+                if (compPhysique.BodyFat == -1f || compPhysique.MuscleMass == -1f)
+                {
+                    (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
+                }
             }
         }
     }
@@ -28,7 +31,7 @@ namespace Maux36.Rimbody
                 var compPhysique = pawn.TryGetComp<CompPhysique>();
                 if (compPhysique != null && compPhysique.BodyFat >= 0 && compPhysique.MuscleMass >= 0)
                 {
-                    __result = compPhysique.GetValidBody(pawn);
+                    __result = compPhysique.GetValidBody();
                 }
             }
         }

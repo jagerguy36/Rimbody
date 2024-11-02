@@ -29,13 +29,13 @@ namespace Maux36.Rimbody
                 {
                     if (compPhysique.PostGen)
                     {
-                        compPhysique.ApplyGene(pawn);
-                        compPhysique.ResetBody(pawn);
+                        compPhysique.ApplyGene();
+                        compPhysique.ResetBody();
                     }
                     else
                     {
-                        compPhysique.ApplyGene(pawn);
-                        (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType(pawn);
+                        compPhysique.ApplyGene();
+                        (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
                     }
                 }
             }            

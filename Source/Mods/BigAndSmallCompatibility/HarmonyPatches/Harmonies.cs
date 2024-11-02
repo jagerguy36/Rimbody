@@ -4,7 +4,7 @@ using Maux36.Rimbody;
 using RimWorld;
 using Verse;
 
-namespace Rimbody.BigAndSmallCompatibility
+namespace Maux36.Rimbody_BigAndSmall
 {
 
     [HarmonyPatch(typeof(CompPropertiesMimicffect), "DoMimic")]

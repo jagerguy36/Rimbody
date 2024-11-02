@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 using static System.Net.Mime.MediaTypeNames;
@@ -14,6 +15,7 @@ namespace Maux36.Rimbody
         public static bool IndividualityLoaded = false;
         public static bool WayBetterRomanceLoaded = false;
         public static bool ExosuitFrameworkLoaded = false;
+        public static bool CombatExtendedLoaded = false;
 
         public Rimbody(ModContentPack content) : base(content)
         {
@@ -40,6 +42,11 @@ namespace Maux36.Rimbody
             {
                 ExosuitFrameworkLoaded = true;
             }
+
+            if (ModsConfig.IsActive("ceteam.combatextended"))
+            {
+                CombatExtendedLoaded = true;
+            }
         }
 
         public override string SettingsCategory()
@@ -47,21 +54,54 @@ namespace Maux36.Rimbody
             return "RimbodySettingCategory".Translate();
         }
 
+        private static Vector2 scrollPosition = new Vector2(0f, 0f);
+        private static float totalContentHeight = ModsConfig.BiotechActive?670f:620f;
+        private const float ScrollBarWidthMargin = 18f;
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            Rect outerRect = inRect.ContractedBy(10f);
+            bool scrollBarVisible = totalContentHeight > outerRect.height;
+            var scrollViewTotal = new Rect(0f, 0f, outerRect.width - (scrollBarVisible ? ScrollBarWidthMargin : 0), totalContentHeight);
+            Widgets.BeginScrollView(outerRect, ref scrollPosition, scrollViewTotal);
+
             var listing_Standard = new Listing_Standard();
-            listing_Standard.Begin(inRect);
-            listing_Standard.Gap(18f);
+            listing_Standard.Begin(new Rect(0f, 0f, scrollViewTotal.width, 9999f));
+            listing_Standard.Gap(12f);
+
             listing_Standard.Label("RimbodyGeneralSetting".Translate());
-            listing_Standard.Gap(6f);
+            listing_Standard.Gap(12f);
             RimbodySettings.rateFactor = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyRateFactor".Translate() + " ("+"Default".Translate()+" 1): " + RimbodySettings.rateFactor, RimbodySettings.rateFactor, 0.1f, 5f, tooltip: "RimbodyRateFactorTooltip".Translate()), 1);
-            listing_Standard.Gap(3f);
+            listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyGenderDifference".Translate(), ref RimbodySettings.genderDifference, "RimbodyGenderDifferenceTooltip".Translate());
-            listing_Standard.Gap(3f);
+            listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyShowFleck".Translate(), ref RimbodySettings.showFleck, "RimbodyShowFleckTooltip".Translate());
             listing_Standard.Gap(24f);
-            listing_Standard.Label("RimbodyThreshholdSetting".Translate());
+
+            listing_Standard.Label("RimbodyPerformanceSetting".Translate());
+            listing_Standard.Gap(12f);
+            if (listing_Standard.RadioButton("RimbodyModePerformance".Translate(), RimbodySettings.CalcEveryTick == 150, 0f, "RimbodyModeTooltipPerformance".Translate()))
+            {
+                RimbodySettings.CalcEveryTick = 150;
+            }
             listing_Standard.Gap(6f);
+            if (listing_Standard.RadioButton("RimbodyModeOptimized".Translate(), RimbodySettings.CalcEveryTick == 75, 0f, "RimbodyModeTooltipOptimized".Translate()))
+            {
+                RimbodySettings.CalcEveryTick = 75;
+            }
+            listing_Standard.Gap(6f);
+            if (listing_Standard.RadioButton("RimbodyModePrecision".Translate(), RimbodySettings.CalcEveryTick == 30, 0f, "RimbodyModeTooltipPrecision".Translate()))
+            {
+                RimbodySettings.CalcEveryTick = 30;
+            }
+            listing_Standard.Gap(6f);
+            if (listing_Standard.RadioButton("RimbodyModeUltra".Translate(), RimbodySettings.CalcEveryTick == 15, 0f, "RimbodyModeTooltipUltra".Translate()))
+            {
+                RimbodySettings.CalcEveryTick = 15;
+            }
+            listing_Standard.Gap(24f);
+
+            listing_Standard.Label("RimbodyThreshholdSetting".Translate());
+            listing_Standard.Gap(12f);
             RimbodySettings.fatThresholdFat = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyFatThreshholdFat".Translate()+ " (" + "Default".Translate() + " 35): " + RimbodySettings.fatThresholdFat, RimbodySettings.fatThresholdFat, 25, 50, tooltip: "RimbodyFatThreshholdFatTooltip".Translate()),1);
             RimbodySettings.fatThresholdThin = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyFatThresholdThin".Translate() + " (" + "Default".Translate() + " 15): " + RimbodySettings.fatThresholdThin, RimbodySettings.fatThresholdThin, 0, 25, tooltip: "RimbodyFatThresholdThinTooltip".Translate()), 1);
             listing_Standard.Gap(6f);
@@ -76,11 +116,13 @@ namespace Maux36.Rimbody
                 RimbodySettings.nonSenescentpoint = (int)Math.Round(listing_Standard.SliderLabeled("RimbodyNonSenescentpoint".Translate() + " (" + "Default".Translate() + " 25): " + RimbodySettings.nonSenescentpoint, RimbodySettings.nonSenescentpoint, 13, 60, tooltip: "RimbodyNonSenescentpointTooltip".Translate()), 0);
             }
 
-
             listing_Standard.Gap(24f);
             if (listing_Standard.ButtonText("RimbodyDefaultSetting".Translate(), "RimbodyDefaultSettingTooltip".Translate()))
             {
                 RimbodySettings.rateFactor = 1f;
+                RimbodySettings.CalcEveryTick = 150;
+                RimbodySettings.genderDifference = true;
+                RimbodySettings.showFleck = true;
                 RimbodySettings.fatThresholdFat = 35f;
                 RimbodySettings.fatThresholdThin = 15f;
                 RimbodySettings.muscleThresholdHulk = 35f;
@@ -90,6 +132,7 @@ namespace Maux36.Rimbody
             }
 
             listing_Standard.End();
+            Widgets.EndScrollView();
         }
 
     }

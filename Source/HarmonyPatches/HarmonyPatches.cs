@@ -8,12 +8,14 @@ namespace Maux36.Rimbody
     [StaticConstructorOnStartup]
     public static class HarmonyPatches
     {
-        public static readonly IEnumerable<ThingDef> beautyPlants;
-
         static HarmonyPatches()
         {
             var harmony = new Harmony("rimworld.mod.Maux.Rimbody");
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            harmony.PatchAllUncategorized(Assembly.GetExecutingAssembly());
+            if (!Rimbody.CombatExtendedLoaded)
+            {
+                harmony.PatchCategory("NonCE");
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace Rimbody.BigAndSmallCompatibility
+namespace Maux36.Rimbody_BigAndSmall
 {
     [StaticConstructorOnStartup]
     public static class HarmonyInit

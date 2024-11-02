@@ -68,6 +68,7 @@
     <Compile Include="CompProperties_Physique.cs" />
     <Compile Include="CompToHumanlikes.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
+    <Compile Include="HarmonyPatches\HaulTracking.cs" />
     <Compile Include="HarmonyPatches\Pawn_Notify_AddBedThoughts.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="RimbodyCardUtility.cs" />
     <Compile Include="RimbodyDefOf.cs" />
     <Compile Include="RimbodySettings.cs" />
+    <Compile Include="Rimbody_Utility.cs" />
     <Compile Include="RoomRoleWorker_Gym.cs" />
     <Compile Include="ThinkNodes\ThinkNode_WorkoutCondition.cs" />
     <Compile Include="ThoughtWorker\ThoughtWorker_RunnerHigh.cs" />

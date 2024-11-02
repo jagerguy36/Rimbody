@@ -4,6 +4,7 @@ namespace Maux36.Rimbody
 {
     public class RimbodySettings : ModSettings
     {
+        public static int CalcEveryTick = 150;
         public static int RecoveryTick = 200;
         public static float fatThresholdFat = 35f;
         public static float fatThresholdThin = 15f;
@@ -22,6 +23,7 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
 
+            Scribe_Values.Look(ref CalcEveryTick, "Rimbody_CalcEveryTick", 150, true);
             Scribe_Values.Look(ref RecoveryTick, "Rimbody_RecoveryTick", 200, true);
             Scribe_Values.Look(ref fatThresholdFat, "Rimbody_fatThresholdFat", 30f, true);
             Scribe_Values.Look(ref fatThresholdThin, "Rimbody_fatThresholdThin", 15f, true);
