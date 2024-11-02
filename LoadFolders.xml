@@ -5,12 +5,13 @@
 		<li>1.5</li>
 		<li>Common</li>
     	<li IfModActive="Ludeon.RimWorld.Biotech">Mods/Biotech</li>
-		<li IfModActive="kones.getrimped" >Mods/Get Rimped</li>
-		<li IfModActive="mlie.syrindividuality" >Mods/SYR Individuality/1.5</li>
-		<li IfModActive="redmattis.betterprerequisites" >Mods/BigAndSmall/1.5</li>
-		<li IfModActive="dubwise.rimefeller" >Mods/Rimefeller</li>
+		<li IfModActive="kones.getrimped">Mods/Get Rimped</li>
+		<li IfModActive="mlie.syrindividuality">Mods/SYR Individuality/1.5</li>
+		<li IfModActive="redmattis.betterprerequisites">Mods/BigAndSmall/1.5</li>
+		<li IfModActive="dubwise.rimefeller">Mods/Rimefeller</li>
 		<li IfModActive="ogliss.thewhitecrayon.quarry" >Mods/Quarry</li>
-		<li IfModActive="flashpoint55.humanpowergeneratormod" >Mods/Human Power Generator Mod</li>
-		<li IfModActive="haplo.miscellaneous.training" >Mods/Misc Training</li>
+		<li IfModActive="flashpoint55.humanpowergeneratormod">Mods/Human Power Generator Mod</li>
+		<li IfModActive="haplo.miscellaneous.training">Mods/Misc Training</li>
+		<li IfModActive="ceteam.combatextended">Mods/CombatExtended/1.5</li>
 	</v1.5>
 </loadFolders>

@@ -313,8 +313,11 @@
 	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="SpinningDummy"]/thingClass</xpath>
 	</Operation>
-	<Operation Class="PatchOperationRemove">
+	<Operation Class="PatchOperationReplace">
 		<xpath>Defs/ThingDef[defName="SpinningDummy"]/passability</xpath>
+			<value>
+				<passability>PassThroughOnly</passability>
+			</value>
 	</Operation>
 	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="SpinningDummy"]/researchPrerequisites</xpath>

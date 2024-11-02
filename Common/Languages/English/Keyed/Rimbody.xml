@@ -13,11 +13,20 @@
   <RimbodySettingCategory>Rimbody</RimbodySettingCategory>
   <RimbodyGeneralSetting>Rimbody General Settings</RimbodyGeneralSetting>
   <RimbodyRateFactor>Rate Factor</RimbodyRateFactor>
+  <RimbodyRateFactorTooltip>The rate factor determines how quickly muscle and fat change. Setting it to 2 will make them change twice as fast, while setting it to 0.5 will halve the speed.</RimbodyRateFactorTooltip>
   <RimbodyGenderDifference>Use Gender difference</RimbodyGenderDifference>
   <RimbodyGenderDifferenceTooltip>Male pawns are more likely to gain muscle. Female pawns takes 1.5 more fat to appear fat than male pawns.</RimbodyGenderDifferenceTooltip>
   <RimbodyShowFleck>Show fleck icon</RimbodyShowFleck>
   <RimbodyShowFleckTooltip>Show fleck icon when pawns are doing strength or cardio workouts.</RimbodyShowFleckTooltip>
-  <RimbodyRateFactorTooltip>The rate factor determines how quickly muscle and fat change. Setting it to 2 will make them change twice as fast, while setting it to 0.5 will halve the speed.</RimbodyRateFactorTooltip>
+  <RimbodyPerformanceSetting>Rimbody Performance Settings</RimbodyPerformanceSetting>
+  <RimbodyModePerformance>Performance (default)</RimbodyModePerformance>
+  <RimbodyModeTooltipPerformance>Rimbody info is updated every 150 ticks, just like needs. It has almost no impact on performance, but may lead to some inaccuracies in detecting pawns' actions.</RimbodyModeTooltipPerformance>
+  <RimbodyModeOptimized>Optimized</RimbodyModeOptimized>
+  <RimbodyModeTooltipOptimized>Rimbody info is updated every 75 ticks. This mode offers better detection than Performance mode with almost no effect on performance.</RimbodyModeTooltipOptimized>
+  <RimbodyModePrecision>Precision (Recommended)</RimbodyModePrecision>
+  <RimbodyModeTooltipPrecision>Rimbody info is updated every 30 ticks. Very accurate with decent performance, comparable to having an additional food need.</RimbodyModeTooltipPrecision>
+  <RimbodyModeUltra>Ultra Precision</RimbodyModeUltra>
+  <RimbodyModeTooltipUltra>Rimbody info is updated every 15 ticks. Extremely accurate, comparable to having an additional beauty need.</RimbodyModeTooltipUltra>
   <RimbodyThreshholdSetting>Threshold Settings</RimbodyThreshholdSetting>
   <RimbodyFatThreshholdFat>Fat Threshold - Fat</RimbodyFatThreshholdFat>
   <RimbodyFatThreshholdFatTooltip>Above this amount of fat, a pawn will have the Fat body type.</RimbodyFatThreshholdFatTooltip>
