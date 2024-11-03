@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigAndSmallCompatibility", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombatExtended", "Source\Mods\CombatExtended\CombatExtended.csproj", "{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiddyUpCompatibility", "Source\Mods\GiddyUpCompatibility\GiddyUpCompatibility.csproj", "{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombatTrainingCompatibility", "Mods\CombatTrainingCompatibility\CombatTrainingCompatibility.csproj", "{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D73F113-619E-4634-B91E-AB0FD3C8B2C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

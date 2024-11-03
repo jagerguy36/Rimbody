@@ -13,5 +13,11 @@
 		<li IfModActive="flashpoint55.humanpowergeneratormod">Mods/Human Power Generator Mod</li>
 		<li IfModActive="haplo.miscellaneous.training">Mods/Misc Training</li>
 		<li IfModActive="ceteam.combatextended">Mods/CombatExtended/1.5</li>
+		<li IfModActive="owlchemist.giddyup">Mods/GiddyUp/1.5</li>
+		<li IfModActive="mlie.combattraining">Mods/CombatTraining/1.5</li>
+		<li IfModActive="kaitorisenkou.ballgames">Mods/BallGames</li>
+		<li IfModActive="arcjc007.rimball">Mods/Rimball</li>
+		<li IfModActive="cain.mineshaft">Mods/Mines 2.0</li>
+		<li IfModActive="aelanna.eccentrictech.beachstuff">Mods/BeachStuff</li>
 	</v1.5>
 </loadFolders>

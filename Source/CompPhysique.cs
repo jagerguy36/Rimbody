@@ -60,7 +60,7 @@ namespace Maux36.Rimbody
             }
         }
 
-        private void PhysiqueTick()
+        private void PhysiqueTick(float forcedCardio = -1f, float forcedStrength = -1f)
         {
             //Cardio
             //private static readonly float _sprintC = 2.0f; 1.8 when limited
@@ -82,9 +82,9 @@ namespace Maux36.Rimbody
             //private static readonly float _sedentaryS = 0.1f; sedentary, standing
             //private static readonly float _lyingS = 0.0f; laying down
 
-            var curJob = parentPawn.CurJobDef;
+            var curJobDef = parentPawn.CurJobDef;
 
-            if (parentPawn?.needs != null && parentPawn.needs.food != null && (parentPawn.IsColonistPlayerControlled || parentPawn.IsPrisonerOfColony || parentPawn.IsSlaveOfColony || parentPawn.IsColonist && parentPawn.GetCaravan() != null || (parentPawn.IsColonist && curJob != null)))
+            if (parentPawn?.needs != null && parentPawn.needs.food != null && (parentPawn.IsColonistPlayerControlled || parentPawn.IsPrisonerOfColony || parentPawn.IsSlaveOfColony || parentPawn.IsColonist && parentPawn.GetCaravan() != null || (parentPawn.IsColonist && curJobDef != null)))
             {
                 if (BodyFat <= -1f || MuscleMass <= -1f)
                 {
@@ -107,91 +107,109 @@ namespace Maux36.Rimbody
 
                 float newBodyFat;
                 float newMuscleMass;
-                //Factors based on jobs
+
+
                 float cardioFactor = 0.3f; //_baseC
                 float strengthFactor = 0.1f; //_sedentaryS
-                                             //Factors for Caravan
-                if (pawnCaravan != null)
-                {
-                    //Resting
-                    if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
-                    {
-                        cardioFactor = 0.2f;
-                        strengthFactor = 0.0f;
-                    }
-                    //Moving, but not boarded
-                    else if (pawnCaravan.pather.MovingNow)
-                    {
-                        cardioFactor = 0.4f;  //Walking
-                        strengthFactor = 0.2f;
-                    }
-                }
-                else if (curJob != null && curDriver != null)
-                {
-                    //get work factor
-                    var jobExtension = curJob.GetModExtension<ModExtentionRimbodyJob>();
-                    //Special cases: moving
-                    if (parentPawn.pather?.MovingNow == true)
-                    {
-                        switch (parentPawn.jobs.curJob.locomotionUrgency)
-                        {
-                            case LocomotionUrgency.Sprint:
-                                {
-                                    cardioFactor = 2.0f; //_sprintC;
-                                    strengthFactor = 0.25f + carryFactor;
-                                }
-                                break;
-                            case LocomotionUrgency.Jog:
-                                {
-                                    cardioFactor = 0.8f; //_joggingC;
-                                    strengthFactor = 0.2f + carryFactor;
-                                }
-                                break;
-                            case LocomotionUrgency.Walk:
-                                {
-                                    cardioFactor = 0.4f; //_walkingC;
-                                    strengthFactor = 0.2f + carryFactor;
-                                }
-                                break;
-                            default:
-                                {
-                                    cardioFactor = 0.35f; //_ambleC
-                                    strengthFactor = 0.15f + carryFactor;
-                                }
-                                break;
 
+                //If factor is Forced
+                if (forcedCardio >= 0 && forcedStrength >=0)
+                {
+                    cardioFactor = forcedCardio;
+                    strengthFactor = forcedStrength;
+                }
+                //Factors based on jobs
+                else
+                {
+                    //Factors for Caravan
+                    if (pawnCaravan != null)
+                    {
+                        //Resting
+                        if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
+                        {
+                            cardioFactor = 0.2f;
+                            strengthFactor = 0.0f;
+                        }
+                        //Moving, but not boarded
+                        else if (pawnCaravan.pather.MovingNow)
+                        {
+                            cardioFactor = 0.4f;  //Walking
+                            strengthFactor = 0.2f;
                         }
                     }
-                    //Special cases: Lying down
-                    else if (curDriver?.CurToilString == "LayDown")
+                    else if (curJobDef != null && curDriver != null)
                     {
-                        cardioFactor = 0.2f;
-                        strengthFactor = 0.0f;
-                    }
-                    //Get factors from dedicated Rimbody buildings
-                    else if (RimbodyJobs.Contains(curJob.defName))
-                    {
-                        var curjobTargetDef = parentPawn.CurJob.targetA.Thing.def;
-                        var curjobName = curjobTargetDef.defName;
-                        var buildingExtention = curjobTargetDef.GetModExtension<ModExtentionRimbodyBuilding>();
-                        if (buildingExtention != null)
+                        //get work factor
+                        var jobExtension = curJobDef.GetModExtension<ModExtentionRimbodyJob>();
+                        var giverExtension = parentPawn?.CurJob?.workGiverDef?.GetModExtension<ModExtentionRimbodyJob>();
+                        //Special cases: moving
+                        if (parentPawn.pather?.MovingNow == true)
                         {
-                            cardioFactor = buildingExtention.cardio;
-                            strengthFactor = buildingExtention.strength;
-                            if (InMemory(curjobName))
+                            switch (parentPawn.jobs.curJob.locomotionUrgency)
                             {
-                                cardioFactor = cardioFactor * 0.9f;
-                                strengthFactor = strengthFactor * 0.9f;
+                                case LocomotionUrgency.Sprint:
+                                    {
+                                        cardioFactor = 2.0f; //_sprintC;
+                                        strengthFactor = 0.25f + carryFactor;
+                                    }
+                                    break;
+                                case LocomotionUrgency.Jog:
+                                    {
+                                        cardioFactor = 0.8f; //_joggingC;
+                                        strengthFactor = 0.2f + carryFactor;
+                                    }
+                                    break;
+                                case LocomotionUrgency.Walk:
+                                    {
+                                        cardioFactor = 0.4f; //_walkingC;
+                                        strengthFactor = 0.2f + carryFactor;
+                                    }
+                                    break;
+                                default:
+                                    {
+                                        cardioFactor = 0.35f; //_ambleC
+                                        strengthFactor = 0.15f + carryFactor;
+                                    }
+                                    break;
                             }
                         }
+                        //Special cases: Lying down
+                        else if (curDriver?.CurToilString == "LayDown")
+                        {
+                            cardioFactor = 0.2f;
+                            strengthFactor = 0.0f;
+                        }
+                        //Get factors from dedicated Rimbody buildings
+                        else if (RimbodyJobs.Contains(curJobDef.defName))
+                        {
+                            var curjobTargetDef = parentPawn.CurJob.targetA.Thing.def;
+                            var curjobName = curjobTargetDef.defName;
+                            var buildingExtention = curjobTargetDef.GetModExtension<ModExtentionRimbodyBuilding>();
+                            if (buildingExtention != null)
+                            {
+                                cardioFactor = buildingExtention.cardio;
+                                strengthFactor = buildingExtention.strength;
+                                if (InMemory(curjobName))
+                                {
+                                    cardioFactor = cardioFactor * 0.9f;
+                                    strengthFactor = strengthFactor * 0.9f;
+                                }
+                            }
 
-                    }
-                    else if (jobExtension != null)
-                    {
-                        cardioFactor = jobExtension.cardio;
-                        strengthFactor = jobExtension.strength;
+                        }
+                        else if (jobExtension != null)
+                        {
+                            cardioFactor = jobExtension.cardio;
+                            strengthFactor = jobExtension.strength;
+                        }
+                        else if (giverExtension != null)
+                        {
+                            cardioFactor = giverExtension.cardio;
+                            strengthFactor = giverExtension.strength;
+                        }
                     }
                 }
+
 
                 if (forceRest)
                 {
@@ -405,8 +423,7 @@ namespace Maux36.Rimbody
                         checkFlag = true;
                     }
                 }
-                //Log.Message($"{pawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
-
+                //Log.Message($"{parentPawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
                 //UI
                 if (RimbodySettings.showFleck && parentPawn.IsHashIntervalTick(150))
