@@ -29,6 +29,7 @@ namespace Maux36.Rimbody
             if (!(ModsConfig.BiotechActive && pawn.DevelopmentalStage.Juvenile()))
             {
                 var compPhysique = pawn.TryGetComp<CompPhysique>();
+                //Can be null when a pawn is generated. This is for babies growing up.
                 if (compPhysique != null && compPhysique.BodyFat >= 0 && compPhysique.MuscleMass >= 0)
                 {
                     __result = compPhysique.GetValidBody();

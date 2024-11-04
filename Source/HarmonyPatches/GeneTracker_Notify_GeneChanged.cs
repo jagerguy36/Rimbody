@@ -49,8 +49,10 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            compPhysique.PostGen = true;
-
+            if (compPhysique != null)
+            {
+                compPhysique.PostGen = true;
+            }
         }
     }
 }
