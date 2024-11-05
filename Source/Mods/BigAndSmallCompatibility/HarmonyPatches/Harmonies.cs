@@ -24,8 +24,9 @@ namespace Maux36.Rimbody_BigAndSmall
     [HarmonyPatch(typeof(CompPhysique), "GetValidBody")]
     public class GetValidBodyPatch
     {
-        public static void Postfix(ref BodyTypeDef __result, Pawn pawn)
+        public static void Postfix(CompPhysique __instance, ref BodyTypeDef __result)
         {
+            var pawn = __instance.parent as Pawn;
             if (pawn != null && pawn.gender == Gender.Male && pawn?.genes?.GenesListForReading?.Any(x => x.def == BSDefs.Body_Androgynous) == true)
             {
                 if (__result == BodyTypeDefOf.Male)
