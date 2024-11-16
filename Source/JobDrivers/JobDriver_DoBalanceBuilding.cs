@@ -9,6 +9,10 @@ namespace Maux36.Rimbody
 {
     internal class JobDriver_DoBalanceBuilding : JobDriver
     {
+        private bool faceaway = false;
+        private bool isMetal = false;
+        private float joygainfactor = 1.0f;
+
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
@@ -32,8 +36,8 @@ namespace Maux36.Rimbody
         protected void GetInPosition(Thing building)
         {
             pawn.rotationTracker.FaceCell(base.TargetA.Cell);
-            var ext = building.def.GetModExtension<ModExtentionRimbodyBuilding>();
-            if (ext != null && ext.faceaway)
+
+            if (faceaway)
             {
                 FieldInfo fieldInfo = typeof(Thing).GetField("rotationInt", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo != null)
@@ -45,16 +49,15 @@ namespace Maux36.Rimbody
         }
         protected void WatchTickAction(Thing building)
         {
-            var ext = building.def.GetModExtension<ModExtentionRimbodyBuilding>();
             if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
             {
-                if (ext != null && ext.isMetal)
+                if (isMetal)
                 {
                     RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map, false));
                 }
                 pawn.Drawer.Notify_MeleeAttackOn(building);
             }
-            pawn.needs?.joy?.GainJoy(1.0f * building.def.GetStatValueAbstract(StatDefOf.JoyGainFactor) * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+            pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
         }
 
         private void AddMemory(ThingDef buildingdef)
@@ -81,6 +84,13 @@ namespace Maux36.Rimbody
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
+                var ext = TargetThingA.def.GetModExtension<ModExtentionRimbodyBuilding>();
+                if (ext != null)
+                {
+                    faceaway = ext.faceaway;
+                    isMetal = ext.isMetal;
+                }
+                joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 GetInPosition(TargetThingA);
             };
             workout.AddPreTickAction(delegate

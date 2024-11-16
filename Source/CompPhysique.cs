@@ -311,7 +311,7 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.065f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
+                float muscleGain = 0.06f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
                 float muscleLoss = ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
@@ -474,7 +474,7 @@ namespace Maux36.Rimbody
                 Thing thing = parentPawn.carryTracker.innerContainer[i];
                 capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
             }
-            carryFactor = Mathf.Clamp((inventoryWeight + capacityWeight) / (parentPawn.GetStatValue(StatDefOf.CarryingCapacity) + MassUtility.Capacity(parentPawn)), 0f, 1f);
+            carryFactor = 0.5f * Mathf.Clamp((inventoryWeight + capacityWeight) / (parentPawn.GetStatValue(StatDefOf.CarryingCapacity) + MassUtility.Capacity(parentPawn)), 0f, 1f);
         }
 
         public override void CompTick()

@@ -46,7 +46,7 @@ namespace Maux36.Rimbody_CE
                 Thing thing = pawn.carryTracker.innerContainer[i];
                 capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
             }
-            compPhysique.carryFactor = Mathf.Clamp((inventoryWeight + capacityWeight) / (pawnInventoryCapacity + pawn.GetStatValue(StatDefOf.CarryingCapacity)), 0f, 1f);
+            compPhysique.carryFactor = 0.5f *  Mathf.Clamp((inventoryWeight + capacityWeight) / (pawnInventoryCapacity + pawn.GetStatValue(StatDefOf.CarryingCapacity)), 0f, 1f);
         }
     }
 }
