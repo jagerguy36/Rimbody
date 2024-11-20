@@ -4,6 +4,7 @@
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
 	  </mods>
 	  <nomatch Class="PatchOperationRemove">
     	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]</xpath>
@@ -13,6 +14,7 @@
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
 	  </mods>
 	  <match Class="PatchOperationReplace">
     	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]/thingDefs</xpath>
@@ -26,6 +28,7 @@
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
 	  </mods>
 	  <match Class="PatchOperationReplace">
     	<xpath>Defs/JoyGiverDef[defName="PracticeMartialArts"]/joyKind</xpath>
@@ -37,6 +40,7 @@
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
 	  </mods>
 	  <match Class="PatchOperationReplace">
     	<xpath>Defs/JobDef[defName="UseMartialArtsTarget"]/joyKind</xpath>
