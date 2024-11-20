@@ -9,6 +9,7 @@ namespace Maux36.Rimbody
     {
         private bool recorded = false;
         private bool jogger = false;
+        private float joygainfactor = 1.0f;
         private int ticksLeft = 2500;
         
         private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
@@ -22,8 +23,6 @@ namespace Maux36.Rimbody
             }
             AddEndCondition(() =>
             {
-                if (pawn?.timetable?.CurrentAssignment != DefOf_Rimbody.Rimbody_Workout)
-                    return JobCondition.Succeeded;
                 if (ticksLeft <= 0)
                     return JobCondition.Succeeded;
                 return JobCondition.Ongoing;
@@ -78,9 +77,22 @@ namespace Maux36.Rimbody
 
 
             Toil toil = Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell);
+            toil.initAction = () =>
+            {
+                joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
+                var joyneed = pawn.needs?.joy;
+                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
+                {
+                    joygainfactor = 0;
+                }
+            };
             toil.AddPreTickAction(delegate
             {
                 ticksLeft--;
+                if (joygainfactor > 0)
+                {
+                    pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+                }
             });
             toil.AddFinishAction(delegate
             {

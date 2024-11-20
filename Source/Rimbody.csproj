@@ -69,7 +69,6 @@
     <Compile Include="CompToHumanlikes.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
-    <Compile Include="HarmonyPatches\Pawn_Notify_AddBedThoughts.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />

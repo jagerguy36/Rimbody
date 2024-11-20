@@ -24,13 +24,6 @@ namespace Maux36.Rimbody
                 return false;
             }
 
-            AddEndCondition(() =>
-            {
-                if (pawn?.timetable?.CurrentAssignment != DefOf_Rimbody.Rimbody_Workout)
-                    return JobCondition.Succeeded;
-                return JobCondition.Ongoing;
-            });
-
             return true;
         }
         protected void GetInPosition(Thing building)
@@ -49,15 +42,10 @@ namespace Maux36.Rimbody
         }
         protected void WatchTickAction(Thing building)
         {
-            if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
+            if (joygainfactor > 0)
             {
-                if (isMetal)
-                {
-                    RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map, false));
-                }
-                pawn.Drawer.Notify_MeleeAttackOn(building);
+                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
-            pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
         }
 
         private void AddMemory(ThingDef buildingdef)
@@ -91,6 +79,11 @@ namespace Maux36.Rimbody
                     isMetal = ext.isMetal;
                 }
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
+                var joyneed = pawn.needs?.joy;
+                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
+                {
+                    joygainfactor = 0;
+                }
                 GetInPosition(TargetThingA);
             };
             workout.AddPreTickAction(delegate

@@ -494,17 +494,6 @@ namespace Maux36.Rimbody
             PhysiqueValueSetup();
         }
 
-        //public override void ReceiveCompSignal(string signal)
-        //{
-        //    if (signal == "bodyTypeSelected" && parent is Pawn pawn)
-        //    {
-        //        if (BodyFat == -1f || MuscleMass == -1f)
-        //        {
-        //            (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType(pawn);
-        //        }
-        //    }
-        //}
-
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
@@ -659,6 +648,11 @@ namespace Maux36.Rimbody
                 var parts = item.Split('|');
                 return parts.Length > 1 && parts[1] == workoutName;
             });
+        }
+
+        public override void Notify_AddBedThoughts(Pawn pawn)
+        {
+            memory.Clear();
         }
 
         //Biotech
