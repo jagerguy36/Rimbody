@@ -62,7 +62,7 @@
     </Operation>
 
     <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/JobDef[defName="RestIdleInCrib "]</xpath>
+        <xpath>Defs/JobDef[defName="RestIdleInCrib"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                 <cardio>0.2</cardio>
@@ -72,7 +72,7 @@
     </Operation>
 
     <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/JobDef[defName="LayAngleInCrib "]</xpath>
+        <xpath>Defs/JobDef[defName="LayAngleInCrib"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
                 <cardio>0.2</cardio>

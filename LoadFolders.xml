@@ -19,5 +19,6 @@
 		<li IfModActive="arcjc007.rimball">Mods/Rimball</li>
 		<li IfModActive="cain.mineshaft">Mods/Mines 2.0</li>
 		<li IfModActive="aelanna.eccentrictech.beachstuff">Mods/BeachStuff</li>
+		<li IfModActive="cyanobot.toddlers">Mods/Toddlers</li>
 	</v1.5>
 </loadFolders>

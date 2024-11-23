@@ -71,21 +71,18 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
+
+            var joyneed = pawn.needs?.joy;
+            if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
+            {
+                joygainfactor = 0;
+            }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             Toil findInterestingThing = FindInterestingThing();
             yield return findInterestingThing;
 
 
             Toil toil = Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.OnCell);
-            toil.initAction = () =>
-            {
-                joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
-                var joyneed = pawn.needs?.joy;
-                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
-                {
-                    joygainfactor = 0;
-                }
-            };
             toil.AddPreTickAction(delegate
             {
                 ticksLeft--;
@@ -110,6 +107,10 @@ namespace Maux36.Rimbody
             wait.initAction = delegate
             {
                 wait.actor.pather.StopDead();
+                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
+                {
+                    joygainfactor = 0;
+                }
             };
             wait.tickAction = delegate
             {
