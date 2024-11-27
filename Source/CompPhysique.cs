@@ -668,7 +668,16 @@ namespace Maux36.Rimbody
 
         public override void Notify_AddBedThoughts(Pawn pawn)
         {
-            memory.Clear();
+            if (memory == null)
+            {
+                Log.Error("Rimbody found null memory. This should never happend.");
+                memory = [];
+            }
+            else
+            {
+                memory.Clear();
+            }
+            
         }
 
         //Biotech
