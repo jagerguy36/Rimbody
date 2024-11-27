@@ -84,7 +84,7 @@ namespace Maux36.Rimbody
 
             var curJobDef = parentPawn.CurJobDef;
 
-            if (parentPawn?.needs != null && parentPawn.needs.food != null && (parentPawn.IsColonistPlayerControlled || parentPawn.IsPrisonerOfColony || parentPawn.IsSlaveOfColony || parentPawn.IsColonist && parentPawn.GetCaravan() != null || (parentPawn.IsColonist && curJobDef != null)))
+            if (parentPawn?.needs?.food != null && (parentPawn.IsColonistPlayerControlled || parentPawn.IsPrisonerOfColony || parentPawn.IsSlaveOfColony || parentPawn.IsColonist && parentPawn.GetCaravan() != null || (parentPawn.IsColonist && curJobDef != null)))
             {
                 if (BodyFat <= -1f || MuscleMass <= -1f)
                 {
@@ -99,7 +99,7 @@ namespace Maux36.Rimbody
                     return;
                 }
 
-                var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevel, 0f, 1f);
+                var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevelPercentage, 0f, 1f);
                 var curDriver = parentPawn.jobs?.curDriver;
                 var checkFlag = false;
 
@@ -183,13 +183,13 @@ namespace Maux36.Rimbody
                         else if (RimbodyJobs.Contains(curJobDef.defName))
                         {
                             var curjobTargetDef = parentPawn.CurJob.targetA.Thing.def;
-                            var curjobName = curjobTargetDef.defName;
+                            var curjobTargetName = curjobTargetDef.defName;
                             var buildingExtention = curjobTargetDef.GetModExtension<ModExtentionRimbodyBuilding>();
                             if (buildingExtention != null)
                             {
                                 cardioFactor = buildingExtention.cardio;
                                 strengthFactor = buildingExtention.strength;
-                                if (InMemory(curjobName))
+                                if (InMemory(curjobTargetName))
                                 {
                                     cardioFactor = cardioFactor * 0.9f;
                                     strengthFactor = strengthFactor * 0.9f;
@@ -207,6 +207,7 @@ namespace Maux36.Rimbody
                             cardioFactor = giverExtension.cardio;
                             strengthFactor = giverExtension.strength;
                         }
+                        //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Factors: s:{strengthFactor}, c:{cardioFactor}");
                     }
                 }
 
@@ -262,48 +263,86 @@ namespace Maux36.Rimbody
                         break;
 
                     case DevelopmentalStage.Newborn:
-                        fatgainF -= 0.015f;
-                        fatloseF += 0.025f;
+                        fatgainF -= 0.024f;
+                        fatloseF += 0.024f;
 
-                        musclegainF -= 0.125f;
-                        muscleloseF += 0.125f;
+                        musclegainF += 0.125f;
+                        muscleloseF -= 0.125f;
                         break;
 
                     case DevelopmentalStage.Baby:
-                        fatgainF -= 0.015f;
-                        fatloseF += 0.025f;
+                        fatgainF -= 0.024f;
+                        fatloseF += 0.024f;
 
-                        musclegainF -= 0.125f;
-                        muscleloseF += 0.125f;
+                        musclegainF += 0.125f;
+                        muscleloseF -= 0.125f;
                         break;
 
                     case DevelopmentalStage.Child:
-                        fatgainF -= 0.012f;
-                        fatloseF += 0.012f;
+                        fatgainF -= 0.024f;
+                        fatloseF += 0.024f;
 
-                        musclegainF -= 0.06f;
-                        muscleloseF += 0.06f;
+                        musclegainF += 0.06f;
+                        muscleloseF -= 0.06f;
                         break;
 
                     case DevelopmentalStage.Adult:
                         if (NonSenescent != null && parentPawn.genes.HasActiveGene(NonSenescent))
                         {
-                            fatgainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000f;
-                            fatloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 1000f;
+                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 500f;
+                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 500f;
 
                             musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
                             muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
                         }
                         else
                         {
-                            fatgainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 1000f;
-                            fatloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 1000f;
+                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 500f;
+                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 500f;
 
                             musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
                             muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
                         }
                         break;
                 }
+
+                //UI
+                if (RimbodySettings.showFleck && parentPawn.IsHashIntervalTick(150))
+                {
+
+                    if (gain == (2f * MuscleMass * musclegainF) + 100f)
+                    {
+                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_MaxGain);
+                    }
+                    else if (strengthFactor >= 2f)
+                    {
+                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Gain);
+                    }
+                    else if (strengthFactor >= 1.8f)
+                    {
+                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_GainLimited);
+                    }
+                    else if (cardioFactor >= 2f)
+                    {
+                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Cardio);
+                    }
+                    else if (cardioFactor >= 1.8f)
+                    {
+                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_CardioLimited);
+                    }
+                }
+
+                //Starving
+                if (parentPawn?.needs?.food.Starving == true)
+                {
+                    Hediff malnutritionHediff = parentPawn.health?.hediffSet?.GetFirstHediffOfDef(HediffDefOf.Malnutrition);
+                    if (malnutritionHediff != null)
+                    {
+                        cardioFactor += 2 * malnutritionHediff.Severity;
+                        strengthFactor -= 2 * malnutritionHediff.Severity * malnutritionHediff.Severity;
+                    }
+                }
+
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
                 float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
@@ -311,8 +350,8 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.06f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
-                float muscleLoss = ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
+                float muscleGain = 0.05f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
+                float muscleLoss = (50f / (BodyFat + 50f)) * ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
                 if (parentPawn.needs.rest != null)
@@ -425,32 +464,6 @@ namespace Maux36.Rimbody
                 }
                 //Log.Message($"{parentPawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
-                //UI
-                if (RimbodySettings.showFleck && parentPawn.IsHashIntervalTick(150))
-                {
-
-                    if (gain == (2f * MuscleMass * musclegainF) + 100f)
-                    {
-                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_MaxGain);
-                    }
-                    else if (strengthFactor >= 2f)
-                    {
-                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Gain);
-                    }
-                    else if (strengthFactor >= 1.8f)
-                    {
-                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_GainLimited);
-                    }
-                    else if (cardioFactor >= 2f)
-                    {
-                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Cardio);
-                    }
-                    else if (cardioFactor >= 1.8f)
-                    {
-                        FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_CardioLimited);
-                    }
-                }
-
                 //Apply New Values
                 BodyFat = newBodyFat;
                 MuscleMass = newMuscleMass;
@@ -461,6 +474,9 @@ namespace Maux36.Rimbody
                     parentPawn.story.bodyType = GetValidBody();
                     parentPawn.Drawer.renderer.SetAllGraphicsDirty();
                 }
+                //Log Memory
+                //string memoery_String = string.Join(", ", memory);
+                //Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
 
             }
         }
@@ -715,7 +731,15 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
             Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
             Scribe_Values.Look(ref carryFactor, "Physique_carryFactor", 0f);
-            Scribe_Collections.Look(ref memory, "Physique_memory");
+            var wo_memory_tmp = new List<string>();
+            while (memory.Any()) wo_memory_tmp.Add(memory.Dequeue());
+            Scribe_Collections.Look(ref wo_memory_tmp, "Physique_memory");
+            memory = new Queue<string>();
+            if (wo_memory_tmp!=null)
+            {
+                foreach (var mem in wo_memory_tmp) memory.Enqueue(mem);
+            }
+            
         }
 
     }

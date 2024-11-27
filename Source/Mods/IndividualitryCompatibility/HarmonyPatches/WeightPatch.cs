@@ -184,7 +184,7 @@ namespace Maux36.Rimbody_Individuality
             num += rect6.height + 2f;
             var rect7 = new Rect(0f, num, rect.width - 10f, 24f);
             Widgets.Label(new Rect(10f, num, rect.width, 24f),
-                "BodyWeight".Translate() + ": " + ((Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f) + 60) * pawn.BodySize) + " kg (" + pawn.story.bodyType + ")");
+                "BodyWeight".Translate() + ": " + Math.Round((compIndividuality.BodyWeight + pawn.def.statBases.Find(s => s.stat == StatDefOf.Mass).value) * pawn.BodySize, 2) + " kg (" + pawn.story.bodyType + ")");
             TipSignal tip4 = "BodyWeightTooltip".Translate();
             TooltipHandler.TipRegion(rect7, tip4);
             Widgets.DrawHighlightIfMouseover(rect7);

@@ -48,6 +48,10 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
+            if (TooTired(pawn))
+            {
+                return null;
+            }
             if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
             {
                 return null;
@@ -88,7 +92,7 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                return !TooTired(pawn) && (t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true);
+                return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
             };
 
             float scoreFunc(Thing t)

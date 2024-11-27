@@ -96,8 +96,8 @@
         <xpath>Defs/JobDef[defName="BabySuckle"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <cardio>1.7</cardio>
+                <strength>1.7</strength>
             </li>
         </value>
     </Operation>

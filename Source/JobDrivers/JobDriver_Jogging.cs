@@ -17,16 +17,7 @@ namespace Maux36.Rimbody
         private static readonly IntRange WaitTicksRange = new IntRange(10, 50);
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if(pawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
-            {
-                jogger = true;
-            }
-            AddEndCondition(() =>
-            {
-                if (ticksLeft <= 0)
-                    return JobCondition.Succeeded;
-                return JobCondition.Ongoing;
-            });
+            
             return true;
         }
 
@@ -77,7 +68,13 @@ namespace Maux36.Rimbody
             {
                 joygainfactor = 0;
             }
+            if (pawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+            {
+                jogger = true;
+            }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
+            this.AddEndCondition(() => (ticksLeft <= 0 ? JobCondition.Succeeded : JobCondition.Ongoing));
+            EndOnTired(this);
             Toil findInterestingThing = FindInterestingThing();
             yield return findInterestingThing;
 
@@ -123,6 +120,21 @@ namespace Maux36.Rimbody
             yield return Toils_Jump.Jump(findInterestingThing);
         }
 
+        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
+        {
+            Pawn actor = f.GetActor();
+            bool isTired = TooTired(actor);
+            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
+            return f;
+        }
+        public static bool TooTired(Pawn actor)
+        {
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
+            {
+                return true;
+            }
+            return false;
+        }
 
         //Code from the vanilla nature running utility.
         private static Dictionary<Region, bool> tmpRegionContainsOwnedBuildingCache_jogging = new();

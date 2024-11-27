@@ -32,12 +32,26 @@ namespace Maux36.Rimbody
 
             return result;
         }
+        public static bool TooTired(Pawn actor)
+        {
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.2f)
+            {
+                return true;
+            }
+            return false;
+        }
+
         protected override Job TryGiveJob(Pawn pawn)
         {
             if (pawn.Downed || pawn.Drafted)
             {
                 return null;
             }
+            if (TooTired(pawn))
+            {
+                return null;
+            }
+
             //if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
             //{
             //    return null;
