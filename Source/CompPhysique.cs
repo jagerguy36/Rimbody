@@ -668,6 +668,7 @@ namespace Maux36.Rimbody
 
         public override void Notify_AddBedThoughts(Pawn pawn)
         {
+            base.Notify_AddBedThoughts(pawn);
             if (memory == null)
             {
                 Log.Error("Rimbody found null memory. This should never happend.");
