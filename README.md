@@ -135,8 +135,12 @@ Quary | Quarrying is considered hard manual labor.
 Rimfeller | Deep drilling is classified as manual labor.
 Misc. Training | Martial Art practice is classified as manual labor.
 Combat Extended | Hauling job strength factor correctly recognizes CE weight capacity.
-
-If there are any other mod-added jobs that you think should be recognized as manual labor, please suggest them in the Suggestions Discussion.
+Combat Training (Continued) | Melee Training is classified as manual labor
+Ball Games | Ball games are balance Exercise.
+Rimball | Practicing balls is balance Exercise.
+Vanilla Plants Epanded | Tilling is recognized as hard labor
+Eccentric Extras - Beach Stuff | Playing beach Ball is mix of balance and moving.
+Mines 2.0 | Mining is recognized as hard labor
 
 ## Incompatibilities
 
@@ -194,10 +198,10 @@ Fat change is calculated as below
 ### Muscle
 Muscle change is calculated as below
 
-    MuscleGain = 0.4  * ( 5 + (CurrentMuscle+75) / (CurrentMuscle-75) )
+    MuscleGain = 0.05  * ( 25 + (CurrentMuscle+75) / (CurrentMuscle-55) )
     ReserveMax = 2*CurrentMuscle+100
     Stored = MuscleGain * GainFactor * StrengthFactor
-    MuscleLoss = ( (CurrentMuscle+60) / 125) * ( (FoodNeed+12.5) / 12.5 )^(-1/2)
+    MuscleLoss = (50 / (CurrentFat + 50)) * ( (CurrentMuscle+50) / 125) * ( (FoodNeed+0.125) / 0.125 )^(-1/2)
     MuscleChange (awake) = - MuscleLoss * LossFactor
     MuscleChange (resting) = SwolFactor * RestEffectiveness (subtracted from Reserve) - MuscleLoss * LossFactor
 
