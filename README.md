@@ -67,7 +67,7 @@ A pawn's body type is determined by their fat and muscle levels. The body shape 
 
     
 There is a grace period around the thresholds. Your pawns need to have 0.5 (configurable in settings) more or less fat/muscle than the threshold for their body type to change.<br/>
-For example, if the fat threshold for Fat bodytype is set to 35, a standard pawn needs to reach 36.5 fat for their bodytype to change, while a fat pawn needs to drop to 34.5 fat for their bodytype to change to Standard.
+For example, if the fat threshold for Fat bodytype is set to 35, a standard pawn needs to reach 35.5 fat for their bodytype to change, while a fat pawn needs to drop to 34.5 fat for their bodytype to change to Standard.
 
 ### Refresh button
 If due to mod conflicts or some reason your pawn ended up with a bodytype that doesn't match their current bodyfat and muscle level, you can click the refresh button to set their bodytype back.
@@ -169,8 +169,8 @@ Add animations to workout
 
 
 ## Modules
-* Rimbody Stats Module (planned)<br/>
-Make it so that Muscle, Fat amount affect pawn stats like running speed, immunity gain, carry abbility.
+* Rimbody Stats Module<br/>
+Make it so that Muscle, Fat amount affect pawn stats like running speed, carry abbility.
 
 * Rimbody Health Module (planned)<br/>
 Add health conditions for pawns based on their muscle and fat levels. Sleep Apnea for high fat, "Pumped" buff after doing strength workout etc.
