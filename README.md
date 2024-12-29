@@ -141,6 +141,7 @@ Rimball | Practicing balls is balance Exercise.
 Vanilla Plants Epanded | Tilling is recognized as hard labor
 Eccentric Extras - Beach Stuff | Playing beach Ball is mix of balance and moving.
 Mines 2.0 | Mining is recognized as hard labor
+Mountain Miner (Continued) | Mountain Mining is recognized as hard labor
 
 ## Incompatibilities
 
