@@ -1,4 +1,5 @@
-﻿using RimWorld.Planet;
+﻿using LudeonTK;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
@@ -24,6 +25,18 @@ namespace Maux36.Rimbody
                     compPhysique.UpdateCarryweight();
                 }
             }
+        }
+
+        [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
+        public static void ResetRimbodyValue(Pawn pawn)
+        {
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique != null)
+            {
+                Log.Message($"resetting rimbody for pawn {pawn.Name}");
+                compPhysique.PhysiqueValueSetup(true);
+            }
+
         }
     }
 }

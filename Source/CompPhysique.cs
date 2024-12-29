@@ -631,7 +631,7 @@ namespace Maux36.Rimbody
             return (-1f, -1f);
         }
 
-        public void PhysiqueValueSetup()
+        public void PhysiqueValueSetup(bool reset = false)
         {
 
             if (HARCompat.Active && parentPawn != null && !HARCompat.CompatibleRace(parentPawn))
@@ -639,8 +639,13 @@ namespace Maux36.Rimbody
                 BodyFat = -2f;
                 MuscleMass = -2f;
             }
+            else if(parentPawn.RaceProps.IsFlesh == false)
+            {
+                BodyFat = -2f;
+                MuscleMass = -2f;
+            }
 
-            else if (parentPawn != null && (BodyFat == -1f || MuscleMass == -1f))
+            else if (parentPawn != null && ((BodyFat == -1f || MuscleMass == -1f) || reset))
             {
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType();
             }

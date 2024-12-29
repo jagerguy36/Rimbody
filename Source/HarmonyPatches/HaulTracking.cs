@@ -14,6 +14,7 @@ using Verse.Noise;
 
 namespace Maux36.Rimbody
 {
+    //Tracking is only needed for Non-CE because CE has its own tracking system so Rimbody piggybacks on it.
     [HarmonyPatchCategory("NonCE")]
     [HarmonyPatch(typeof(ThingOwner), "NotifyAdded")]
     public class ThingOwner_NotifyAdded_Patch

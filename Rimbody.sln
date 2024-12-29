@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GiddyUpCompatibility", "Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombatTrainingCompatibility", "Mods\CombatTrainingCompatibility\CombatTrainingCompatibility.csproj", "{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VFEAndroidCompatibility", "Source\Mods\VFEAndroidCompatibility\VFEAndroidCompatibility.csproj", "{C77AB277-7A00-4795-8648-9322D8AA40A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,5 +20,7 @@
 		<li IfModActive="cain.mineshaft">Mods/Mines 2.0</li>
 		<li IfModActive="aelanna.eccentrictech.beachstuff">Mods/BeachStuff</li>
 		<li IfModActive="cyanobot.toddlers">Mods/Toddlers</li>
+		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner</li>
+		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
 	</v1.5>
 </loadFolders>
