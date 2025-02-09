@@ -46,7 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="SyrTraits">
-      <HintPath>..\..\..\..\..\..\..\..\Steam\steamapps\workshop\content\294100\3253596705\1.5\Assemblies\SyrTraits.dll</HintPath>
+      <HintPath>..\..\..\..\SYRIndividuality\1.5\Assemblies\SyrTraits.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

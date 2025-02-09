@@ -11,7 +11,7 @@
 		<li IfModActive="dubwise.rimefeller">Mods/Rimefeller</li>
 		<li IfModActive="ogliss.thewhitecrayon.quarry" >Mods/Quarry</li>
 		<li IfModActive="flashpoint55.humanpowergeneratormod">Mods/Human Power Generator Mod</li>
-		<li IfModActive="haplo.miscellaneous.training">Mods/Misc Training</li>
+		<li IfModActive="haplo.miscellaneous.training,haplo.miscellaneous.trainingnotask">Mods/Misc Training</li>
 		<li IfModActive="ceteam.combatextended">Mods/CombatExtended/1.5</li>
 		<li IfModActive="owlchemist.giddyup">Mods/GiddyUp/1.5</li>
 		<li IfModActive="mlie.combattraining">Mods/CombatTraining/1.5</li>
@@ -22,5 +22,6 @@
 		<li IfModActive="cyanobot.toddlers">Mods/Toddlers</li>
 		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner</li>
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
+		<li IfModActive="avius.prisonlabor">Mods/Prison Labor</li>
 	</v1.5>
 </loadFolders>
