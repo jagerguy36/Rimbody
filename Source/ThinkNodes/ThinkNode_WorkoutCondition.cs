@@ -16,16 +16,16 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                if (pawn.timetable?.CurrentAssignment == DefOf_Rimbody.Rimbody_Workout) //Workout schedule
-                {
-                    return true;
-                }
                 if (pawn.IsColonist || pawn.IsPrisonerOfColony)
                 {
+                    if (pawn.timetable?.CurrentAssignment == DefOf_Rimbody.Rimbody_Workout) //Workout schedule
+                    {
+                        return true;
+                    }
                     var need = pawn.needs?.joy;
                     if (need != null) //Idle Joy
                     {
-                        if (need.CurLevelPercentage < 0.9 && !need.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) && Find.TickManager.TicksGame >= 60000)
+                        if (need.CurLevel < 0.9 && !need.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) && Find.TickManager.TicksGame >= 60000)
                         {
                             return true;
                         }
