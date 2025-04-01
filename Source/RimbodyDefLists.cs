@@ -1,43 +1,51 @@
 ﻿using System.Collections.Generic;
 using Verse;
+using static UnityEngine.Scripting.GarbageCollector;
 
 namespace Maux36.Rimbody
 {
-    //public class RimbodyDefLists
-    //{
-    //    public static List<ThingDef> WorkOutBuildings = new List<ThingDef>();
-    //    WorkOutBuildings.
-
-    //}
-
     public class RimbodyDefLists
     {
-        public static List<ThingDef> StrengthBuilding = [];
-        public static List<ThingDef> CardioBuilding = [];
-        public static List<ThingDef> BalanceBuilding = [];
-        public static List<ThingDef> WorkoutBuilding = [];
+        public static Dictionary<ThingDef, ModExtentionRimbodyBuilding> StrengthBuilding = new();
+        public static Dictionary<ThingDef, ModExtentionRimbodyBuilding> CardioBuilding = new();
+        public static Dictionary<ThingDef, ModExtentionRimbodyBuilding> BalanceBuilding = new();
+        public static Dictionary<ThingDef, ModExtentionRimbodyBuilding> WorkoutBuilding = new();
+        public static List<ThingDef> StoneChunkList = new();
 
         static RimbodyDefLists() // Static constructor
         {
-
-            if (ModsConfig.IsActive("kones.getrimped")){
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("WeightBench", true));
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("Barbell", true));
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("PullupBars", true));
-                StrengthBuilding.Add(DefDatabase<ThingDef>.GetNamed("SpinningDummy", true));
-
-                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("BalanceBeam", true));
-                BalanceBuilding.Add(DefDatabase<ThingDef>.GetNamed("YogaBall", true));
-
-                CardioBuilding.Add(DefDatabase<ThingDef>.GetNamed("Treadmill", true));
-                CardioBuilding.Add(DefDatabase<ThingDef>.GetNamed("ExerciseBike", true));
-
-                WorkoutBuilding.AddRange(StrengthBuilding);
-                WorkoutBuilding.AddRange(BalanceBuilding);
-                WorkoutBuilding.AddRange(CardioBuilding);
-
+            foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
+            {
+                if (thingDef.thingCategories != null && thingDef.thingCategories.Contains(DefDatabase<ThingCategoryDef>.GetNamed("StoneChunks", true)))
+                {
+                    StoneChunkList.Add(thingDef);
+                }
+                var buildingExtension = thingDef.GetModExtension<ModExtentionRimbodyBuilding>();
+                if (buildingExtension != null)
+                {
+                    AddBuilding(thingDef, buildingExtension);
+                }
             }
         }
-    }
 
+        private static void AddBuilding(ThingDef buildingDef, ModExtentionRimbodyBuilding buildingExtension)
+        {
+            switch (buildingExtension.type)
+            {
+                case RimbodyBuildingType.Strength:
+                    StrengthBuilding[buildingDef] = buildingExtension;
+                    break;
+                case RimbodyBuildingType.Balance:
+                    BalanceBuilding[buildingDef] = buildingExtension;
+                    break;
+                case RimbodyBuildingType.Cardio:
+                    CardioBuilding[buildingDef] = buildingExtension;
+                    break;
+            }
+
+            WorkoutBuilding[buildingDef] = buildingExtension;
+        }
+    }
 }
+
+

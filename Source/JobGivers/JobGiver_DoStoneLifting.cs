@@ -7,7 +7,7 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    internal class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
+    internal class JobGiver_DoStoneLifting : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
         public override float GetPriority(Pawn pawn)
@@ -18,15 +18,20 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 5.0f;
+            float result = 9f; //5.5f;
 
-            if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
+            if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
             {
-                result += 2.5f + ((compPhysique.BodyFat - compPhysique.FatGoal)/100f);
+                result += 2.5f + ((compPhysique.MuscleGoal - compPhysique.MuscleMass)/100f);
             }
             else
             {
-                result += (compPhysique.BodyFat - 25f) / 100f;
+                result += (compPhysique.MuscleMass - 25f) / 100f;
+            }
+
+            if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
+            {
+                result -= 4f;
             }
 
             return result;
@@ -51,10 +56,10 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            //if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-            //{
-            //    return null;
-            //}
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+            {
+                return null;
+            }
             var compPhysique = pawn.TryGetComp<CompPhysique>();
 
             if (compPhysique == null)
@@ -78,25 +83,12 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                if (!t.IsSociallyProper(pawn))
-                {
-                    return false;
-                }
-                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
-                {
-                    return false;
-                }
-                LocalTargetInfo target = result;
-                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
-                {
-                    return false;
-                }
-                return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
+                return true;
             };
 
             float scoreFunc(Thing t)
             {
-                string key = "cardio|" + t.def.defName;
+                string key = "strength|" + "stonelifting";
                 float score = compPhysique.memory.Contains(key) ? 3f : 5f;
                 if (compPhysique.lastMemory == key)
                 {
@@ -119,17 +111,11 @@ namespace Maux36.Rimbody
             }
             return null;
         }
-
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+            if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
             {
-                return null;
-            }
-            LocalTargetInfo target = result;
-            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
-            {
-                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoCardioBuilding, t, result, chair);
+                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStoneLifting, t);
             }
             return null;
         }
@@ -137,13 +123,13 @@ namespace Maux36.Rimbody
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.CardioBuilding == null || RimbodyDefLists.CardioBuilding.Count == 0)
+            if (RimbodyDefLists.StoneChunkList == null || RimbodyDefLists.StoneChunkList.Count == 0)
             {
                 return;
             }
-            foreach (var buildingDef in RimbodyDefLists.CardioBuilding.Keys)
+            foreach (var stoneChunkDef in RimbodyDefLists.StoneChunkList)
             {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
+                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(stoneChunkDef));
             }
         }
     }

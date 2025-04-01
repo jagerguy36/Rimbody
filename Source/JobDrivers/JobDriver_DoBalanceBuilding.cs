@@ -56,9 +56,8 @@ namespace Maux36.Rimbody
             }
         }
 
-        private void AddMemory(ThingDef buildingdef)
+        private void AddMemory(ThingDef buildingdef, CompPhysique compPhysique)
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
@@ -68,9 +67,11 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
+            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
@@ -101,7 +102,7 @@ namespace Maux36.Rimbody
             workout.AddFinishAction(delegate
             {
                 TryGainGymThought();
-                AddMemory(TargetThingA.def);
+                AddMemory(TargetThingA.def, compPhysique);
             });
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
             workout.defaultDuration = 1500;
@@ -138,7 +139,7 @@ namespace Maux36.Rimbody
             //if the stage index exists in the definition (in xml), gain the memory (and buff)
             if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
             {
-                pawn.needs.mood.thoughts.memories.TryGainMemory(
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
                     ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
                         scoreStageIndex));
             }

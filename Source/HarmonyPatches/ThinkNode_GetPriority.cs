@@ -17,7 +17,6 @@ namespace Maux36.Rimbody
         private static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method("JobGiver_GetRest:GetPriority", [typeof(Pawn)]);
-            yield return AccessTools.Method("JobGiver_Work:GetPriority", [typeof(Pawn)]);
             yield return AccessTools.Method("ThinkNode_Priority_GetJoy:GetPriority", [typeof(Pawn)]);
         }
 
@@ -32,58 +31,85 @@ namespace Maux36.Rimbody
 
             return true;
         }
+    }
 
-        [HarmonyPatch(typeof(JobGiver_GetFood), "GetPriority")]
-        public class GetRestPriorityPatch
+
+    [HarmonyPatch(typeof(JobGiver_Work), "GetPriority")]
+    public class WorkPriorityPatch
+    {
+        public static bool Prefix(Pawn pawn, ref float __result)
         {
-            public static bool Prefix(Pawn pawn, ref float __result)
+            if (pawn == null)
             {
-                if (pawn == null)
+                return true;
+            }
+            if (pawn.workSettings == null || !pawn.workSettings.EverWork)
+            {
+                __result = 0f;
+                return false;
+            }
+            TimeAssignmentDef timeAssignmentDef = ((pawn.timetable == null) ? TimeAssignmentDefOf.Anything : pawn.timetable.CurrentAssignment);
+            if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
+            {
+                __result = 2f;
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(JobGiver_GetFood), "GetPriority")]
+    public class GetRestPriorityPatch
+    {
+        public static bool Prefix(Pawn pawn, ref float __result)
+        {
+            if (pawn == null)
+            {
+                return true;
+            }
+
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+
+            if (compPhysique?.useFatgoal == true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
+            {
+
+                //If Both not satisfied
+                if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal)
+                {
+                    return true; //return normal behavior
+                }
+
+                Need_Food food = pawn.needs.food;
+                //Muscle goal is satisfied: only fat goal matters
+                if ((int)food.CurCategory < (int)HungerCategory.UrgentlyHungry)
+                {
+                    __result = 0f;
+                    return false;
+                }
+                else
                 {
                     return true;
                 }
-
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
-                Need_Food food = pawn.needs.food;
-
-                if (compPhysique?.useFatgoal==true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
-                {
-
-                    //If Both not satisfied
-                    if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal)
-                    {
-                        return true; //return normal behavior
-                    }
-
-                    //Muscle goal is satisfied: only fat goal matters
-                    if((int)food.CurCategory < (int)HungerCategory.UrgentlyHungry)
-                    {
-                        __result = 0f;
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-
-                //Fat goal is satisfied already
-                else if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal) //Fat goal satisfied and Muscle goal not satisfied
-                {
-                    if (food.CurLevelPercentage < 0.5f)
-                    {
-                        __result = 9.5f;
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-
-                //Both satisfied
-                return true;
             }
+
+            //Fat goal is satisfied already
+            else if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal) //Fat goal satisfied and Muscle goal not satisfied
+            {
+                Need_Food food = pawn.needs.food;
+                if (food.CurLevelPercentage < 0.5f)
+                {
+                    __result = 9.5f;
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            //Both satisfied
+            return true;
         }
     }
 }

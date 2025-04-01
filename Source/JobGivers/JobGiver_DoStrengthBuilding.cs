@@ -22,7 +22,11 @@ namespace Maux36.Rimbody
 
             if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
             {
-                result += 2f + ((compPhysique.MuscleGoal - compPhysique.MuscleMass)/100f);
+                result += 2.5f + ((compPhysique.MuscleGoal - compPhysique.MuscleMass)/100f);
+            }
+            else
+            {
+                result += (compPhysique.MuscleMass - 25f) / 100f;
             }
 
             if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
@@ -98,8 +102,13 @@ namespace Maux36.Rimbody
             float scoreFunc(Thing t)
             {
                 string key = "strength|" + t.def.defName;
-                return compPhysique.memory.Contains(key) ? 1f : 2f;
-            };
+                float score = compPhysique.memory.Contains(key) ? 3f : 5f;
+                if (compPhysique.lastMemory == key)
+                {
+                    score = 1f;
+                }
+                return score;
+            }
 
             Thing thing = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
@@ -132,18 +141,13 @@ namespace Maux36.Rimbody
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.StrengthBuilding == null)
+            if (RimbodyDefLists.StrengthBuilding == null || RimbodyDefLists.StrengthBuilding.Count == 0)
             {
                 return;
             }
-            if (RimbodyDefLists.StrengthBuilding.Count == 1)
+            foreach (var buildingDef in RimbodyDefLists.StrengthBuilding.Keys)
             {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(RimbodyDefLists.StrengthBuilding[0]));
-                return;
-            }
-            for (int i = 0; i < RimbodyDefLists.StrengthBuilding.Count; i++)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(RimbodyDefLists.StrengthBuilding[i]));
+                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }
         }
     }

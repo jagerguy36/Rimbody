@@ -13,11 +13,14 @@ namespace Maux36.Rimbody
         public static float gracePeriod = 1f;
         public static float rateFactor = 1f;
         public static int nonSenescentpoint = 25;
-        public static float maleMusclegain = 0.01f;
-        public static float femaleFatThreshold = 1.5f;
-
+        public static float maleMusclegain = 0.015f;
+        public static float femaleFatThreshold = 1.0f;
+        
         public static bool genderDifference = true;
         public static bool showFleck = true;
+
+        public static float WorkOutGainEfficiency = 1.0f;
+        public static float carryRateMultiplier = 1.0f;
 
         public override void ExposeData()
         {
@@ -36,6 +39,8 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref femaleFatThreshold, "Rimbody_femaleFatThreshold", 1.5f, true);
             Scribe_Values.Look(ref genderDifference, "Rimbody_genderDifference", true, true);
             Scribe_Values.Look(ref showFleck, "Rimbody_showFleck", true, true);
+            Scribe_Values.Look(ref WorkOutGainEfficiency, "Rimbody_WorkOutGainEfficiency", 1.0f, true);
+            Scribe_Values.Look(ref carryRateMultiplier, "Rimbody_carryRateMultiplier", 1.0f, true);
         }
     }
 }

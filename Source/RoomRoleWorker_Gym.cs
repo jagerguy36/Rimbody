@@ -16,7 +16,7 @@ namespace Maux36.Rimbody
                 {
                     return 0f;
                 }
-                if (RimbodyDefLists.WorkoutBuilding.Contains(thing.def))
+                if (RimbodyDefLists.WorkoutBuilding.ContainsKey(thing.def))
                 {
                     num++;
                 }

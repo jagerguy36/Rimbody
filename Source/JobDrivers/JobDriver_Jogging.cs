@@ -39,10 +39,9 @@ namespace Maux36.Rimbody
             return toil;
         }
 
-        private void AddMemory()
+        private void AddMemory(CompPhysique compPhysique)
         {
             if (!recorded) {
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
                 if (compPhysique != null)
                 {
                     compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
@@ -62,7 +61,7 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             var joyneed = pawn.needs?.joy;
             if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
             {
@@ -73,6 +72,7 @@ namespace Maux36.Rimbody
                 jogger = true;
             }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
+            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
             this.AddEndCondition(() => (ticksLeft <= 0 ? JobCondition.Succeeded : JobCondition.Ongoing));
             EndOnTired(this);
             Toil findInterestingThing = FindInterestingThing();
@@ -90,7 +90,7 @@ namespace Maux36.Rimbody
             });
             toil.AddFinishAction(delegate
             {
-                AddMemory();
+                AddMemory(compPhysique);
                 if (ticksLeft < 5 && jogger)
                 {
                     pawn?.needs?.mood?.thoughts?.memories?.TryGainMemory(DefOf_Rimbody.Rimbody_GoodRun);

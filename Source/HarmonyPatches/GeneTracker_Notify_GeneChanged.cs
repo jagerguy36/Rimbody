@@ -20,6 +20,16 @@ namespace Maux36.Rimbody
         {
             var pawnField = typeof(Pawn_GeneTracker).GetField("pawn");
             var pawn = (Pawn)pawnField.GetValue(__instance);
+            if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.defName== "DiseaseFree")
+            {
+                var compPhysique = pawn.TryGetComp<CompPhysique>();
+
+                if (compPhysique != null)
+                {
+                    compPhysique.ApplyGene();
+                }
+
+            }
 
             if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.bodyType.HasValue)
             {

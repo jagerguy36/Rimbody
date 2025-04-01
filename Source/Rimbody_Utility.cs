@@ -28,6 +28,17 @@ namespace Maux36.Rimbody
         }
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
+        public static void LogRimbodyValue(Pawn pawn)
+        {
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique != null)
+            {
+                Log.Message($"Rimbody for pawn {pawn.Name}\n\n BodyFat: {compPhysique.BodyFat}\n MuscleMass: {compPhysique.MuscleMass}\n isNonSen: {compPhysique.isNonSen}\n FatGainFactor: {compPhysique.FatGainFactor}\n FatLoseFactor: {compPhysique.FatLoseFactor}\n MuscleGainFactor: {compPhysique.MuscleGainFactor}\n MuscleLoseFactor: {compPhysique.MuscleLoseFactor}");
+            }
+
+        }
+
+        [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void ResetRimbodyValue(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();

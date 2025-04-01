@@ -8,6 +8,7 @@ namespace Maux36.Rimbody
     public static class DefOf_Rimbody
     {
         public static JobDef Rimbody_Jogging;
+        public static JobDef Rimbody_DoStoneLifting;
         //public static JobDef Rimbody_GoDoPushUps;
         public static JobDef Rimbody_DoStrengthBuilding;
         public static JobDef Rimbody_DoBalanceBuilding;

@@ -7,7 +7,7 @@ namespace Maux36.Rimbody
     {
         public override float GetPriority(Pawn pawn)
         {
-            return 0.5f;
+            return 2.5f;
         }
         public JobGiver_RecoverWander()
         {

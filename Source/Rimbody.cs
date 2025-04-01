@@ -55,7 +55,7 @@ namespace Maux36.Rimbody
         }
 
         private static Vector2 scrollPosition = new Vector2(0f, 0f);
-        private static float totalContentHeight = ModsConfig.BiotechActive?670f:620f;
+        private static float totalContentHeight = ModsConfig.BiotechActive?770f:720f;
         private const float ScrollBarWidthMargin = 18f;
         public override void DoSettingsWindowContents(Rect inRect)
         {
@@ -71,6 +71,10 @@ namespace Maux36.Rimbody
             listing_Standard.Label("RimbodyGeneralSetting".Translate());
             listing_Standard.Gap(12f);
             RimbodySettings.rateFactor = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyRateFactor".Translate() + " ("+"Default".Translate()+" 1): " + RimbodySettings.rateFactor, RimbodySettings.rateFactor, 0.1f, 5f, tooltip: "RimbodyRateFactorTooltip".Translate()), 1);
+            listing_Standard.Gap(6f);
+            RimbodySettings.WorkOutGainEfficiency = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyWorkOutGainEfficiency".Translate() + " (" + "Default".Translate() + " 1.0): " + RimbodySettings.WorkOutGainEfficiency, RimbodySettings.WorkOutGainEfficiency, 1f, 2f, tooltip: "RimbodyWorkOutGainEfficiencyTooltip".Translate()), 1);
+            listing_Standard.Gap(6f);
+            RimbodySettings.carryRateMultiplier = Mathf.Clamp((float)Math.Round(listing_Standard.SliderLabeled("RimbodyCarryRateMultiplier".Translate() + " (" + "Default".Translate() + " 1.0): " + RimbodySettings.carryRateMultiplier, RimbodySettings.carryRateMultiplier, 0f, 1f, tooltip: "RimbodyCarryRateMultiplierTooltip".Translate()), 1), 0f, 1f);
             listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyGenderDifference".Translate(), ref RimbodySettings.genderDifference, "RimbodyGenderDifferenceTooltip".Translate());
             listing_Standard.Gap(6f);
@@ -129,6 +133,7 @@ namespace Maux36.Rimbody
                 RimbodySettings.muscleThresholdThin = 15f;
                 RimbodySettings.gracePeriod = 1f;
                 RimbodySettings.nonSenescentpoint = 25;
+                RimbodySettings.WorkOutGainEfficiency = 1.0f;
             }
 
             listing_Standard.End();

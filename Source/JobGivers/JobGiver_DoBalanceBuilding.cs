@@ -18,11 +18,11 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 5.5f;
+            float result = 5.0f;
 
-            if (!compPhysique.memory.Any(s => s.Split('|')[0] == "balance"))
+            if (compPhysique.memory?.Count>0 && !compPhysique.memory.Any(s => s.Split('|')[0] == "balance"))
             {
-                result += 2.05f;
+                result += 3.05f;
             }
 
             return result;
@@ -93,7 +93,12 @@ namespace Maux36.Rimbody
             float scoreFunc(Thing t)
             {
                 string key = "balance|" + t.def.defName;
-                return compPhysique.memory.Contains(key) ? 1f : 2f;
+                float score = compPhysique.memory.Contains(key) ? 3f : 5f;
+                if(compPhysique.lastMemory == key)
+                {
+                    score = 1f;
+                }
+                return score;
             }
 
             Thing thing = null;
@@ -128,18 +133,13 @@ namespace Maux36.Rimbody
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.BalanceBuilding == null)
+            if (RimbodyDefLists.BalanceBuilding == null || RimbodyDefLists.BalanceBuilding.Count == 0)
             {
                 return;
             }
-            if (RimbodyDefLists.BalanceBuilding.Count == 1)
+            foreach (var buildingDef in RimbodyDefLists.BalanceBuilding.Keys)
             {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(RimbodyDefLists.BalanceBuilding[0]));
-                return;
-            }
-            for (int i = 0; i < RimbodyDefLists.BalanceBuilding.Count; i++)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(RimbodyDefLists.BalanceBuilding[i]));
+                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }
         }
     }
