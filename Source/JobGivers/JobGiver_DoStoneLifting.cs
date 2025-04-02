@@ -9,7 +9,6 @@ namespace Maux36.Rimbody
 {
     internal class JobGiver_DoStoneLifting : ThinkNode_JobGiver
     {
-        private static List<Thing> tmpCandidates = [];
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -18,7 +17,7 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 9f; //5.5f;
+            float result = 5f; //5.5f;
 
             if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
             {
@@ -66,16 +65,10 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            tmpCandidates.Clear();
-            GetSearchSet(pawn, tmpCandidates);
-            if (tmpCandidates.Count == 0)
-            {
-                return null;
-            }
 
             Predicate<Thing> predicate = delegate (Thing t)
             {
-                if (!pawn.CanReserve(t))
+                if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Deadly))
                 {
                     return false;
                 }
@@ -83,27 +76,24 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
+                //Haul하라고 마킹해있어도 노노노
                 return true;
             };
 
-            float scoreFunc(Thing t)
-            {
-                string key = "strength|" + "stonelifting";
-                float score = compPhysique.memory.Contains(key) ? 3f : 5f;
-                if (compPhysique.lastMemory == key)
-                {
-                    score = 1f;
-                }
-                return score;
-            }
+            Thing stoneChunk = GenClosest.ClosestThingReachable(
+                pawn.Position,
+                pawn.Map,
+                ThingRequest.ForGroup(ThingRequestGroup.Chunk),
+                PathEndMode.OnCell,
+                TraverseParms.For(pawn, Danger.Deadly),
+                9999f,
+                predicate
+            );
 
-            Thing thing = null;
-            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
-            tmpCandidates.Clear();
 
-            if (thing != null)
+            if (stoneChunk != null)
             {
-                Job job = DoTryGiveJob(pawn, thing);
+                Job job = DoTryGiveJob(pawn, stoneChunk);
                 if (job != null)
                 {
                     return job;
@@ -118,19 +108,6 @@ namespace Maux36.Rimbody
                 return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStoneLifting, t);
             }
             return null;
-        }
-
-        protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
-        {
-            outCandidates.Clear();
-            if (RimbodyDefLists.StoneChunkList == null || RimbodyDefLists.StoneChunkList.Count == 0)
-            {
-                return;
-            }
-            foreach (var stoneChunkDef in RimbodyDefLists.StoneChunkList)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(stoneChunkDef));
-            }
         }
     }
 }

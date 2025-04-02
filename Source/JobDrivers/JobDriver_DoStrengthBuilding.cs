@@ -28,16 +28,14 @@ namespace Maux36.Rimbody
         }
         protected void GetInPosition(Thing building)
         {
-            pawn.rotationTracker.FaceCell(base.TargetA.Cell);
+            pawn.rotationTracker.FaceCell(building.Position);
 
             if (faceaway)
             {
-                FieldInfo fieldInfo = typeof(Thing).GetField("rotationInt", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (fieldInfo != null)
-                {
-                    Rot4 rotationValue = (Rot4)fieldInfo.GetValue(building);
-                    pawn.Rotation = rotationValue;
-                }
+                IntVec3 directionAway = 2 * pawn.Position - building.Position;
+
+                pawn.rotationTracker.FaceCell(directionAway);
+
             }
         }
         protected void WatchTickAction(Thing building)

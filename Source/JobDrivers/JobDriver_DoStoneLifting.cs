@@ -6,12 +6,15 @@ using Verse.Sound;
 using System.Reflection;
 using UnityEngine;
 using System;
+using UnityEngine.Profiling;
 
 namespace Maux36.Rimbody
 {
     internal class JobDriver_DoStoneLifting : JobDriver
     {
         private float joygainfactor = 1.0f;
+        private int tickProgress = 0;
+        private float muscleInt = 25;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -32,21 +35,33 @@ namespace Maux36.Rimbody
             }
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref tickProgress, "stonelifting_tickProgress", 0);
+            Scribe_Values.Look(ref muscleInt, "stonelifting_muscleInt", 25);
+        }
+
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            float curtick = 0;
             var compPhysique = pawn.TryGetComp<CompPhysique>();
+            muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
-            
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
+            yield return Toils_General.DoAtomic(delegate
+            {
+                pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
+            });
+            //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
+            //yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
+
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                pawn.inventory.GetDirectlyHeldThings().TryAddOrTransfer(TargetA.Thing.SplitOff(1));
                 pawn.pather.StopDead();
                 pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
                 var joyneed = pawn.needs?.joy;
@@ -55,24 +70,56 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
             };
-            float oscillationSpeed = 0.05f;
-            float oscillationAmplitude = 0.1f;
             workout.tickAction = delegate
             {
-                float yOffset = Mathf.Sin(curtick * oscillationSpeed) * oscillationAmplitude;
+                tickProgress += 1;
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
-                TargetA.Thing.DrawNowAt(pawn.DrawPos + new Vector3(0, 1f, yOffset));
-                curtick += 1;
             };
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
-            workout.defaultDuration = 1000;
+            workout.defaultDuration = 800;
             workout.AddFinishAction(delegate
             {
-                pawn.inventory.GetDirectlyHeldThings().TryDrop(TargetA.Thing, pawn.Position, pawn.Map, ThingPlaceMode.Near, 1, out _);
+                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
                 AddMemory(compPhysique);
             });
             yield return workout;
         }
+
+        public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
+        {
+            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt);
+        }
+        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt)
+        {
+            Thing carriedThing = pawn.carryTracker.CarriedThing;
+            if (carriedThing == null)
+            {
+                return false;
+            }
+            float uptime = 0.95f - (40f * muscleInt / 5000f);
+            float cycleDuration = 150f-muscleInt;
+            float jiggle_amount = 3f * (1f - (muscleInt / 50f)) / 100f;
+            float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
+            float yOffset = 0f;
+            if (cycleTime < uptime)
+            {
+                yOffset = Mathf.Lerp(0f, 0.3f, cycleTime / uptime);
+            }
+            else
+            {
+                yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
+            }
+
+            float xJitter = (Rand.RangeSeeded(-jiggle_amount, jiggle_amount, tickProgress));
+            if (tickProgress>0)
+            {
+                drawPos += new Vector3(xJitter, 1f / 26f, yOffset);
+                flip = false;
+                return true;
+            }
+            return false;
+        }
+
         public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
         {
             Pawn actor = f.GetActor();
