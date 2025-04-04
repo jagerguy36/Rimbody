@@ -33,7 +33,6 @@ namespace Maux36.Rimbody
             {
                 result += (compPhysique.BodyFat - 25f) / 100f;
             }
-
             return result;
         }
         public static bool TooTired(Pawn actor)

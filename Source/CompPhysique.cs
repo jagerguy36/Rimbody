@@ -52,6 +52,7 @@ namespace Maux36.Rimbody
             "Rimbody_DoStrengthBuilding",
             "Rimbody_DoBalanceBuilding",
             "Rimbody_DoCardioBuilding",
+            "Rimbody_DoStrengthLifting"
         ];
 
         private Pawn parentPawn
@@ -205,7 +206,7 @@ namespace Maux36.Rimbody
                             cardioFactor = 0.2f;
                             strengthFactor = 0.0f;
                         }
-                        //Get factors from dedicated Rimbody buildings
+                        //Get factors from dedicated Rimbody buildings and items
                         else if (RimbodyJobs.Contains(curJobDef.defName))
                         {
                             var curjobTargetDef = parentPawn.CurJob.targetA.Thing.def;
@@ -217,6 +218,11 @@ namespace Maux36.Rimbody
                                 switch (curJobDef.defName)
                                 {
                                     case "Rimbody_DoStrengthBuilding":
+                                        {
+                                            doingS = true;
+                                        }
+                                        break;
+                                    case "Rimbody_DoStrengthLifting":
                                         {
                                             doingS = true;
                                         }
@@ -245,15 +251,19 @@ namespace Maux36.Rimbody
                         else
                         {
                             //get work factor
-                            var jobExtension = curJobDef.GetModExtension<ModExtentionRimbodyJob>();
+                            var jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
                             if (jobExtension != null)
                             {
+                                if (curJobDef.defName == "Rimbody_DoChunkLifting")
+                                {
+                                    doingS = true;
+                                }
                                 cardioFactor = jobExtension.cardio;
                                 strengthFactor = jobExtension.strength;
                             }
                             else
                             {
-                                var giverExtension = parentPawn?.CurJob?.workGiverDef?.GetModExtension<ModExtentionRimbodyJob>();
+                                var giverExtension = parentPawn?.CurJob?.workGiverDef?.GetModExtension<ModExtensionRimbodyJob>();
                                 if (giverExtension != null)
                                 {
                                     cardioFactor = giverExtension.cardio;
@@ -529,20 +539,17 @@ namespace Maux36.Rimbody
                 if (doingS)
                 {
                     fatigueDelta = RimbodySettings.CalcEveryTick / (25f * (0.5f + (5f * (MuscleMass / 100f)) + (4f * (BodyFat / 100f) * (MuscleMass / 100f)) + (2f * (BodyFat / 100f))));
-                    //fatigue = Mathf.Clamp(fatigue + (), 0f, 100f);
-                    //Log.Message($"{parentPawn.Name} Strength Training. Fatigue: {fatigue}");
+                    //Log.Message($"{parentPawn.Name} Strength Training. fatigueDelta: {fatigueDelta}");
                 }
                 else if (doingB)
                 {
                     fatigueDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                    //fatigue = Mathf.Clamp(fatigue + , 0f, 100f);
-                    //Log.Message($"{parentPawn.Name} Balance Training. Fatigue: {fatigue}");
+                    //Log.Message($"{parentPawn.Name} Balance Training. fatigueDelta: {fatigueDelta}");
                 }
                 else if (doingC)
                 {
                     fatigueDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                    //fatigue = Mathf.Clamp(fatigue + (RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - (5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f))), 0f, 100f);
-                    //Log.Message($"{parentPawn.Name} Cardio Training. Fatigue: {fatigue}");
+                    //Log.Message($"{parentPawn.Name} Cardio Training. fatigueDelta: {fatigueDelta}");
                 }
                 var newFatigue = fatigue + fatigueDelta;
                 if(newFatigue >= 100f)
@@ -738,7 +745,7 @@ namespace Maux36.Rimbody
         public void PhysiqueValueSetup(bool reset = false)
         {
 
-            if (HARCompat.Active && parentPawn != null && !HARCompat.CompatibleRace(parentPawn))
+            if (HARCompat.Active && parentPawn != null && !HARCompat.CompatibleRace(parentPawn.def))
             {
                 BodyFat = -2f;
                 MuscleMass = -2f;

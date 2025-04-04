@@ -51,12 +51,6 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
-
-            if (compPhysique == null)
-            {
-                return null;
-            }
             tmpCandidates.Clear();
             GetSearchSet(pawn, tmpCandidates);
             if (tmpCandidates.Count == 0)
@@ -83,13 +77,18 @@ namespace Maux36.Rimbody
                     return false;
                 }
                 LocalTargetInfo target = result;
-                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
                 {
                     return false;
                 }
                 return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
             };
 
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique == null)
+            {
+                return null;
+            }
             float scoreFunc(Thing t)
             {
                 string key = "balance|" + t.def.defName;
@@ -123,7 +122,7 @@ namespace Maux36.Rimbody
                 return null;
             }
             LocalTargetInfo target = result;
-            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
             {
                 return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceBuilding, t, result, chair);
             }

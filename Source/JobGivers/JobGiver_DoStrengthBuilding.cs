@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
             }
             else
             {
-                result += (compPhysique.MuscleMass - 25f) / 100f;
+                result += (25f - compPhysique.MuscleMass) / 100f;
             }
 
             if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
@@ -60,12 +60,6 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
-
-            if (compPhysique == null)
-            {
-                return null;
-            }
             tmpCandidates.Clear();
             GetSearchSet(pawn, tmpCandidates);
             if (tmpCandidates.Count == 0)
@@ -75,37 +69,52 @@ namespace Maux36.Rimbody
 
             Predicate<Thing> predicate = delegate (Thing t)
             {
-                if (!pawn.CanReserve(t))
-                {
-                    return false;
-                }
                 if (t.IsForbidden(pawn))
                 {
                     return false;
                 }
-                if (!t.IsSociallyProper(pawn))
+                RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
+                if(targetModExtension.Type == RimbodyTargetType.Building)
                 {
-                    return false;
+                    if (!pawn.CanReserve(t))
+                    {
+                        return false;
+                    }
+                    if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                    {
+                        return false;
+                    }
+                    LocalTargetInfo target = result;
+                    if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                    {
+                        return false;
+                    }
+                    return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
                 }
-                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                else
                 {
-                    return false;
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                    {
+                        return false;
+                    }
+                    return true;
                 }
-                LocalTargetInfo target = result;
-                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
-                {
-                    return false;
-                }
-                return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
             };
 
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique == null)
+            {
+                return null;
+            }
             float scoreFunc(Thing t)
             {
+                RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
                 string key = "strength|" + t.def.defName;
-                float score = compPhysique.memory.Contains(key) ? 3f : 5f;
+                float score = targetModExtension.baseEfficiency;
+                score += compPhysique.memory.Contains(key) ? 0.9f : 1f;
                 if (compPhysique.lastMemory == key)
                 {
-                    score = 1f;
+                    score -= 0.1f;
                 }
                 return score;
             }
@@ -126,15 +135,28 @@ namespace Maux36.Rimbody
         }
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+            RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
+
+            if (targetModExtension.Type == RimbodyTargetType.Building)
             {
-                return null;
+                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                {
+                    return null;
+                }
+                LocalTargetInfo target = result;
+                if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                {
+                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthBuilding, t, result, chair);
+                }
             }
-            LocalTargetInfo target = result;
-            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+            else
             {
-                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthBuilding, t, result, chair);
+                if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                {
+                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthLifting, t);
+                }
             }
+
             return null;
         }
 

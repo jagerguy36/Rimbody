@@ -1,9 +1,7 @@
-﻿using System;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using RimWorld;
+using System;
 using UnityEngine;
 using Verse;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Maux36.Rimbody
 {

@@ -37,11 +37,11 @@ namespace Maux36.Rimbody
             bodyTypes = AccessTools.FieldRefAccess<List<BodyTypeDef>>(AccessTools.TypeByName("AlienRace.AlienPartGenerator"), "bodyTypes");
         }
 
-        public static List<BodyTypeDef> AllowedBodyTypes(Pawn pawn)
+        public static List<BodyTypeDef> AllowedBodyTypes(ThingDef pawnDef)
         {
-            if (thingDef_AlienRace.IsInstanceOfType(pawn.def))
+            if (thingDef_AlienRace.IsInstanceOfType(pawnDef))
             {
-                object obj = alienRace(pawn.def);
+                object obj = alienRace(pawnDef);
                 if (obj == null)
                 {
                     return null;
@@ -60,10 +60,10 @@ namespace Maux36.Rimbody
             }
             return null;
         }
-        public static bool CompatibleRace(Pawn pawn)
+        public static bool CompatibleRace(ThingDef pawnDef)
         {
 
-            if(_cache.TryGetValue(pawn.def.defName, out bool cachedResult))
+            if (_cache.TryGetValue(pawnDef.defName, out bool cachedResult))
             {
                 return cachedResult;
             }
@@ -89,14 +89,14 @@ namespace Maux36.Rimbody
             var human = DefDatabase<ThingDef>.GetNamed("Human", true);
             var expectedLifestages = human.race.lifeStageAges;
 
-            var allowedBodyTypes = AllowedBodyTypes(pawn).ToHashSet();
+            var allowedBodyTypes = AllowedBodyTypes(pawnDef).ToHashSet();
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
 
-            var lifestages = pawn.RaceProps.lifeStageAges;
+            var lifestages = pawnDef.race.lifeStageAges;
             bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
 
             bool isValid = allPresent && ageEqual;
-            _cache[pawn.def.defName] = isValid;
+            _cache[pawnDef.defName] = isValid;
             //string shower = string.Join(", ", allowedBodyTypes.Select(thingDef => thingDef.defName));
             //Log.Message(shower);
             //string shower2 = string.Join(", ", expectedBodyTypes.Select(thingDef => thingDef.defName));

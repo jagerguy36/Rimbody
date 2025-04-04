@@ -10,7 +10,7 @@ using UnityEngine.Profiling;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoStoneLifting : JobDriver
+    internal class JobDriver_DoChunkLifting : JobDriver
     {
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
@@ -31,15 +31,15 @@ namespace Maux36.Rimbody
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|stonelifting");
+                compPhysique.AddNewMemory($"strength|chunklifting");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "stonelifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "stonelifting_muscleInt", 25);
+            Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
+            Scribe_Values.Look(ref muscleInt, "chunklifting_muscleInt", 25);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()

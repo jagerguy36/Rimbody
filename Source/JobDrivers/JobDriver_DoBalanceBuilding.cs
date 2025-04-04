@@ -79,7 +79,7 @@ namespace Maux36.Rimbody
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                var ext = TargetThingA.def.GetModExtension<ModExtentionRimbodyBuilding>();
+                var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
                 if (ext != null)
                 {
                     faceaway = ext.faceaway;

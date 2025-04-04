@@ -7,7 +7,7 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    internal class JobGiver_DoStoneLifting : ThinkNode_JobGiver
+    internal class JobGiver_DoChunkLifting : ThinkNode_JobGiver
     {
         public override float GetPriority(Pawn pawn)
         {
@@ -17,7 +17,7 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 5f; //5.5f;
+            float result = 5.0f; //5.5f;
 
             if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
             {
@@ -25,14 +25,13 @@ namespace Maux36.Rimbody
             }
             else
             {
-                result += (compPhysique.MuscleMass - 25f) / 100f;
+                result += (25f - compPhysique.MuscleMass) / 100f;
             }
 
             if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
             {
                 result -= 4f;
             }
-
             return result;
         }
 
@@ -59,16 +58,9 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
-
-            if (compPhysique == null)
+            bool predicate(Thing t)
             {
-                return null;
-            }
-
-            Predicate<Thing> predicate = delegate (Thing t)
-            {
-                if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Deadly))
+                if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
                 {
                     return false;
                 }
@@ -78,22 +70,22 @@ namespace Maux36.Rimbody
                 }
                 //Haul하라고 마킹해있어도 노노노
                 return true;
-            };
+            }
 
-            Thing stoneChunk = GenClosest.ClosestThingReachable(
+            Thing Chunk = GenClosest.ClosestThingReachable(
                 pawn.Position,
                 pawn.Map,
                 ThingRequest.ForGroup(ThingRequestGroup.Chunk),
                 PathEndMode.OnCell,
-                TraverseParms.For(pawn, Danger.Deadly),
+                TraverseParms.For(pawn, Danger.Some),
                 9999f,
                 predicate
             );
 
 
-            if (stoneChunk != null)
+            if (Chunk != null)
             {
-                Job job = DoTryGiveJob(pawn, stoneChunk);
+                Job job = DoTryGiveJob(pawn, Chunk);
                 if (job != null)
                 {
                     return job;
@@ -103,9 +95,9 @@ namespace Maux36.Rimbody
         }
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Deadly, 1, -1, null, false))
+            if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
             {
-                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStoneLifting, t);
+                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoChunkLifting, t);
             }
             return null;
         }

@@ -159,7 +159,7 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                if (r.DangerFor(searcher) == Danger.Deadly)
+                if (r.DangerFor(searcher) == Danger.Some)
                 {
                     return false;
                 }
