@@ -7,6 +7,7 @@ using System.Reflection;
 using UnityEngine;
 using System;
 using UnityEngine.Profiling;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Maux36.Rimbody
 {
@@ -31,7 +32,7 @@ namespace Maux36.Rimbody
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|chunklifting");
+                compPhysique.AddNewMemory($"strength|chunk lifting");
             }
         }
 
@@ -47,16 +48,21 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
+            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
+            yield return Toils_General.DoAtomic(delegate
+            {
+                job.count = 1;
+            });
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_General.DoAtomic(delegate
             {
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
-            //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
-            //yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
+
+            var exWorkout = TargetThingA.def.GetModExtension<ModExtensionRimbodyJob>();
+            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -69,18 +75,28 @@ namespace Maux36.Rimbody
                 {
                     joygainfactor = 0;
                 }
+                compPhysique.jobOverride = true;
+                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
+                compPhysique.strengthOverride = score;
+                compPhysique.cardioOverride = 0.2f;
             };
             workout.tickAction = delegate
             {
                 tickProgress += 1;
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             };
+            workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
             workout.defaultDuration = 800;
             workout.AddFinishAction(delegate
             {
-                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                compPhysique.jobOverride = false;
+                compPhysique.limitOverride = false;
+                compPhysique.strengthOverride = 0f;
+                compPhysique.cardioOverride = 0f;
                 AddMemory(compPhysique);
+                compPhysique.AddPartFatigue(exWorkout.strengthParts);
+                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
             });
             yield return workout;
         }

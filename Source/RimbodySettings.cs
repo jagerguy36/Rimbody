@@ -18,6 +18,7 @@ namespace Maux36.Rimbody
         
         public static bool genderDifference = true;
         public static bool showFleck = true;
+        public static bool useFatigue = false;
 
         public static float WorkOutGainEfficiency = 1.0f;
         public static float carryRateMultiplier = 1.0f;
@@ -39,6 +40,7 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref femaleFatThreshold, "Rimbody_femaleFatThreshold", 1.5f, true);
             Scribe_Values.Look(ref genderDifference, "Rimbody_genderDifference", true, true);
             Scribe_Values.Look(ref showFleck, "Rimbody_showFleck", true, true);
+            Scribe_Values.Look(ref useFatigue, "Rimbody_useFatigue", false, true);
             Scribe_Values.Look(ref WorkOutGainEfficiency, "Rimbody_WorkOutGainEfficiency", 1.0f, true);
             Scribe_Values.Look(ref carryRateMultiplier, "Rimbody_carryRateMultiplier", 1.0f, true);
         }

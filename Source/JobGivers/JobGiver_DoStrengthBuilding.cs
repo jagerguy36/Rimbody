@@ -29,9 +29,9 @@ namespace Maux36.Rimbody
                 result += (25f - compPhysique.MuscleMass) / 100f;
             }
 
-            if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
+            if (compPhysique.gain >= compPhysique.gainMax)
             {
-                result -= 4f;
+                result = 0f;
             }
 
             return result;
@@ -73,7 +73,7 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
+                RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);
                 if(targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (!pawn.CanReserve(t))
@@ -108,15 +108,16 @@ namespace Maux36.Rimbody
             }
             float scoreFunc(Thing t)
             {
-                RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
-                string key = "strength|" + t.def.defName;
-                float score = targetModExtension.baseEfficiency;
-                score += compPhysique.memory.Contains(key) ? 0.9f : 1f;
-                if (compPhysique.lastMemory == key)
+                if(RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension))
                 {
-                    score -= 0.1f;
+                    float score = 0f;
+                    foreach (WorkOut workout in targetModExtension.workouts)
+                    {
+                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, workout));
+                    }
+                    return score;
                 }
-                return score;
+                return 0;
             }
 
             Thing thing = null;
@@ -135,18 +136,24 @@ namespace Maux36.Rimbody
         }
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            RimbodyDefLists.StrengthBuilding.TryGetValue(t.def, out var targetModExtension);
-
+            RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
-                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                if (targetModExtension.buildingUsecell)
                 {
-                    return null;
+                    if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                    {
+                        return null;
+                    }
+                    LocalTargetInfo target = result;
+                    if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                    {
+                        return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthBuilding, t, result, chair);
+                    }
                 }
-                LocalTargetInfo target = result;
-                if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                else
                 {
-                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthBuilding, t, result, chair);
+                    return null;//container type buildings not yet implemented.
                 }
             }
             else
@@ -156,18 +163,17 @@ namespace Maux36.Rimbody
                     return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthLifting, t);
                 }
             }
-
             return null;
         }
 
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.StrengthBuilding == null || RimbodyDefLists.StrengthBuilding.Count == 0)
+            if (RimbodyDefLists.StrengthTarget == null || RimbodyDefLists.StrengthTarget.Count == 0)
             {
                 return;
             }
-            foreach (var buildingDef in RimbodyDefLists.StrengthBuilding.Keys)
+            foreach (var buildingDef in RimbodyDefLists.StrengthTarget.Keys)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }

@@ -72,7 +72,7 @@ namespace Maux36.Rimbody
                 jogger = true;
             }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
+            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (ticksLeft <= 0 ? JobCondition.Succeeded : JobCondition.Ongoing));
             EndOnTired(this);
             Toil findInterestingThing = FindInterestingThing();

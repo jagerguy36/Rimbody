@@ -77,6 +77,8 @@ namespace Maux36.Rimbody
             listing_Standard.CheckboxLabeled("RimbodyGenderDifference".Translate(), ref RimbodySettings.genderDifference, "RimbodyGenderDifferenceTooltip".Translate());
             listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyShowFleck".Translate(), ref RimbodySettings.showFleck, "RimbodyShowFleckTooltip".Translate());
+            listing_Standard.Gap(6f);
+            listing_Standard.CheckboxLabeled("RimbodyUseFatigue".Translate(), ref RimbodySettings.useFatigue, "RimbodyUseFatigueTooltip".Translate());
             listing_Standard.Gap(24f);
 
             listing_Standard.Label("RimbodyPerformanceSetting".Translate());

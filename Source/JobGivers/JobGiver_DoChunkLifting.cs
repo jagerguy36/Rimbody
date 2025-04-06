@@ -28,9 +28,9 @@ namespace Maux36.Rimbody
                 result += (25f - compPhysique.MuscleMass) / 100f;
             }
 
-            if (compPhysique.gain >= ((2f * compPhysique.MuscleMass * compPhysique.MuscleGainFactor) + 100f))
+            if (compPhysique.gain >= compPhysique.gainMax)
             {
-                result -= 4f;
+                result = 0f;
             }
             return result;
         }
@@ -68,7 +68,7 @@ namespace Maux36.Rimbody
                 {
                     return false;
                 }
-                //Haul하라고 마킹해있어도 노노노
+                //Todo: ignore stones marked for haul.
                 return true;
             }
 

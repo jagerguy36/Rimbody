@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -7,6 +8,7 @@ namespace Maux36.Rimbody
     {
         public float cardio = 1f;
         public float strength = 1f;
+        public List<int> strengthParts;
     }
 
     public enum RimbodyTargetCategory
@@ -20,17 +22,24 @@ namespace Maux36.Rimbody
         Building,
         Item
     }
-    public class ModExtensionRimbodyTarget : DefModExtension
+
+    public class WorkOut
     {
-        public bool faceaway = false;
-        public bool isMetal = false;
-        public bool useCell = false;
-        public float baseEfficiency = 1f;
-        public float baseFatigueRate = 1f;
+        public string name;
+        public string reportString;
         public float cardio = 1f;
         public float strength = 1f;
-        public RimbodyTargetCategory Category = RimbodyTargetCategory.Balance;
+        public bool buildingFaceaway = false;
+        public bool buildingIsMetal = false;
+        public Vector3 itemOffset = new Vector3 (0,0,0);
+        public List<int> strengthParts;
+    }
+    public class ModExtensionRimbodyTarget : DefModExtension
+    {
+
         public RimbodyTargetType Type = RimbodyTargetType.Building;
-        public Vector3 offset = new Vector3(0,0,0);
+        public RimbodyTargetCategory Category = RimbodyTargetCategory.Balance;
+        public bool buildingUsecell = true;
+        public List<WorkOut> workouts = new List<WorkOut>();
     }
 }

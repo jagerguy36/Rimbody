@@ -16,7 +16,7 @@ namespace Maux36.Rimbody
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private float muscleInt = 25;
-        private ModExtensionRimbodyTarget modEx = null;
+        private WorkOut exWorkout = null;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -27,30 +27,44 @@ namespace Maux36.Rimbody
 
             return true;
         }
-
-        private void AddMemory(ThingDef liftItemDef, CompPhysique compPhysique)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        {
+            score = 0f;
+            int indexBest = -1;
+            var numVarieties = ext.workouts.Count;
+            for (int i = 0; i < numVarieties; i++)
+            {
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
+                if (score < tempscore)
+                {
+                    score = tempscore;
+                    indexBest = i;
+                }
+            }
+            return indexBest;
+        }
+        private void AddMemory(CompPhysique compPhysique, string name)
         {
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|{liftItemDef.defName}");
+                compPhysique.AddNewMemory($"strength|{name}");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "chunklifting_muscleInt", 25);
+            Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
+            Scribe_Values.Look(ref muscleInt, "strengthlifting_muscleInt", 25);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             muscleInt = compPhysique.MuscleMass;
-            modEx = TargetA.Thing.def.GetModExtension<ModExtensionRimbodyTarget>();
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
+            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_General.DoAtomic(delegate
             {
@@ -66,6 +80,13 @@ namespace Maux36.Rimbody
             IntVec3 workoutspot = SpotToWorkoutStandingNear(pawn, TargetA.Thing);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
 
+            var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            exWorkout = ext.workouts[workoutIndex];
+            if (exWorkout.reportString != null)
+            {
+                this.job.reportStringOverride = exWorkout.reportString.Translate();
+            }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
@@ -77,6 +98,10 @@ namespace Maux36.Rimbody
                 {
                     joygainfactor = 0;
                 }
+                compPhysique.jobOverride = true;
+                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
+                compPhysique.strengthOverride = score;
+                compPhysique.cardioOverride = 0.2f;
             };
             workout.tickAction = delegate
             {
@@ -89,7 +114,13 @@ namespace Maux36.Rimbody
             workout.AddFinishAction(delegate
             {
                 //pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-                AddMemory(TargetThingA.def, compPhysique);
+                compPhysique.jobOverride = false;
+                compPhysique.limitOverride = false;
+                compPhysique.strengthOverride = 0f;
+                compPhysique.cardioOverride = 0f;
+                TryGainGymThought();
+                AddMemory(compPhysique, ext.workouts[workoutIndex].name);
+                compPhysique.AddPartFatigue(ext.workouts[workoutIndex].strengthParts);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {
@@ -101,7 +132,7 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, modEx.offset);
+            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.itemOffset);
         }
         public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset)
         {
@@ -149,6 +180,26 @@ namespace Maux36.Rimbody
             }
             return false;
         }
+        private void TryGainGymThought()
+        {
+            var room = pawn.GetRoom();
+            if (room == null)
+            {
+                return;
+            }
+
+            //get the impressive stage index for the current room
+            var scoreStageIndex =
+                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
+            //if the stage index exists in the definition (in xml), gain the memory (and buff)
+            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
+            {
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
+                    ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
+                        scoreStageIndex));
+            }
+        }
+
         public static IntVec3 SpotToWorkoutStandingNear(Pawn pawn, Thing workoutThing, Predicate<IntVec3> extraValidator = null)
         {
             IntVec3 workoutLocation = RCellFinder.RandomWanderDestFor(pawn, workoutThing.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(pawn, Danger.Some));

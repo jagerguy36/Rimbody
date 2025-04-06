@@ -20,7 +20,7 @@ namespace Maux36.Rimbody
                     var compPhysique = pawn.TryGetComp<CompPhysique>();
                     if (compPhysique != null)
                     {
-                        if (compPhysique.resting)
+                        if (RimbodySettings.useFatigue && compPhysique.resting)
                         {
                             return 0f;
                         }

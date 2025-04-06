@@ -7,9 +7,9 @@ namespace Maux36.Rimbody
     [StaticConstructorOnStartup]
     public class RimbodyDefLists
     {
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> StrengthBuilding = new();
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> CardioBuilding = new();
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> BalanceBuilding = new();
+        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> StrengthTarget = new();
+        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> CardioTarget = new();
+        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> BalanceTarget = new();
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> WorkoutBuilding = new();
         //public static List<ThingDef> ChunkList = new();
 
@@ -24,27 +24,31 @@ namespace Maux36.Rimbody
                 var buildingExtension = thingDef.GetModExtension<ModExtensionRimbodyTarget>();
                 if (buildingExtension != null)
                 {
-                    AddBuilding(thingDef, buildingExtension);
+                    AddTarget(thingDef, buildingExtension);
                 }
             }
         }
 
-        private static void AddBuilding(ThingDef buildingDef, ModExtensionRimbodyTarget buildingExtension)
+        private static void AddTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
         {
-            switch (buildingExtension.Category)
+            switch (targetExtension.Category)
             {
                 case RimbodyTargetCategory.Strength:
-                    StrengthBuilding[buildingDef] = buildingExtension;
+                    StrengthTarget[targetDef] = targetExtension;
                     break;
                 case RimbodyTargetCategory.Balance:
-                    BalanceBuilding[buildingDef] = buildingExtension;
+                    BalanceTarget[targetDef] = targetExtension;
                     break;
                 case RimbodyTargetCategory.Cardio:
-                    CardioBuilding[buildingDef] = buildingExtension;
+                    CardioTarget[targetDef] = targetExtension;
                     break;
             }
 
-            WorkoutBuilding[buildingDef] = buildingExtension;
+            if(targetExtension.Type == RimbodyTargetType.Building)
+            {
+                WorkoutBuilding[targetDef] = targetExtension;
+            }
+            
         }
     }
 }

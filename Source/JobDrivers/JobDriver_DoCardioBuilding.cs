@@ -4,13 +4,12 @@ using Verse.AI;
 using Verse;
 using Verse.Sound;
 using System.Reflection;
+using System;
 
 namespace Maux36.Rimbody
 {
     internal class JobDriver_DoCardioBuilding : JobDriver
     {
-        private bool faceaway = false;
-        private bool isMetal = false;
         private float joygainfactor = 1.0f;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -26,7 +25,7 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        protected void GetInPosition(Thing building)
+        protected void GetInPosition(Thing building, bool faceaway)
         {
             pawn.rotationTracker.FaceCell(building.Position);
 
@@ -45,13 +44,29 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
         }
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        {
+            score = 0f;
+            int indexBest = -1;
+            var numVarieties = ext.workouts.Count;
+            for (int i = 0; i < numVarieties; i++)
+            {
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Cardio, ext.workouts[i]));
+                if (score < tempscore)
+                {
+                    score = tempscore;
+                    indexBest = i;
+                }
+            }
+            return indexBest;
+        }
 
-        private void AddMemory(ThingDef buildingdef, CompPhysique compPhysique)
+        private void AddMemory(CompPhysique compPhysique, string name)
         {
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"cardio|{buildingdef.defName}");
+                compPhysique.AddNewMemory($"cardio|{name}");
             }
         }
 
@@ -61,42 +76,51 @@ namespace Maux36.Rimbody
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
+            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
+            var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var exWorkout = ext.workouts[workoutIndex];
+            if (exWorkout.reportString != null)
+            {
+                this.job.reportStringOverride = exWorkout.reportString.Translate();
+            }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
-                if (ext != null)
-                {
-                    faceaway = ext.faceaway;
-                    isMetal = ext.isMetal;
-                }
+                GetInPosition(TargetThingA, exWorkout.buildingFaceaway);
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
                 {
                     joygainfactor = 0;
                 }
-                GetInPosition(TargetThingA);
+                compPhysique.jobOverride = true;
+                compPhysique.limitOverride = score <= exWorkout.cardio * 0.9f;
+                compPhysique.strengthOverride = exWorkout.strength;
+                compPhysique.cardioOverride = score;
             };
             workout.AddPreTickAction(delegate
             {
                 WatchTickAction(TargetThingA);
             });
-            workout.AddFinishAction(delegate
-            {
-                TryGainGymThought();
-                AddMemory(TargetThingA.def, compPhysique);
-            });
+            workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
             workout.defaultDuration = 2500;
-            workout.handlingFacing = true;
+            workout.AddFinishAction(delegate
+            {
+                compPhysique.jobOverride = false;
+                compPhysique.limitOverride = false;
+                compPhysique.strengthOverride = 0f;
+                compPhysique.cardioOverride = 0f;
+                TryGainGymThought();
+                AddMemory(compPhysique, ext.workouts[workoutIndex].name);
+            });
             yield return workout;
         }
 

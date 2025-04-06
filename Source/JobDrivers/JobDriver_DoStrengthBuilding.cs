@@ -4,15 +4,15 @@ using Verse.AI;
 using Verse;
 using Verse.Sound;
 using System.Reflection;
+using UnityEngine;
+using System;
 
 namespace Maux36.Rimbody
 {
     internal class JobDriver_DoStrengthBuilding : JobDriver
     {
-        private bool faceaway = false;
-        private bool isMetal = false;
         private float joygainfactor = 1.0f;
-
+        
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        protected void GetInPosition(Thing building)
+        protected void GetInPosition(Thing building, bool faceaway)
         {
             pawn.rotationTracker.FaceCell(building.Position);
 
@@ -35,10 +35,9 @@ namespace Maux36.Rimbody
                 IntVec3 directionAway = 2 * pawn.Position - building.Position;
 
                 pawn.rotationTracker.FaceCell(directionAway);
-
             }
         }
-        protected void WatchTickAction(Thing building)
+        protected void WatchTickAction(Thing building, bool isMetal)
         {
             if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
             {
@@ -53,13 +52,29 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }            
         }
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        {
+            score = 0f;
+            int indexBest = -1;
+            var numVarieties = ext.workouts.Count;
+            for (int i = 0; i < numVarieties; i++)
+            {
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
+                if (score < tempscore)
+                {
+                    score = tempscore;
+                    indexBest = i;
+                }
+            }
+            return indexBest;
+        }
 
-        private void AddMemory(ThingDef buildingdef, CompPhysique compPhysique)
+        private void AddMemory(CompPhysique compPhysique, string name)
         {
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|{buildingdef.defName}");
+                compPhysique.AddNewMemory($"strength|{name}");
             }
         }
 
@@ -69,43 +84,51 @@ namespace Maux36.Rimbody
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (!compPhysique.resting) ? JobCondition.Ongoing : JobCondition.InterruptForced);
+            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
-
-
+            var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var exWorkout = ext.workouts[workoutIndex];
+            if (exWorkout.reportString != null)
+            {
+                this.job.reportStringOverride = exWorkout.reportString.Translate();
+            }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
-                if (ext != null)
-                {
-                    faceaway = ext.faceaway;
-                    isMetal = ext.isMetal;
-                }
+                GetInPosition(TargetThingA, exWorkout.buildingFaceaway);
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
                 {
                     joygainfactor = 0;
                 }
-                GetInPosition(TargetThingA);
+                compPhysique.jobOverride = true;
+                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
+                compPhysique.strengthOverride = score;
+                compPhysique.cardioOverride = exWorkout.cardio;
             };
             workout.AddPreTickAction(delegate
             {
-                WatchTickAction(TargetThingA);
+                WatchTickAction(TargetThingA, exWorkout.buildingIsMetal);
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
             workout.defaultDuration = 1000;
             workout.AddFinishAction(delegate
             {
+                compPhysique.jobOverride = false;
+                compPhysique.limitOverride = false;
+                compPhysique.strengthOverride = 0f;
+                compPhysique.cardioOverride = 0f;
                 TryGainGymThought();
-                AddMemory(TargetThingA.def, compPhysique);
+                AddMemory(compPhysique, ext.workouts[workoutIndex].name);
+                compPhysique.AddPartFatigue(ext.workouts[workoutIndex].strengthParts);
             });
             yield return workout;
         }

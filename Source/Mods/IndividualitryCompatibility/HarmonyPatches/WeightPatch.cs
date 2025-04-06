@@ -116,21 +116,24 @@ namespace Maux36.Rimbody_Individuality
             Text.Font = GameFont.Small;
             num += rect3.height + 5f;
 
-            //=======================Rimbody Info========================================
-            var rectFatigue = new Rect(160f - 10f, num - 25f, rect.width - 10f, 10f);
-            Rect barBackgroundFatigue = new Rect(160f, num + 3f - 25f, rect.width - 180f, 4f);
-            Widgets.DrawBoxSolid(barBackgroundFatigue, BackgroundColor);
-            Rect filledBarFatigue = new Rect(barBackgroundFatigue.x, barBackgroundFatigue.y, barBackgroundFatigue.width * (compPhysique.fatigue / 100), barBackgroundFatigue.height);
-            float red = Mathf.Lerp(0f, 1f, compPhysique.fatigue / 100f);  // Interpolates from 0 to 1 based on fatigue
-            float green = Mathf.Lerp(1f, 0f, compPhysique.fatigue / 100f);
-            Color fatigueColor = new Color(red, green, 0f, 0.7f);
-            Widgets.DrawBoxSolid(filledBarFatigue, fatigueColor);
-            TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(compPhysique.fatigue.ToString("F1"));
-            //TipSignal tipFatigue = $"{compPhysique.fatigue}/100";
-            //"Example_KeyString".Translate(level.ToString("N0"), className, levelProgress.ToString("F1"));
-            TooltipHandler.TipRegion(rectFatigue, tipFatigue);
-            Widgets.DrawHighlightIfMouseover(rectFatigue);
-            //=======================Rimbody Info========================================
+            //=======================Rimbody Fatigue Info========================================
+            if (RimbodySettings.useFatigue)
+            {
+                var rectFatigue = new Rect(160f - 10f, num - 25f, rect.width - 10f, 10f);
+                Rect barBackgroundFatigue = new Rect(160f, num + 3f - 25f, rect.width - 180f, 4f);
+                Widgets.DrawBoxSolid(barBackgroundFatigue, BackgroundColor);
+                Rect filledBarFatigue = new Rect(barBackgroundFatigue.x, barBackgroundFatigue.y, barBackgroundFatigue.width * (compPhysique.fatigue / 100), barBackgroundFatigue.height);
+                float red = Mathf.Lerp(0f, 1f, compPhysique.fatigue / 100f);  // Interpolates from 0 to 1 based on fatigue
+                float green = Mathf.Lerp(1f, 0f, compPhysique.fatigue / 100f);
+                Color fatigueColor = new Color(red, green, 0f, 0.7f);
+                Widgets.DrawBoxSolid(filledBarFatigue, fatigueColor);
+                TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(compPhysique.fatigue.ToString("F1"));
+                //TipSignal tipFatigue = $"{compPhysique.fatigue}/100";
+                //"Example_KeyString".Translate(level.ToString("N0"), className, levelProgress.ToString("F1"));
+                TooltipHandler.TipRegion(rectFatigue, tipFatigue);
+                Widgets.DrawHighlightIfMouseover(rectFatigue);
+            }
+            //=======================Rimbody Fatigue Info========================================
 
             if (!SyrIndividuality.RomanceDisabled)
             {
@@ -225,7 +228,7 @@ namespace Maux36.Rimbody_Individuality
 
             Rect reservebackground = new Rect(160f, num + 1f, rect.width - 180f, 2f);
             Widgets.DrawBoxSolid(reservebackground, BackgroundColor);
-            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * Mathf.Clamp(compPhysique.gain / ((2f * compPhysique.MuscleMass * (compPhysique.MuscleGainFactor + (RimbodySettings.genderDifference && (pawn.gender == Gender.Male) ? 0.01f : 0f))) + 100f), 0f, 1f), reservebackground.height);
+            Rect reservefilledbar = new Rect(reservebackground.x, reservebackground.y, reservebackground.width * Mathf.Clamp(compPhysique.gain / compPhysique.gainMax, 0f, 1f), reservebackground.height);
             Widgets.DrawBoxSolid(reservefilledbar, reserveColor);
 
 

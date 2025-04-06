@@ -95,13 +95,16 @@ namespace Maux36.Rimbody
             }
             float scoreFunc(Thing t)
             {
-                string key = "cardio|" + t.def.defName;
-                float score = compPhysique.memory.Contains(key) ? 3f : 5f;
-                if (compPhysique.lastMemory == key)
+                if (RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension))
                 {
-                    score = 1f;
+                    float score = 0f;
+                    foreach (WorkOut workout in targetModExtension.workouts)
+                    {
+                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout));
+                    }
+                    return score;
                 }
-                return score;
+                return 0;
             }
 
             Thing thing = null;
@@ -121,14 +124,33 @@ namespace Maux36.Rimbody
 
         public Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+            RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
+            if (targetModExtension.Type == RimbodyTargetType.Building)
             {
-                return null;
+                if (targetModExtension.buildingUsecell)
+                {
+                    if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                    {
+                        return null;
+                    }
+                    LocalTargetInfo target = result;
+                    if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                    {
+                        return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoCardioBuilding, t, result, chair);
+                    }
+                }
+                else
+                {
+                    return null;//container type buildings not yet implemented.
+                }
             }
-            LocalTargetInfo target = result;
-            if (pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+            else
             {
-                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoCardioBuilding, t, result, chair);
+                return null;//cardio item not yet implemented.
+                //if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                //{
+                //    return null;
+                //}
             }
             return null;
         }
@@ -136,11 +158,11 @@ namespace Maux36.Rimbody
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.CardioBuilding == null || RimbodyDefLists.CardioBuilding.Count == 0)
+            if (RimbodyDefLists.CardioTarget == null || RimbodyDefLists.CardioTarget.Count == 0)
             {
                 return;
             }
-            foreach (var buildingDef in RimbodyDefLists.CardioBuilding.Keys)
+            foreach (var buildingDef in RimbodyDefLists.CardioTarget.Keys)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }

@@ -23,7 +23,7 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
-                    if (compPhysique.resting)
+                    if (RimbodySettings.useFatigue && compPhysique.resting)
                     {
                         return false;
                     }
@@ -38,9 +38,16 @@ namespace Maux36.Rimbody
                         }
                     }
                     //Meet Goal
-                    if ((compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass) || (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat))
+                    if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
                     {
                         return true;
+                    }
+                    if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
+                    {
+                        if(compPhysique.gain < compPhysique.gainMax)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
