@@ -17,6 +17,7 @@ namespace Maux36.Rimbody
         private int tickProgress = 0;
         private float muscleInt = 25;
         private WorkOut exWorkout = null;
+        private int side = 1;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -91,6 +92,8 @@ namespace Maux36.Rimbody
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
+                int random = Rand.Range(0, 2);
+                side = random == 0 ? -1 : 1;
                 pawn.pather.StopDead();
                 pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
                 var joyneed = pawn.needs?.joy;
@@ -132,9 +135,9 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.itemOffset);
+            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.itemOffset, side);
         }
-        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset)
+        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset, int side)
         {
             Thing carriedThing = pawn.carryTracker.CarriedThing;
             if (carriedThing == null)
@@ -154,6 +157,7 @@ namespace Maux36.Rimbody
             {
                 yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
             }
+            offset.x = offset.x * side;
 
             float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
             if (tickProgress > 0)
