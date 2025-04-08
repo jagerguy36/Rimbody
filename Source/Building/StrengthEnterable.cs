@@ -39,7 +39,7 @@ namespace Maux36.Rimbody
         public float HeldPawnBodyAngle => base.Rotation.Opposite.AsAngle;
         public PawnPosture HeldPawnPosture => PawnPosture.LayingOnGroundFaceUp;
 
-        public override Vector3 PawnDrawOffset => IntVec3.West.RotatedBy(base.Rotation).ToVector3() / def.size.x;
+        public override Vector3 PawnDrawOffset => new Vector3(0, 0, -0.2f);// IntVec3.West.RotatedBy(base.Rotation).ToVector3() / def.size.x; //south: (0, 0, -0.2f);, north: (0, 0, 0.2f); east: (0.2f, 0, 0); west: (-0.2f, 0, 0);
 
         public override void Tick()
         {
@@ -108,6 +108,7 @@ namespace Maux36.Rimbody
 
         private void Finish()
         {
+            Log.Message("finished");
             startTick = -1;
             selectedPawn = null;
             if (ContainedPawn == null)
@@ -115,8 +116,47 @@ namespace Maux36.Rimbody
                 return;
             }
             Pawn containedPawn = ContainedPawn;
+            var compPhysique = containedPawn.TryGetComp<CompPhysique>();
+            AddMemory(compPhysique, "testDef");
             IntVec3 intVec = (def.hasInteractionCell ? InteractionCell : base.Position);
             innerContainer.TryDropAll(intVec, base.Map, ThingPlaceMode.Near);
+            TryGainGymThought(containedPawn);
+        }
+        private void AddMemory(CompPhysique compPhysique, string name)
+        {
+            if (compPhysique != null)
+            {
+                compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
+                compPhysique.AddNewMemory($"strength|{name}");
+            }
+        }
+
+        public static bool TooTired(Pawn actor)
+        {
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
+            {
+                return true;
+            }
+            return false;
+        }
+        private void TryGainGymThought(Pawn pawn)
+        {
+            var room = pawn.GetRoom();
+            if (room == null)
+            {
+                return;
+            }
+
+            //get the impressive stage index for the current room
+            var scoreStageIndex =
+                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
+            //if the stage index exists in the definition (in xml), gain the memory (and buff)
+            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
+            {
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
+                    ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
+                        scoreStageIndex));
+            }
         }
 
         public override void TryAcceptPawn(Pawn pawn)
@@ -129,6 +169,8 @@ namespace Maux36.Rimbody
                 {
                     startTick = Find.TickManager.TicksGame;
                     ticksRemaining = 1000;
+
+                    Log.Message($"Set start tick {startTick} and ticksremaining. {ticksRemaining}");
                 }
                 if (num)
                 {
@@ -137,10 +179,10 @@ namespace Maux36.Rimbody
             }
         }
 
-        protected override void SelectPawn(Pawn pawn)
-        {
-            base.SelectPawn(pawn);
-        }
+        //protected override void SelectPawn(Pawn pawn)
+        //{
+        //    base.SelectPawn(pawn);
+        //}
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
@@ -151,8 +193,8 @@ namespace Maux36.Rimbody
             if (base.Working)
             {
                 Command_Action command_Action = new Command_Action();
-                command_Action.defaultLabel = "CommandCancelExtraction".Translate();
-                command_Action.defaultDesc = "CommandCancelExtractionDesc".Translate();
+                command_Action.defaultLabel = "Stop Working out".Translate();
+                command_Action.defaultDesc = "Stop Working out".Translate();
                 command_Action.icon = CancelIcon;
                 command_Action.action = delegate
                 {
@@ -160,16 +202,6 @@ namespace Maux36.Rimbody
                 };
                 command_Action.activateSound = SoundDefOf.Designate_Cancel;
                 yield return command_Action;
-                if (DebugSettings.ShowDevGizmos)
-                {
-                    Command_Action command_Action2 = new Command_Action();
-                    command_Action2.defaultLabel = "DEV: Finish extraction";
-                    command_Action2.action = delegate
-                    {
-                        Finish();
-                    };
-                    yield return command_Action2;
-                }
                 yield break;
             }
         }
@@ -182,19 +214,19 @@ namespace Maux36.Rimbody
             }
         }
 
-        public override string GetInspectString()
-        {
-            string text = base.GetInspectString();
-            if (base.Working && ContainedPawn != null)
-            {
-                if (!text.NullOrEmpty())
-                {
-                    text += "\n";
-                }
-                text = text + "ExtractingXenogermFrom".Translate(ContainedPawn.Named("PAWN")).Resolve() + "\n";
-            }
-            return text;
-        }
+        //public override string GetInspectString()
+        //{
+        //    string text = base.GetInspectString();
+        //    if (base.Working && ContainedPawn != null)
+        //    {
+        //        if (!text.NullOrEmpty())
+        //        {
+        //            text += "\n";
+        //        }
+        //        text = text + "ExtractingXenogermFrom".Translate(ContainedPawn.Named("PAWN")).Resolve() + "\n";
+        //    }
+        //    return text;
+        //}
 
         public override void ExposeData()
         {

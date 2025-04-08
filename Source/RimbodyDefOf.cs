@@ -14,6 +14,7 @@ namespace Maux36.Rimbody
         public static JobDef Rimbody_DoStrengthBuilding;
         public static JobDef Rimbody_DoBalanceBuilding;
         public static JobDef Rimbody_DoCardioBuilding;
+        public static JobDef Rimbody_EnterWorkoutBuilding;
 
         public static TimeAssignmentDef Rimbody_Workout;
 

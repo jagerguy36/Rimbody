@@ -72,6 +72,7 @@
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
+    <Compile Include="JobDrivers\JobDriver_EnterWorkoutBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthLifting.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />

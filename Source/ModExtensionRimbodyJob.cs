@@ -20,6 +20,7 @@ namespace Maux36.Rimbody
     public enum RimbodyTargetType
     {
         Building,
+        Container,
         Item
     }
 

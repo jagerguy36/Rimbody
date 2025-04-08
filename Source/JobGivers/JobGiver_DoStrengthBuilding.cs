@@ -91,6 +91,33 @@ namespace Maux36.Rimbody
                     }
                     return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
                 }
+                else if(targetModExtension.Type == RimbodyTargetType.Container)
+                {
+                    Log.Message($"container called {t.def.defName}");
+                    if (!(t is Building_Enterable building_Enterable))
+                    {
+                        Log.Message($"{t.def.defName} got 1");
+                        return false;
+                    }
+                    if (t.IsForbidden(pawn) || !pawn.CanReserve(t, 1, -1, null))
+                    {
+                        Log.Message($"{t.def.defName} got 2");
+                        return false;
+                    }
+                    if (t.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null)
+                    {
+                        Log.Message($"{t.def.defName} got 3");
+                        return false;
+                    }
+                    if (!building_Enterable.CanAcceptPawn(pawn))
+                    {
+                        Log.Message($"{t.def.defName} got 5");
+                        return false;
+                    }
+
+                    Log.Message($"{t.def.defName} got through");
+                    return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
+                }
                 else
                 {
                     if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
@@ -151,10 +178,14 @@ namespace Maux36.Rimbody
                         return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoStrengthBuilding, t, result, chair);
                     }
                 }
-                else
+            }
+            else if (targetModExtension.Type == RimbodyTargetType.Container)
+            {
+                if (!(t is Building_Enterable))
                 {
-                    return null;//container type buildings not yet implemented.
+                    return null;
                 }
+                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_EnterWorkoutBuilding, t);
             }
             else
             {
