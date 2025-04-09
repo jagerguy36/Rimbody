@@ -38,6 +38,9 @@
       <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="0PrepatcherAPI, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zetrith.Prepatcher.1.2.0\lib\net472\0PrepatcherAPI.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -64,12 +67,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building\Building_WorkoutAnimated.cs" />
     <Compile Include="Building\StrengthEnterable.cs" />
     <Compile Include="CompPhysique.cs" />
     <Compile Include="CompProperties_Physique.cs" />
     <Compile Include="CompToHumanlikes.cs" />
+    <Compile Include="Extensions\PawnExtensions.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
+    <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_EnterWorkoutBuilding.cs" />
