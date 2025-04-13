@@ -138,7 +138,7 @@ namespace Maux36.Rimbody
             };
             workout.AddPreTickAction(delegate
             {
-                WatchTickAction(TargetThingA, ext.rimbodyBuildingpartGraphic == null, exWorkout.playSound);
+                WatchTickAction(TargetThingA, ext.rimbodyBuildingpartGraphics == null, exWorkout.playSound);
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;

@@ -13,21 +13,21 @@ namespace Maux36.Rimbody
 {
     internal class Building_WorkoutAnimated: Building
     {
-        public Graphic_Multi graphic = null;
+        public List<Graphic_Multi> graphics = null;
         public int workoutStartTick = -1;
         public float actorMuscle = 25f;
         public WorkOut currentWorkout = null;
         private ModExtensionRimbodyTarget RimbodyEx;
 
-        public Graphic_Multi GetGraphic
+        public List<Graphic_Multi> GetGraphic
         {
             get
             {
-                if (graphic is null)
+                if (graphics is null)
                 {
                     LongEventHandler.ExecuteWhenFinished(delegate { GetGraphicLong(); });
                 }
-                return graphic;
+                return graphics;
             }
         }
         public override void ExposeData()
@@ -44,32 +44,45 @@ namespace Maux36.Rimbody
 
         public void GetGraphicLong()
         {
+            graphics = [];
             try
             {
-                graphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(RimbodyEx.rimbodyBuildingpartGraphic.texPath, ShaderDatabase.DefaultShader, DrawSize, DrawColor);
+                Log.Message("Get graphic!");
+                // Loop through each texPath in the list of RimbodyEx.rimbodyBuildingpartGraphic
+                foreach (var buildingPartGraphic in RimbodyEx.rimbodyBuildingpartGraphics)
+                {
+                    // Retrieve the graphic for each texPath and add to the graphic list
+                    var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(buildingPartGraphic.texPath, ShaderDatabase.DefaultShader, DrawSize, DrawColor);
+                    graphics.Add(newGraphic);
+                }
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to get graphics: " + ex.Message);
+            }
         }
+
+
 
         protected override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
 
             base.DrawAt(drawLoc, flip);
-            if(RimbodyEx.rimbodyBuildingpartGraphic != null)
+            Vector3 calculatedOffset = Vector3.zero;
+            if (RimbodyEx.rimbodyBuildingpartGraphics != null)
             {
-                var vector = DrawPos + RimbodyEx.rimbodyBuildingpartGraphic.drawOffset;
-                if (currentWorkout?.useAnimation==true && workoutStartTick > 0)
+                if (currentWorkout?.useAnimation == true && workoutStartTick > 0)
                 {
                     int tickProgress = Find.TickManager.TicksGame - workoutStartTick;
                     if (currentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != null && currentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != Vector3.zero)
                     {
                         if (tickProgress > 0)
                         {
-                            vector += currentWorkout.movingpartAnimOffset.FromRot(base.Rotation);
+                            calculatedOffset += currentWorkout.movingpartAnimOffset.FromRot(base.Rotation);
                         }
                     }
 
-                    if (currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) !=null && currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != Vector3.zero)
+                    if (currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != null && currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != Vector3.zero)
                     {
                         float uptime = 0.95f - (15f * actorMuscle / 5000f);
                         float cycleDuration = 125f - actorMuscle;
@@ -89,19 +102,29 @@ namespace Maux36.Rimbody
                         Vector3 JitterVector = IntVec3.West.RotatedBy(base.Rotation).ToVector3() * xJitter;
                         if (tickProgress > 0)
                         {
-                            vector += JitterVector + nudgeMultiplier * currentWorkout.movingpartAnimPeak.FromRot(base.Rotation);
+                            calculatedOffset += JitterVector + nudgeMultiplier * currentWorkout.movingpartAnimPeak.FromRot(base.Rotation);
                         }
                     }
                 }
-                GetGraphic?.DrawFromDef(vector, this.Rotation, null);
+                if (GetGraphic != null && GetGraphic.Count>0)
+                {
+                    for (int i = 0; i < GetGraphic.Count && i < RimbodyEx.rimbodyBuildingpartGraphics.Count; i++)
+                    {
+                        var part_graphic = GetGraphic[i];  // Get the Graphic_Multi at index i
+                        var graphicdata = RimbodyEx.rimbodyBuildingpartGraphics[i];  // Get the corresponding GraphicData at index i
+
+                        Log.Message($"Getgraphic.count = {GetGraphic.Count}, {RimbodyEx.rimbodyBuildingpartGraphics.Count}. {part_graphic.GraphicPath}");
+                        // Assuming DrawFromDef expects a position and rotation to draw the graphic
+                        part_graphic.DrawFromDef(calculatedOffset, this.Rotation, null);//graphicdata.drawOffset + 
+                    }
+                }
             }
-            
         }
 
         public override void Notify_ColorChanged()
         {
             base.Notify_ColorChanged();
-            graphic = null;
+            graphics = null;
             Map.mapDrawer.MapMeshDirty(Position, MapMeshFlagDefOf.Things);
             DrawAt(this.DrawPos);
         }

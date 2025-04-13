@@ -188,7 +188,7 @@ namespace Maux36.Rimbody
                 compPhysique.fatigueOverride = exWorkout.strengthParts;
                 if (exWorkout.useAnimation)
                 {
-                    if (ext.rimbodyBuildingpartGraphic != null)
+                    if (ext.rimbodyBuildingpartGraphics != null)
                     {
                         buildingAnimated.workoutStartTick = Find.TickManager.TicksGame;
                         buildingAnimated.currentWorkout = exWorkout;
@@ -212,7 +212,7 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;
                 compPhysique.fatigueOverride = null;
-                if (ext.rimbodyBuildingpartGraphic != null)
+                if (ext.rimbodyBuildingpartGraphics != null)
                 {
                     buildingAnimated.workoutStartTick = -1;
                     buildingAnimated.currentWorkout = null;
