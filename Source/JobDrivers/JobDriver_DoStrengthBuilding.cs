@@ -139,6 +139,7 @@ namespace Maux36.Rimbody
             base.ExposeData();
             Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
             Scribe_Values.Look(ref pawnOffset, "strengthlifting_pawnOffset", Vector3.zero);
+            Scribe_Values.Look(ref pawnNudge, "strengthlifting_pawnNudget", Vector3.zero);
         }
 
         private void AddMemory(CompPhysique compPhysique, string name)
@@ -191,7 +192,7 @@ namespace Maux36.Rimbody
                     if (ext.rimbodyBuildingpartGraphics != null)
                     {
                         buildingAnimated.workoutStartTick = Find.TickManager.TicksGame;
-                        buildingAnimated.currentWorkout = exWorkout;
+                        buildingAnimated.currentWorkoutIndex = workoutIndex;
                         buildingAnimated.actorMuscle = compPhysique.MuscleMass;
                     }
                     pawnOffset = exWorkout.pawnAnimOffset.FromRot(buildingAnimated.Rotation);
@@ -215,7 +216,7 @@ namespace Maux36.Rimbody
                 if (ext.rimbodyBuildingpartGraphics != null)
                 {
                     buildingAnimated.workoutStartTick = -1;
-                    buildingAnimated.currentWorkout = null;
+                    buildingAnimated.currentWorkoutIndex = -1;
                     buildingAnimated.actorMuscle = 25;
                 }
                 pawnOffset = Vector3.zero;

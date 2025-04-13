@@ -16,8 +16,19 @@ namespace Maux36.Rimbody
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private float muscleInt = 25;
-        private WorkOut exWorkout = null;
+        public int currentWorkoutIndex = -1;
         private int side = 1;
+        private ModExtensionRimbodyTarget ext => TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
+        public WorkOut CurrentWorkout
+        {
+            get
+            {
+                // Return the workout if the index is valid, otherwise return null
+                return (currentWorkoutIndex >= 0 && currentWorkoutIndex < ext.workouts.Count)
+                    ? ext.workouts[currentWorkoutIndex]
+                    : null;
+            }
+        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -80,13 +91,10 @@ namespace Maux36.Rimbody
             //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
             IntVec3 workoutspot = SpotToWorkoutStandingNear(pawn, TargetA.Thing);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-            
-            var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
-            exWorkout = ext.workouts[workoutIndex];
-            if (exWorkout.reportString != null)
+            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            if (CurrentWorkout.reportString != null)
             {
-                this.job.reportStringOverride = exWorkout.reportString.Translate();
+                this.job.reportStringOverride = CurrentWorkout.reportString.Translate();
             }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -102,11 +110,11 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
+                compPhysique.limitOverride = score <= CurrentWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = 0.2f;
                 compPhysique.durationOverride = 800;
-                compPhysique.fatigueOverride = exWorkout.strengthParts;
+                compPhysique.fatigueOverride = CurrentWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
@@ -126,7 +134,7 @@ namespace Maux36.Rimbody
                 compPhysique.durationOverride = 0;
                 compPhysique.fatigueOverride = null;
                 TryGainGymThought();
-                AddMemory(compPhysique, ext.workouts[workoutIndex].name);
+                AddMemory(compPhysique, CurrentWorkout.name);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {
@@ -138,9 +146,9 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            if(exWorkout.movingpartAnimOffset?.south != null && exWorkout.movingpartAnimPeak?.south != null)
+            if(CurrentWorkout.movingpartAnimOffset?.south != null && CurrentWorkout.movingpartAnimPeak?.south != null)
             {
-                return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.movingpartAnimOffset.south, exWorkout.movingpartAnimPeak.south, side);
+                return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, CurrentWorkout.movingpartAnimOffset.south, CurrentWorkout.movingpartAnimPeak.south, side);
             }
             return false;
             

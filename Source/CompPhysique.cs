@@ -944,6 +944,12 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref limitOverride, "Physique_limitOverride", false);
             Scribe_Values.Look(ref cardioOverride, "Physique_cardioOverride", 0f);
             Scribe_Values.Look(ref strengthOverride, "Physique_strengthOverride", 0f);
+            Scribe_Values.Look(ref durationOverride, "Physique_durationOverride", 0);
+            Scribe_Collections.Look(ref fatigueOverride, "Physique_fatigueOverride", LookMode.Value);
+            if (fatigueOverride == null || fatigueOverride.Count != PartCount)
+            {
+                fatigueOverride = Enumerable.Repeat(0f, PartCount).ToList();
+            }
 
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);
             Scribe_Values.Look(ref FatGainFactor, "Physique_FatGainFactor", 1f);

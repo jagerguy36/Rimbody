@@ -15,8 +15,18 @@ namespace Maux36.Rimbody
     {
         public List<Graphic_Multi> graphics = null;
         public int workoutStartTick = -1;
+        public int currentWorkoutIndex = -1;
         public float actorMuscle = 25f;
-        public WorkOut currentWorkout = null;
+        public WorkOut CurrentWorkout
+        {
+            get
+            {
+                // Return the workout if the index is valid, otherwise return null
+                return (currentWorkoutIndex >= 0 && currentWorkoutIndex < RimbodyEx.workouts.Count)
+                    ? RimbodyEx.workouts[currentWorkoutIndex]
+                    : null;
+            }
+        }
         private ModExtensionRimbodyTarget RimbodyEx;
 
         public List<Graphic_Multi> GetGraphic
@@ -33,7 +43,9 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref workoutStartTick, "workoutStartTick");
+            Scribe_Values.Look(ref workoutStartTick, "workoutStartTick", -1);
+            Scribe_Values.Look(ref currentWorkoutIndex, "currentWorkoutIndex", -1);
+            Scribe_Values.Look(ref actorMuscle, "actorMuscle", 25f);
         }
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
@@ -71,18 +83,18 @@ namespace Maux36.Rimbody
             Vector3 calculatedOffset = Vector3.zero;
             if (RimbodyEx.rimbodyBuildingpartGraphics != null)
             {
-                if (currentWorkout?.useAnimation == true && workoutStartTick > 0)
+                if (CurrentWorkout?.useAnimation == true && workoutStartTick > 0)
                 {
                     int tickProgress = Find.TickManager.TicksGame - workoutStartTick;
-                    if (currentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != null && currentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != Vector3.zero)
+                    if (CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != null && CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != Vector3.zero)
                     {
                         if (tickProgress > 0)
                         {
-                            calculatedOffset += currentWorkout.movingpartAnimOffset.FromRot(base.Rotation);
+                            calculatedOffset += CurrentWorkout.movingpartAnimOffset.FromRot(base.Rotation);
                         }
                     }
 
-                    if (currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != null && currentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != Vector3.zero)
+                    if (CurrentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != null && CurrentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != Vector3.zero)
                     {
                         float uptime = 0.95f - (15f * actorMuscle / 5000f);
                         float cycleDuration = 125f - actorMuscle;
@@ -102,7 +114,7 @@ namespace Maux36.Rimbody
                         Vector3 JitterVector = IntVec3.West.RotatedBy(base.Rotation).ToVector3() * xJitter;
                         if (tickProgress > 0)
                         {
-                            calculatedOffset += JitterVector + nudgeMultiplier * currentWorkout.movingpartAnimPeak.FromRot(base.Rotation);
+                            calculatedOffset += JitterVector + nudgeMultiplier * CurrentWorkout.movingpartAnimPeak.FromRot(base.Rotation);
                         }
                     }
                 }
@@ -112,10 +124,8 @@ namespace Maux36.Rimbody
                     {
                         var part_graphic = GetGraphic[i];  // Get the Graphic_Multi at index i
                         var graphicdata = RimbodyEx.rimbodyBuildingpartGraphics[i];  // Get the corresponding GraphicData at index i
-
-                        Log.Message($"Getgraphic.count = {GetGraphic.Count}, {RimbodyEx.rimbodyBuildingpartGraphics.Count}. {part_graphic.GraphicPath}");
                         // Assuming DrawFromDef expects a position and rotation to draw the graphic
-                        part_graphic.DrawFromDef(calculatedOffset, this.Rotation, null);//graphicdata.drawOffset + 
+                        part_graphic.DrawFromDef(DrawPos + graphicdata.drawOffset + calculatedOffset, this.Rotation, null);//
                     }
                 }
             }
