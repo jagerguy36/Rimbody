@@ -4,6 +4,7 @@ using Verse;
 using Verse.Sound;
 using System;
 using Verse.Noise;
+using LudeonTK;
 using static HarmonyLib.Code;
 
 namespace Maux36.Rimbody
@@ -17,6 +18,18 @@ namespace Maux36.Rimbody
         }
 
         public static bool editMode;
+
+        [TweakValue("rimbody_a", 0f, 400f)]
+        private static float rimb_a = 200f;
+
+        [TweakValue("rimbody_b", 0f, 400f)]
+        private static float rimb_b = 10f;
+
+        [TweakValue("rimbody_c", 0f, 400f)]
+        private static float rimb_c = 40f;
+
+        [TweakValue("rimbody_d", 0f, 400f)]
+        private static float rimb_d = 30f;
 
         public static void DrawRimbodyCard(Rect rect, Pawn pawn)
         {
@@ -42,21 +55,93 @@ namespace Maux36.Rimbody
             num += rect3.height + 10f;
 
             //=======================Rimbody Info========================================
-            if (RimbodySettings.useFatigue)
+            var rectFatigue = new Rect(205f, 8f, 50f, 39f);
+            TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(
+                (100f * compPhysique.partFatigue[0] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[1] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[2] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[3] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[4] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[5] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[6] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[7] / 10f).ToString("F1"),
+                (100f * compPhysique.partFatigue[8] / 10f).ToString("F1"));
+            TooltipHandler.TipRegion(rectFatigue, tipFatigue);
+            Widgets.DrawHighlightIfMouseover(rectFatigue);
+            Texture2D partsbase = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partBase");
+            Texture2D partsShoulders = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsShoulders");
+            Texture2D partsBiceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBiceps");
+            Texture2D partsChest;
+            if (pawn.gender == Gender.Male)
             {
-                var rectFatigue = new Rect(160f - 10f, num - 30f, rect.width - 10f, 10f);
-                Rect barBackgroundFatigue = new Rect(160f, num + 3f - 30f, rect.width - 180f, 4f);
+                partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest");
+            }
+            else
+            {
+                partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest_w");
+            }            
+            Texture2D partsAbs = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsAbs");
+            Texture2D partsQuads = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsQuads");
+            var frontpartsrect = new Rect(200f, 10f, 35f, 35f);
+            GUI.DrawTexture(frontpartsrect, partsbase);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[0] / 10f);
+            GUI.DrawTexture(frontpartsrect, partsShoulders);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[1] / 10f);
+            GUI.DrawTexture(frontpartsrect, partsChest);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[2] / 10f);
+            GUI.DrawTexture(frontpartsrect, partsBiceps);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[5] / 10f);
+            GUI.DrawTexture(frontpartsrect, partsAbs);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[7] / 10f);
+            GUI.DrawTexture(frontpartsrect, partsQuads);
+            GUI.color = Color.white;
+
+            Texture2D partsTriceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsTriceps");
+            Texture2D partsBack;
+            if (pawn.gender == Gender.Male)
+            {
+                partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack");
+            }
+            else
+            {
+                partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack_w");
+            }
+            Texture2D partsGlutes;
+            if (pawn.gender == Gender.Male)
+            {
+                partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes");
+            }
+            else
+            {
+                partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes_w");
+            }
+            Texture2D partsHams = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsHams");
+            var backpartsrect = new Rect(225f, 10f, 35f, 35f);
+            GUI.DrawTexture(backpartsrect, partsbase);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[3] / 10f);
+            GUI.DrawTexture(backpartsrect, partsTriceps);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[4] / 10f);
+            GUI.DrawTexture(backpartsrect, partsBack);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[6] / 10f);
+            GUI.DrawTexture(backpartsrect, partsGlutes);
+            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[8] / 10f);
+            GUI.DrawTexture(backpartsrect, partsHams);
+            GUI.color = Color.white;
+
+            if (RimbodySettings.useExhaustion)
+            {
+                var rectExhaustion = new Rect(258f, 8f, 9f, 39f);
+                Rect barBackgroundFatigue = new Rect(260f, 10f, 5f, 35f);
+                
                 Widgets.DrawBoxSolid(barBackgroundFatigue, BackgroundColor);
-                Rect filledBarFatigue = new Rect(barBackgroundFatigue.x, barBackgroundFatigue.y, barBackgroundFatigue.width * (compPhysique.fatigue / 100), barBackgroundFatigue.height);
-                float red = Mathf.Lerp(0f, 1f, compPhysique.fatigue / 100f);  // Interpolates from 0 to 1 based on fatigue
-                float green = Mathf.Lerp(1f, 0f, compPhysique.fatigue / 100f);
+                Rect filledBarFatigue = new Rect(barBackgroundFatigue.x, barBackgroundFatigue.y+ barBackgroundFatigue.height * (1f-compPhysique.exhaustion / 100), barBackgroundFatigue.width, barBackgroundFatigue.height * (compPhysique.exhaustion / 100));
+                float red = Mathf.Lerp(0f, 1f, compPhysique.exhaustion / 100f);  // Interpolates from 0 to 1 based on fatigue
+                float green = Mathf.Lerp(1f, 0f, compPhysique.exhaustion / 100f);
                 Color fatigueColor = new Color(red, green, 0f, 0.7f);
                 Widgets.DrawBoxSolid(filledBarFatigue, fatigueColor);
-                TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(compPhysique.fatigue.ToString("F1"));
-                //TipSignal tipFatigue = $"{compPhysique.fatigue}/100";
-                //"Example_KeyString".Translate(level.ToString("N0"), className, levelProgress.ToString("F1"));
-                TooltipHandler.TipRegion(rectFatigue, tipFatigue);
-                Widgets.DrawHighlightIfMouseover(rectFatigue);
+                TipSignal tipExhaustion = "RimbodyExhaustionTooltip".Translate(compPhysique.exhaustion.ToString("F1"));
+                TooltipHandler.TipRegion(rectExhaustion, tipExhaustion);
+                Widgets.DrawHighlightIfMouseover(rectExhaustion);
             }
 
             var rect8 = new Rect(0f, num, rect.width - 10f, 24f);

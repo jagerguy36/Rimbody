@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
         /// Injected prepatcher Gizmo field on Building_Door object.
         /// </summary>
         [PrepatcherField]
-        [Prepatcher.DefaultValue(0f)]
+        [Prepatcher.DefaultValue(-1f)]
         public static extern ref float PawnBodyAngleOverride(this Pawn target);
     }
 }

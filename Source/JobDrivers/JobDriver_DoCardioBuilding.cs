@@ -25,16 +25,38 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        protected void GetInPosition(Thing building, bool faceaway)
+        protected void GetInPosition(Thing building, Direction direction)
         {
-            pawn.rotationTracker.FaceCell(building.Position);
-
-            if (faceaway)
+            switch (direction)
             {
-                IntVec3 directionAway = 2 * pawn.Position - building.Position;
-
-                pawn.rotationTracker.FaceCell(directionAway);
-
+                case Direction.center:
+                    pawn.rotationTracker.FaceCell(building.Position);
+                    break;
+                case Direction.away:
+                    pawn.rotationTracker.FaceCell(2 * pawn.Position - building.Position);
+                    break;
+                case Direction.faceSame:
+                    pawn.Rotation = building.Rotation;
+                    break;
+                case Direction.faceOpposite:
+                    pawn.Rotation = building.Rotation.Opposite;
+                    break;
+                case Direction.rotSame:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                    break;
+                case Direction.rotOpposite:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.AsAngle;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                    break;
+                case Direction.rotClock:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle + 90f;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                    break;
+                case Direction.rotAntiClock:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle + 270f % 360f;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                    break;
             }
         }
         protected void WatchTickAction(Thing building)
@@ -76,7 +98,7 @@ namespace Maux36.Rimbody
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
@@ -93,7 +115,7 @@ namespace Maux36.Rimbody
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                GetInPosition(TargetThingA, exWorkout.buildingFaceaway);
+                GetInPosition(TargetThingA, exWorkout.pawnDirection);
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)

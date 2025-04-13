@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Building\Building_WorkoutAnimated.cs" />
-    <Compile Include="Building\StrengthEnterable.cs" />
+    <Compile Include="Building\PlaceWorker_WorkoutAnimated.cs" />
     <Compile Include="CompPhysique.cs" />
     <Compile Include="CompProperties_Physique.cs" />
     <Compile Include="CompToHumanlikes.cs" />
@@ -78,7 +78,6 @@
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
-    <Compile Include="JobDrivers\JobDriver_EnterWorkoutBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthLifting.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />
@@ -97,7 +96,7 @@
     <Compile Include="JobDrivers\JobDriver_Jogging.cs" />
     <Compile Include="JobGivers\JobGiver_DoStrengthBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_Jogging.cs" />
-    <Compile Include="ModExtensionRimbodyJob.cs" />
+    <Compile Include="Extensions\ModExtensionRimbodyJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rimbody.cs" />
     <Compile Include="RimbodyCardUtility.cs" />

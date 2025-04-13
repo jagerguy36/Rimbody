@@ -51,10 +51,12 @@ namespace Maux36.Rimbody
             {
                 return null;
             }
-            //if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-            //{
-            //    return null;
-            //}
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            if (compPhysique == null)
+            {
+                return null;
+            }
+
             tmpCandidates.Clear();
             GetSearchSet(pawn, tmpCandidates);
             if (tmpCandidates.Count == 0)
@@ -64,35 +66,48 @@ namespace Maux36.Rimbody
 
             Predicate<Thing> predicate = delegate (Thing t)
             {
-                if (!pawn.CanReserve(t))
-                {
-                    return false;
-                }
                 if (t.IsForbidden(pawn))
                 {
                     return false;
                 }
-                if (!t.IsSociallyProper(pawn))
+                RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
+                if (targetModExtension.Type == RimbodyTargetType.Building)
+                {
+                    if (!pawn.CanReserve(t))
+                    {
+                        return false;
+                    }
+                    if (t.def.hasInteractionCell)
+                    {
+                        if (!pawn.CanReserveSittableOrSpot(t.InteractionCell))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
+                        {
+                            return false;
+                        }
+                        LocalTargetInfo target = result;
+                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
+                        {
+                            return false;
+                        }
+                    }
+                    return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
+                }
+                else
                 {
                     return false;
+                    //if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                    //{
+                    //    return false;
+                    //}
+                    //return true;
                 }
-                if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
-                {
-                    return false;
-                }
-                LocalTargetInfo target = result;
-                if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
-                {
-                    return false;
-                }
-                return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
             };
-
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
-            if (compPhysique == null)
-            {
-                return null;
-            }
             float scoreFunc(Thing t)
             {
                 if (RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension))
@@ -127,7 +142,11 @@ namespace Maux36.Rimbody
             RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
-                if (targetModExtension.buildingUsecell)
+                if (t.def.hasInteractionCell)
+                {
+                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceBuilding, t, t.InteractionCell);
+                }
+                else
                 {
                     if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
                     {
@@ -139,10 +158,7 @@ namespace Maux36.Rimbody
                         return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoCardioBuilding, t, result, chair);
                     }
                 }
-                else
-                {
-                    return null;//container type buildings not yet implemented.
-                }
+                return null;
             }
             else
             {
@@ -152,7 +168,6 @@ namespace Maux36.Rimbody
                 //    return null;
                 //}
             }
-            return null;
         }
 
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)

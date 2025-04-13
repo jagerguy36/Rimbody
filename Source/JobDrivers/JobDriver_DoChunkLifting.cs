@@ -48,7 +48,7 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_General.DoAtomic(delegate
             {
@@ -61,7 +61,7 @@ namespace Maux36.Rimbody
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
 
-            var exWorkout = TargetThingA.def.GetModExtension<ModExtensionRimbodyJob>();
+            var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
             float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
 
             Toil workout;
@@ -79,6 +79,8 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = 0.2f;
+                compPhysique.durationOverride = 800;
+                compPhysique.fatigueOverride = exWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
@@ -94,8 +96,9 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
+                compPhysique.durationOverride = 0;
+                compPhysique.fatigueOverride = null;
                 AddMemory(compPhysique);
-                compPhysique.AddPartFatigue(exWorkout.strengthParts);
                 pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
             });
             yield return workout;

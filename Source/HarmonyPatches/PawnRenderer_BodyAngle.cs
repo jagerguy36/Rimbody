@@ -16,7 +16,7 @@ namespace Maux36.Rimbody
         [HarmonyLib.HarmonyPatch(nameof(Pawn.ExposeData)), HarmonyLib.HarmonyPostfix]
         internal static void ExposeDataPostfix(Pawn __instance)
         {
-            Scribe_Values.Look(ref __instance.PawnBodyAngleOverride(), nameof(PawnExtensions.PawnBodyAngleOverride));
+            Scribe_Values.Look(ref __instance.PawnBodyAngleOverride(), nameof(PawnExtensions.PawnBodyAngleOverride), -1);
         }
     }
 
@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
         public static bool Prefix(ref float __result, PawnRenderFlags flags, PawnRenderer __instance, Pawn ___pawn)
         {
             var overrideAngle = ___pawn.PawnBodyAngleOverride();
-            if (overrideAngle != 0 )
+            if (overrideAngle >= 0 )
             {
                 __result = overrideAngle;
                 return false;

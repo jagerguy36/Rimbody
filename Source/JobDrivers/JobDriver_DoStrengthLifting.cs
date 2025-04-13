@@ -65,7 +65,7 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useFatigue && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_General.DoAtomic(delegate
             {
@@ -80,7 +80,7 @@ namespace Maux36.Rimbody
             //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
             IntVec3 workoutspot = SpotToWorkoutStandingNear(pawn, TargetA.Thing);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-
+            
             var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
             var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             exWorkout = ext.workouts[workoutIndex];
@@ -105,6 +105,8 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = 0.2f;
+                compPhysique.durationOverride = 800;
+                compPhysique.fatigueOverride = exWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
@@ -121,9 +123,10 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
+                compPhysique.durationOverride = 0;
+                compPhysique.fatigueOverride = null;
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);
-                compPhysique.AddPartFatigue(ext.workouts[workoutIndex].strengthParts);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {
@@ -135,9 +138,14 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.itemOffset, side);
+            if(exWorkout.movingpartAnimOffset?.south != null && exWorkout.movingpartAnimPeak?.south != null)
+            {
+                return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, exWorkout.movingpartAnimOffset.south, exWorkout.movingpartAnimPeak.south, side);
+            }
+            return false;
+            
         }
-        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset, int side)
+        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset, Vector3 peak, int side)
         {
             Thing carriedThing = pawn.carryTracker.CarriedThing;
             if (carriedThing == null)
@@ -148,22 +156,21 @@ namespace Maux36.Rimbody
             float cycleDuration = 125f - muscleInt;
             float jitter_amount = 3f * Mathf.Max(0f,(1f - (muscleInt / 35f))) / 100f;
             float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-            float yOffset = 0f;
+            float nudgeMultiplier = 0f;
             if (cycleTime < uptime)
             {
-                yOffset = Mathf.Lerp(0f, 0.3f, cycleTime / uptime);
+                nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
             }
             else
             {
-                yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
+                nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
             }
             offset.x = offset.x * side;
 
             float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
             if (tickProgress > 0)
             {
-                drawPos += new Vector3(xJitter, 1f / 26f, yOffset) + offset;
-                flip = false;
+                drawPos += new Vector3(xJitter, 1f / 26f, 0) + offset + nudgeMultiplier*peak;
                 return true;
             }
             return false;

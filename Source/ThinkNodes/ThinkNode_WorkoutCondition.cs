@@ -23,7 +23,7 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
-                    if (RimbodySettings.useFatigue && compPhysique.resting)
+                    if (RimbodySettings.useExhaustion && compPhysique.resting)
                     {
                         return false;
                     }
