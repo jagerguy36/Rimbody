@@ -9,7 +9,8 @@ namespace Maux36.Rimbody
     {
         public static JobDef Rimbody_Jogging;
         public static JobDef Rimbody_DoChunkLifting;
-        //public static JobDef Rimbody_GoDoPushUps;
+        public static JobDef Rimbody_DoChunkOverheadPress;
+        public static JobDef Rimbody_DoChunkSquats;
         public static JobDef Rimbody_DoStrengthLifting;
         public static JobDef Rimbody_DoStrengthBuilding;
         public static JobDef Rimbody_DoBalanceBuilding;

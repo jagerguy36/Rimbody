@@ -11,7 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoChunkLifting : JobDriver
+    internal class JobDriver_DoChunkOverheadPress : JobDriver
     {
         private const int duration = 800;
         private float joygainfactor = 1.0f;
@@ -33,15 +33,15 @@ namespace Maux36.Rimbody
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|chunk lifting");
+                compPhysique.AddNewMemory($"strength|chunk overhead press");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "chunklifting_muscleInt", 25);
+            Scribe_Values.Look(ref tickProgress, "chunkoverheadpress_tickProgress", 0);
+            Scribe_Values.Look(ref muscleInt, "chunkoverheadpress_muscleInt", 25);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -123,11 +123,11 @@ namespace Maux36.Rimbody
             float yOffset = 0f;
             if (cycleTime < uptime)
             {
-                yOffset = Mathf.Lerp(0f, 0.3f, cycleTime / uptime);
+                yOffset = Mathf.Lerp(0.4f, 0.7f, cycleTime / uptime);
             }
             else
             {
-                yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
+                yOffset = Mathf.Lerp(0.7f, 0.4f, (cycleTime - uptime) / (1f - uptime));
             }
 
             float xJitter = (Rand.RangeSeeded(-jiggle_amount, jiggle_amount, tickProgress));

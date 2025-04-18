@@ -9,6 +9,7 @@ namespace Maux36.Rimbody
     {
         public float cardio = 1f;
         public float strength = 1f;
+        public RimbodyTargetCategory Category = RimbodyTargetCategory.Job;
         public List<float> strengthParts;
     }
 
@@ -16,7 +17,8 @@ namespace Maux36.Rimbody
     {
         Strength,
         Balance,
-        Cardio
+        Cardio,
+        Job
     }
     public enum RimbodyTargetType
     {
@@ -29,12 +31,17 @@ namespace Maux36.Rimbody
         center,
         faceSame,
         faceOpposite,
-        faceLeft,
-        faceRight,
-        rotSame,
-        rotOpposite,
-        rotClock,
-        rotAntiClock
+        lyingFrontSame,
+        lyingFrontOpposite,
+        lyingDownSame,
+        lyingUpSame
+
+    }
+    public enum InteractionType
+    {
+        melee,
+        animation,
+        still
     }
     public class vectorSet
     {
@@ -63,7 +70,7 @@ namespace Maux36.Rimbody
         public float cardio = 1f;
         public float strength = 1f;
         public bool playSound = false;
-        public bool useAnimation = false;
+        public InteractionType animationType = InteractionType.still;
         public Direction pawnDirection = Direction.center;
         public List<float> strengthParts;
         public vectorSet movingpartAnimOffset;
@@ -76,6 +83,7 @@ namespace Maux36.Rimbody
 
         public RimbodyTargetType Type = RimbodyTargetType.Building;
         public RimbodyTargetCategory Category = RimbodyTargetCategory.Balance;
+        public bool moveBase = false;
         public List<GraphicData> rimbodyBuildingpartGraphics;
         public List<WorkOut> workouts = new List<WorkOut>();
     }

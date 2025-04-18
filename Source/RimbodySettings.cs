@@ -4,6 +4,9 @@ namespace Maux36.Rimbody
 {
     public class RimbodySettings : ModSettings
     {
+        public const int PartCount = 9;
+        public const int MaxFatiguePerPart = 10;
+
         public static int CalcEveryTick = 150;
         public static int RecoveryTick = 250;
         public static float fatThresholdFat = 35f;

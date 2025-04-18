@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using Verse.AI;
 using Verse;
 using Verse.Sound;
-using System.Reflection;
 using UnityEngine;
 using System;
-using System.Net.NetworkInformation;
-using LudeonTK;
 
 namespace Maux36.Rimbody
 {
     internal class JobDriver_DoStrengthBuilding : JobDriver
     {
+        private const int duration = 1000;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private Vector3 pawnOffset = Vector3.zero;
         private Vector3 pawnNudge = Vector3.zero;
+        private Rot4 lyingRotation = Rot4.Invalid;
         private Building_WorkoutAnimated buildingAnimated => (Building_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -38,6 +37,13 @@ namespace Maux36.Rimbody
                 return pawnOffset + pawnNudge;
             }
         }
+        public override Rot4 ForcedLayingRotation
+        {
+            get
+            {
+                return lyingRotation;
+            }
+        }
 
         protected void GetInPosition(Thing building, Direction direction)
         {
@@ -55,34 +61,36 @@ namespace Maux36.Rimbody
                 case Direction.faceOpposite:
                     pawn.Rotation = building.Rotation.Opposite;
                     break;
-                case Direction.rotSame:
+                case Direction.lyingFrontSame:
                     pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
-                case Direction.rotOpposite:
+                case Direction.lyingFrontOpposite:
                     pawn.PawnBodyAngleOverride() = building.Rotation.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
-                case Direction.rotClock:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle+90f;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                case Direction.lyingDownSame:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
+                    lyingRotation = building.Rotation.Opposite == Rot4.South?Rot4.North : building.Rotation.Opposite;
                     break;
-                case Direction.rotAntiClock:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle+270f%360f;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
+                case Direction.lyingUpSame:
+                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
+                    lyingRotation = building.Rotation == Rot4.North ? Rot4.South : building.Rotation;
                     break;
             }
         }
         protected void WatchTickAction(Thing building, WorkOut wo, float actorMuscle)
         {
             tickProgress++;
-            if (wo.useAnimation)
+            if (wo.animationType == InteractionType.animation)
             {
                 if (tickProgress > 0)
                 {
                     if (wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != null && wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != Vector3.zero)
                     {
-                        float uptime = 0.95f - (15f * actorMuscle / 5000f);
+                        float uptime = 0.95f - (20f * actorMuscle / 5000f);
                         float cycleDuration = 125f - actorMuscle;
                         float jitter_amount = 3f * Mathf.Max(0f, (1f - (actorMuscle / 35f))) / 100f;
                         float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
@@ -105,14 +113,18 @@ namespace Maux36.Rimbody
                     }
                 }
             }
-            else if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
+            else if(wo.animationType == InteractionType.melee)
             {
-                if (wo.playSound)
+                if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
                 {
-                    RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                    if (wo.playSound)
+                    {
+                        RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                    }
+                    pawn.Drawer.Notify_MeleeAttackOn(building);
                 }
-                pawn.Drawer.Notify_MeleeAttackOn(building);
             }
+            
             if (joygainfactor > 0)
             {
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
@@ -137,9 +149,10 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
-            Scribe_Values.Look(ref pawnOffset, "strengthlifting_pawnOffset", Vector3.zero);
-            Scribe_Values.Look(ref pawnNudge, "strengthlifting_pawnNudget", Vector3.zero);
+            Scribe_Values.Look(ref tickProgress, "strengthbuilding_tickProgress", 0);
+            Scribe_Values.Look(ref pawnOffset, "strengthbuilding_pawnOffset", Vector3.zero);
+            Scribe_Values.Look(ref pawnNudge, "strengthbuilding_pawnNudget", Vector3.zero);
+            Scribe_Values.Look(ref lyingRotation, "strengthbuilding_lyingRotation", Rot4.Invalid);
         }
 
         private void AddMemory(CompPhysique compPhysique, string name)
@@ -185,9 +198,9 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = exWorkout.cardio;
-                compPhysique.durationOverride = 1000;
+                compPhysique.durationOverride = duration;
                 compPhysique.fatigueOverride = exWorkout.strengthParts;
-                if (exWorkout.useAnimation)
+                if (exWorkout.animationType == InteractionType.animation)
                 {
                     if (ext.rimbodyBuildingpartGraphics != null)
                     {
@@ -204,7 +217,7 @@ namespace Maux36.Rimbody
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
-            workout.defaultDuration = 1000;
+            workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
                 compPhysique.jobOverride = false;
@@ -220,6 +233,7 @@ namespace Maux36.Rimbody
                     buildingAnimated.actorMuscle = 25;
                 }
                 pawnOffset = Vector3.zero;
+                lyingRotation = Rot4.Invalid;
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);
                 pawn.PawnBodyAngleOverride() = -1;

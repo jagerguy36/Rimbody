@@ -10,6 +10,7 @@ namespace Maux36.Rimbody
 {
     internal class JobDriver_DoCardioBuilding : JobDriver
     {
+        private const int duration = 2500;
         private float joygainfactor = 1.0f;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -40,22 +41,6 @@ namespace Maux36.Rimbody
                     break;
                 case Direction.faceOpposite:
                     pawn.Rotation = building.Rotation.Opposite;
-                    break;
-                case Direction.rotSame:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
-                    break;
-                case Direction.rotOpposite:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.AsAngle;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
-                    break;
-                case Direction.rotClock:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle + 90f;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
-                    break;
-                case Direction.rotAntiClock:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle + 270f % 360f;
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
             }
         }
@@ -133,7 +118,7 @@ namespace Maux36.Rimbody
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
-            workout.defaultDuration = 2500;
+            workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
                 compPhysique.jobOverride = false;

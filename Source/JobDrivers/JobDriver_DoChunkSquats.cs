@@ -11,12 +11,13 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoChunkLifting : JobDriver
+    internal class JobDriver_DoChunkSquats : JobDriver
     {
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private float muscleInt = 25;
+        private Vector3 pawnNudge = Vector3.zero;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -27,21 +28,28 @@ namespace Maux36.Rimbody
 
             return true;
         }
+        public override Vector3 ForcedBodyOffset
+        {
+            get
+            {
+                return pawnNudge;
+            }
+        }
 
         private void AddMemory(CompPhysique compPhysique)
         {
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|chunk lifting");
+                compPhysique.AddNewMemory($"strength|chunk squats");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "chunklifting_muscleInt", 25);
+            Scribe_Values.Look(ref tickProgress, "chunksquats_tickProgress", 0);
+            Scribe_Values.Look(ref muscleInt, "chunksquats_muscleInt", 25);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -83,10 +91,30 @@ namespace Maux36.Rimbody
                 compPhysique.durationOverride = duration;
                 compPhysique.fatigueOverride = exWorkout.strengthParts;
             };
+            float uptime = 0.95f - (20f * muscleInt / 5000f);
+            float cycleDuration = 125f - muscleInt;
+            float jiggle_amount = 3f * (1f - (muscleInt / 50f)) / 100f;
+            float nudgeMultiplier;
             workout.tickAction = delegate
             {
                 tickProgress += 1;
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+                if (tickProgress > 0)
+                {
+                    float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
+                    if (cycleTime < uptime)
+                    {
+                        nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
+                    }
+                    else
+                    {
+                        nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
+                    }
+                    if (tickProgress > 0)
+                    {
+                        pawnNudge = new Vector3(Rand.RangeSeeded(-jiggle_amount, jiggle_amount, tickProgress), 0f, nudgeMultiplier * 0.13f - 0.1f);
+                    }
+                }
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -107,33 +135,18 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt);
+            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress);
         }
-        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt)
+        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress)
         {
             Thing carriedThing = pawn.carryTracker.CarriedThing;
             if (carriedThing == null)
             {
                 return false;
             }
-            float uptime = 0.95f - (40f * muscleInt / 5000f);
-            float cycleDuration = 150f-muscleInt;
-            float jiggle_amount = 3f * (1f - (muscleInt / 50f)) / 100f;
-            float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-            float yOffset = 0f;
-            if (cycleTime < uptime)
-            {
-                yOffset = Mathf.Lerp(0f, 0.3f, cycleTime / uptime);
-            }
-            else
-            {
-                yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
-            }
-
-            float xJitter = (Rand.RangeSeeded(-jiggle_amount, jiggle_amount, tickProgress));
             if (tickProgress>0)
             {
-                drawPos += new Vector3(xJitter, 1f / 26f, yOffset);
+                drawPos += new Vector3(0f, -1f / 26f, 0.45f);
                 flip = false;
                 return true;
             }

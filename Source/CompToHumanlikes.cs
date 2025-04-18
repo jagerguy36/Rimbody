@@ -16,11 +16,14 @@ namespace Maux36.Rimbody
             {
                 if (allDef.race is { intelligence: Intelligence.Humanlike } && !allDef.IsCorpse)
                 {
+                    if (allDef.race.IsFlesh == false)
+                    {
+                        return;
+                    }
                     if (!HARCompat.Active || HARCompat.CompatibleRace(allDef))
                     {
                         allDef.comps.Add(new CompProperties_Physique());
                     }
-                    
                 }
             }
         }

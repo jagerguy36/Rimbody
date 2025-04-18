@@ -78,11 +78,12 @@
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
+    <Compile Include="JobDrivers\JobDriver_DoChunkSquats.cs" />
+    <Compile Include="JobDrivers\JobDriver_DoChunkOverheadPress.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthLifting.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoBalanceBuilding.cs" />
     <Compile Include="JobGivers\JobGiver_DoCardioBuilding.cs" />
-    <Compile Include="JobGivers\JobGiver_DoChunkLifting.cs" />
     <Compile Include="JobGivers\JobGiver_RecoverWander.cs" />
     <Compile Include="RimbodyDefLists.cs" />
     <Compile Include="HARCompat.cs" />

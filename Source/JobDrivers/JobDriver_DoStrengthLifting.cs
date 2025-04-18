@@ -13,6 +13,7 @@ namespace Maux36.Rimbody
 {
     internal class JobDriver_DoStrengthLifting : JobDriver
     {
+        private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private float muscleInt = 25;
@@ -113,7 +114,7 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = score <= CurrentWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = 0.2f;
-                compPhysique.durationOverride = 800;
+                compPhysique.durationOverride = duration;
                 compPhysique.fatigueOverride = CurrentWorkout.strengthParts;
             };
             workout.tickAction = delegate
@@ -123,7 +124,7 @@ namespace Maux36.Rimbody
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
-            workout.defaultDuration = 800;
+            workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
                 //pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
@@ -160,7 +161,7 @@ namespace Maux36.Rimbody
             {
                 return false;
             }
-            float uptime = 0.95f - (15f * muscleInt / 5000f);
+            float uptime = 0.95f - (20f * muscleInt / 5000f);
             float cycleDuration = 125f - muscleInt;
             float jitter_amount = 3f * Mathf.Max(0f,(1f - (muscleInt / 35f))) / 100f;
             float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;

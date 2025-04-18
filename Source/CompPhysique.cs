@@ -49,9 +49,7 @@ namespace Maux36.Rimbody
 
         public Queue<string> memory = [];
 
-        private const int PartCount = 9;
-        private const int MaxFatiguePerPart = 10;
-        public List<float> partFatigue = Enumerable.Repeat(0f, PartCount).ToList();
+        public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
 
         public CompProperties_Physique Props => (CompProperties_Physique)props;
 
@@ -85,7 +83,16 @@ namespace Maux36.Rimbody
         {
             if (pawn.Faction != null && pawn.Faction.IsPlayer && pawn.RaceProps.Humanlike && !pawn.IsMutant) //The same as isColonist Check minus the slave check
             {
-                return (pawn.Spawned || pawn.GetCaravan() != null);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool shouldTick(Pawn pawn)
+        {
+            if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
+            {
+                return true;
             }
             return false;
         }
@@ -114,6 +121,10 @@ namespace Maux36.Rimbody
 
             if (isColonyMember(parentPawn) || parentPawn.IsPrisonerOfColony)
             {
+                if (!shouldTick(parentPawn))
+                {
+                    return;
+                }
                 if (parentPawn.Deathresting || parentPawn.Suspended)
                 {
                     return;
@@ -769,19 +780,7 @@ namespace Maux36.Rimbody
 
         public void PhysiqueValueSetup(bool reset = false)
         {
-
-            if (HARCompat.Active && parentPawn != null && !HARCompat.CompatibleRace(parentPawn.def))
-            {
-                BodyFat = -2f;
-                MuscleMass = -2f;
-            }
-            else if(parentPawn.RaceProps.IsFlesh == false)
-            {
-                BodyFat = -2f;
-                MuscleMass = -2f;
-            }
-
-            else if (parentPawn != null && ((BodyFat == -1f || MuscleMass == -1f) || reset))
+            if (parentPawn != null && ((BodyFat == -1f || MuscleMass == -1f) || reset))
             {
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType();
                 ApplyGene();
@@ -802,19 +801,19 @@ namespace Maux36.Rimbody
         //partFatigue
         public void AddPartFatigue(List<float> strengthParts, float multiplier = 1f)
         {
-            if (strengthParts?.Count == PartCount && partFatigue?.Count == PartCount)
+            if (strengthParts?.Count == RimbodySettings.PartCount && partFatigue?.Count == RimbodySettings.PartCount)
             {
-                for (int i = 0; i < PartCount; i++)
+                for (int i = 0; i < RimbodySettings.PartCount; i++)
                 {
-                    partFatigue[i] = Math.Min((strengthParts[i]* multiplier) + partFatigue[i], MaxFatiguePerPart);
+                    partFatigue[i] = Math.Max(0f, Math.Min((strengthParts[i]* multiplier) + partFatigue[i], RimbodySettings.MaxFatiguePerPart));
                 }
             }
         }
         public void RestorePartFatigue(float multiplier)
         {
-            if (partFatigue?.Count == PartCount)
+            if (partFatigue?.Count == RimbodySettings.PartCount)
             {
-                for (int i = 0; i < PartCount; i++)
+                for (int i = 0; i < RimbodySettings.PartCount; i++)
                 {
                     partFatigue[i] = Math.Max(0f, partFatigue[i] - (multiplier * RimbodySettings.CalcEveryTick/5000f));
                 }
@@ -823,16 +822,15 @@ namespace Maux36.Rimbody
 
         public float GetStrengthPartScore(List<float> strengthParts, float strength)
         {
-            if(partFatigue == null || strengthParts.Count != PartCount) return 0f;
+            if(partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
             float fatigueFactor = 0f;
             float total = 0;
             float spread = 0f;
             float peak = 0f;
-            for (int i = 0; i < PartCount; i++)
+            for (int i = 0; i < RimbodySettings.PartCount; i++)
             {
                 if (strengthParts[i] > 0)
                 {
-                    string debug_String = string.Join(", ", partFatigue);
                     fatigueFactor += strengthParts[i] * (10f - partFatigue[i]) / 10f;
                     spread = spread + Math.Min(1f, strengthParts[i]);
                     total = total + strengthParts[i];
@@ -840,7 +838,7 @@ namespace Maux36.Rimbody
                 }
             }
             fatigueFactor = fatigueFactor / total;
-            float fi = (total + ((0.1f * ((float)PartCount - spread)) * peak))/4f;
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak))/4f;
             return strength * fatigueFactor * fi;
         }
 
@@ -946,9 +944,9 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref strengthOverride, "Physique_strengthOverride", 0f);
             Scribe_Values.Look(ref durationOverride, "Physique_durationOverride", 0);
             Scribe_Collections.Look(ref fatigueOverride, "Physique_fatigueOverride", LookMode.Value);
-            if (fatigueOverride == null || fatigueOverride.Count != PartCount)
+            if (fatigueOverride == null || fatigueOverride.Count != RimbodySettings.PartCount)
             {
-                fatigueOverride = Enumerable.Repeat(0f, PartCount).ToList();
+                fatigueOverride = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
             }
 
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);
@@ -969,9 +967,9 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref exhaustion, "Physique_exhaustion", 0f);
             Scribe_Values.Look(ref resting, "Physique_resting", false);
             Scribe_Collections.Look(ref partFatigue, "Physique_partFatigue", LookMode.Value);
-            if (partFatigue == null || partFatigue.Count != PartCount)
+            if (partFatigue == null || partFatigue.Count != RimbodySettings.PartCount)
             {
-                partFatigue = Enumerable.Repeat(0f, PartCount).ToList();
+                partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
             }
             Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
             Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
