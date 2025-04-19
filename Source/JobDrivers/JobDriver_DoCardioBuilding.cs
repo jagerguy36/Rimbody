@@ -51,17 +51,20 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score, out float fatigueFactor)
         {
             score = 0f;
+            fatigueFactor = 1f;
+            float tmpFatigueFactor = 1f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Cardio, ext.workouts[i]));
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Cardio, ext.workouts[i], out tmpFatigueFactor));
                 if (score < tempscore)
                 {
                     score = tempscore;
+                    fatigueFactor = tmpFatigueFactor;
                     indexBest = i;
                 }
             }
@@ -89,8 +92,8 @@ namespace Maux36.Rimbody
             yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
-            var ext = TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            RimbodyDefLists.CardioTarget.TryGetValue(TargetThingA.def, out var ext);
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score, out float fatigueFactor);
             var exWorkout = ext.workouts[workoutIndex];
             if (exWorkout.reportString != null)
             {
@@ -108,9 +111,10 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.limitOverride = score <= exWorkout.cardio * 0.9f;
                 compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = score;
+                compPhysique.cardioOverride = exWorkout.cardio;
+                compPhysique.durationOverride = duration;
+                compPhysique.partsOverride = exWorkout.strengthParts;
             };
             workout.AddPreTickAction(delegate
             {
@@ -125,6 +129,8 @@ namespace Maux36.Rimbody
                 compPhysique.limitOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
+                compPhysique.durationOverride = 0;
+                compPhysique.partsOverride = null;
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);
             });

@@ -19,7 +19,7 @@ namespace Maux36.Rimbody
         public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioJob = new();
         public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceJob = new();
         public static float strengthHighscore = 0;
-        public static float cardioHighscore = 0;
+        public static float cardioHighscore = 1;
         public static float balanceHighscore = 0;
 
         static RimbodyDefLists() // Static constructor

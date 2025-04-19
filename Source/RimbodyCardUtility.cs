@@ -19,18 +19,6 @@ namespace Maux36.Rimbody
 
         public static bool editMode;
 
-        [TweakValue("rimbody_a", 0f, 400f)]
-        private static float rimb_a = 200f;
-
-        [TweakValue("rimbody_b", 0f, 400f)]
-        private static float rimb_b = 10f;
-
-        [TweakValue("rimbody_c", 0f, 400f)]
-        private static float rimb_c = 40f;
-
-        [TweakValue("rimbody_d", 0f, 400f)]
-        private static float rimb_d = 30f;
-
         public static void DrawRimbodyCard(Rect rect, Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();

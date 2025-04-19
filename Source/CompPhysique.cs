@@ -14,6 +14,7 @@ namespace Maux36.Rimbody
     public class CompPhysique : ThingComp
     {
         private Pawn parentPawnInt = null;
+        private bool? isJoggerInt;
         public bool PostGen = false;
         public bool forceRest = false; //For mod compatibility.
 
@@ -22,7 +23,7 @@ namespace Maux36.Rimbody
         public float cardioOverride = 0f;
         public float strengthOverride = 0f;
         public int durationOverride = 0;
-        public List<float> fatigueOverride = null;
+        public List<float> partsOverride = null;
 
         public float BodyFat = -1f;
         public float FatGainFactor = 1f;
@@ -42,6 +43,25 @@ namespace Maux36.Rimbody
         public float exhaustion = 0f;
         public bool resting = false;
         public bool isNonSen = false;
+        public bool isJogger
+        {
+            get
+            {
+                if(isJoggerInt is null)
+                {
+                    TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
+                    if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+                    {
+                        isJoggerInt = true;
+                    }
+                    else
+                    {
+                        isJoggerInt = false;
+                    }
+                }
+                return isJoggerInt ?? false;
+            }
+        }
 
         public string lastMemory = string.Empty;
         public int lastWorkoutTick = 0;
@@ -558,9 +578,9 @@ namespace Maux36.Rimbody
                 //Log.Message($"{parentPawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
                 //Manage fatigue and exhaustion
-                if(durationOverride>0 && fatigueOverride != null)
+                if(durationOverride>0 && partsOverride != null)
                 {
-                    AddPartFatigue(fatigueOverride, (float)RimbodySettings.CalcEveryTick/durationOverride);
+                    AddPartFatigue(partsOverride, (float)RimbodySettings.CalcEveryTick/durationOverride);
                 }
                 else
                 {
@@ -820,10 +840,10 @@ namespace Maux36.Rimbody
             }
         }
 
-        public float GetStrengthPartScore(List<float> strengthParts, float strength)
+        public float GetStrengthPartScore(List<float> strengthParts, float strength, out float fatigueFactor)
         {
-            if(partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
-            float fatigueFactor = 0f;
+            fatigueFactor = 0f;
+            if (partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
             float total = 0;
             float spread = 0f;
             float peak = 0f;
@@ -842,8 +862,51 @@ namespace Maux36.Rimbody
             return strength * fatigueFactor * fi;
         }
 
-        public float GetScore(RimbodyTargetCategory category, WorkOut workout)
+        public float GetCardioFatigueScore(List<float> strengthParts)
         {
+            if (partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
+            float total = 0;
+            float spread = 0f;
+            float peak = 0f;
+            for (int i = 0; i < RimbodySettings.PartCount; i++)
+            {
+                if (strengthParts[i] > 0)
+                {
+                    spread = spread + Math.Min(1f, strengthParts[i]);
+                    total = total + strengthParts[i];
+                    peak = Math.Max(peak, strengthParts[i]);
+                }
+            }
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) / 4f;
+            return -fi;
+        }
+
+        public float GetScore(RimbodyTargetCategory category, ModExtensionRimbodyJob workout, out float fatigueFactor)
+        {
+            fatigueFactor = 1f;
+            switch (category)
+            {
+                case RimbodyTargetCategory.Strength:
+                    if (workout.strengthParts == null)
+                    {
+                        return 0f;
+                    }
+                    return GetStrengthPartScore(workout.strengthParts, workout.strength, out fatigueFactor);
+                case RimbodyTargetCategory.Cardio:
+                    if (workout.strengthParts == null)
+                    {
+                        return 0f;
+                    }
+                    return GetCardioFatigueScore(workout.strengthParts);
+                case RimbodyTargetCategory.Balance:
+                    return 1f;
+            }
+            return 0;
+        }
+
+        public float GetScore(RimbodyTargetCategory category, WorkOut workout, out float fatigueFactor)
+        {
+            fatigueFactor = 1f;
             switch (category)
             {
                 case RimbodyTargetCategory.Strength:
@@ -851,9 +914,13 @@ namespace Maux36.Rimbody
                     {
                         return 0f;
                     }
-                    return GetStrengthPartScore(workout.strengthParts, workout.strength);
+                    return GetStrengthPartScore(workout.strengthParts, workout.strength, out fatigueFactor);
                 case RimbodyTargetCategory.Cardio:
-                    return memory.Contains("cardio|" + workout.name) ? 0.9f*workout.cardio : workout.cardio;
+                    if (workout.strengthParts == null)
+                    {
+                        return 0f;
+                    }
+                    return GetCardioFatigueScore(workout.strengthParts);
                 case RimbodyTargetCategory.Balance:
                     return memory.Contains("balance|" + workout.name) ? 0.9f : 1f;
             }
@@ -943,10 +1010,10 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref cardioOverride, "Physique_cardioOverride", 0f);
             Scribe_Values.Look(ref strengthOverride, "Physique_strengthOverride", 0f);
             Scribe_Values.Look(ref durationOverride, "Physique_durationOverride", 0);
-            Scribe_Collections.Look(ref fatigueOverride, "Physique_fatigueOverride", LookMode.Value);
-            if (fatigueOverride == null || fatigueOverride.Count != RimbodySettings.PartCount)
+            Scribe_Collections.Look(ref partsOverride, "Physique_partsOverride", LookMode.Value);
+            if (partsOverride == null || partsOverride.Count != RimbodySettings.PartCount)
             {
-                fatigueOverride = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
+                partsOverride = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
             }
 
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);

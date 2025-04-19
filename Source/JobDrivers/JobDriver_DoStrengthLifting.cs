@@ -40,17 +40,20 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score, out float fatigueFactor)
         {
             score = 0f;
+            fatigueFactor = 1f;
+            float tmpFatigueFactor = 1f;
             int indexBest = -1;
-            var numVarieties = ext.workouts.Count;
+            var numVarieties = ext.workouts.Count; fatigueFactor = 1f;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i], out tmpFatigueFactor));
                 if (score < tempscore)
                 {
                     score = tempscore;
+                    fatigueFactor = tmpFatigueFactor;
                     indexBest = i;
                 }
             }
@@ -92,7 +95,7 @@ namespace Maux36.Rimbody
             //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
             IntVec3 workoutspot = SpotToWorkoutStandingNear(pawn, TargetA.Thing);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score, out float fatigueFactor);
             if (CurrentWorkout.reportString != null)
             {
                 this.job.reportStringOverride = CurrentWorkout.reportString.Translate();
@@ -113,9 +116,9 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = true;
                 compPhysique.limitOverride = score <= CurrentWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
-                compPhysique.cardioOverride = 0.2f;
+                compPhysique.cardioOverride = CurrentWorkout.cardio;
                 compPhysique.durationOverride = duration;
-                compPhysique.fatigueOverride = CurrentWorkout.strengthParts;
+                compPhysique.partsOverride = CurrentWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
@@ -133,7 +136,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;
-                compPhysique.fatigueOverride = null;
+                compPhysique.partsOverride = null;
                 TryGainGymThought();
                 AddMemory(compPhysique, CurrentWorkout.name);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);

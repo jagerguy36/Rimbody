@@ -63,7 +63,7 @@ namespace Maux36.Rimbody
             });
 
             var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
-            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
+            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength, out float fatigueFactor);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -79,9 +79,9 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = true;
                 compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
                 compPhysique.strengthOverride = score;
-                compPhysique.cardioOverride = 0.2f;
+                compPhysique.cardioOverride = exWorkout.cardio;
                 compPhysique.durationOverride = duration;
-                compPhysique.fatigueOverride = exWorkout.strengthParts;
+                compPhysique.partsOverride = exWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
@@ -98,7 +98,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;
-                compPhysique.fatigueOverride = null;
+                compPhysique.partsOverride = null;
                 AddMemory(compPhysique);
                 pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
             });

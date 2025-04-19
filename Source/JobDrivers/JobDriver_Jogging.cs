@@ -8,7 +8,6 @@ namespace Maux36.Rimbody
     public class JobDriver_Jogging : JobDriver
     {
         private bool recorded = false;
-        private bool jogger = false;
         private float joygainfactor = 1.0f;
         private int ticksLeft = 2500;
         
@@ -56,7 +55,6 @@ namespace Maux36.Rimbody
             base.ExposeData();
             Scribe_Values.Look(ref ticksLeft, "ticksLeft", 0);
             Scribe_Values.Look(ref recorded, "recorded", false);
-            Scribe_Values.Look(ref jogger, "jogger", false);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -66,10 +64,6 @@ namespace Maux36.Rimbody
             if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
             {
                 joygainfactor = 0;
-            }
-            if (pawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
-            {
-                jogger = true;
             }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
@@ -91,7 +85,7 @@ namespace Maux36.Rimbody
             toil.AddFinishAction(delegate
             {
                 AddMemory(compPhysique);
-                if (ticksLeft < 5 && jogger)
+                if (ticksLeft < 5 && compPhysique.isJogger)
                 {
                     pawn?.needs?.mood?.thoughts?.memories?.TryGainMemory(DefOf_Rimbody.Rimbody_GoodRun);
                 }

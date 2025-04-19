@@ -126,14 +126,15 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score, out float fatigueFactor)
         {
             score = 0f;
+            fatigueFactor = 0f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, ext.workouts[i]));
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, ext.workouts[i], out fatigueFactor));
                 if (score < tempscore)
                 {
                     score = tempscore;
@@ -173,7 +174,7 @@ namespace Maux36.Rimbody
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             RimbodyDefLists.BalanceTarget.TryGetValue(TargetThingA.def, out var ext);
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score, out float fatigueFactor);
             var exWorkout = ext.workouts[workoutIndex];
             if(exWorkout.reportString != null)
             {
@@ -195,7 +196,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = score;
                 compPhysique.cardioOverride = exWorkout.cardio;
                 compPhysique.durationOverride = duration;
-                compPhysique.fatigueOverride = exWorkout.strengthParts;
+                compPhysique.partsOverride = exWorkout.strengthParts;
                 if (exWorkout.animationType == InteractionType.animation)
                 {
                     if (ext.rimbodyBuildingpartGraphics != null)
@@ -222,7 +223,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;
-                compPhysique.fatigueOverride = null;
+                compPhysique.partsOverride = null;
                 if (ext.rimbodyBuildingpartGraphics != null)
                 {
                     buildingAnimated.workoutStartTick = -1;

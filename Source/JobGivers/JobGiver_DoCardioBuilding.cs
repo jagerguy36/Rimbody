@@ -10,6 +10,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
+        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -22,7 +23,7 @@ namespace Maux36.Rimbody
 
             if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {
-                result += 2.5f + ((compPhysique.BodyFat - compPhysique.FatGoal)/100f);
+                result += 0.5f + ((compPhysique.BodyFat - compPhysique.FatGoal)/100f);
             }
             else
             {
@@ -57,13 +58,21 @@ namespace Maux36.Rimbody
                 return null;
             }
 
-            tmpCandidates.Clear();
-            GetSearchSet(pawn, tmpCandidates);
-            if (tmpCandidates.Count == 0)
+            //Joggers will always try to jog if possible.
+            if(compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn))
             {
-                return null;
+                if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
+                {
+                    Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
+                    job.locomotionUrgency = LocomotionUrgency.Sprint;
+                    return job;
+                }
             }
 
+            //If not joggers or impossible to jog outside
+            tmpCandidates.Clear();
+            workoutCache.Clear();
+            GetSearchSet(pawn, tmpCandidates);
             Predicate<Thing> predicate = delegate (Thing t)
             {
                 if (t.IsForbidden(pawn))
@@ -100,14 +109,14 @@ namespace Maux36.Rimbody
                 }
                 else
                 {
-                    return false;
-                    //if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                    //{
-                    //    return false;
-                    //}
-                    //return true;
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                    {
+                        return false;
+                    }
+                    return true;
                 }
             };
+            float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
                 if (RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension))
@@ -115,16 +124,54 @@ namespace Maux36.Rimbody
                     float score = 0f;
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout));
+                        float tmpScore = 0;
+                        if (workoutCache.ContainsKey(workout.name))
+                        {
+                            tmpScore = workoutCache[workout.name];
+                        }
+                        else
+                        {
+                            tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout, out _);
+                        }
+                        if (tmpScore > score)
+                        {
+                            score = tmpScore;
+                        }
+                        if (score > targethighscore)
+                        {
+                            targethighscore = score;
+                        }
+                        Log.Message($"score for{workout.name} is {tmpScore}");
                     }
+                    
                     return score;
                 }
                 return 0;
             }
-
             Thing thing = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
             tmpCandidates.Clear();
+            workoutCache.Clear();
+
+            if (targethighscore < RimbodyDefLists.cardioHighscore)
+            {
+                if (!compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn)) //Already checked outside condition for jogger.
+                {
+                    if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
+                    {
+                        //jogging is possible. Compare the score
+                        var joggingEx = DefOf_Rimbody.Rimbody_Jogging.GetModExtension<ModExtensionRimbodyJob>();
+                        var joggingscore = joggingEx.cardio;
+                        if (targethighscore < joggingscore)
+                        {
+                            Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
+                            job.locomotionUrgency = LocomotionUrgency.Sprint;
+                            return job;
+                        }
+
+                    }
+                }
+            }
 
             if (thing != null)
             {

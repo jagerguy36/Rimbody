@@ -115,7 +115,7 @@ namespace Maux36.Rimbody
                     float score = 0f;
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, workout));
+                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, workout, out _));
                     }
                     return score;
                 }
