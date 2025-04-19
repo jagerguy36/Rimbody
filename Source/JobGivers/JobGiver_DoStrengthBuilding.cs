@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
+        private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -18,7 +18,7 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
-            if (compPhysique.gain >= compPhysique.gainMax)
+            if (compPhysique.gain >= compPhysique.gainMax*0.95f)
             {
                 return 0f;
             }
@@ -118,25 +118,26 @@ namespace Maux36.Rimbody
                 if(RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
-                    foreach (WorkOut workout in targetModExtension.workouts)
+                    if (workoutCache.ContainsKey(t.def))
                     {
-                        float tmpScore = 0;
-                        if (workoutCache.ContainsKey(workout.name))
-                        {
-                            tmpScore = workoutCache[workout.name];
-                        }
-                        else
-                        {
-                            tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, workout, out _);
-                        }
-                        if (tmpScore > score)
-                        {
-                            score = tmpScore;
-                        }
+                        score = workoutCache[t.def];
                         if (score > targethighscore)
                         {
                             targethighscore = score;
                         }
+                        return score;
+                    }
+                    foreach (WorkOut workout in targetModExtension.workouts)
+                    {
+                        float tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, workout);
+                        if (tmpScore > score)
+                        {
+                            score = tmpScore;
+                        }
+                    }
+                    if (score > targethighscore)
+                    {
+                        targethighscore = score;
                     }
                     return score;
                 }
@@ -177,13 +178,13 @@ namespace Maux36.Rimbody
                 if (Chunk != null)
                 {
                     var liftingjobEx = DefOf_Rimbody.Rimbody_DoChunkLifting.GetModExtension<ModExtensionRimbodyJob>();
-                    float lifting_score = compPhysique.GetStrengthPartScore(liftingjobEx.strengthParts, liftingjobEx.strength, out _);
+                    float lifting_score = compPhysique.GetStrengthPartScore(liftingjobEx.strengthParts, liftingjobEx.strength);
 
                     var pressjobEx = DefOf_Rimbody.Rimbody_DoChunkOverheadPress.GetModExtension<ModExtensionRimbodyJob>();
-                    float press_score = compPhysique.GetStrengthPartScore(pressjobEx.strengthParts, pressjobEx.strength, out _);
+                    float press_score = compPhysique.GetStrengthPartScore(pressjobEx.strengthParts, pressjobEx.strength);
 
                     var squatsjobEx = DefOf_Rimbody.Rimbody_DoChunkSquats.GetModExtension<ModExtensionRimbodyJob>();
-                    float squats_score = compPhysique.GetStrengthPartScore(squatsjobEx.strengthParts, squatsjobEx.strength, out _);
+                    float squats_score = compPhysique.GetStrengthPartScore(squatsjobEx.strengthParts, squatsjobEx.strength);
 
                     float maxScore = lifting_score;
                     JobDef maxJob = DefOf_Rimbody.Rimbody_DoChunkLifting;

@@ -58,6 +58,7 @@ namespace Maux36.Rimbody
             muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_General.DoAtomic(delegate
             {
@@ -71,7 +72,7 @@ namespace Maux36.Rimbody
             });
 
             var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
-            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength, out float fatigueFactor);
+            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -85,8 +86,7 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
-                compPhysique.strengthOverride = score;
+                compPhysique.strengthOverride = exWorkout.strength;
                 compPhysique.cardioOverride = exWorkout.cardio;
                 compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = exWorkout.strengthParts;
@@ -122,7 +122,6 @@ namespace Maux36.Rimbody
             workout.AddFinishAction(delegate
             {
                 compPhysique.jobOverride = false;
-                compPhysique.limitOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;

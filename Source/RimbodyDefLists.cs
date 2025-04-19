@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Jobs;
 using Verse;
 using static UnityEngine.Scripting.GarbageCollector;
@@ -18,6 +19,8 @@ namespace Maux36.Rimbody
         public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthJob = new();
         public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioJob = new();
         public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceJob = new();
+        public static List<float> jogging_parts;
+        public static List<float> jogging_parts_jogger;
         public static float strengthHighscore = 0;
         public static float cardioHighscore = 1;
         public static float balanceHighscore = 0;
@@ -80,7 +83,15 @@ namespace Maux36.Rimbody
                     BalanceJob[jobDef] = jobExtension;
                     break;
                 case RimbodyTargetCategory.Cardio:
-                    CardioJob[jobDef] = jobExtension;
+                    if (jobExtension.strengthParts != null)
+                    {
+                        if(jobDef.defName == "Rimbody_Jogging")
+                        {
+                            jogging_parts = jobExtension.strengthParts;
+                            jogging_parts_jogger = jobExtension.strengthParts.Select(x => x / 3f).ToList();
+                        }
+                        CardioJob[jobDef] = jobExtension;
+                    }   
                     break;
             }
         }

@@ -130,20 +130,17 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }            
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score, out float fatigueFactor)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
         {
             score = 0f;
-            fatigueFactor = 1f;
-            float tmpFatigueFactor = 1f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i], out tmpFatigueFactor));
+                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
                 if (score < tempscore)
                 {
                     score = tempscore;
-                    fatigueFactor = tmpFatigueFactor;
                     indexBest = i;
                 }
             }
@@ -174,13 +171,14 @@ namespace Maux36.Rimbody
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score, out float fatigueFactor);
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             var exWorkout = ext.workouts[workoutIndex];
             if (exWorkout.reportString != null)
             {
@@ -198,8 +196,7 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.limitOverride = score <= exWorkout.strength * 0.9f;
-                compPhysique.strengthOverride = score;
+                compPhysique.strengthOverride = exWorkout.strength;
                 compPhysique.cardioOverride = exWorkout.cardio;
                 compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = exWorkout.strengthParts;
@@ -224,7 +221,6 @@ namespace Maux36.Rimbody
             workout.AddFinishAction(delegate
             {
                 compPhysique.jobOverride = false;
-                compPhysique.limitOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;

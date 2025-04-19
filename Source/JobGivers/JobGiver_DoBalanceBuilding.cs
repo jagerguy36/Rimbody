@@ -18,12 +18,28 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 5.0f;
+            float result = 4.0f;
 
-            if (compPhysique.memory?.Count>0 && !compPhysique.memory.Any(s => s.Split('|')[0] == "balance"))
+            if(compPhysique.memory?.Count > 0)
             {
-                result += 3.05f;
+                foreach (var item in compPhysique.memory)
+                {
+                    int delimiterIndex = item.IndexOf('|');
+                    if (delimiterIndex >= 0)
+                    {
+                        string firstPart = item.Substring(0, delimiterIndex);
+                        if (firstPart == "balance")
+                        {
+                            result -= 0.8f;
+                        }
+                        else
+                        {
+                            result += 0.4f;
+                        }
+                    }
+                }
             }
+
 
             return result;
         }
@@ -115,7 +131,7 @@ namespace Maux36.Rimbody
                     float score = 0f;
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, workout, out _));
+                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, workout));
                     }
                     return score;
                 }

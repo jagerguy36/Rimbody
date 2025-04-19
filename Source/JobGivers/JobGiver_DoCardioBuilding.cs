@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
+        private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -122,28 +122,27 @@ namespace Maux36.Rimbody
                 if (RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
-                    foreach (WorkOut workout in targetModExtension.workouts)
+                    if (workoutCache.ContainsKey(t.def))
                     {
-                        float tmpScore = 0;
-                        if (workoutCache.ContainsKey(workout.name))
-                        {
-                            tmpScore = workoutCache[workout.name];
-                        }
-                        else
-                        {
-                            tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout, out _);
-                        }
-                        if (tmpScore > score)
-                        {
-                            score = tmpScore;
-                        }
+                        score = workoutCache[t.def];
                         if (score > targethighscore)
                         {
                             targethighscore = score;
                         }
-                        Log.Message($"score for{workout.name} is {tmpScore}");
+                        return score;
                     }
-                    
+                    foreach (WorkOut workout in targetModExtension.workouts)
+                    {
+                        float tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout);
+                        if (tmpScore > score)
+                        {
+                            score = tmpScore;
+                        }
+                    }
+                    if (score > targethighscore)
+                    {
+                        targethighscore = score;
+                    }
                     return score;
                 }
                 return 0;

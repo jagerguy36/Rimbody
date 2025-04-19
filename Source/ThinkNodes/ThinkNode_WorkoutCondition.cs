@@ -44,10 +44,11 @@ namespace Maux36.Rimbody
                     }
                     if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
                     {
-                        if(compPhysique.gain < compPhysique.gainMax)
+                        if(compPhysique.gain >= compPhysique.gainMax * 0.95f)
                         {
-                            return true;
+                            return false;
                         }
+                        return true;
                     }
                 }
             }
