@@ -78,14 +78,6 @@ namespace Maux36.Rimbody
         private static readonly GeneDef GeneBodyStandard = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Standard", true) : null;
         private static readonly GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
 
-        private static readonly HashSet<string> RimbodyJobs =
-        [
-            "Rimbody_DoStrengthBuilding",
-            "Rimbody_DoBalanceBuilding",
-            "Rimbody_DoCardioBuilding",
-            "Rimbody_DoStrengthLifting"
-        ];
-
         private Pawn parentPawn
         {
             get
@@ -176,6 +168,7 @@ namespace Maux36.Rimbody
                 float cardioFactor = 0.3f; //_baseC
                 float strengthFactor = 0.1f; //_sedentaryS
                 List<float> partsToApplyFatigue = null;
+                float fatigueMult = durationOverride;
 
                 //If factor is Forced
                 if (forcedCardio >= 0 && forcedStrength >=0)
@@ -196,13 +189,13 @@ namespace Maux36.Rimbody
                     partsToApplyFatigue = partsOverride;
                     switch (curJobDef.defName)
                     {
-                        case string job when job.StartsWith("Rimbody_DoStrength") || job.StartsWith("Rimbody_DoChunk"):
+                        case string job when RimbodyDefLists.StrengthJob.Contains(job):
                             doingS = true;
                             break;
-                        case "Rimbody_DoBalanceBuilding":
+                        case string job when RimbodyDefLists.BalanceJob.Contains(job):
                             doingB = true;
                             break;
-                        case "Rimbody_DoCardioBuilding":
+                        case string job when RimbodyDefLists.CardioJob.Contains(job):
                             doingC = true;
                             break;
                     }
@@ -250,6 +243,7 @@ namespace Maux36.Rimbody
                                             {
                                                 partsToApplyFatigue = RimbodyDefLists.jogging_parts;
                                             }
+                                            fatigueMult = 2500f;
                                         }
                                     }
                                     break;
@@ -272,7 +266,6 @@ namespace Maux36.Rimbody
                                     }
                                     break;
                             }
-                            //get partFatigue for moving
                         }
                         //Special cases: Lying down
                         else if (curDriver?.CurToilString == "LayDown")
@@ -286,10 +279,6 @@ namespace Maux36.Rimbody
                             var jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
                             if (jobExtension != null)
                             {
-                                if (curJobDef.defName == "Rimbody_DoChunkLifting")
-                                {
-                                    doingS = true;
-                                }
                                 cardioFactor = jobExtension.cardio;
                                 strengthFactor = jobExtension.strength;
                             }
@@ -307,7 +296,7 @@ namespace Maux36.Rimbody
                     }
                 }
                 //Apply partFatigue
-                if (partsToApplyFatigue != null)
+                if (RimbodySettings.useFatigue && partsToApplyFatigue != null)
                 {
                     if (doingS)
                     {
@@ -612,31 +601,30 @@ namespace Maux36.Rimbody
                 //Log.Message($"{parentPawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
                 //Manage fatigue and exhaustion
-                if(partsToApplyFatigue != null)
+                if (RimbodySettings.useFatigue)
                 {
-                    AddPartFatigue(partsToApplyFatigue, (float)RimbodySettings.CalcEveryTick/durationOverride);
+                    if (partsToApplyFatigue != null)
+                    {
+                        AddPartFatigue(partsToApplyFatigue, (float)RimbodySettings.CalcEveryTick / fatigueMult);
+                    }
+                    else
+                    {
+                        RestorePartFatigue(restingCheck ? 2f : 1f);
+                    }
                 }
-                else
-                {
-                    RestorePartFatigue(restingCheck?2f:1f);
-                }
-
                 if (RimbodySettings.useExhaustion)
                 {
                     if (doingS)
                     {
                         exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (0.5f + (5f * (MuscleMass / 100f)) + (4f * (BodyFat / 100f) * (MuscleMass / 100f)) + (2f * (BodyFat / 100f))));
-                        //Log.Message($"{parentPawn.Name} Strength Training. fatigueDelta: {fatigueDelta}");
                     }
                     else if (doingB)
                     {
                         exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                        //Log.Message($"{parentPawn.Name} Balance Training. fatigueDelta: {fatigueDelta}");
                     }
                     else if (doingC)
                     {
                         exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                        //Log.Message($"{parentPawn.Name} Cardio Training. fatigueDelta: {fatigueDelta}");
                     }
                     var newExhaustion = exhaustion + exhaustionDelta;
                     if (newExhaustion >= 100f)
@@ -667,7 +655,7 @@ namespace Maux36.Rimbody
                     parentPawn.story.bodyType = GetValidBody();
                     parentPawn.Drawer.renderer.SetAllGraphicsDirty();
                 }
-                //Log Memory
+                ////Log Memory
                 //string memoery_String = string.Join(", ", memory);
                 //Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
 
@@ -876,6 +864,10 @@ namespace Maux36.Rimbody
 
         public float GetStrengthPartScore(List<float> strengthParts, float strength)
         {
+            if (!RimbodySettings.useFatigue)
+            {
+                return strength;
+            }
             if (partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0;
             float fatigueFactor = 0f;
             float total = 0;
@@ -898,6 +890,10 @@ namespace Maux36.Rimbody
 
         public float GetCardioFatigueScore(List<float> strengthParts, float cardio)
         {
+            if (!RimbodySettings.useFatigue)
+            {
+                return cardio;
+            }
             if (partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
             float fatigueFactor = 0f;
             float total = 0;
@@ -911,32 +907,6 @@ namespace Maux36.Rimbody
             }
             fatigueFactor = fatigueFactor / total;
             return cardio * (fatigueFactor + 1f)/2f;
-        }
-
-        public float GetScore(RimbodyTargetCategory category, ModExtensionRimbodyJob workout)
-        {
-            switch (category)
-            {
-                case RimbodyTargetCategory.Strength:
-                    if (workout.strengthParts == null)
-                    {
-                        return 0f;
-                    }
-                    return GetStrengthPartScore(workout.strengthParts, workout.strength);
-                case RimbodyTargetCategory.Cardio:
-                    if (workout.strengthParts == null)
-                    {
-                        return 0f;
-                    }
-                    return GetCardioFatigueScore(workout.strengthParts, workout.cardio);
-                case RimbodyTargetCategory.Balance:
-                    if (workout.strengthParts == null)
-                    {
-                        return 0f;
-                    }
-                    return GetStrengthPartScore(workout.strengthParts, workout.strength);
-            }
-            return 0;
         }
 
         public float GetScore(RimbodyTargetCategory category, WorkOut workout)

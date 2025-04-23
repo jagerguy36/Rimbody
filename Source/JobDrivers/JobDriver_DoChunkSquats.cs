@@ -41,7 +41,7 @@ namespace Maux36.Rimbody
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|chunk squats");
+                compPhysique.AddNewMemory($"strength|{job.def.defName}");
             }
         }
 

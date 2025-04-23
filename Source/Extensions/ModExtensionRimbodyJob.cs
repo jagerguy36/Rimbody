@@ -70,6 +70,7 @@ namespace Maux36.Rimbody
         public float cardio = 1f;
         public float strength = 1f;
         public bool playSound = false;
+        public bool useBench = false;
         public InteractionType animationType = InteractionType.still;
         public Direction pawnDirection = Direction.center;
         public List<float> strengthParts;

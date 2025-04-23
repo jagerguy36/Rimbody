@@ -43,11 +43,11 @@ namespace Maux36.Rimbody
             if (!recorded) {
                 if (compPhysique != null)
                 {
-                    compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                    compPhysique.AddNewMemory("cardio|jogging");
+                    compPhysique.AddNewMemory($"cardio|{job.def.defName}");
                     recorded = true;
                 }
             }
+            compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
         }
 
         public override void ExposeData()

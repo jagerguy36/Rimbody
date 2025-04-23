@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using Verse.AI;
 using Verse;
-using Verse.Sound;
-using System.Reflection;
 using UnityEngine;
 using System;
-using UnityEngine.Profiling;
-using System.Linq;
 
 namespace Maux36.Rimbody
 {
@@ -19,6 +15,7 @@ namespace Maux36.Rimbody
         private float muscleInt = 25;
         public int currentWorkoutIndex = -1;
         private int side = 1;
+        private readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
         private ModExtensionRimbodyTarget ext => TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
         public WorkOut CurrentWorkout
         {
@@ -47,10 +44,12 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
-                if (score < tempscore)
+                float tmpScore;
+                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
+                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                if (tmpScore > score)
                 {
-                    score = tempscore;
+                    score = tmpScore;
                     indexBest = i;
                 }
             }
@@ -80,6 +79,7 @@ namespace Maux36.Rimbody
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
+            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             yield return Toils_General.DoAtomic(delegate
             {
                 job.count = 1;
@@ -90,10 +90,15 @@ namespace Maux36.Rimbody
             {
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
-            //IntVec3 workoutspot = RCellFinder.SpotToStandDuringJob(pawn);
-            IntVec3 workoutspot = SpotToWorkoutStandingNear(pawn, TargetA.Thing);
+            IntVec3 workoutspot = SpotToWorkout(pawn, TargetA.Thing, out bool usingBench, CurrentWorkout.useBench);
+            float efficiency = 1f;
+            if (usingBench)
+            {
+                efficiency = 1.05f;
+            }
+            this.job.SetTarget(TargetIndex.C, workoutspot);
+            yield return Toils_Reserve.Reserve(TargetIndex.C);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             if (CurrentWorkout.reportString != null)
             {
                 this.job.reportStringOverride = CurrentWorkout.reportString.Translate();
@@ -112,8 +117,8 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = CurrentWorkout.strength;
-                compPhysique.cardioOverride = CurrentWorkout.cardio;
+                compPhysique.strengthOverride = CurrentWorkout.strength * efficiency;
+                compPhysique.cardioOverride = CurrentWorkout.cardio * efficiency;
                 compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = CurrentWorkout.strengthParts;
             };
@@ -219,56 +224,72 @@ namespace Maux36.Rimbody
             }
         }
 
-        public static IntVec3 SpotToWorkoutStandingNear(Pawn pawn, Thing workoutThing, Predicate<IntVec3> extraValidator = null)
+        public IntVec3 SpotToWorkout(Pawn pawn, Thing workoutThing, out bool usingBench, bool lookForBench = false)
         {
-            IntVec3 workoutLocation = RCellFinder.RandomWanderDestFor(pawn, workoutThing.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(pawn, Danger.Some));
-            if (workoutLocation == null)
+            usingBench = false;
+            IntVec3 workoutLocation = IntVec3.Invalid;
+            if (lookForBench)
+            {
+                Thing thing = null;
+                Predicate<Thing> baseChairValidator = delegate (Thing t)
+                {
+                    if (t.def.building == null)
+                    {
+                        return false;
+                    }
+                    if (t.IsForbidden(pawn))
+                    {
+                        return false;
+                    }
+                    if (!t.IsSociallyProper(pawn))
+                    {
+                        return false;
+                    }
+                    if (t.IsBurning())
+                    {
+                        return false;
+                    }
+                    if (!TryFindFreeSittingSpotOnThing(t, pawn, out var cell))
+                    {
+                        return false;
+                    }
+                    if (!pawn.CanReserve(cell))
+                    {
+                        return false;
+                    }
+                    return true;
+                };
+                thing = GenClosest.ClosestThingReachable(workoutThing.Position, pawn.Map, ThingRequest.ForDef(benchDef), PathEndMode.OnCell, TraverseParms.For(pawn), 30f, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(pawn, t.Map) == Danger.None);
+                if (thing != null && TryFindFreeSittingSpotOnThing(thing, pawn, out workoutLocation))
+                {
+                    usingBench = true;
+                    return workoutLocation;
+                }
+            }
+            workoutLocation = RCellFinder.RandomWanderDestFor(pawn, workoutThing.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(pawn, Danger.Some));
+            if (workoutLocation == IntVec3.Invalid)
             {
                 if (CellFinder.TryFindRandomReachableNearbyCell(workoutThing.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out workoutLocation))
                 {
                     return workoutLocation;
                 }
                 return IntVec3.Invalid;
-                //return RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
-                //{
-                //    if (!TryFindAdjacentWorkoutPlaceSpot(c, workoutThing.def, pawn, out var _))
-                //    {
-                //        return false;
-                //    }
-                //    return (extraValidator == null || extraValidator(c)) ? true : false;
-                //}, pawn: pawn);
             }
             return workoutLocation;
         }
-        //public static bool TryFindAdjacentWorkoutPlaceSpot(IntVec3 root, ThingDef workoutDef, Pawn pawn, out IntVec3 placeSpot)
-        //{
 
-        //    List<IntVec3> spotSearchList = new List<IntVec3>();
-        //    List<IntVec3> cardinals = GenAdj.CardinalDirections.ToList();
-        //    List<IntVec3> diagonals = GenAdj.DiagonalDirections.ToList();
-        //    placeSpot = IntVec3.Invalid;
-        //    spotSearchList.Clear();
-        //    cardinals.Shuffle();
-        //    for (int j = 0; j < 4; j++)
-        //    {
-        //        spotSearchList.Add(cardinals[j]);
-        //    }
-        //    diagonals.Shuffle();
-        //    for (int k = 0; k < 4; k++)
-        //    {
-        //        spotSearchList.Add(diagonals[k]);
-        //    }
-        //    spotSearchList.Add(IntVec3.Zero);
-        //    for (int l = 0; l < spotSearchList.Count; l++)
-        //    {
-        //        IntVec3 intVec2 = root + spotSearchList[l];
-        //        if (intVec2.Walkable(pawn.Map) && !intVec2.IsForbidden(pawn) && !pawn.Map.thingGrid.ThingsAt(intVec2).Any((Thing t) => t.def == workoutDef))
-        //        {
-        //            placeSpot = intVec2;
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
+        public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
+        {
+            foreach (IntVec3 item in t.OccupiedRect())
+            {
+                if (pawn.CanReserve(item, 1, -1, null, false)) //(pawn.CanReserveSittableOrSpot(item))
+                {
+                    cell = item;
+                    return true;
+                }
+            }
+            cell = default;
+            return false;
+        }
     }
 }

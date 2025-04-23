@@ -43,78 +43,82 @@ namespace Maux36.Rimbody
             num += rect3.height + 10f;
 
             //=======================Rimbody Info========================================
-            var rectFatigue = new Rect(205f, 8f, 50f, 39f);
-            TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(
-                (100f * compPhysique.partFatigue[0] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[1] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[2] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[3] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[4] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[5] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[6] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[7] / 10f).ToString("F1"),
-                (100f * compPhysique.partFatigue[8] / 10f).ToString("F1"));
-            TooltipHandler.TipRegion(rectFatigue, tipFatigue);
-            Widgets.DrawHighlightIfMouseover(rectFatigue);
-            Texture2D partsbase = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partBase");
-            Texture2D partsShoulders = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsShoulders");
-            Texture2D partsBiceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBiceps");
-            Texture2D partsChest;
-            if (pawn.gender == Gender.Male)
+            if (RimbodySettings.useFatigue)
             {
-                partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest");
-            }
-            else
-            {
-                partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest_w");
-            }            
-            Texture2D partsAbs = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsAbs");
-            Texture2D partsQuads = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsQuads");
-            var frontpartsrect = new Rect(200f, 10f, 35f, 35f);
-            GUI.DrawTexture(frontpartsrect, partsbase);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[0] / 10f);
-            GUI.DrawTexture(frontpartsrect, partsShoulders);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[1] / 10f);
-            GUI.DrawTexture(frontpartsrect, partsChest);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[2] / 10f);
-            GUI.DrawTexture(frontpartsrect, partsBiceps);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[5] / 10f);
-            GUI.DrawTexture(frontpartsrect, partsAbs);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[7] / 10f);
-            GUI.DrawTexture(frontpartsrect, partsQuads);
-            GUI.color = Color.white;
+                var rectFatigue = new Rect(205f, 8f, 50f, 39f);
+                TipSignal tipFatigue = "RimbodyFatigueTooltip".Translate(
+                    (100f * compPhysique.partFatigue[0] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[1] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[2] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[3] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[4] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[5] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[6] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[7] / 10f).ToString("F1"),
+                    (100f * compPhysique.partFatigue[8] / 10f).ToString("F1"));
+                TooltipHandler.TipRegion(rectFatigue, tipFatigue);
+                Widgets.DrawHighlightIfMouseover(rectFatigue);
+                Texture2D partsbase = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partBase");
+                Texture2D partsShoulders = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsShoulders");
+                Texture2D partsBiceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBiceps");
+                Texture2D partsChest;
+                if (pawn.gender == Gender.Male)
+                {
+                    partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest");
+                }
+                else
+                {
+                    partsChest = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsChest_w");
+                }
+                Texture2D partsAbs = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsAbs");
+                Texture2D partsQuads = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsQuads");
+                var frontpartsrect = new Rect(200f, 10f, 35f, 35f);
+                GUI.DrawTexture(frontpartsrect, partsbase);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[0] / 10f);
+                GUI.DrawTexture(frontpartsrect, partsShoulders);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[1] / 10f);
+                GUI.DrawTexture(frontpartsrect, partsChest);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[2] / 10f);
+                GUI.DrawTexture(frontpartsrect, partsBiceps);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[5] / 10f);
+                GUI.DrawTexture(frontpartsrect, partsAbs);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[7] / 10f);
+                GUI.DrawTexture(frontpartsrect, partsQuads);
+                GUI.color = Color.white;
 
-            Texture2D partsTriceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsTriceps");
-            Texture2D partsBack;
-            if (pawn.gender == Gender.Male)
-            {
-                partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack");
+                Texture2D partsTriceps = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsTriceps");
+                Texture2D partsBack;
+                if (pawn.gender == Gender.Male)
+                {
+                    partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack");
+                }
+                else
+                {
+                    partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack_w");
+                }
+                Texture2D partsGlutes;
+                if (pawn.gender == Gender.Male)
+                {
+                    partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes");
+                }
+                else
+                {
+                    partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes_w");
+                }
+                Texture2D partsHams = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsHams");
+                var backpartsrect = new Rect(225f, 10f, 35f, 35f);
+                GUI.DrawTexture(backpartsrect, partsbase);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[3] / 10f);
+                GUI.DrawTexture(backpartsrect, partsTriceps);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[4] / 10f);
+                GUI.DrawTexture(backpartsrect, partsBack);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[6] / 10f);
+                GUI.DrawTexture(backpartsrect, partsGlutes);
+                GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[8] / 10f);
+                GUI.DrawTexture(backpartsrect, partsHams);
+                GUI.color = Color.white;
+
             }
-            else
-            {
-                partsBack = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsBack_w");
-            }
-            Texture2D partsGlutes;
-            if (pawn.gender == Gender.Male)
-            {
-                partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes");
-            }
-            else
-            {
-                partsGlutes = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsGlutes_w");
-            }
-            Texture2D partsHams = ContentFinder<Texture2D>.Get("UI/Parts/Rimbody_partsHams");
-            var backpartsrect = new Rect(225f, 10f, 35f, 35f);
-            GUI.DrawTexture(backpartsrect, partsbase);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[3] / 10f);
-            GUI.DrawTexture(backpartsrect, partsTriceps);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[4] / 10f);
-            GUI.DrawTexture(backpartsrect, partsBack);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[6] / 10f);
-            GUI.DrawTexture(backpartsrect, partsGlutes);
-            GUI.color = new Color(1f, 1f, 1f, compPhysique.partFatigue[8] / 10f);
-            GUI.DrawTexture(backpartsrect, partsHams);
-            GUI.color = Color.white;
 
             if (RimbodySettings.useExhaustion)
             {

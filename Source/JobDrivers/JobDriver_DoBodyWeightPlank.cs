@@ -8,15 +8,31 @@ using UnityEngine;
 using System;
 using UnityEngine.Profiling;
 using static System.Net.Mime.MediaTypeNames;
+using static Verse.PawnRenderNodeProperties;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoChunkLifting : JobDriver
+    internal class JobDriver_DoBodyWeightPlank : JobDriver
     {
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
-        private float muscleInt = 25;
+        private Vector3 pawnNudge = Vector3.zero;
+        private Rot4 lyingRotation = Rot4.Invalid;
+        public override Vector3 ForcedBodyOffset
+        {
+            get
+            {
+                return pawnNudge;
+            }
+        }
+        public override Rot4 ForcedLayingRotation
+        {
+            get
+            {
+                return lyingRotation;
+            }
+        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -27,51 +43,52 @@ namespace Maux36.Rimbody
 
             return true;
         }
-
+        protected void WatchTickAction(Thing building)
+        {
+            if (joygainfactor > 0)
+            {
+                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+            }
+        }
         private void AddMemory(CompPhysique compPhysique)
         {
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|{job.def.defName}");
+                compPhysique.AddNewMemory($"balance|{job.def.defName}");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "chunklifting_muscleInt", 25);
+            Scribe_Values.Look(ref tickProgress, "plank_tickProgress", 0);
+            Scribe_Values.Look(ref pawnNudge, "plank_pawnNudget", Vector3.zero);
+            Scribe_Values.Look(ref lyingRotation, "plank_lyingRotation", Rot4.Invalid);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            muscleInt = compPhysique.MuscleMass;
-            this.FailOnDestroyedOrNull(TargetIndex.A);
+            float jitter_amount = 3f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f))) / 100f;
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);
-            yield return Toils_General.DoAtomic(delegate
-            {
-                job.count = 1;
-            });
-            yield return Toils_Reserve.Reserve(TargetIndex.A);
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
-            yield return Toils_General.DoAtomic(delegate
-            {
-                pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
-            });
 
             var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
             float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
+            yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
+            Rot4 facing = Rot4.Random;
+            float adjsusted =(facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f;
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
                 pawn.pather.StopDead();
-                pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
+                pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + adjsusted;
+                pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
+                lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
                 {
@@ -87,6 +104,13 @@ namespace Maux36.Rimbody
             {
                 tickProgress += 1;
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+                float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
+                Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * xJitter;
+                pawnNudge = JitterVector;
+                if (tickProgress % 150 == 0)
+                {
+                    FleckMaker.ThrowMetaIcon(pawn.Position, pawn.Map, DefOf_Rimbody.Mote_Rimbody_Plank);
+                }
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -98,45 +122,13 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.durationOverride = 0;
                 compPhysique.partsOverride = null;
+                pawnNudge = Vector3.zero;
+                lyingRotation = Rot4.Invalid;
+                TryGainGymThought();
                 AddMemory(compPhysique);
-                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                pawn.PawnBodyAngleOverride() = -1;
             });
             yield return workout;
-        }
-
-        public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
-        {
-            return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt);
-        }
-        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt)
-        {
-            Thing carriedThing = pawn.carryTracker.CarriedThing;
-            if (carriedThing == null)
-            {
-                return false;
-            }
-            float uptime = 0.95f - (40f * muscleInt / 5000f);
-            float cycleDuration = 150f-muscleInt;
-            float jiggle_amount = 3f * (1f - (muscleInt / 50f)) / 100f;
-            float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-            float yOffset = 0f;
-            if (cycleTime < uptime)
-            {
-                yOffset = Mathf.Lerp(0f, 0.3f, cycleTime / uptime);
-            }
-            else
-            {
-                yOffset = Mathf.Lerp(0.3f, 0f, (cycleTime - uptime) / (1f - uptime));
-            }
-
-            float xJitter = (Rand.RangeSeeded(-jiggle_amount, jiggle_amount, tickProgress));
-            if (tickProgress>0)
-            {
-                drawPos += new Vector3(xJitter, 1f / 26f, yOffset);
-                flip = false;
-                return true;
-            }
-            return false;
         }
 
         public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
@@ -153,6 +145,25 @@ namespace Maux36.Rimbody
                 return true;
             }
             return false;
+        }
+        private void TryGainGymThought()
+        {
+            var room = pawn.GetRoom();
+            if (room == null)
+            {
+                return;
+            }
+
+            //get the impressive stage index for the current room
+            var scoreStageIndex =
+                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
+            //if the stage index exists in the definition (in xml), gain the memory (and buff)
+            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
+            {
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
+                    ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
+                        scoreStageIndex));
+            }
         }
     }
 }

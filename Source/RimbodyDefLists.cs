@@ -16,13 +16,16 @@ namespace Maux36.Rimbody
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> CardioTarget = new();
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> BalanceTarget = new();
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> WorkoutBuilding = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthJob = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioJob = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceJob = new();
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthNonTargetJob = new();
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioNonTargetJob = new();
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceNonTargetJob = new();
+        public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" };
+        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" };
+        public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceBuilding" };
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;
         public static float strengthHighscore = 0;
-        public static float cardioHighscore = 1;
+        public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
 
         static RimbodyDefLists() // Static constructor
@@ -76,11 +79,18 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
-                        StrengthJob[jobDef] = jobExtension;
+                        StrengthNonTargetJob[jobDef] = jobExtension;
+                        StrengthJob.Add(jobDef.defName);
                     }
                     break;
                 case RimbodyTargetCategory.Balance:
-                    BalanceJob[jobDef] = jobExtension;
+                    if (jobExtension.strengthParts != null)
+                    {
+                        var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
+                        balanceHighscore = Math.Max(balanceHighscore, os);
+                        BalanceNonTargetJob[jobDef] = jobExtension;
+                        BalanceJob.Add(jobDef.defName);
+                    }
                     break;
                 case RimbodyTargetCategory.Cardio:
                     if (jobExtension.strengthParts != null)
@@ -90,7 +100,9 @@ namespace Maux36.Rimbody
                             jogging_parts = jobExtension.strengthParts;
                             jogging_parts_jogger = jobExtension.strengthParts.Select(x => x / 3f).ToList();
                         }
-                        CardioJob[jobDef] = jobExtension;
+                        cardioHighscore = Math.Max(cardioHighscore, jobExtension.cardio);
+                        CardioNonTargetJob[jobDef] = jobExtension;
+                        CardioJob.Add(jobDef.defName);
                     }   
                     break;
             }

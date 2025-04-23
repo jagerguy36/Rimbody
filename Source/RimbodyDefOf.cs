@@ -8,13 +8,17 @@ namespace Maux36.Rimbody
     public static class DefOf_Rimbody
     {
         public static JobDef Rimbody_Jogging;
+        public static JobDef Rimbody_DoStrengthPushUps;
         public static JobDef Rimbody_DoChunkLifting;
         public static JobDef Rimbody_DoChunkOverheadPress;
         public static JobDef Rimbody_DoChunkSquats;
         public static JobDef Rimbody_DoStrengthLifting;
         public static JobDef Rimbody_DoStrengthBuilding;
         public static JobDef Rimbody_DoBalanceBuilding;
+        public static JobDef Rimbody_DoBodyWeightPlank;
         public static JobDef Rimbody_DoCardioBuilding;
+
+        public static StatDef Rimbody_WorkoutEfficiency;
 
         public static TimeAssignmentDef Rimbody_Workout;
 
@@ -26,6 +30,7 @@ namespace Maux36.Rimbody
         public static FleckDef Mote_GainLimited;
         public static FleckDef Mote_Cardio;
         public static FleckDef Mote_CardioLimited;
+        public static FleckDef Mote_Rimbody_Plank;
 
         public static JoyKindDef Rimbody_WorkoutJoy;
 

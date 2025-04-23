@@ -10,6 +10,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoBalanceBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
+        private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
@@ -18,7 +19,7 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 4.0f;
+            float result = 4.0f;//4.0f;
 
             if(compPhysique.memory?.Count > 0)
             {
@@ -40,7 +41,6 @@ namespace Maux36.Rimbody
                 }
             }
 
-
             return result;
         }
 
@@ -55,37 +55,19 @@ namespace Maux36.Rimbody
 
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted)
-            {
-                return null;
-            }
-            if (TooTired(pawn))
-            {
-                return null;
-            }
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-            {
-                return null;
-            }
+            if (pawn.Downed || pawn.Drafted) return null;
+            if (TooTired(pawn)) return null;
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
+
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            if (compPhysique == null)
-            {
-                return null;
-            }
-
+            if (compPhysique == null) return null;
             tmpCandidates.Clear();
+            workoutCache.Clear();
             GetSearchSet(pawn, tmpCandidates);
-            if (tmpCandidates.Count == 0)
-            {
-                return null;
-            }
-
             Predicate<Thing> predicate = delegate (Thing t)
             {
-                if (t.IsForbidden(pawn))
-                {
-                    return false;
-                }
+                if (t.IsForbidden(pawn)) return false;
+
                 RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
@@ -102,36 +84,45 @@ namespace Maux36.Rimbody
                     }
                     else
                     {
-                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
-                        {
-                            return false;
-                        }
+                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;
                         LocalTargetInfo target = result;
-                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
-                        {
-                            return false;
-                        }
+                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false)) return false;
                     }
                     return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
                 }
                 else
                 {
                     return false;
-                    //if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                    //{
-                    //    return false;
-                    //}
-                    //return true;
                 }
             };
+            float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
                 if (RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
+                    if (workoutCache.ContainsKey(t.def))
+                    {
+                        score = workoutCache[t.def];
+                        if (score > targethighscore)
+                        {
+                            targethighscore = score;
+                        }
+                        return score;
+                    }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        score = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, workout));
+                        float tmpScore;
+                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("balance|" + workout.name) ? workout.strength * 0.9f : workout.strength;
+                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Balance, workout);
+                        if (tmpScore > score)
+                        {
+                            score = tmpScore;
+                        }
+                    }
+                    if (score > targethighscore)
+                    {
+                        targethighscore = score;
                     }
                     return score;
                 }
@@ -141,10 +132,28 @@ namespace Maux36.Rimbody
             Thing thing = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
             tmpCandidates.Clear();
+            workoutCache.Clear();
+
+
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.balanceHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
+            {
+
+                var plankjobEx = DefOf_Rimbody.Rimbody_DoBodyWeightPlank.GetModExtension<ModExtensionRimbodyJob>();
+                float plank_score;
+                plank_score = compPhysique.GetStrengthPartScore(plankjobEx.strengthParts, plankjobEx.strength);
+                if (targethighscore < plank_score)
+                {
+                    if (CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out IntVec3 workoutLocation))
+                    {
+                        Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation);
+                        return job;
+                    }
+                }
+            }
 
             if (thing != null)
             {
-                Job job = DoTryGiveJob(pawn, thing);
+                Job job = DoTryGiveTargetJob(pawn, thing);
                 if (job != null)
                 {
                     return job;
@@ -153,7 +162,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        public Job DoTryGiveJob(Pawn pawn, Thing t)
+        public Job DoTryGiveTargetJob(Pawn pawn, Thing t)
         {
             RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)

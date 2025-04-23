@@ -137,10 +137,12 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]));
-                if (score < tempscore)
+                float tmpScore;
+                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
+                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                if (tmpScore > score)
                 {
-                    score = tempscore;
+                    score = tmpScore;
                     indexBest = i;
                 }
             }
@@ -178,6 +180,7 @@ namespace Maux36.Rimbody
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
+            var workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
             var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             var exWorkout = ext.workouts[workoutIndex];
             if (exWorkout.reportString != null)
@@ -196,8 +199,8 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = exWorkout.cardio;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 if (exWorkout.animationType == InteractionType.animation)
@@ -232,6 +235,7 @@ namespace Maux36.Rimbody
                     buildingAnimated.actorMuscle = 25;
                 }
                 pawnOffset = Vector3.zero;
+                pawnNudge = Vector3.zero;
                 lyingRotation = Rot4.Invalid;
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);

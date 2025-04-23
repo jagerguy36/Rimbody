@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse.AI;
 using Verse;
+using Unity.Jobs;
 
 namespace Maux36.Rimbody
 {
@@ -48,35 +49,22 @@ namespace Maux36.Rimbody
 
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted)
-            {
-                return null;
-            }
-            if (TooTired(pawn))
-            {
-                return null;
-            }
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-            {
-                return null;
-            }
+            if (pawn.Downed || pawn.Drafted) return null;
+            if (TooTired(pawn)) return null;
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
+
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            if (compPhysique == null)
-            {
-                return null;
-            }
+            if (compPhysique == null) return null;
 
             tmpCandidates.Clear();
             workoutCache.Clear();
             GetSearchSet(pawn, tmpCandidates);
             Predicate<Thing> targetPredicate = delegate (Thing t)
             {
-                if (t.IsForbidden(pawn))
-                {
-                    return false;
-                }
-                RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);
-                if(targetModExtension.Type == RimbodyTargetType.Building)
+                if (t.IsForbidden(pawn)) return false;
+
+                RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);//TODO: null check?
+                if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (!pawn.CanReserve(t))
                     {
@@ -91,24 +79,15 @@ namespace Maux36.Rimbody
                     }
                     else
                     {
-                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
-                        {
-                            return false;
-                        }
+                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;
                         LocalTargetInfo target = result;
-                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
-                        {
-                            return false;
-                        }
+                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false)) return false;
                     }
                     return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
                 }
                 else
                 {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                    {
-                        return false;
-                    }
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
                     return true;
                 }
             };
@@ -129,7 +108,9 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, workout);
+                        float tmpScore;
+                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + workout.name) ? workout.strength * 0.9f : workout.strength;
+                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -146,117 +127,93 @@ namespace Maux36.Rimbody
             Thing thing = null;
             JobDef jobtogive = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
-            jobtogive = DefOf_Rimbody.Rimbody_DoStrengthBuilding;
+            if(thing != null)
+            {
+                jobtogive = DefOf_Rimbody.Rimbody_DoStrengthBuilding;
+            }
             tmpCandidates.Clear();
             workoutCache.Clear();
 
-            if (targethighscore < RimbodyDefLists.strengthHighscore) //If chunk job can be better, try to get chunk job to compare
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.strengthHighscore) || (!RimbodySettings.useFatigue && thing == null)) //If chunk job can be better, try to get chunk job to compare
             {
-                bool bodyweightPredicate(Thing t)
+                float maxScore = -1f;
+                int tieCount = 0;
+                JobDef bestJob = null;
+                bool chunkPredicate(Thing t)
                 {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                    {
-                        return false;
-                    }
-                    if (t.IsForbidden(pawn))
-                    {
-                        return false;
-                    }
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
+                    if (t.IsForbidden(pawn)) return false;
                     //Todo: ignore stones marked for haul.
                     return true;
                 }
-                Thing Chunk = GenClosest.ClosestThingReachable(
-                    pawn.Position,
-                    pawn.Map,
-                    ThingRequest.ForGroup(ThingRequestGroup.Chunk),
-                    PathEndMode.OnCell,
-                    TraverseParms.For(pawn, Danger.Some),
-                    20f,
-                    bodyweightPredicate
-                );
-                //If chunk available, get the maxing chunk job and its score
-                if (Chunk != null)
+                Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
+
+                foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
                 {
-                    var liftingjobEx = DefOf_Rimbody.Rimbody_DoChunkLifting.GetModExtension<ModExtensionRimbodyJob>();
-                    float lifting_score = compPhysique.GetStrengthPartScore(liftingjobEx.strengthParts, liftingjobEx.strength);
-
-                    var pressjobEx = DefOf_Rimbody.Rimbody_DoChunkOverheadPress.GetModExtension<ModExtensionRimbodyJob>();
-                    float press_score = compPhysique.GetStrengthPartScore(pressjobEx.strengthParts, pressjobEx.strength);
-
-                    var squatsjobEx = DefOf_Rimbody.Rimbody_DoChunkSquats.GetModExtension<ModExtensionRimbodyJob>();
-                    float squats_score = compPhysique.GetStrengthPartScore(squatsjobEx.strengthParts, squatsjobEx.strength);
-
-                    float maxScore = lifting_score;
-                    JobDef maxJob = DefOf_Rimbody.Rimbody_DoChunkLifting;
-                    int tieCount = 1;
-
-                    // Check press_score
-                    if (press_score > maxScore)
+                    if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
                     {
-                        maxScore = press_score;
-                        maxJob = DefOf_Rimbody.Rimbody_DoChunkOverheadPress;
-                        tieCount = 1;
+                        continue;
                     }
-                    else if (press_score == maxScore) tieCount++;
-
-                    // Check squats_score
-                    if (squats_score > maxScore)
+                    float nonTarget_score;
+                    if (RimbodySettings.useFatigue) nonTarget_score = compPhysique.GetStrengthPartScore(strengthEx.strengthParts, strengthEx.strength);
+                    else nonTarget_score = compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? strengthEx.strength * 0.9f : strengthEx.strength;
+                    if (nonTarget_score > maxScore)
                     {
-                        maxScore = squats_score;
-                        maxJob = DefOf_Rimbody.Rimbody_DoChunkSquats;
+                        maxScore = nonTarget_score;
                         tieCount = 1;
+                        bestJob = strengthJobdef;
                     }
-                    else if (squats_score == maxScore) tieCount++;
-
-                    // Handle ties only if needed
-                    if (tieCount > 1)
+                    else if (nonTarget_score == maxScore)
                     {
-                        int index = 0;
-                        if (lifting_score == maxScore) index |= 1;
-                        if (press_score == maxScore) index |= 2;
-                        if (squats_score == maxScore) index |= 4;
-
-                        // Predefined job arrays for each tie scenario
-                        JobDef[] tieJobs = index switch
+                        tieCount++;
+                        if (Rand.Chance(1f / tieCount))
                         {
-                            3 => [DefOf_Rimbody.Rimbody_DoChunkLifting, DefOf_Rimbody.Rimbody_DoChunkOverheadPress],
-                            5 => [DefOf_Rimbody.Rimbody_DoChunkLifting, DefOf_Rimbody.Rimbody_DoChunkSquats],
-                            6 => [DefOf_Rimbody.Rimbody_DoChunkOverheadPress, DefOf_Rimbody.Rimbody_DoChunkSquats],
-                            7 => [DefOf_Rimbody.Rimbody_DoChunkLifting, DefOf_Rimbody.Rimbody_DoChunkOverheadPress, DefOf_Rimbody.Rimbody_DoChunkSquats],
-                            _ => [maxJob],
-                        };
-
-                        // Random choice from tied top scores
-                        maxJob = tieJobs[Rand.Range(0, tieJobs.Length)];
+                            bestJob = strengthJobdef; // Reservoir sampling for random among ties
+                        }
                     }
-
-                    if (targethighscore < maxScore)
+                }
+                if (maxScore > targethighscore)
+                {
+                    jobtogive = bestJob;
+                    if (bestJob?.defName.StartsWith("Rimbody_DoChunk")==true)
                     {
                         thing = Chunk;
-                        jobtogive = maxJob;
                     }
                 }
             }
 
-            if (thing != null)
+
+            if(jobtogive != null)
             {
-                if (jobtogive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
+                if (thing != null)
                 {
-                    Job job = DoTryGiveTargetJob(pawn, thing);
-                    if (job != null)
+                    if (jobtogive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
                     {
-                        return job;
+                        Job job = DoTryGiveTargetJob(pawn, thing);
+                        if (job != null)
+                        {
+                            return job;
+                        }
+                    }
+                    else if (jobtogive.defName.StartsWith("Rimbody_DoChunk") == true)
+                    {
+                        Job job = DoTryGiveChunkJob(pawn, thing, jobtogive);
+                        if (job != null)
+                        {
+                            return job;
+                        }
                     }
                 }
                 else
                 {
-                    Job job = DoTryGiveChunkJob(pawn, thing, jobtogive);
-                    if (job != null)
+                    if (CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out IntVec3 workoutLocation))
                     {
+                        Job job = JobMaker.MakeJob(jobtogive, workoutLocation);
                         return job;
                     }
                 }
             }
+
             return null;
         }
         public Job DoTryGiveTargetJob(Pawn pawn, Thing t)

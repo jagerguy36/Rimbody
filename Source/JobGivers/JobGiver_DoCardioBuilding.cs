@@ -44,19 +44,11 @@ namespace Maux36.Rimbody
 
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted)
-            {
-                return null;
-            }
-            if (TooTired(pawn))
-            {
-                return null;
-            }
+            if (pawn.Downed || pawn.Drafted) return null;
+            if (TooTired(pawn)) return null;
+
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            if (compPhysique == null)
-            {
-                return null;
-            }
+            if (compPhysique == null) return null;
 
             //Joggers will always try to jog if possible.
             if(compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn))
@@ -69,16 +61,14 @@ namespace Maux36.Rimbody
                 }
             }
 
-            //If not joggers or impossible to jog outside
+            //If not joggers or impossible to jog outside, look for cardio targets
             tmpCandidates.Clear();
             workoutCache.Clear();
             GetSearchSet(pawn, tmpCandidates);
             Predicate<Thing> predicate = delegate (Thing t)
             {
-                if (t.IsForbidden(pawn))
-                {
-                    return false;
-                }
+                if (t.IsForbidden(pawn)) return false;
+
                 RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
@@ -95,24 +85,15 @@ namespace Maux36.Rimbody
                     }
                     else
                     {
-                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
-                        {
-                            return false;
-                        }
+                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;
                         LocalTargetInfo target = result;
-                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
-                        {
-                            return false;
-                        }
+                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false)) return false;
                     }
                     return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
                 }
                 else
                 {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                    {
-                        return false;
-                    }
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
                     return true;
                 }
             };
@@ -133,7 +114,9 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout);
+                        float tmpScore;
+                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("cardio|" + workout.name) ? workout.cardio * 0.9f : workout.cardio;
+                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -152,7 +135,7 @@ namespace Maux36.Rimbody
             tmpCandidates.Clear();
             workoutCache.Clear();
 
-            if (targethighscore < RimbodyDefLists.cardioHighscore)
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.cardioHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
                 if (!compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn)) //Already checked outside condition for jogger.
                 {
@@ -160,7 +143,15 @@ namespace Maux36.Rimbody
                     {
                         //jogging is possible. Compare the score
                         var joggingEx = DefOf_Rimbody.Rimbody_Jogging.GetModExtension<ModExtensionRimbodyJob>();
-                        var joggingscore = joggingEx.cardio;
+                        float joggingscore;
+                        if (!RimbodySettings.useFatigue)
+                        {
+                            joggingscore = compPhysique.memory.Contains("cardio|" + DefOf_Rimbody.Rimbody_Jogging.defName) ? joggingEx.cardio * 0.9f * 0.9f : joggingEx.cardio * 0.9f; //jogging preference should be lower
+                        }
+                        else
+                        {
+                            joggingscore = compPhysique.GetCardioFatigueScore(joggingEx.strengthParts, joggingEx.cardio);
+                        }
                         if (targethighscore < joggingscore)
                         {
                             Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
@@ -190,7 +181,7 @@ namespace Maux36.Rimbody
             {
                 if (t.def.hasInteractionCell)
                 {
-                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceBuilding, t, t.InteractionCell);
+                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoCardioBuilding, t, t.InteractionCell);
                 }
                 else
                 {

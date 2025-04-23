@@ -113,14 +113,18 @@ namespace Maux36.Rimbody
                     }
                 }
             }
-            else if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
+            else if (wo.animationType == InteractionType.melee)
             {
-                if (wo.playSound)
+                if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
                 {
-                    RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                    if (wo.playSound)
+                    {
+                        RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                    }
+                    pawn.Drawer.Notify_MeleeAttackOn(building);
                 }
-                pawn.Drawer.Notify_MeleeAttackOn(building);
             }
+
             if (joygainfactor > 0)
             {
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
@@ -133,10 +137,12 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             for (int i = 0; i < numVarieties; i++)
             {
-                var tempscore = Math.Max(score, compPhysique.GetScore(RimbodyTargetCategory.Balance, ext.workouts[i]));
-                if (score < tempscore)
+                float tmpScore;
+                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
+                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Balance, ext.workouts[i]);
+                if (tmpScore > score)
                 {
-                    score = tempscore;
+                    score = tmpScore;
                     indexBest = i;
                 }
             }
@@ -173,6 +179,7 @@ namespace Maux36.Rimbody
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             RimbodyDefLists.BalanceTarget.TryGetValue(TargetThingA.def, out var ext);
+            var workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
             var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
             var exWorkout = ext.workouts[workoutIndex];
             if(exWorkout.reportString != null)
@@ -191,8 +198,8 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = exWorkout.cardio;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 if (exWorkout.animationType == InteractionType.animation)

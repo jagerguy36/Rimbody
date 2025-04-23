@@ -18,6 +18,19 @@ namespace Maux36.Rimbody
         public int currentWorkoutIndex = -1;
         public float actorMuscle = 25f;
         public bool useJitter= true;
+
+        private static readonly string[] muscleGroups = {
+            "Rimbody_Shoulder",
+            "Rimbody_Chest",
+            "Rimbody_Biceps",
+            "Rimbody_Triceps",
+            "Rimbody_Back",
+            "Rimbody_Core",
+            "Rimbody_Glutes",
+            "Rimbody_Quads",
+            "Rimbody_Hams"
+        };
+
         public WorkOut CurrentWorkout
         {
             get
@@ -29,6 +42,45 @@ namespace Maux36.Rimbody
             }
         }
         private ModExtensionRimbodyTarget RimbodyEx;
+
+        public override string DescriptionFlavor
+        {
+            get
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(base.DescriptionFlavor);
+                if(RimbodyEx != null)
+                {
+                    stringBuilder.Append("\n\n" + "Rimbody_Description".Translate() + "\n");
+                    foreach (WorkOut wo in RimbodyEx.workouts)
+                    {
+                        stringBuilder.Append($"\n{wo.name.Translate()}:");
+                        //for (int i = 0; i < wo.strengthParts.Count; i++)
+                        //{
+                        //    if (i >= 1)
+                        //    {
+                        //        stringBuilder.Append($"{muscleGroups[i]}({wo.strengthParts[i]})");
+                        //    }
+                        //}
+                        var topMuscles = wo.strengthParts
+                            .Select((value, index) => new { Index = index, Value = value })
+                            .Where(x => x.Value > 0)
+                            .OrderByDescending(x => x.Value)
+                            .Take(3);
+
+                        foreach (var item in topMuscles)
+                        {
+                            stringBuilder.Append($" {muscleGroups[item.Index].Translate()}({item.Value})");
+                        }
+
+                    }
+
+
+                }
+
+                return stringBuilder.ToString();
+            }
+        }
 
         public List<Graphic_Multi> GetGraphic
         {
