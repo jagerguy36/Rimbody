@@ -14,9 +14,10 @@ namespace Maux36.Rimbody
 {
     internal class JobDriver_DoBodyWeightPlank : JobDriver
     {
-        private const int duration = 800;
+        private const int duration = 1000;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
+        private Rot4 facing = Rot4.Invalid;
         private Vector3 pawnNudge = Vector3.zero;
         private Rot4 lyingRotation = Rot4.Invalid;
         public override Vector3 ForcedBodyOffset
@@ -63,6 +64,7 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref tickProgress, "plank_tickProgress", 0);
+            Scribe_Values.Look(ref facing, "plank_facing", Rot4.Invalid);
             Scribe_Values.Look(ref pawnNudge, "plank_pawnNudget", Vector3.zero);
             Scribe_Values.Look(ref lyingRotation, "plank_lyingRotation", Rot4.Invalid);
         }
@@ -75,10 +77,13 @@ namespace Maux36.Rimbody
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);
 
-            var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
-            float score = compPhysique.GetStrengthPartScore(exWorkout.strengthParts, exWorkout.strength);
+            var exWorkout = job.def.GetModExtension<ModExtensionRimbodyJob>();
+            float memoryFactor = compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f;
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
-            Rot4 facing = Rot4.Random;
+            if (facing == Rot4.Invalid)
+            {
+                facing = Rot4.Random;
+            }
             float adjsusted =(facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f;
 
             Toil workout;
@@ -97,7 +102,7 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = true;
                 compPhysique.strengthOverride = exWorkout.strength;
                 compPhysique.cardioOverride = exWorkout.cardio;
-                compPhysique.durationOverride = duration;
+                compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
             };
             workout.tickAction = delegate
@@ -120,8 +125,9 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
-                compPhysique.durationOverride = 0;
+                compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
+                facing = Rot4.Invalid;
                 pawnNudge = Vector3.zero;
                 lyingRotation = Rot4.Invalid;
                 TryGainGymThought();

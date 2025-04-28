@@ -71,6 +71,7 @@ namespace Maux36.Rimbody
                 RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
+                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
                     if (!pawn.CanReserve(t))
                     {
                         return false;
@@ -112,9 +113,7 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore;
-                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("balance|" + workout.name) ? workout.strength * 0.9f : workout.strength;
-                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Balance, workout);
+                        float tmpScore = (compPhysique.memory.Contains("balance|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Balance, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -139,8 +138,8 @@ namespace Maux36.Rimbody
             {
 
                 var plankjobEx = DefOf_Rimbody.Rimbody_DoBodyWeightPlank.GetModExtension<ModExtensionRimbodyJob>();
-                float plank_score;
-                plank_score = compPhysique.GetStrengthPartScore(plankjobEx.strengthParts, plankjobEx.strength);
+
+                float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
                     if (CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out IntVec3 workoutLocation))

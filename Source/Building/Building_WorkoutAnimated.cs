@@ -13,11 +13,14 @@ namespace Maux36.Rimbody
 {
     internal class Building_WorkoutAnimated: Building
     {
+        private string cachedDescriptionFlavor = null;
         public List<Graphic_Multi> graphics = null;
         public int workoutStartTick = -1;
         public int currentWorkoutIndex = -1;
         public float actorMuscle = 25f;
         public bool useJitter= true;
+        public Vector3 calculatedOffset = Vector3.zero;
+        public Vector3 DrawAtOffset => workoutStartTick > 0 ? calculatedOffset : Vector3.zero;
 
         private static readonly string[] muscleGroups = {
             "Rimbody_Shoulder",
@@ -47,6 +50,10 @@ namespace Maux36.Rimbody
         {
             get
             {
+                if (cachedDescriptionFlavor != null)
+                {
+                    return cachedDescriptionFlavor;
+                }
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(base.DescriptionFlavor);
                 if(RimbodyEx != null)
@@ -54,31 +61,23 @@ namespace Maux36.Rimbody
                     stringBuilder.Append("\n\n" + "Rimbody_Description".Translate() + "\n");
                     foreach (WorkOut wo in RimbodyEx.workouts)
                     {
-                        stringBuilder.Append($"\n{wo.name.Translate()}:");
-                        //for (int i = 0; i < wo.strengthParts.Count; i++)
-                        //{
-                        //    if (i >= 1)
-                        //    {
-                        //        stringBuilder.Append($"{muscleGroups[i]}({wo.strengthParts[i]})");
-                        //    }
-                        //}
-                        var topMuscles = wo.strengthParts
-                            .Select((value, index) => new { Index = index, Value = value })
-                            .Where(x => x.Value > 0)
-                            .OrderByDescending(x => x.Value)
-                            .Take(3);
-
-                        foreach (var item in topMuscles)
+                        stringBuilder.Append($"\n{wo.name.Translate()}");
+                        if (RimbodyEx.Category == RimbodyTargetCategory.Strength)
                         {
-                            stringBuilder.Append($" {muscleGroups[item.Index].Translate()}({item.Value})");
+                            stringBuilder.Append($": ");
+                            var topMuscles = wo.strengthParts
+                                .Select((value, index) => new { index, value })
+                                .Where(x => x.value > 0)
+                                .OrderByDescending(x => x.value)
+                                .Take(3)
+                                .Select(item => muscleGroups[item.index].Translate())
+                                .Aggregate((a, b) => a + ", " + b);
+                            stringBuilder.Append(topMuscles);
                         }
-
                     }
-
-
                 }
-
-                return stringBuilder.ToString();
+                cachedDescriptionFlavor = stringBuilder.ToString();
+                return cachedDescriptionFlavor;
             }
         }
 
@@ -97,6 +96,7 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref workoutStartTick, "workoutStartTick", -1);
+            Scribe_Values.Look(ref calculatedOffset, "workoutcalculatedOffset", Vector3.zero);
             Scribe_Values.Look(ref currentWorkoutIndex, "currentWorkoutIndex", -1);
             Scribe_Values.Look(ref actorMuscle, "actorMuscle", 25f);
             Scribe_Values.Look(ref useJitter, "useJitter", true);
@@ -111,31 +111,34 @@ namespace Maux36.Rimbody
         public void GetGraphicLong()
         {
             graphics = [];
-            try
+            if(RimbodyEx.rimbodyBuildingpartGraphics != null)
             {
-                foreach (var buildingPartGraphic in RimbodyEx.rimbodyBuildingpartGraphics)
+                try
                 {
-                    var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(buildingPartGraphic.texPath, buildingPartGraphic.shaderType!=null?buildingPartGraphic.shaderType.Shader:ShaderDatabase.DefaultShader, DrawSize, DrawColor);
-                    graphics.Add(newGraphic);
+                    foreach (var buildingPartGraphic in RimbodyEx.rimbodyBuildingpartGraphics)
+                    {
+                        var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(buildingPartGraphic.texPath, buildingPartGraphic.shaderType != null ? buildingPartGraphic.shaderType.Shader : ShaderDatabase.DefaultShader, DrawSize, DrawColor);
+                        graphics.Add(newGraphic);
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Failed to get graphics: " + ex.Message);
+                catch (Exception ex)
+                {
+                    Log.Error("Failed to get graphics: " + ex.Message);
+                }
             }
         }
 
-
-
-        protected override void DrawAt(Vector3 drawLoc, bool flip = false)
+        public override void Tick()
         {
-            Vector3 calculatedOffset = Vector3.zero;
-            if (RimbodyEx.rimbodyBuildingpartGraphics != null)
+            base.Tick();
+            // During Workout
+            if (workoutStartTick > 0 && CurrentWorkout?.animationType == InteractionType.animation)
             {
-                // During Workout
-                if (CurrentWorkout?.animationType == InteractionType.animation && workoutStartTick > 0)
+                //If there is something to move
+                if (RimbodyEx.moveBase == true || RimbodyEx.rimbodyBuildingpartGraphics != null)
                 {
                     int tickProgress = Find.TickManager.TicksGame - workoutStartTick;
+                    calculatedOffset = Vector3.zero;
                     if (CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != null && CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != Vector3.zero)
                     {
                         if (tickProgress > 0)
@@ -172,20 +175,21 @@ namespace Maux36.Rimbody
                         }
                     }
                 }
-                if (GetGraphic != null && GetGraphic.Count>0)
-                {
-                    for (int i = 0; i < GetGraphic.Count && i < RimbodyEx.rimbodyBuildingpartGraphics.Count; i++)
-                    {
-                        var part_graphic = GetGraphic[i];  // Get the Graphic_Multi at index i
-                        var graphicdata = RimbodyEx.rimbodyBuildingpartGraphics[i];  // Get the corresponding GraphicData at index i
-                        //Assuming DrawFromDef expects a position and rotation to draw the graphic
-                        part_graphic.Draw(DrawPos + graphicdata.drawOffset + calculatedOffset, flip ? Rotation.Opposite : Rotation, this);
-                    }
-                }
+            }
+        }
+
+
+
+        protected override void DrawAt(Vector3 drawLoc, bool flip = false)
+        {
+            for (int i = 0; i < GetGraphic.Count; i++)
+            {
+                var graphicdata = RimbodyEx.rimbodyBuildingpartGraphics[i];
+                GetGraphic[i].Draw(DrawPos + graphicdata.drawOffset + DrawAtOffset, graphicdata.drawRotated ? (flip ? Rotation.Opposite : Rotation) : Rot4.North, this);
             }
             if (RimbodyEx.moveBase)
             {
-                base.DrawAt(drawLoc + calculatedOffset, flip);
+                base.DrawAt(drawLoc + DrawAtOffset, flip);
             }
             else
             {

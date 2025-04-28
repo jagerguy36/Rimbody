@@ -37,20 +37,34 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float memoryFactor)
         {
-            score = 0f;
+            float score = 0f;
+            memoryFactor = 1f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
+            if (numVarieties == 1)
+            {
+                return 0;
+            }
             for (int i = 0; i < numVarieties; i++)
             {
-                float tmpScore;
-                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
-                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                float tmpMemoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? 0.9f : 1f;
+                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;
+                    memoryFactor = tmpMemoryFactor;
                     indexBest = i;
+                }
+                else if (tmpScore == score)
+                {
+                    if (Rand.Chance(0.5f))
+                    {
+                        score = tmpScore;
+                        memoryFactor = tmpMemoryFactor;
+                        indexBest = i;
+                    }
                 }
             }
             return indexBest;
@@ -119,7 +133,6 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = true;
                 compPhysique.strengthOverride = CurrentWorkout.strength * efficiency;
                 compPhysique.cardioOverride = CurrentWorkout.cardio * efficiency;
-                compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = CurrentWorkout.strengthParts;
             };
             workout.tickAction = delegate
@@ -136,7 +149,6 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
-                compPhysique.durationOverride = 0;
                 compPhysique.partsOverride = null;
                 TryGainGymThought();
                 AddMemory(compPhysique, CurrentWorkout.name);

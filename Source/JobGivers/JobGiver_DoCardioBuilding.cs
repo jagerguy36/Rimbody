@@ -72,6 +72,7 @@ namespace Maux36.Rimbody
                 RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
+                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
                     if (!pawn.CanReserve(t))
                     {
                         return false;
@@ -114,9 +115,7 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore;
-                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("cardio|" + workout.name) ? workout.cardio * 0.9f : workout.cardio;
-                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Cardio, workout);
+                        float tmpScore = compPhysique.GetWorkoutScore(RimbodyTargetCategory.Cardio, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -143,15 +142,7 @@ namespace Maux36.Rimbody
                     {
                         //jogging is possible. Compare the score
                         var joggingEx = DefOf_Rimbody.Rimbody_Jogging.GetModExtension<ModExtensionRimbodyJob>();
-                        float joggingscore;
-                        if (!RimbodySettings.useFatigue)
-                        {
-                            joggingscore = compPhysique.memory.Contains("cardio|" + DefOf_Rimbody.Rimbody_Jogging.defName) ? joggingEx.cardio * 0.9f * 0.9f : joggingEx.cardio * 0.9f; //jogging preference should be lower
-                        }
-                        else
-                        {
-                            joggingscore = compPhysique.GetCardioFatigueScore(joggingEx.strengthParts, joggingEx.cardio);
-                        }
+                        float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
                         if (targethighscore < joggingscore)
                         {
                             Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);

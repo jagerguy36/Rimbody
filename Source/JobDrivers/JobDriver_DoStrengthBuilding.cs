@@ -108,7 +108,7 @@ namespace Maux36.Rimbody
                         Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * xJitter;
                         if (tickProgress > 0)
                         {
-                            pawnNudge  = JitterVector + nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation);
+                             pawnNudge  = JitterVector + nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation);
                         }
                     }
                 }
@@ -130,20 +130,34 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }            
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float memoryFactor)
         {
-            score = 0f;
+            float score = 0f;
+            memoryFactor = 1f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
+            if (numVarieties == 1)
+            {
+                return 0;
+            }
             for (int i = 0; i < numVarieties; i++)
             {
-                float tmpScore;
-                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
-                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                float tmpMemoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? 0.9f : 1f;
+                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;
+                    memoryFactor = tmpMemoryFactor;
                     indexBest = i;
+                }
+                else if (tmpScore == score)
+                {
+                    if (Rand.Chance(0.5f))
+                    {
+                        score = tmpScore;
+                        memoryFactor = tmpMemoryFactor;
+                        indexBest = i;
+                    }
                 }
             }
             return indexBest;
@@ -181,7 +195,7 @@ namespace Maux36.Rimbody
 
             RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
             var workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var memoryFactor);
             var exWorkout = ext.workouts[workoutIndex];
             if (exWorkout.reportString != null)
             {
@@ -201,11 +215,11 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = true;
                 compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
                 compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
-                compPhysique.durationOverride = duration;
+                compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 if (exWorkout.animationType == InteractionType.animation)
                 {
-                    if (ext.rimbodyBuildingpartGraphics != null)
+                    if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                     {
                         buildingAnimated.workoutStartTick = Find.TickManager.TicksGame;
                         buildingAnimated.currentWorkoutIndex = workoutIndex;
@@ -226,9 +240,9 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
-                compPhysique.durationOverride = 0;
+                compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
-                if (ext.rimbodyBuildingpartGraphics != null)
+                if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                 {
                     buildingAnimated.workoutStartTick = -1;
                     buildingAnimated.currentWorkoutIndex = -1;

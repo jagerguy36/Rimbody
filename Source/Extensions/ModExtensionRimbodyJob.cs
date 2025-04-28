@@ -10,6 +10,7 @@ namespace Maux36.Rimbody
         public float cardio = 1f;
         public float strength = 1f;
         public RimbodyTargetCategory Category = RimbodyTargetCategory.Job;
+        public RimbodyTargetCategory TreatAs = RimbodyTargetCategory.Job;
         public List<float> strengthParts;
     }
 

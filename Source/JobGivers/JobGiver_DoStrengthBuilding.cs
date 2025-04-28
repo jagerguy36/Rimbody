@@ -66,6 +66,7 @@ namespace Maux36.Rimbody
                 RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);//TODO: null check?
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
+                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
                     if (!pawn.CanReserve(t))
                     {
                         return false;
@@ -108,9 +109,7 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore;
-                        if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("strength|" + workout.name) ? workout.strength * 0.9f : workout.strength;
-                        else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Strength, workout);
+                        float tmpScore = (compPhysique.memory.Contains("strength|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -143,7 +142,7 @@ namespace Maux36.Rimbody
                 {
                     if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
                     if (t.IsForbidden(pawn)) return false;
-                    //Todo: ignore stones marked for haul.
+                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Haul) != null) return false;
                     return true;
                 }
                 Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
@@ -154,9 +153,7 @@ namespace Maux36.Rimbody
                     {
                         continue;
                     }
-                    float nonTarget_score;
-                    if (RimbodySettings.useFatigue) nonTarget_score = compPhysique.GetStrengthPartScore(strengthEx.strengthParts, strengthEx.strength);
-                    else nonTarget_score = compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? strengthEx.strength * 0.9f : strengthEx.strength;
+                    float nonTarget_score = (compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? 0.9f : 1f) * compPhysique.GetStrengthJobScore(strengthEx.strengthParts, strengthEx.strength);
                     if (nonTarget_score > maxScore)
                     {
                         maxScore = nonTarget_score;

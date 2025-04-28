@@ -29,7 +29,7 @@ namespace Maux36.Rimbody
                 foreach (var partgraphic in partgraphics)
                 {
                     Graphic_Multi graphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(partgraphic.texPath, ShaderDatabase.Cutout, def.graphicData.drawSize, Color.white);
-                    GhostUtility.GhostGraphicFor(graphic, def, ghostCol).DrawFromDef(GenThing.TrueCenter(loc, rot, def.Size, AltitudeLayer.MetaOverlays.AltitudeFor()), rot, def);
+                    GhostUtility.GhostGraphicFor(graphic, def, ghostCol).DrawFromDef(GenThing.TrueCenter(loc, rot, def.Size, AltitudeLayer.MetaOverlays.AltitudeFor()), def.graphicData.drawRotated? (rot) : Rot4.North, def);//graphicdata.drawRotated? (flip ? Rotation.Opposite : Rotation) : Rot4.North
                 }
             }
         }

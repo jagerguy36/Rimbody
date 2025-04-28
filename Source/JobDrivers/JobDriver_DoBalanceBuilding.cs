@@ -130,20 +130,34 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float score)
+        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float memoryFactor)
         {
-            score = 0f;
+            float score = 0f;
+            memoryFactor = 1f;
             int indexBest = -1;
             var numVarieties = ext.workouts.Count;
+            if (numVarieties == 1)
+            {
+                return 0;
+            }
             for (int i = 0; i < numVarieties; i++)
             {
-                float tmpScore;
-                if (!RimbodySettings.useFatigue) tmpScore = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? ext.workouts[i].strength * 0.9f : ext.workouts[i].strength;
-                else tmpScore = compPhysique.GetScore(RimbodyTargetCategory.Balance, ext.workouts[i]);
+                float tmpMemoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? 0.9f : 1f;
+                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Balance, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;
+                    memoryFactor = tmpMemoryFactor;
                     indexBest = i;
+                }
+                else if (tmpScore == score)
+                {
+                    if (Rand.Chance(0.5f))
+                    {
+                        score = tmpScore;
+                        memoryFactor = tmpMemoryFactor;
+                        indexBest = i;
+                    }
                 }
             }
             return indexBest;
@@ -198,13 +212,12 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue * (compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f);
                 compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
-                compPhysique.durationOverride = duration;
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 if (exWorkout.animationType == InteractionType.animation)
                 {
-                    if (ext.rimbodyBuildingpartGraphics != null)
+                    if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                     {
                         buildingAnimated.workoutStartTick = Find.TickManager.TicksGame;
                         buildingAnimated.currentWorkoutIndex = workoutIndex;
@@ -226,9 +239,8 @@ namespace Maux36.Rimbody
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
-                compPhysique.durationOverride = 0;
                 compPhysique.partsOverride = null;
-                if (ext.rimbodyBuildingpartGraphics != null)
+                if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                 {
                     buildingAnimated.workoutStartTick = -1;
                     buildingAnimated.currentWorkoutIndex = -1;
