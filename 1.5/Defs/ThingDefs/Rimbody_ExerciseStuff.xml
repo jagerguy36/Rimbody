@@ -2,7 +2,7 @@
 <Defs>
 
 	<ThingDef Name="ThingBase_RimbodyWorkout" Abstract="True">
-		<thingClass>ThingWithComps</thingClass>
+		<thingClass>Maux36.Rimbody.Thing_WorkoutAnimated</thingClass>
     	<category>Item</category>
 		<drawerType>MapMeshOnly</drawerType>
 		<resourceReadoutPriority>Middle</resourceReadoutPriority>
@@ -28,10 +28,10 @@
 		<defName>Rimbody_Dumbbell</defName>
 		<label>dumbbell</label>
 		<description>Free weights for a variety of exercises targeting different muscle groups.</description>
-		<stackLimit>2</stackLimit>
+		<stackLimit>1</stackLimit>
 		<graphicData>
-			<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells</texPath>
-			<graphicClass>Graphic_StackCount</graphicClass>
+			<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/Dumbbells</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
 		</graphicData>
 		<thingCategories>
 			<li>Rimbody_Workout_equipment</li>
@@ -51,15 +51,22 @@
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
 				<Category>Strength</Category>
+				<rimbodyBuildingpartGraphics>
+					<li>
+						<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/Dumbbells_anim</texPath>
+						<graphicClass>Graphic_Single</graphicClass>
+					</li>
+				</rimbodyBuildingpartGraphics>
 				<workouts>
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>dumbbell_bicepcurl_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
+						<animationType>item</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(+0.2,0,-0.2)</south>
+							<south>(+0.33,0,-0.2)</south>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
 							<south>(0,0,0.3)</south>
@@ -82,12 +89,13 @@
 						<reportString>dumbbell_overheadshoulderpress_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
+						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(0.2,0,0.2)</south>
+							<south>(0.4,0,0.3)</south>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
-							<south>(0,0,0.3)</south>
+							<south>(-0.05,0,0.5)</south>
 						</movingpartAnimPeak>
 						<strengthParts>
 							<li>3</li>

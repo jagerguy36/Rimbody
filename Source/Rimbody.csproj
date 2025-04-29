@@ -78,6 +78,7 @@
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
+    <Compile Include="Thing\Thing_WorkoutAnimated.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceBuilding.cs" />
     <Compile Include="JobDrivers\JobDriver_DoStrengthPushUps.cs" />
     <Compile Include="JobDrivers\JobDriver_DoCardioBuilding.cs" />
