@@ -40,9 +40,12 @@ namespace Maux36.Rimbody
     }
     public enum InteractionType
     {
+        still,
         melee,
-        animation,
-        still
+        building,
+        item,
+        itemEach,
+        itemBoth
     }
     public class vectorSet
     {

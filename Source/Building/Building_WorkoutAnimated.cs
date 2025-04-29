@@ -1,17 +1,14 @@
-﻿using LudeonTK;
-using RimWorld;
+﻿using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
-using static Verse.PawnRenderNodeProperties;
 
 namespace Maux36.Rimbody
 {
-    internal class Building_WorkoutAnimated: Building
+    public class Building_WorkoutAnimated: Building
     {
         private string cachedDescriptionFlavor = null;
         public List<Graphic_Multi> graphics = null;
@@ -132,7 +129,7 @@ namespace Maux36.Rimbody
         {
             base.Tick();
             // During Workout
-            if (workoutStartTick > 0 && CurrentWorkout?.animationType == InteractionType.animation)
+            if (workoutStartTick > 0 && CurrentWorkout?.animationType == InteractionType.building)
             {
                 //If there is something to move
                 if (RimbodyEx.moveBase == true || RimbodyEx.rimbodyBuildingpartGraphics != null)

@@ -451,7 +451,7 @@
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>lyingFrontSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.65)</north>
 							<east>(0.85,3.5,0)</east>
@@ -576,7 +576,7 @@
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>faceSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,0,0.05)</north>
 							<east>(0.15,3.0,-0.1)</east>
@@ -614,7 +614,7 @@
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>faceSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.35)</north>
 							<east>(-0.15,3.0,0.1)</east>
@@ -739,7 +739,7 @@
 						<cardio>0.4</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>faceSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,0,0.05)</north>
 							<east>(0.15,3.0,-0.1)</east>
@@ -777,7 +777,7 @@
 						<cardio>0.4</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>faceSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.35)</north>
 							<east>(-0.15,3.0,0.1)</east>
@@ -893,7 +893,7 @@
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0)</north>
 							<east>(0,0,0)</east>
@@ -931,7 +931,7 @@
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>faceSame</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0)</north>
 							<east>(0,0,0)</east>
@@ -1048,7 +1048,7 @@
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<pawnDirection>lyingFrontOpposite</pawnDirection>
-						<animationType>animation</animationType>
+						<animationType>building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.2)</north>
 							<east>(0.2,3.5,0)</east>

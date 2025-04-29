@@ -84,7 +84,7 @@ namespace Maux36.Rimbody
         protected void WatchTickAction(Thing building, WorkOut wo, float actorMuscle)
         {
             tickProgress++;
-            if (wo.animationType == InteractionType.animation)
+            if (wo.animationType == InteractionType.building)
             {
                 if (tickProgress > 0)
                 {
@@ -215,7 +215,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue * (compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f);
                 compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.partsOverride = exWorkout.strengthParts;
-                if (exWorkout.animationType == InteractionType.animation)
+                if (exWorkout.animationType == InteractionType.building)
                 {
                     if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                     {

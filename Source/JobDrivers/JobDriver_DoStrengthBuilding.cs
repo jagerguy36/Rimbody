@@ -16,7 +16,6 @@ namespace Maux36.Rimbody
         private Vector3 pawnOffset = Vector3.zero;
         private Vector3 pawnNudge = Vector3.zero;
         private Rot4 lyingRotation = Rot4.Invalid;
-        private Building_WorkoutAnimated buildingAnimated => (Building_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
@@ -84,7 +83,7 @@ namespace Maux36.Rimbody
         protected void WatchTickAction(Thing building, WorkOut wo, float actorMuscle)
         {
             tickProgress++;
-            if (wo.animationType == InteractionType.animation)
+            if (wo.animationType == InteractionType.building)
             {
                 if (tickProgress > 0)
                 {
@@ -194,6 +193,8 @@ namespace Maux36.Rimbody
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
+            Building_WorkoutAnimated buildingAnimated = (Building_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
+
             var workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
             var workoutIndex = GetWorkoutInt(compPhysique, ext, out var memoryFactor);
             var exWorkout = ext.workouts[workoutIndex];
@@ -217,7 +218,7 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
-                if (exWorkout.animationType == InteractionType.animation)
+                if (exWorkout.animationType == InteractionType.building)
                 {
                     if (ext.rimbodyBuildingpartGraphics != null || ext.moveBase)
                     {

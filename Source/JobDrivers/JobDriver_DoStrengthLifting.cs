@@ -4,6 +4,7 @@ using Verse.AI;
 using Verse;
 using UnityEngine;
 using System;
+using Verse.Sound;
 
 namespace Maux36.Rimbody
 {
@@ -12,21 +13,10 @@ namespace Maux36.Rimbody
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
-        private float muscleInt = 25;
-        public int currentWorkoutIndex = -1;
-        private int side = 1;
+        private Vector3 itemOffset = Vector3.zero;
+
         private readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
         private ModExtensionRimbodyTarget ext => TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
-        public WorkOut CurrentWorkout
-        {
-            get
-            {
-                // Return the workout if the index is valid, otherwise return null
-                return (currentWorkoutIndex >= 0 && currentWorkoutIndex < ext.workouts.Count)
-                    ? ext.workouts[currentWorkoutIndex]
-                    : null;
-            }
-        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -34,8 +24,66 @@ namespace Maux36.Rimbody
             {
                 return false;
             }
-
             return true;
+        }
+        protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float actorMuscle)
+        {
+            tickProgress++;
+            if (tickProgress > 0)
+            {
+                if (wo.movingpartAnimOffset?.south != null && wo.movingpartAnimPeak?.south != null)
+                {
+                    float uptime = 0.95f - (20f * actorMuscle / 5000f);
+                    float cycleDuration = 125f - actorMuscle;
+                    float jitter_amount = 3f * Mathf.Max(0f, (1f - (actorMuscle / 35f))) / 100f;
+                    float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
+                    int cycleIndex = (int)(tickProgress / cycleDuration);
+                    float nudgeMultiplier;
+                    if (cycleTime < uptime)
+                    {
+                        nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
+                    }
+                    else
+                    {
+                        nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
+                    }
+                    Vector3 woOffset = wo.movingpartAnimOffset.south;
+                    Vector3 woNudge = wo.movingpartAnimPeak.south;
+                    int armIndex;
+                    float xJitter;
+                    Vector3 jitterVector;
+
+                    switch (wo.animationType)
+                    {
+                        case InteractionType.item:
+                            armIndex = (cycleIndex % 2 == 0) ? 1 : -1;
+                            woOffset.x *= armIndex;
+                            woNudge.x *= armIndex;
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                            break;
+                        case InteractionType.itemEach:
+                            //int direction = (cycleIndex % 2 == 0) ? 1 : -1;
+                            //woOffset.x *= direction;
+                            //woNudge.x *= direction;
+                            //float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
+                            //Vector3 jitterVector = new Vector3(xJitter, 1f / 26f, 0);
+                            //itemOffset = woOffset + nudgeMultiplier * woNudge + jitterVector;
+                            break;
+                        case InteractionType.itemBoth:
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.x = -itemOffset.x * 2 + Rand.Range(-jitter_amount, jitter_amount);
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            if (joygainfactor > 0)
+            {
+                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+            }
         }
         private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float memoryFactor)
         {
@@ -82,18 +130,18 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
-            Scribe_Values.Look(ref muscleInt, "strengthlifting_muscleInt", 25);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            muscleInt = compPhysique.MuscleMass;
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
-            currentWorkoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
+            var exWorkout = ext.workouts[workoutIndex];
+            Thing_WorkoutAnimated thingAnimated = (Thing_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
             yield return Toils_General.DoAtomic(delegate
             {
                 job.count = 1;
@@ -104,7 +152,7 @@ namespace Maux36.Rimbody
             {
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
-            IntVec3 workoutspot = SpotToWorkout(pawn, TargetA.Thing, out bool usingBench, CurrentWorkout.useBench);
+            IntVec3 workoutspot = SpotToWorkout(pawn, TargetA.Thing, out bool usingBench, exWorkout.useBench);
             float efficiency = 1f;
             if (usingBench)
             {
@@ -113,16 +161,17 @@ namespace Maux36.Rimbody
             this.job.SetTarget(TargetIndex.C, workoutspot);
             yield return Toils_Reserve.Reserve(TargetIndex.C);
             yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-            if (CurrentWorkout.reportString != null)
+            if (exWorkout.reportString != null)
             {
-                this.job.reportStringOverride = CurrentWorkout.reportString.Translate();
+                this.job.reportStringOverride = exWorkout.reportString.Translate();
             }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
+                Log.Message("initiated");
                 int random = Rand.Range(0, 2);
-                side = random == 0 ? -1 : 1;
+                var side = random == 0 ? -1 : 1;
                 pawn.pather.StopDead();
                 pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
                 var joyneed = pawn.needs?.joy;
@@ -130,28 +179,29 @@ namespace Maux36.Rimbody
                 {
                     joygainfactor = 0;
                 }
+                thingAnimated.beingUsed = true;
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = CurrentWorkout.strength * efficiency;
-                compPhysique.cardioOverride = CurrentWorkout.cardio * efficiency;
-                compPhysique.partsOverride = CurrentWorkout.strengthParts;
+                compPhysique.strengthOverride = exWorkout.strength * efficiency;
+                compPhysique.cardioOverride = exWorkout.cardio * efficiency;
+                compPhysique.partsOverride = exWorkout.strengthParts;
             };
             workout.tickAction = delegate
             {
-                tickProgress += 1;
-                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+                WatchTickAction(thingAnimated, exWorkout, compPhysique.MuscleMass);
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
             workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
-                //pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                thingAnimated.beingUsed = false;
+                thingAnimated.ghostOffset = Vector3.zero;
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.partsOverride = null;
                 TryGainGymThought();
-                AddMemory(compPhysique, CurrentWorkout.name);
+                AddMemory(compPhysique, exWorkout.name);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {
@@ -163,39 +213,9 @@ namespace Maux36.Rimbody
 
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
-            if(CurrentWorkout.movingpartAnimOffset?.south != null && CurrentWorkout.movingpartAnimPeak?.south != null)
-            {
-                return ModifyCarriedThingDrawPosWorker(ref drawPos, ref flip, pawn, tickProgress, muscleInt, CurrentWorkout.movingpartAnimOffset.south, CurrentWorkout.movingpartAnimPeak.south, side);
-            }
-            return false;
-            
-        }
-        public static bool ModifyCarriedThingDrawPosWorker(ref Vector3 drawPos, ref bool flip, Pawn pawn, int tickProgress, float muscleInt, Vector3 offset, Vector3 peak, int side)
-        {
-            Thing carriedThing = pawn.carryTracker.CarriedThing;
-            if (carriedThing == null)
-            {
-                return false;
-            }
-            float uptime = 0.95f - (20f * muscleInt / 5000f);
-            float cycleDuration = 125f - muscleInt;
-            float jitter_amount = 3f * Mathf.Max(0f,(1f - (muscleInt / 35f))) / 100f;
-            float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-            float nudgeMultiplier = 0f;
-            if (cycleTime < uptime)
-            {
-                nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
-            }
-            else
-            {
-                nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
-            }
-            offset.x = offset.x * side;
-
-            float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
             if (tickProgress > 0)
             {
-                drawPos += new Vector3(xJitter, 1f / 26f, 0) + offset + nudgeMultiplier*peak;
+                drawPos += itemOffset;
                 return true;
             }
             return false;
