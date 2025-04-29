@@ -19,7 +19,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\..\Steam\steamapps\common\RimWorld\Mods\Rimbody\Mods\BigAndSmall\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\Mods\BigAndSmall\1.5\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,15 +38,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\..\..\..\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BetterPrerequisites">
-      <HintPath>..\..\..\..\_ForDec\BetterPrerequisites.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\workshop\content\294100\2925432336\1.5\Main\Assemblies\BetterPrerequisites.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rimbody">
-      <HintPath>..\..\..\..\..\..\..\..\Steam\steamapps\common\RimWorld\Mods\Rimbody\1.5\Assemblies\Rimbody.dll</HintPath>
+      <HintPath>..\..\..\1.5\Assemblies\Rimbody.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
