@@ -11,7 +11,6 @@
 				<li Class="ThinkNode_PrioritySorter">
 					<subNodes>
 						<li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
-						<li Class="Maux36.Rimbody.JobGiver_Jogging"/>
 						<li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
 						<li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
 						<li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
