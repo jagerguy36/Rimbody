@@ -24,8 +24,8 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/WorkGiverDef[defName="DoBillsStonecut"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
-                <cardio>0.85</cardio>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <cardio>0.4</cardio>
                 <strength>0.8</strength>
             </li>
         </value>

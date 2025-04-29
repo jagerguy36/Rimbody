@@ -24,7 +24,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="ToddlerPlayToys"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.4</cardio>
                 <strength>0.2</strength>
             </li>
@@ -34,7 +34,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="ToddlerPlayDecor"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.4</cardio>
                 <strength>0.2</strength>
             </li>
@@ -44,7 +44,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="BePlayedWith"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.4</cardio>
                 <strength>0.2</strength>
             </li>
@@ -54,7 +54,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="WiggleInCrib"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>1.5</cardio>
                 <strength>1.2</strength>
             </li>
@@ -64,7 +64,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="RestIdleInCrib"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.2</cardio>
                 <strength>0.0</strength>
             </li>
@@ -74,7 +74,7 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="LayAngleInCrib"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.2</cardio>
                 <strength>0.0</strength>
             </li>

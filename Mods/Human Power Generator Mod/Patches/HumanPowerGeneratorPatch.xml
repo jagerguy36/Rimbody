@@ -24,9 +24,22 @@
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="HPGMcycling"]</xpath>
         <value>
-            <li Class="Maux36.Rimbody.ModExtentionRimbodyJob">
-                <cardio>2.0</cardio>
-                <strength>0.25</strength>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <cardio>2.0</cardio>
+                  <strength>0.25</strength>
+                  <TreatAs>Cardio</TreatAs>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0.25</li>
+                    <li>0.75</li>
+                    <li>0.75</li>
+                    <li>0.75</li>
+                  </strengthParts>
             </li>
         </value>
     </Operation>
