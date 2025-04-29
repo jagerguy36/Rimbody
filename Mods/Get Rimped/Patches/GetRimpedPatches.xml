@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Patch>
-	<!-- Fix Double def-->
+
+	<!-- If no misc training then remove unused defs-->
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
+	  </mods>
+	  <nomatch Class="PatchOperationRemove">
+    	<xpath>Defs/JobDef[defName="UseMartialArtsTarget"]</xpath>
+	  </nomatch>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
+	  </mods>
+	  <nomatch Class="PatchOperationRemove">
+    	<xpath>Defs/JobDef[defName="UseMartialArtsTarget_NonJoy"]</xpath>
+	  </nomatch>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+	  <mods>
+	    <li>Misc. Training</li>
+	    <li>Misc. Training (no Task)</li>
+	  </mods>
+	  <nomatch Class="PatchOperationRemove">
+    	<xpath>Defs/JobDef[defName="UseMartialArtsTarget_NonJoy_Work"]</xpath>
+	  </nomatch>
+	</Operation>
+
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
@@ -11,6 +42,7 @@
 	  </nomatch>
 	</Operation>
 	
+	<!-- Fix Double def-->
 	<Operation Class="PatchOperationFindMod">
 	  <mods>
 	    <li>Misc. Training</li>
@@ -94,6 +126,12 @@
 				<costStuffCount>100</costStuffCount>
 			</value>
 	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="WeightBench"]/researchPrerequisites</xpath>
+	</Operation>
 
 
     <Operation Class="PatchOperationAttributeSet">
@@ -169,6 +207,12 @@
 				<costStuffCount>25</costStuffCount>
 			</value>
 	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Barbell"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Barbell"]/researchPrerequisites</xpath>
+	</Operation>
 
 
     <Operation Class="PatchOperationAttributeSet">
@@ -222,6 +266,12 @@
 			<value>
 				<costStuffCount>100</costStuffCount>
 			</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="PullupBars"]/researchPrerequisites</xpath>
 	</Operation>
 
 
@@ -307,6 +357,12 @@
 				<costStuffCount>50</costStuffCount>
 			</value>
 	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]/researchPrerequisites</xpath>
+	</Operation>
 
 
     <Operation Class="PatchOperationAttributeSet">
@@ -346,7 +402,9 @@
 				<costStuffCount>70</costStuffCount>
 			</value>
 	</Operation>
-
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/designationCategory</xpath>
+	</Operation>
 
     <Operation Class="PatchOperationAttributeSet">
     	<xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
@@ -402,6 +460,12 @@
 			        <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
 			</value>
 	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Treadmill"]/researchPrerequisites</xpath>
+	</Operation>
 
 
     <Operation Class="PatchOperationAttributeSet">
@@ -441,6 +505,12 @@
 			<value>
 				<costStuffCount>100</costStuffCount>
 			</value>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/designationCategory</xpath>
+	</Operation>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]/researchPrerequisites</xpath>
 	</Operation>
 
 
@@ -493,43 +563,31 @@
 				<costStuffCount>50</costStuffCount>
 			</value>
 	</Operation>
-
-
-<!--     <Operation Class="PatchOperationAttributeSet">
-    	<xpath>Defs/ThingDef[defName="Rack"]</xpath>
-  			<attribute>ParentName</attribute>
-  			<value>BuildingBase_RimbodyWorkout</value>
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="YogaBall"]/designationCategory</xpath>
 	</Operation>
 	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/ThingDef[defName="Rack"]/thingClass</xpath>
+		<xpath>Defs/ThingDef[defName="YogaBall"]/researchPrerequisites</xpath>
 	</Operation>
-	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/ThingDef[defName="Rack"]/placeWorkers</xpath>
-	</Operation>
-	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/ThingDef[defName="Rack"]/passability</xpath>
-	</Operation>
-	<Operation Class="PatchOperationReplace">
-		<xpath>Defs/ThingDef[defName="Rack"]/pathCost</xpath>
-			<value>
-				<pathCost>10</pathCost>
-			</value>
-	</Operation> -->
 
 
 	<!-- Remove itemified buildings -->
 	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/ThingDef[defName="Rack"]</xpath>
-	</Operation>
-	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="Dumbbells"]</xpath>
 	</Operation>
-	<Operation Class="PatchOperationRemove">
-		<xpath>Defs/ThingDef[defName="JumpRope"]</xpath>
-	</Operation>
+
 	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="Kettlebell"]</xpath>
 	</Operation>
+
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="Rack"]</xpath>
+	</Operation>
+
+	<Operation Class="PatchOperationRemove">
+		<xpath>Defs/ThingDef[defName="JumpRope"]</xpath>
+	</Operation>
+	
 	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="HandGrip"]</xpath>
 	</Operation>
