@@ -23,5 +23,6 @@
 		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner</li>
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
 		<li IfModActive="avius.prisonlabor">Mods/Prison Labor</li>
+		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2</li>
 	</v1.5>
 </loadFolders>
