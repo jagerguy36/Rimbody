@@ -12,7 +12,6 @@ namespace Maux36.Rimbody
     [HarmonyLib.HarmonyPatch(typeof(Pawn))]
     internal static class DoorsPatches
     {
-        // Extend door's expose data with additional lock value.
         [HarmonyLib.HarmonyPatch(nameof(Pawn.ExposeData)), HarmonyLib.HarmonyPostfix]
         internal static void ExposeDataPostfix(Pawn __instance)
         {

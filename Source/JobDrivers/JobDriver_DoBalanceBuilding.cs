@@ -81,14 +81,11 @@ namespace Maux36.Rimbody
                     break;
             }
         }
-        protected void WatchTickAction(Building_WorkoutAnimated building, WorkOut wo, float actorMuscle)
+        protected void WatchTickAction(Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration)
         {
             tickProgress++;
             if (wo.animationType == InteractionType.building)
             {
-                float uptime = 0.95f - (20f * actorMuscle / 5000f);
-                float cycleDuration = 125f - actorMuscle;
-                float jitter_amount = 3f * Mathf.Max(0f, (1f - (actorMuscle / 35f))) / 100f;
                 float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
                 float nudgeMultiplier;
                 Vector3 buildingOffset = Vector3.zero;
@@ -225,9 +222,11 @@ namespace Maux36.Rimbody
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 buildingAnimated.beingUsed = true;
             };
+            float uptime = 0.95f - (0.0004f * compPhysique.MuscleMass / 5000f);
+            float cycleDuration = 125f - compPhysique.MuscleMass;
             workout.AddPreTickAction(delegate
             {
-                WatchTickAction(buildingAnimated, exWorkout, compPhysique.MuscleMass);
+                WatchTickAction(buildingAnimated, exWorkout, uptime, cycleDuration);
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;

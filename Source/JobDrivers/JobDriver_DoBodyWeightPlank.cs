@@ -44,13 +44,6 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        protected void WatchTickAction(Thing building)
-        {
-            if (joygainfactor > 0)
-            {
-                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
-            }
-        }
         private void AddMemory(CompPhysique compPhysique)
         {
             if (compPhysique != null)

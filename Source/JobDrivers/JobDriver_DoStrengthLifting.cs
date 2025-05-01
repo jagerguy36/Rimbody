@@ -26,57 +26,53 @@ namespace Maux36.Rimbody
             }
             return true;
         }
-        protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float actorMuscle)
+        protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float uptime, float cycleDuration, float jitter_amount)
         {
             tickProgress++;
-            if (tickProgress > 0)
+            if (wo.movingpartAnimOffset?.south != null && wo.movingpartAnimPeak?.south != null)
             {
-                if (wo.movingpartAnimOffset?.south != null && wo.movingpartAnimPeak?.south != null)
+                float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
+                int cycleIndex = (int)(tickProgress / cycleDuration);
+                float nudgeMultiplier;
+                if (cycleTime < uptime)
                 {
-                    float uptime = 0.95f - (20f * actorMuscle / 5000f);
-                    float cycleDuration = 125f - actorMuscle;
-                    float jitter_amount = 3f * Mathf.Max(0f, (1f - (actorMuscle / 35f))) / 100f;
-                    float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-                    int cycleIndex = (int)(tickProgress / cycleDuration);
-                    float nudgeMultiplier;
-                    if (cycleTime < uptime)
-                    {
-                        nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
-                    }
-                    else
-                    {
-                        nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
-                    }
-                    Vector3 woOffset = wo.movingpartAnimOffset.south;
-                    Vector3 woNudge = wo.movingpartAnimPeak.south;
-                    float armIndex;
+                    nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
+                }
+                else
+                {
+                    nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
+                }
+                Vector3 woOffset = wo.movingpartAnimOffset.south;
+                Vector3 woNudge = wo.movingpartAnimPeak.south;
+                float armIndex;
 
-                    switch (wo.animationType)
-                    {
-                        case InteractionType.item:
-                            armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
-                            woOffset.x *= armIndex;
-                            woNudge.x *= armIndex;
-                            itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
-                            break;
-                        case InteractionType.itemEach:
-                            armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
-                            woOffset.x *= armIndex;
-                            woNudge.x *= armIndex;
-                            itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            item.ghostOffset.x = -itemOffset.x * 2f;
-                            item.ghostOffset.z = -itemOffset.z + woOffset.z;
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
-                            break;
-                        case InteractionType.itemBoth:
-                            itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            item.ghostOffset.x = -itemOffset.x * 2f + Rand.Range(-jitter_amount, jitter_amount);
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
-                            break;
-                        default:
-                            break;
-                    }
+                switch (wo.animationType)
+                {
+                    case InteractionType.item:
+                        armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
+                        woOffset.x *= armIndex;
+                        woNudge.x *= armIndex;
+                        itemOffset = woOffset + nudgeMultiplier * woNudge;
+                        itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        break;
+                    case InteractionType.itemEach:
+                        armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
+                        woOffset.x *= armIndex;
+                        woNudge.x *= armIndex;
+                        var randValue = Rand.Range(-jitter_amount, jitter_amount);
+                        itemOffset = woOffset + nudgeMultiplier * woNudge;
+                        item.ghostOffset.x = -itemOffset.x * 2f;
+                        item.ghostOffset.z = -itemOffset.z + woOffset.z;
+                        itemOffset.x += randValue;
+                        item.ghostOffset.x -= randValue;
+                        break;
+                    case InteractionType.itemBoth:
+                        itemOffset = woOffset + nudgeMultiplier * woNudge;
+                        item.ghostOffset.x = -itemOffset.x * 2f + Rand.Range(-jitter_amount, jitter_amount);
+                        itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        break;
+                    default:
+                        break;
                 }
             }
             if (joygainfactor > 0)
@@ -128,6 +124,7 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref joygainfactor, "strengthlifting_joygainfactor", 1.0f);
             Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
             Scribe_Values.Look(ref workoutIndex, "strengthlifting_workoutIndex", -1);
             Scribe_Values.Look(ref memoryFactor, "strengthlifting_memoryFactor", 1f);
@@ -187,9 +184,12 @@ namespace Maux36.Rimbody
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 thingAnimated.beingUsed = true;
             };
+            float uptime = 0.95f - (0.004f * compPhysique.MuscleMass);
+            float cycleDuration = 125f - compPhysique.MuscleMass;
+            float jitter_amount = 0.03f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f)));
             workout.tickAction = delegate
             {
-                WatchTickAction(thingAnimated, exWorkout, compPhysique.MuscleMass);
+                WatchTickAction(thingAnimated, exWorkout, uptime, cycleDuration, jitter_amount);
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;

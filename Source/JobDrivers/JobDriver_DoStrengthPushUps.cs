@@ -44,13 +44,6 @@ namespace Maux36.Rimbody
 
             return true;
         }
-        protected void WatchTickAction(Thing building)
-        {
-            if (joygainfactor > 0)
-            {
-                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
-            }
-        }
         private void AddMemory(CompPhysique compPhysique)
         {
             if (compPhysique != null)
@@ -72,22 +65,18 @@ namespace Maux36.Rimbody
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
-            float jitter_amount = 3f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f))) / 100f;
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);
 
-            var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
+            var exWorkout = job.def.GetModExtension<ModExtensionRimbodyJob>();
             float memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
-            if(facing == Rot4.Invalid)
+            if (facing == Rot4.Invalid)
             {
                 facing = Rot4.Random;
             }
             float adjsusted =(facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f;
-
-            float uptime = 0.75f - (20f * compPhysique.MuscleMass / 5000f);
-            float cycleDuration = 125f - compPhysique.MuscleMass;
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -107,10 +96,13 @@ namespace Maux36.Rimbody
                 compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
             };
+            float uptime = 0.75f - (20f * compPhysique.MuscleMass / 5000f);
+            float cycleDuration = 125f - compPhysique.MuscleMass;
+            float jitter_amount = 0.03f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f)));
+            float nudgeMultiplier;
             workout.tickAction = delegate
             {
-                tickProgress += 1;
-                float nudgeMultiplier = 0f;
+                tickProgress++;
                 float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
                 if (cycleTime < uptime)
                 {
@@ -121,8 +113,7 @@ namespace Maux36.Rimbody
                     nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
                 }
                 pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + adjsusted*(1f + nudgeMultiplier)*0.5f;
-                float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
-                Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * xJitter;
+                Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress);
                 pawnNudge = JitterVector + Vector3.forward*nudgeMultiplier*0.15f;
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             };
@@ -136,10 +127,6 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
-                facing = Rot4.Invalid;
-                pawnNudge = Vector3.zero;
-                lyingRotation = Rot4.Invalid;
-                TryGainGymThought();
                 AddMemory(compPhysique);
                 pawn.PawnBodyAngleOverride() = -1;
             });
