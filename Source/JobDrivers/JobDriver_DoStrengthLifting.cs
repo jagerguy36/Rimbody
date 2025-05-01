@@ -4,7 +4,6 @@ using Verse.AI;
 using Verse;
 using UnityEngine;
 using System;
-using Verse.Sound;
 
 namespace Maux36.Rimbody
 {
@@ -13,10 +12,11 @@ namespace Maux36.Rimbody
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
+        private int workoutIndex = -1;
+        private float memoryFactor = 1.0f;
+        private float workoutEfficiencyValue = 1.0f;
         private Vector3 itemOffset = Vector3.zero;
-
-        private readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
-        private ModExtensionRimbodyTarget ext => TargetThingA.def.GetModExtension<ModExtensionRimbodyTarget>();
+        private static readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -49,30 +49,29 @@ namespace Maux36.Rimbody
                     }
                     Vector3 woOffset = wo.movingpartAnimOffset.south;
                     Vector3 woNudge = wo.movingpartAnimPeak.south;
-                    int armIndex;
-                    float xJitter;
-                    Vector3 jitterVector;
+                    float armIndex;
 
                     switch (wo.animationType)
                     {
                         case InteractionType.item:
-                            armIndex = (cycleIndex % 2 == 0) ? 1 : -1;
+                            armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
                             woOffset.x *= armIndex;
                             woNudge.x *= armIndex;
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
                             itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                             break;
                         case InteractionType.itemEach:
-                            //int direction = (cycleIndex % 2 == 0) ? 1 : -1;
-                            //woOffset.x *= direction;
-                            //woNudge.x *= direction;
-                            //float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
-                            //Vector3 jitterVector = new Vector3(xJitter, 1f / 26f, 0);
-                            //itemOffset = woOffset + nudgeMultiplier * woNudge + jitterVector;
+                            armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
+                            woOffset.x *= armIndex;
+                            woNudge.x *= armIndex;
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.x = -itemOffset.x * 2f;
+                            item.ghostOffset.z = -itemOffset.z + woOffset.z;
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                             break;
                         case InteractionType.itemBoth:
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            item.ghostOffset.x = -itemOffset.x * 2 + Rand.Range(-jitter_amount, jitter_amount);
+                            item.ghostOffset.x = -itemOffset.x * 2f + Rand.Range(-jitter_amount, jitter_amount);
                             itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                             break;
                         default:
@@ -130,6 +129,9 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
+            Scribe_Values.Look(ref workoutIndex, "strengthlifting_workoutIndex", -1);
+            Scribe_Values.Look(ref memoryFactor, "strengthlifting_memoryFactor", 1f);
+            Scribe_Values.Look(ref workoutEfficiencyValue, "strengthlifting_workoutEfficiencyValue", 1f);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -139,9 +141,16 @@ namespace Maux36.Rimbody
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
-            var workoutIndex = GetWorkoutInt(compPhysique, ext, out var score);
-            var exWorkout = ext.workouts[workoutIndex];
+
+            //Set up workout
+            RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
             Thing_WorkoutAnimated thingAnimated = (Thing_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
+            if (workoutIndex < 0)
+            {
+                workoutIndex = GetWorkoutInt(compPhysique, ext, out memoryFactor);
+            }
+            var exWorkout = ext.workouts[workoutIndex];
+
             yield return Toils_General.DoAtomic(delegate
             {
                 job.count = 1;
@@ -152,38 +161,31 @@ namespace Maux36.Rimbody
             {
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
-            IntVec3 workoutspot = SpotToWorkout(pawn, TargetA.Thing, out bool usingBench, exWorkout.useBench);
-            float efficiency = 1f;
-            if (usingBench)
-            {
-                efficiency = 1.05f;
-            }
-            this.job.SetTarget(TargetIndex.C, workoutspot);
+            Toil chooseCell = FindSpotToWorkout(TargetIndex.C, ref workoutEfficiencyValue, exWorkout.useBench);
+            yield return chooseCell;
             yield return Toils_Reserve.Reserve(TargetIndex.C);
-            yield return Toils_Goto.GotoCell(workoutspot, PathEndMode.OnCell);
-            if (exWorkout.reportString != null)
-            {
-                this.job.reportStringOverride = exWorkout.reportString.Translate();
-            }
+            yield return Toils_Goto.GotoCell(TargetIndex.C, PathEndMode.OnCell);
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                Log.Message("initiated");
-                int random = Rand.Range(0, 2);
-                var side = random == 0 ? -1 : 1;
                 pawn.pather.StopDead();
                 pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
+                if (exWorkout.reportString != null)
+                {
+                    job.reportStringOverride = exWorkout.reportString.Translate();
+                }
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
                 {
                     joygainfactor = 0;
                 }
-                thingAnimated.beingUsed = true;
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength * efficiency;
-                compPhysique.cardioOverride = exWorkout.cardio * efficiency;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
+                compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
+                thingAnimated.beingUsed = true;
             };
             workout.tickAction = delegate
             {
@@ -194,12 +196,12 @@ namespace Maux36.Rimbody
             workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
-                thingAnimated.beingUsed = false;
-                thingAnimated.ghostOffset = Vector3.zero;
                 compPhysique.jobOverride = false;
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.partsOverride = null;
+                thingAnimated.beingUsed = false;
+                thingAnimated.ghostOffset = Vector3.zero;
                 TryGainGymThought();
                 AddMemory(compPhysique, exWorkout.name);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
@@ -210,7 +212,57 @@ namespace Maux36.Rimbody
             });
             yield return workout;
         }
+        public static Toil FindSpotToWorkout(TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
+        {
+            Toil findCell = new Toil();
+            bool usingBench = false;
+            findCell.initAction = delegate
+            {
+                Pawn actor = findCell.actor;
+                Job curJob = actor.CurJob;
+                IntVec3 workoutLocation = IntVec3.Invalid;
+                if (lookForBench)
+                {
+                    Thing thing = null;
+                    Predicate<Thing> baseChairValidator = delegate (Thing t)
+                    {
+                        if (t.def.building == null) return false;
+                        if (t.IsForbidden(actor)) return false;
+                        if (!t.IsSociallyProper(actor)) return false;
+                        if (t.IsBurning()) return false;
+                        if (!TryFindFreeSittingSpotOnThing(t, actor, out var cell)) return false;
+                        if (!actor.CanReserve(cell)) return false;
+                        return true;
+                    };
+                    thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(benchDef), PathEndMode.OnCell, TraverseParms.For(actor), 30f, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
+                    if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
+                    {
+                        usingBench = true;
+                        curJob.SetTarget(cellInd, workoutLocation);
+                        return;
+                    }
+                }
+                workoutLocation = RCellFinder.RandomWanderDestFor(actor, actor.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(actor, Danger.Some));
+                if (workoutLocation == IntVec3.Invalid)
+                {
+                    if (CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 5, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map), (Region x) => true, out workoutLocation))
+                    {
 
+                        curJob.SetTarget(cellInd, workoutLocation);
+                        return;
+                    }
+                    curJob.SetTarget(cellInd, IntVec3.Invalid);
+                    return;
+                }
+                curJob.SetTarget(cellInd, workoutLocation);
+                return;
+            };
+            if (usingBench)
+            {
+                workoutEfficiencyValue = 1.05f;
+            }
+            return findCell;
+        }
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {
             if (tickProgress > 0)
@@ -220,7 +272,6 @@ namespace Maux36.Rimbody
             }
             return false;
         }
-
         public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
         {
             Pawn actor = f.GetActor();
@@ -255,61 +306,6 @@ namespace Maux36.Rimbody
                         scoreStageIndex));
             }
         }
-
-        public IntVec3 SpotToWorkout(Pawn pawn, Thing workoutThing, out bool usingBench, bool lookForBench = false)
-        {
-            usingBench = false;
-            IntVec3 workoutLocation = IntVec3.Invalid;
-            if (lookForBench)
-            {
-                Thing thing = null;
-                Predicate<Thing> baseChairValidator = delegate (Thing t)
-                {
-                    if (t.def.building == null)
-                    {
-                        return false;
-                    }
-                    if (t.IsForbidden(pawn))
-                    {
-                        return false;
-                    }
-                    if (!t.IsSociallyProper(pawn))
-                    {
-                        return false;
-                    }
-                    if (t.IsBurning())
-                    {
-                        return false;
-                    }
-                    if (!TryFindFreeSittingSpotOnThing(t, pawn, out var cell))
-                    {
-                        return false;
-                    }
-                    if (!pawn.CanReserve(cell))
-                    {
-                        return false;
-                    }
-                    return true;
-                };
-                thing = GenClosest.ClosestThingReachable(workoutThing.Position, pawn.Map, ThingRequest.ForDef(benchDef), PathEndMode.OnCell, TraverseParms.For(pawn), 30f, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(pawn, t.Map) == Danger.None);
-                if (thing != null && TryFindFreeSittingSpotOnThing(thing, pawn, out workoutLocation))
-                {
-                    usingBench = true;
-                    return workoutLocation;
-                }
-            }
-            workoutLocation = RCellFinder.RandomWanderDestFor(pawn, workoutThing.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(pawn, Danger.Some));
-            if (workoutLocation == IntVec3.Invalid)
-            {
-                if (CellFinder.TryFindRandomReachableNearbyCell(workoutThing.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out workoutLocation))
-                {
-                    return workoutLocation;
-                }
-                return IntVec3.Invalid;
-            }
-            return workoutLocation;
-        }
-
         public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
         {
             foreach (IntVec3 item in t.OccupiedRect())

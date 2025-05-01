@@ -26,7 +26,15 @@ namespace Maux36.Rimbody
             "Rimbody_Quads",
             "Rimbody_Hams"
         };
-        private ModExtensionRimbodyTarget RimbodyEx;
+        private ModExtensionRimbodyTarget RimbodyExInternal;
+        private ModExtensionRimbodyTarget RimbodyEx
+        {
+            get
+            {
+                RimbodyExInternal ??= def.GetModExtension<ModExtensionRimbodyTarget>();
+                return RimbodyExInternal;
+            }
+        }
         public override string DescriptionFlavor
         {
             get
@@ -72,10 +80,15 @@ namespace Maux36.Rimbody
                 return graphics;
             }
         }
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref beingUsed, "twa_beingUsed", false);
+            Scribe_Values.Look(ref ghostOffset, "twa_ghostOffset", Vector3.zero);
+        }
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            RimbodyEx = this.def.GetModExtension<ModExtensionRimbodyTarget>();
         }
         public void GetGraphicLong()
         {
@@ -114,7 +127,7 @@ namespace Maux36.Rimbody
             else
             {
                 base.DrawAt(drawLoc, flip);
-                if (ghostOffset != Vector3.zero)
+                if (beingUsed && ghostOffset != Vector3.zero)
                 {
                     Graphic.Draw(drawLoc + ghostOffset, flip ? Rotation.Opposite : Rotation, this);
                 }

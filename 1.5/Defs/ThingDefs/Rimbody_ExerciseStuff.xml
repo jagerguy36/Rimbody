@@ -63,7 +63,7 @@
 						<reportString>dumbbell_bicepcurl_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
-						<animationType>item</animationType>
+						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
 							<south>(+0.33,0,-0.2)</south>
@@ -92,10 +92,10 @@
 						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(0.4,0,0.3)</south>
+							<south>(0.4,0,0.25)</south>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
-							<south>(-0.05,0,0.5)</south>
+							<south>(-0.05,0,0.45)</south>
 						</movingpartAnimPeak>
 						<strengthParts>
 							<li>3</li>
