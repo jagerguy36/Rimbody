@@ -28,7 +28,7 @@
       </thingDefs>
     </fixedIngredientFilter>
     <products>
-      <Rimbody_Dumbbell>1</Rimbody_Dumbbell>
+      <Rimbody_Dumbbells>1</Rimbody_Dumbbells>
     </products>
     <recipeUsers>
         <li>ElectricSmithy</li>
@@ -62,7 +62,7 @@
       </categories>
     </fixedIngredientFilter>
     <products>
-      <Rimbody_Haltere>1</Rimbody_Haltere>
+      <Rimbody_Halteres>1</Rimbody_Halteres>
     </products>
     <recipeUsers>
         <li>TableStonecutter</li>

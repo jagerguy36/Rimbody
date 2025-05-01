@@ -143,7 +143,7 @@
 				<Category>Strength</Category>
 				<rimbodyBuildingpartGraphics>
 					<li>
-						<texPath>Things/Item/Rimbody_things/Halteres/Haltere_anim</texPath>
+						<texPath>Things/Item/Rimbody_things/Halteres/Halteres_anim</texPath>
 						<graphicClass>Graphic_Single</graphicClass>
 					</li>
 				</rimbodyBuildingpartGraphics>
