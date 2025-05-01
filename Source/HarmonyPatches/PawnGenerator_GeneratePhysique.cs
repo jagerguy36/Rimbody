@@ -24,7 +24,7 @@ namespace Maux36.Rimbody
     [HarmonyPatch(typeof(PawnGenerator), "GetBodyTypeFor")]
     public static class PawnGenerator_GetBodyTypeFor
     {
-        static void Postfix(ref BodyTypeDef __result, Pawn pawn)
+        static bool Prefix(ref BodyTypeDef __result, Pawn pawn)
         {
             if (!(ModsConfig.BiotechActive && pawn.DevelopmentalStage.Juvenile()))
             {
@@ -33,8 +33,10 @@ namespace Maux36.Rimbody
                 if (compPhysique != null && compPhysique.BodyFat >= 0 && compPhysique.MuscleMass >= 0)
                 {
                     __result = compPhysique.GetValidBody();
+                    return false;
                 }
             }
+            return true;
         }
     }
 }

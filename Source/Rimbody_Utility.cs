@@ -1,6 +1,6 @@
 ﻿using LudeonTK;
 using RimWorld.Planet;
-using UnityEngine;
+using System.Linq;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -46,6 +46,7 @@ namespace Maux36.Rimbody
             {
                 Log.Message($"resetting rimbody for pawn {pawn.Name}");
                 compPhysique.PhysiqueValueSetup(true);
+                compPhysique.partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
             }
 
         }
