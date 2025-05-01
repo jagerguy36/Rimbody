@@ -323,9 +323,9 @@ namespace Maux36.Rimbody
                                 }
                             }
                         }
-                        //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Factors: s:{strengthFactor}, c:{cardioFactor}");
                     }
                 }
+                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Factors: s:{strengthFactor}, c:{cardioFactor}");
                 //Apply partFatigue
                 if (RimbodySettings.useFatigue && partsToApplyFatigue != null)
                 {
@@ -343,7 +343,7 @@ namespace Maux36.Rimbody
                     else if (doingC)
                     {
                         valueToCompare = cardioFactor;
-                        ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
+                        ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor, 2f);
                         if (valueToCompare * 0.9 >= cardioFactor)
                         {
                             UIflag--;
@@ -355,6 +355,7 @@ namespace Maux36.Rimbody
                         strengthFactor *= memoryFactorOverride;
                     }
                 }
+                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Applied Factors: s:{strengthFactor}, c:{cardioFactor}");
 
                 //Tiredness reduces gain
                 if (parentPawn.needs.rest != null)
@@ -882,7 +883,7 @@ namespace Maux36.Rimbody
                 }
             }
         }
-        void ApplyFatigueToFactors(List<float> strengthParts, ref float strength, ref float cardio)
+        void ApplyFatigueToFactors(List<float> strengthParts, ref float strength, ref float cardio, float assumedBase = 4)
         {
             if (!RimbodySettings.useFatigue)
             {
@@ -904,9 +905,9 @@ namespace Maux36.Rimbody
                 }
             }
             fatigueFactor = fatigueFactor / total;
-            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.25f;
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) / assumedBase;
             strength = strength * (0.25f + (0.75f * fatigueFactor)) * fi;
-            cardio = cardio * (fatigueFactor + 1f) / 2f;
+            cardio = cardio * (fatigueFactor + 3f) * 0.25f;
         }
 
         public float GetStrengthJobScore(List<float> strengthParts, float strength)
