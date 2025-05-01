@@ -162,7 +162,7 @@ namespace Maux36.Rimbody
                 bool doingB = false;
                 bool doingC = false;
                 //bool UIlimit = false;
-                int UIflag = 2;
+                int UIflag = 0;
 
                 float cardioFactor = 0.3f; //_baseC
                 float strengthFactor = 0.1f; //_sedentaryS
@@ -189,13 +189,16 @@ namespace Maux36.Rimbody
                     {
                         case string job when RimbodyDefLists.StrengthJob.Contains(job):
                             doingS = true;
+                            UIflag = 2;
                             strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
                             break;
                         case string job when RimbodyDefLists.BalanceJob.Contains(job):
                             doingB = true;
+                            UIflag = 2;
                             break;
                         case string job when RimbodyDefLists.CardioJob.Contains(job):
                             doingC = true;
+                            UIflag = 2;
                             break;
                     }
                 }
@@ -232,7 +235,7 @@ namespace Maux36.Rimbody
                                         //Jogging
                                         if (curJobDef?.defName != "Rimbody_Jogging")
                                         {
-                                            UIflag = 0;
+                                            UIflag = 2;
                                         }
                                         doingC = true;
                                         if (isJogger)
@@ -281,22 +284,23 @@ namespace Maux36.Rimbody
                                 strengthFactor = jobExtension.strength;
                                 if(jobExtension.strengthParts != null)
                                 {
+                                    partsToApplyFatigue = jobExtension.strengthParts;
                                     switch (jobExtension.TreatAs)
                                     {
                                         case RimbodyTargetCategory.Job:
                                             break;
                                         case RimbodyTargetCategory.Strength:
-                                            partsToApplyFatigue = jobExtension.strengthParts;
                                             doingS = true;
-                                            strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
+                                            UIflag = 2;
+                                            strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
                                             break;
                                         case RimbodyTargetCategory.Balance:
-                                            partsToApplyFatigue = jobExtension.strengthParts;
                                             doingB = true;
+                                            UIflag = 2;
                                             break;
                                         case RimbodyTargetCategory.Cardio:
-                                            partsToApplyFatigue = jobExtension.strengthParts;
                                             doingC = true;
+                                            UIflag = 2;
                                             break;
                                     }
                                 }
@@ -317,38 +321,32 @@ namespace Maux36.Rimbody
                 //Apply partFatigue
                 if (RimbodySettings.useFatigue && partsToApplyFatigue != null)
                 {
+                    float valueToCompare;
                     if (doingS)
                     {
-                        var tempFactor = GetStrengthJobScore(partsToApplyFatigue, strengthFactor);
-                        if (tempFactor < 0.9 * strengthFactor)
+                        valueToCompare = strengthFactor;
+                        ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
+                        strengthFactor *= memoryFactorOverride;
+                        cardioFactor *= memoryFactorOverride;
+                        if (valueToCompare >= 0.9 * strengthFactor)
                         {
                             UIflag--;
                         }
-                        strengthFactor = tempFactor;
                     }
                     else if (doingC)
                     {
-                        var tempFactor = GetCardioJobScore(partsToApplyFatigue, cardioFactor);
-                        if (tempFactor < 0.9 * cardioFactor)
+                        valueToCompare = cardioFactor;
+                        ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
+                        if (valueToCompare >= 0.9 * cardioFactor)
                         {
                             UIflag--;
                         }
-                        cardioFactor = tempFactor;
                     }
                     else if (doingB)
                     {
-                        var tempFactor = GetBalanceJobScore(partsToApplyFatigue, strengthFactor);
-                        if (tempFactor < 0.9 * strengthFactor)
-                        {
-                            UIflag--;
-                        }
-                        strengthFactor = tempFactor;
-                        tempFactor = GetCardioJobScore(partsToApplyFatigue, cardioFactor);
-                        if (tempFactor < 0.9 * cardioFactor)
-                        {
-                            UIflag--;
-                        }
-                        cardioFactor = tempFactor;
+                        ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
+                        strengthFactor *= memoryFactorOverride;
+                        cardioFactor *= memoryFactorOverride;
                     }
                 }
 
@@ -878,7 +876,7 @@ namespace Maux36.Rimbody
                 }
             }
         }
-        void ApplyFatigue(List<float> strengthParts, ref float strength, ref float cardio)
+        void ApplyFatigueToFactors(List<float> strengthParts, ref float strength, ref float cardio)
         {
             if (!RimbodySettings.useFatigue)
             {
