@@ -11,34 +11,52 @@ namespace Maux36.Rimbody
 {
     public class CompPhysique : ThingComp
     {
+        //Internals
         private Pawn parentPawnInt = null;
         private bool? isJoggerInt;
         public bool PostGen = false;
-        public bool forceRest = false; //For mod compatibility.
+        private Pawn parentPawn
+        {
+            get
+            {
+                parentPawnInt ??= parent as Pawn;
+                return parentPawnInt;
+            }
+        }
 
+        //Job Overrides
+        public bool forceRest = false; //For mod compatibility.
         public bool jobOverride = false;
         public float strengthOverride = 0f;
         public float cardioOverride = 0f;
         public float memoryFactorOverride = 1f;
         public List<float> partsOverride = null;
 
+        //Fat
         public float BodyFat = -1f;
         public float FatGainFactor = 1f;
         public float FatLoseFactor = 1f;
         public bool useFatgoal = false;
         public float FatGoal = 25f;
 
+        //Muscle
         public float MuscleMass = -1f;
         public float MuscleGainFactor = 1f;
         public float MuscleLoseFactor = 1f;
         public bool useMuscleGoal = false;
         public float MuscleGoal = 25f;
+
+        //Gain
+        public float gain = 0f;
         public float gainF = 1f;
         public float gainMax => (2f * MuscleMass * gainF) + 100f;
 
-        public float gain = 0f;
+        //Fatigue and Exhuastion
         public float exhaustion = 0f;
         public bool resting = false;
+        public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
+
+        //Traits and Genes
         public bool isNonSen = false;
         public bool isJogger
         {
@@ -60,13 +78,11 @@ namespace Maux36.Rimbody
             }
         }
 
+        //Memory
+        public Queue<string> memory = [];
         public string lastMemory = string.Empty;
         public int lastWorkoutTick = 0;
         public float carryFactor = 0f;
-
-        public Queue<string> memory = [];
-
-        public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
 
         public CompProperties_Physique Props => (CompProperties_Physique)props;
 
@@ -75,15 +91,6 @@ namespace Maux36.Rimbody
         private static readonly GeneDef GeneBodyHulk = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Hulk", true) : null;
         private static readonly GeneDef GeneBodyStandard = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Standard", true) : null;
         private static readonly GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
-
-        private Pawn parentPawn
-        {
-            get
-            {
-                parentPawnInt ??= parent as Pawn;
-                return parentPawnInt;
-            }
-        }
 
         private CompHoldingPlatformTarget platformComp;
         private CompHoldingPlatformTarget PlatformTarget => platformComp ?? (platformComp = parentPawn.TryGetComp<CompHoldingPlatformTarget>());
@@ -146,6 +153,7 @@ namespace Maux36.Rimbody
                     }
                 }
 
+                //Set up
                 var tickRatio = RimbodySettings.CalcEveryTick / 150f;
                 var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevelPercentage, 0f, 1f);
                 var curJobDef = parentPawn.CurJobDef;
@@ -161,13 +169,13 @@ namespace Maux36.Rimbody
                 bool doingS = false;
                 bool doingB = false;
                 bool doingC = false;
-                //bool UIlimit = false;
-                int UIflag = 2;
+                int UIflag = 0;
 
                 float cardioFactor = 0.3f; //_baseC
                 float strengthFactor = 0.1f; //_sedentaryS
                 List<float> partsToApplyFatigue = null;
 
+                //Factor Calculation
                 //If factor is Forced
                 if (forcedCardio >= 0 && forcedStrength >=0)
                 {
@@ -189,17 +197,20 @@ namespace Maux36.Rimbody
                     {
                         case string job when RimbodyDefLists.StrengthJob.Contains(job):
                             doingS = true;
+                            UIflag = 2;
                             strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
                             break;
                         case string job when RimbodyDefLists.BalanceJob.Contains(job):
                             doingB = true;
+                            UIflag = 2;
                             break;
                         case string job when RimbodyDefLists.CardioJob.Contains(job):
                             doingC = true;
+                            UIflag = 2;
                             break;
                     }
                 }
-                //Factors based on jobs
+                //Factors based on current jobs
                 else
                 {
                     //Factors for Caravan
@@ -230,11 +241,11 @@ namespace Maux36.Rimbody
                                         cardioFactor = 2.0f; //_sprintC;
                                         strengthFactor = 0.25f + (carryFactor * RimbodySettings.carryRateMultiplier);
                                         //Jogging
-                                        if (curJobDef?.defName != "Rimbody_Jogging")
+                                        doingC = true;
+                                        if (curJobDef?.defName == "Rimbody_Jogging")
                                         {
                                             UIflag = 2;
                                         }
-                                        doingC = true;
                                         if (isJogger)
                                         {
                                             partsToApplyFatigue = RimbodyDefLists.jogging_parts_jogger;
@@ -288,13 +299,16 @@ namespace Maux36.Rimbody
                                             break;
                                         case RimbodyTargetCategory.Strength:
                                             doingS = true;
+                                            UIflag = 2;
                                             strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
                                             break;
                                         case RimbodyTargetCategory.Balance:
                                             doingB = true;
+                                            UIflag = 2;
                                             break;
                                         case RimbodyTargetCategory.Cardio:
                                             doingC = true;
+                                            UIflag = 2;
                                             break;
                                     }
                                 }
@@ -335,7 +349,7 @@ namespace Maux36.Rimbody
                             UIflag--;
                         }
                     }
-                    else if (doingB)
+                    else //Balance and non-workout jobs
                     {
                         ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
                         strengthFactor *= memoryFactorOverride;
@@ -414,19 +428,19 @@ namespace Maux36.Rimbody
                     case DevelopmentalStage.Adult:
                         if (isNonSen)
                         {
-                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 500f;
-                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 500f;
+                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.002f;
+                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.002f;
 
-                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
-                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) / 200f;
+                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.005f;
+                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.005f;
                         }
                         else
                         {
-                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 500f;
-                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 500f;
+                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.002f;
+                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.002f;
 
-                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
-                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) / 200f;
+                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.005f;
+                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.005f;
                         }
                         break;
                 }
@@ -477,15 +491,15 @@ namespace Maux36.Rimbody
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
                 float fatLoss = (BodyFat + 43f) / (40) * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
-                float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * RimbodySettings.rateFactor / 400f;
+                float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * RimbodySettings.rateFactor * 0.0025f;
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
                 float muscleGain = 0.045f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
-                float muscleLoss = (51.5f / (BodyFat + 50f)) * ((MuscleMass + 25f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);//(51.5f / (BodyFat + 50f)) * ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
+                float muscleLoss = (51.5f / (BodyFat + 50f)) * ((MuscleMass + 25f) / 125f) * Mathf.Pow(((curFood + 0.125f) * 8f), -0.5f);//(51.5f / (BodyFat + 50f)) * ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
-                //exhaustion
+                //exhaustion recovery
                 float exhaustionDelta = 0f;
                 if (RimbodySettings.useExhaustion)
                 {
@@ -507,11 +521,11 @@ namespace Maux36.Rimbody
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
-                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor / 400f);
+                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
                         }
                         else if (gain > 0f)
                         {
-                            muscleDelta += (RimbodySettings.rateFactor / 400f) * gain;
+                            muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
                             gain = 0f;
                         }
                         exhaustionDelta = 8f * exhaustionDelta;
@@ -526,11 +540,11 @@ namespace Maux36.Rimbody
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
-                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor / 400f);
+                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
                         }
                         else if (gain > 0f)
                         {
-                            muscleDelta += (RimbodySettings.rateFactor / 400f) * gain;
+                            muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
                             gain = 0f;
                         }
                     }
@@ -548,16 +562,16 @@ namespace Maux36.Rimbody
                     if (gain - (recoveryFactor * tickRatio) > 0f)
                     {
                         gain -= recoveryFactor * tickRatio;
-                        muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor / 400f);
+                        muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
                     }
                     else if (gain > 0f)
                     {
-                        muscleDelta += (RimbodySettings.rateFactor / 400f) * gain;
+                        muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
                         gain = 0f;
                     }
                     exhaustionDelta = 4f * exhaustionDelta;
                 }
-                muscleDelta -= muscleloseF * muscleLoss * tickRatio * RimbodySettings.rateFactor / 400f;
+                muscleDelta -= muscleloseF * muscleLoss * tickRatio * RimbodySettings.rateFactor * 0.0025f;
                 newMuscleMass = Mathf.Clamp(MuscleMass + muscleDelta, 0f, 50f);
                 //BodyChange Check
                 if (fatDelta > 0f)
@@ -612,11 +626,11 @@ namespace Maux36.Rimbody
                 {
                     if (partsToApplyFatigue != null)
                     {
-                        AddPartFatigue(partsToApplyFatigue, (float)RimbodySettings.CalcEveryTick / 1000f); //raises partfactor / 1000 per tick
+                        AddPartFatigue(partsToApplyFatigue, (float)RimbodySettings.CalcEveryTick * 0.001f); //raises partfactor * 0.001 per tick
                     }
                     else
                     {
-                        RestorePartFatigue(restingCheck ? 3f * RimbodySettings.CalcEveryTick / 20000f : 1f * RimbodySettings.CalcEveryTick / 20000f); //restore 1 / 20000 per tick. triple when resting. A day is 60000 ticks, so awake, a pawn can restore 3 points per day. if asleep 7H, 5point
+                        RestorePartFatigue(restingCheck ? RimbodySettings.CalcEveryTick * 0.00015f : RimbodySettings.CalcEveryTick * 0.00005f); //restore 1 / 20000 per tick. triple when resting. A day is 60000 ticks, so awake, a pawn can restore 3 points per day. if asleep for 7H during a day, 5point total
                     }
                 }
                 if (RimbodySettings.useExhaustion)
