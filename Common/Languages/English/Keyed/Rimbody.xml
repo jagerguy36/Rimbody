@@ -45,4 +45,48 @@
   <RimbodyRefreshTooltip>Use this if to refresh the bodytype in case there is a mismatch between muscle/fat and bodytype due to other mods.</RimbodyRefreshTooltip>
   <RimbodyGainGoalTooltip>When gain goal exceeds their muscle level, pawns will eat more often and focus on strength exercises.</RimbodyGainGoalTooltip>
   <RimbodyDietGoalTooltip>When diet goal is below their fat level, pawns will only eat when hungry and will focus on cardio exercises.</RimbodyDietGoalTooltip>
+  <RimbodyWorkOutGainEfficiency>Strength Workout Efficiency</RimbodyWorkOutGainEfficiency>
+  <RimbodyWorkOutGainEfficiencyTooltip>How efficiently a pawn gains muscle during strength training.</RimbodyWorkOutGainEfficiencyTooltip>
+  <RimbodyCarryRateMultiplier>Carry Rate Multiplier</RimbodyCarryRateMultiplier>
+  <RimbodyCarryRateMultiplierTooltip>The multiplier for how much the character gains muscle based on the weight of the carried object.</RimbodyCarryRateMultiplierTooltip>
+  <RimbodyUseFatigue>Use part fatigue</RimbodyUseFatigue>
+  <RimbodyUseFatigueTooltip>Activates the fatigue system for specific body parts. As you exercise, the targeted part will become fatigued. Resting will help the fatigued area recover.</RimbodyUseFatigueTooltip>
+  <RimbodyUseExhaustion>Use exhaustion</RimbodyUseExhaustion>
+  <RimbodyUseExhaustionTooltip>Activates the exhaustion system. Exhaustion limits the amount of workouts you can do without rest.</RimbodyUseExhaustionTooltip>
+  <RimbodyExhaustionTooltip>Exhaustion ({0}%)\n\nA pawn gains exhaustion while exercising. If their exhaustion reaches 100%, they must wait until it drops below 40% before they can work out again.</RimbodyExhaustionTooltip>
+  <RimbodyFatigueTooltip>As a pawn works out, the areas used in the exercise accumulate fatigue. Exercises that use fatigued areas are less effective.\n\nParts Fatigue\n\nShoulders: ({0}%)\nChest: ({1}%)\nBiceps: ({2}%)\nTriceps: ({3}%)\nBack: ({4}%)\nCore: ({5}%)\nGlutes: ({6}%)\nQuads: ({7}%)\nHamstrings: ({8}%)</RimbodyFatigueTooltip>
+  <Rimbody_Description>[Available Workouts]</Rimbody_Description>
+  <Rimbody_Shoulder>Shoulders</Rimbody_Shoulder>
+  <Rimbody_Chest>Chest</Rimbody_Chest>
+  <Rimbody_Biceps>Biceps</Rimbody_Biceps>
+  <Rimbody_Triceps>Triceps</Rimbody_Triceps>
+  <Rimbody_Back>Back</Rimbody_Back>
+  <Rimbody_Core>Core</Rimbody_Core>
+  <Rimbody_Glutes>Glutes</Rimbody_Glutes>
+  <Rimbody_Quads>Quads</Rimbody_Quads>
+  <Rimbody_Hams>Hamstrings</Rimbody_Hams>
+  <treadmill_name>Treadmill Run</treadmill_name>
+  <treadmill_report>Running on a treadmill</treadmill_report>
+  <cycling_name>Cycling</cycling_name>
+  <cycling_report>Riding an exercise bike</cycling_report>
+  <benchpress_name>Bench Press</benchpress_name>
+  <benchpress_report>Performing bench presses</benchpress_report>
+  <deadlift_name>Deadlift</deadlift_name>
+  <deadlift_report>Doing deadlifts</deadlift_report>
+  <squats_name>Squats</squats_name>
+  <squats_report>Doing squats</squats_report>
+  <pullups_name>Pull-ups</pullups_name>
+  <pullups_report>Doing pull-ups</pullups_report>
+  <dips_name>Dips</dips_name>
+  <dips_report>Doing dips</dips_report>
+  <sbll_name>Swissball Leg Lift</sbll_name>
+  <sbll_report>Doing Swissball leg lifts</sbll_report>
+  <bicepcurl_name>Bicep Curl</bicepcurl_name>
+  <dumbbells_bicepcurl_report>Doing bicep curls with dumbbells</dumbbells_bicepcurl_report>
+  <halteres_bicepcurl_report>Doing bicep curls with halteres</halteres_bicepcurl_report>
+  <overheadshoulderpress_name>Overhead Shoulder Press</overheadshoulderpress_name>
+  <dumbbells_overheadshoulderpress_report>Doing overhead shoulder presses with dumbbells</dumbbells_overheadshoulderpress_report>
+  <halteres_overheadshoulderpress_report>Doing overhead shoulder presses with halteres</halteres_overheadshoulderpress_report>
+  <kettlebellswing_name>Kettlebell Swing</kettlebellswing_name>
+  <kettlebellswing_report>Doing kettlebell swings</kettlebellswing_report>
 </LanguageData>

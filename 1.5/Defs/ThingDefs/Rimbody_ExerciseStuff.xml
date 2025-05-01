@@ -25,8 +25,8 @@
 	</ThingDef>
 
 	<ThingDef ParentName="ThingBase_RimbodyWorkout">
-		<defName>Rimbody_Dumbbell</defName>
-		<label>dumbbell</label>
+		<defName>Rimbody_Dumbbells</defName>
+		<label>dumbbells</label>
 		<description>Free weights for a variety of exercises targeting different muscle groups.</description>
 		<stackLimit>1</stackLimit>
 		<graphicData>
@@ -60,7 +60,7 @@
 				<workouts>
 					<li>
 						<name>bicepcurl_name</name>
-						<reportString>dumbbell_bicepcurl_report</reportString>
+						<reportString>dumbbells_bicepcurl_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<animationType>itemEach</animationType>
@@ -75,7 +75,7 @@
 						<strengthParts>
 							<li>0</li>
 							<li>0</li>
-							<li>3</li>
+							<li>3.25</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -86,7 +86,7 @@
 					</li>
 					<li>
 						<name>overheadshoulderpress_name</name>
-						<reportString>dumbbell_overheadshoulderpress_report</reportString>
+						<reportString>dumbbells_overheadshoulderpress_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
 						<animationType>itemBoth</animationType>
@@ -115,13 +115,13 @@
 	</ThingDef>
 
 	<ThingDef ParentName="ThingBase_RimbodyWorkout">
-		<defName>Rimbody_Haltere</defName>
-		<label>haltere</label>
+		<defName>Rimbody_Halteres</defName>
+		<label>halteres</label>
 		<description>Handheld weights for strengthening and toning muscles through a range of exercises.</description>
-		<stackLimit>2</stackLimit>
+		<stackLimit>1</stackLimit>
 		<graphicData>
-			<texPath>Things/Item/Rimbody_things/Haltere</texPath>
-			<graphicClass>Graphic_StackCount</graphicClass>
+			<texPath>Things/Item/Rimbody_things/Halteres/Halteres</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
 		</graphicData>
 		<thingCategories>
 			<li>Rimbody_Workout_equipment</li>
@@ -141,12 +141,19 @@
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
 				<Category>Strength</Category>
+				<rimbodyBuildingpartGraphics>
+					<li>
+						<texPath>Things/Item/Rimbody_things/Halteres/Haltere_anim</texPath>
+						<graphicClass>Graphic_Single</graphicClass>
+					</li>
+				</rimbodyBuildingpartGraphics>
 				<workouts>
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>halteres_bicepcurl_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>1.9</strength>
+						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
 							<south>(+0.2,0,-0.2)</south>
@@ -158,7 +165,7 @@
 						<strengthParts>
 							<li>0</li>
 							<li>0</li>
-							<li>3</li>
+							<li>3.25</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -172,12 +179,13 @@
 						<reportString>halteres_overheadshoulderpress_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>1.9</strength>
+						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(0.2,0,0.2)</south>
+							<south>(0.4,0,0.25)</south>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
-							<south>(0,0,0.3)</south>
+							<south>(-0.05,0,0.45)</south>
 						</movingpartAnimPeak>
 						<strengthParts>
 							<li>3</li>
@@ -228,6 +236,7 @@
 						<reportString>kettlebellswing_report</reportString>
 						<cardio>0.4</cardio>
 						<strength>2.0</strength>
+						<animationType>item</animationType>
 						<movingpartAnimOffset>
 							<south>(0,0,-0.3)</south>
 						</movingpartAnimOffset>
@@ -241,10 +250,10 @@
 							<li>0</li>
 							<li>0</li>
 							<li>1</li>
-							<li>0</li>
-							<li>2</li>
-							<li>0</li>
-							<li>0</li>
+							<li>0.5</li>
+							<li>1.5</li>
+							<li>0.75</li>
+							<li>0.5</li>
 						</strengthParts>
 					</li>
 				</workouts>

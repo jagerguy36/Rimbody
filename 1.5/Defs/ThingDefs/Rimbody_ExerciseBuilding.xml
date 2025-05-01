@@ -149,6 +149,7 @@
 			<li>Fabric</li>
 			<li>Leathery</li>
 		</stuffCategories>
+		<passability>PassThroughOnly</passability>
 		<pathCost>10</pathCost>
 		<designationCategory>Joy</designationCategory>
 		<uiIconScale>0.9</uiIconScale>
@@ -598,11 +599,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>2</li>
+							<li>1.5</li>
 							<li>0.5</li>
 							<li>1</li>
-							<li>0</li>
-							<li>1</li>
+							<li>0.5</li>
+							<li>1.5</li>
 						</strengthParts>
 					</li>
 					<li>
@@ -643,9 +644,9 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0</li>
-							<li>2.5</li>
-							<li>1.5</li>
+							<li>0.5</li>
+							<li>2</li>
+							<li>2</li>
 							<li>0.5</li>
 						</strengthParts>
 					</li>
@@ -761,11 +762,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>2</li>
+							<li>1.5</li>
 							<li>0.5</li>
 							<li>1</li>
-							<li>0</li>
-							<li>1</li>
+							<li>0.5</li>
+							<li>1.5</li>
 						</strengthParts>
 					</li>
 					<li>
@@ -806,9 +807,9 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0</li>
-							<li>2.5</li>
-							<li>1.5</li>
+							<li>0.5</li>
+							<li>2</li>
+							<li>2</li>
 							<li>0.5</li>
 						</strengthParts>
 					</li>
@@ -952,7 +953,7 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>3</li>
+							<li>3.25</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -1071,7 +1072,7 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>2</li>
+							<li>2.5</li>
 							<li>0.5</li>
 							<li>0.5</li>
 							<li>0.5</li>
@@ -1159,7 +1160,7 @@
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0.5</li>
-							<li>0.5</li>
+							<li>1</li>
 							<li>0.5</li>
 							<li>1</li>
 							<li>0</li>
