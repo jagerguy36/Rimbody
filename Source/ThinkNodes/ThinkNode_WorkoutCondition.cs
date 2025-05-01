@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
         private const int GameStartNoIdleWorkoutTicks = 60000;
         protected override bool Satisfied(Pawn pawn)
         {
-            if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult && !HealthAIUtility.ShouldSeekMedicalRest(pawn))
+            if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
             {
                 if (pawn.needs?.rest?.CurLevel < 0.17f) //Too tired
                 {
@@ -18,7 +18,7 @@ namespace Maux36.Rimbody
                 }
                 if (pawn.IsColonist || pawn.IsPrisonerOfColony)
                 {
-                    var compPhysique = pawn.TryGetComp<CompPhysique>(); //Goal not satisfied
+                    var compPhysique = pawn.TryGetComp<CompPhysique>();
                     if (compPhysique == null)
                     {
                         return false;
@@ -27,15 +27,9 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
-
-                    var need = pawn.needs?.joy;
-                    //Idle Joy
-                    if (need != null)
+                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
                     {
-                        if (need.CurLevel < 0.9 && !need.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) && Find.TickManager.TicksGame >= 60000)
-                        {
-                            return true;
-                        }
+                        return false;
                     }
                     //Meet Goal
                     if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
