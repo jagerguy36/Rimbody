@@ -27,15 +27,14 @@ namespace Maux36.Rimbody
             }
             else
             {
-                result += (compPhysique.BodyFat - 25f) / 100f;
+                result += (compPhysique.BodyFat - 25f) * 0.01f;
             }
-
             return result;
         }
 
         public static bool TooTired(Pawn actor)
         {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.2f)
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
             {
                 return true;
             }

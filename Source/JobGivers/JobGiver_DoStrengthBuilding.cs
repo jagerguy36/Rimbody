@@ -32,15 +32,14 @@ namespace Maux36.Rimbody
             }
             else
             {
-                result += (25f - compPhysique.MuscleMass) / 100f;
+                result += (25f - compPhysique.MuscleMass) * 0.01f;
             }
-
             return result;
         }
 
         public static bool TooTired(Pawn actor)
         {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.2f)
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
             {
                 return true;
             }
@@ -95,7 +94,7 @@ namespace Maux36.Rimbody
             float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
-                if(RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension))
+                if (RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
                     if (workoutCache.ContainsKey(t.def))
@@ -176,11 +175,14 @@ namespace Maux36.Rimbody
                     {
                         thing = Chunk;
                     }
+                    else
+                    {
+                        thing = null;
+                    }
                 }
             }
 
-
-            if(jobtogive != null)
+            if (jobtogive != null)
             {
                 if (thing != null)
                 {
