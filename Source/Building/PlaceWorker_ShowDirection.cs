@@ -9,6 +9,7 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
+    [StaticConstructorOnStartup]
     public class PlaceWorker_ShowDirection : PlaceWorker
     {
 

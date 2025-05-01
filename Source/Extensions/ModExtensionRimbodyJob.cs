@@ -49,10 +49,10 @@ namespace Maux36.Rimbody
     }
     public class vectorSet
     {
-        public Vector3 north = new Vector3(0f, 0f, 0f);
-        public Vector3 east = new Vector3(0f, 0f, 0f);
-        public Vector3 south = new Vector3(0f, 0f, 0f);
-        public Vector3 west = new Vector3(0f, 0f, 0f);
+        public Vector3 north = Vector3.zero;
+        public Vector3 east = Vector3.zero;
+        public Vector3 south = Vector3.zero;
+        public Vector3 west = Vector3.zero;
 
         public Vector3 FromRot(Rot4 rot)
         {
