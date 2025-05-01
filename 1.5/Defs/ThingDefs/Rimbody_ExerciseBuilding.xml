@@ -6,7 +6,6 @@
 		<soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
 		<selectable>true</selectable>
 		<drawerType>MapMeshAndRealTime</drawerType>
-		<tickerType>Normal</tickerType>
 		<terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
 		<repairEffect>Repair</repairEffect>
 		<leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -170,7 +169,6 @@
 		<description>An indoor treadmill for cardiovascular fitness.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
-		<tickerType>Never</tickerType>
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/AgRipnus/Treadmill/Treadmill</texPath>
 			<shaderType>CutoutComplex</shaderType>
@@ -278,7 +276,6 @@
 		<description>A stationary fitness machine resembling a bicycle, used for cardiovascular workouts by pedaling against resistance levels.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
-		<tickerType>Never</tickerType>
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/AgRipnus/ExerciseBike/ExerciseBike</texPath>
 			<shaderType>CutoutComplex</shaderType>
@@ -1099,7 +1096,6 @@
 		<description>A spinning dummy used in martial arts and combat sports for striking and grappling practice.</description>
 		<minTechLevelToBuild>Neolithic</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
-		<tickerType>Never</tickerType>
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/AgRipnus/SpinningDummy/SpinningDummy</texPath>
 			<drawRotated>false</drawRotated>

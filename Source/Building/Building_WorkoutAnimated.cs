@@ -10,14 +10,11 @@ namespace Maux36.Rimbody
 {
     public class Building_WorkoutAnimated: Building
     {
+        public bool beingUsed = false;
         private string cachedDescriptionFlavor = null;
         public List<Graphic_Multi> graphics = null;
-        public int workoutStartTick = -1;
-        public int currentWorkoutIndex = -1;
-        public float actorMuscle = 25f;
-        public bool useJitter= true;
         public Vector3 calculatedOffset = Vector3.zero;
-        public Vector3 DrawAtOffset => workoutStartTick > 0 ? calculatedOffset : Vector3.zero;
+        public Vector3 DrawAtOffset => beingUsed ? calculatedOffset : Vector3.zero;
 
         private static readonly string[] muscleGroups = {
             "Rimbody_Shoulder",
@@ -30,19 +27,15 @@ namespace Maux36.Rimbody
             "Rimbody_Quads",
             "Rimbody_Hams"
         };
-
-        public WorkOut CurrentWorkout
+        private ModExtensionRimbodyTarget RimbodyExInternal;
+        private ModExtensionRimbodyTarget RimbodyEx
         {
             get
             {
-                // Return the workout if the index is valid, otherwise return null
-                return (currentWorkoutIndex >= 0 && currentWorkoutIndex < RimbodyEx.workouts.Count)
-                    ? RimbodyEx.workouts[currentWorkoutIndex]
-                    : null;
+                RimbodyExInternal ??= def.GetModExtension<ModExtensionRimbodyTarget>();
+                return RimbodyExInternal;
             }
         }
-        private ModExtensionRimbodyTarget RimbodyEx;
-
         public override string DescriptionFlavor
         {
             get
@@ -53,7 +46,7 @@ namespace Maux36.Rimbody
                 }
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(base.DescriptionFlavor);
-                if(RimbodyEx != null)
+                if (RimbodyEx != null)
                 {
                     stringBuilder.Append("\n\n" + "Rimbody_Description".Translate() + "\n");
                     foreach (WorkOut wo in RimbodyEx.workouts)
@@ -77,7 +70,6 @@ namespace Maux36.Rimbody
                 return cachedDescriptionFlavor;
             }
         }
-
         public List<Graphic_Multi> GetGraphic
         {
             get
@@ -92,23 +84,17 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref workoutStartTick, "workoutStartTick", -1);
-            Scribe_Values.Look(ref calculatedOffset, "workoutcalculatedOffset", Vector3.zero);
-            Scribe_Values.Look(ref currentWorkoutIndex, "currentWorkoutIndex", -1);
-            Scribe_Values.Look(ref actorMuscle, "actorMuscle", 25f);
-            Scribe_Values.Look(ref useJitter, "useJitter", true);
+            Scribe_Values.Look(ref beingUsed, "bwa_beingUsed", false);
+            Scribe_Values.Look(ref calculatedOffset, "bwa_calculatedOffset", Vector3.zero);
         }
-
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            RimbodyEx = this.def.GetModExtension<ModExtensionRimbodyTarget>();
         }
-
         public void GetGraphicLong()
         {
             graphics = [];
-            if(RimbodyEx.rimbodyBuildingpartGraphics != null)
+            if (RimbodyEx.rimbodyBuildingpartGraphics != null)
             {
                 try
                 {
@@ -124,58 +110,6 @@ namespace Maux36.Rimbody
                 }
             }
         }
-
-        public override void Tick()
-        {
-            base.Tick();
-            // During Workout
-            if (workoutStartTick > 0 && CurrentWorkout?.animationType == InteractionType.building)
-            {
-                //If there is something to move
-                if (RimbodyEx.moveBase == true || RimbodyEx.rimbodyBuildingpartGraphics != null)
-                {
-                    int tickProgress = Find.TickManager.TicksGame - workoutStartTick;
-                    calculatedOffset = Vector3.zero;
-                    if (CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != null && CurrentWorkout?.movingpartAnimOffset?.FromRot(base.Rotation) != Vector3.zero)
-                    {
-                        if (tickProgress > 0)
-                        {
-                            calculatedOffset += CurrentWorkout.movingpartAnimOffset.FromRot(base.Rotation);
-                        }
-                    }
-
-                    if (CurrentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != null && CurrentWorkout?.movingpartAnimPeak?.FromRot(base.Rotation) != Vector3.zero)
-                    {
-                        float uptime = 0.95f - (20f * actorMuscle / 5000f);
-                        float cycleDuration = 125f - actorMuscle;
-                        float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-                        float nudgeMultiplier;
-                        if (cycleTime < uptime)
-                        {
-                            nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
-                        }
-                        else
-                        {
-                            nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
-                        }
-                        Vector3 JitterVector = Vector3.zero;
-                        if (useJitter)
-                        {
-                            JitterVector = IntVec3.West.RotatedBy(base.Rotation).ToVector3();
-                            float jitter_amount = 3f * Mathf.Max(0f, (1f - (actorMuscle / 35f))) / 100f;
-                            float xJitter = (Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress));
-                            JitterVector = JitterVector * xJitter;
-                        }
-                        if (tickProgress > 0)
-                        {
-                            calculatedOffset += JitterVector + nudgeMultiplier * CurrentWorkout.movingpartAnimPeak.FromRot(base.Rotation);
-                        }
-                    }
-                }
-            }
-        }
-
-
 
         protected override void DrawAt(Vector3 drawLoc, bool flip = false)
         {

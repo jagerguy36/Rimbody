@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using Verse.AI;
 using Verse;
-using Verse.Sound;
-using System.Reflection;
-using System;
 
 namespace Maux36.Rimbody
 {
@@ -12,6 +9,8 @@ namespace Maux36.Rimbody
     {
         private const int duration = 2500;
         private float joygainfactor = 1.0f;
+        private int workoutIndex = -1;
+        private float workoutEfficiencyValue = 1.0f;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -44,7 +43,7 @@ namespace Maux36.Rimbody
                     break;
             }
         }
-        protected void WatchTickAction(Thing building)
+        protected void WatchTickAction()
         {
             if (joygainfactor > 0)
             {
@@ -79,6 +78,13 @@ namespace Maux36.Rimbody
             }
             return indexBest;
         }
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref joygainfactor, "cardiobuilding_joygainfactor", 1.0f);
+            Scribe_Values.Look(ref workoutIndex, "cardiobuilding_workoutIndex", -1);
+            Scribe_Values.Look(ref workoutEfficiencyValue, "cardiobuilding_workoutEfficiencyValue", 1f);
+        }
 
         private void AddMemory(CompPhysique compPhysique, string name)
         {
@@ -97,14 +103,16 @@ namespace Maux36.Rimbody
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
+
+            RimbodyDefLists.CardioTarget.TryGetValue(TargetThingA.def, out var ext);
+            if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext);
+            var exWorkout = ext.workouts[workoutIndex];
+            workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
+
             yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
-            RimbodyDefLists.CardioTarget.TryGetValue(TargetThingA.def, out var ext);
-            var workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
-            var workoutIndex = GetWorkoutInt(compPhysique, ext);
-            var exWorkout = ext.workouts[workoutIndex];
             if (exWorkout.reportString != null)
             {
                 this.job.reportStringOverride = exWorkout.reportString.Translate();
@@ -127,7 +135,7 @@ namespace Maux36.Rimbody
             };
             workout.AddPreTickAction(delegate
             {
-                WatchTickAction(TargetThingA);
+                WatchTickAction();
             });
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
