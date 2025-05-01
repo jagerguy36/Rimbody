@@ -162,7 +162,7 @@ namespace Maux36.Rimbody
                 bool doingB = false;
                 bool doingC = false;
                 //bool UIlimit = false;
-                int UIflag = 0;
+                int UIflag = 2;
 
                 float cardioFactor = 0.3f; //_baseC
                 float strengthFactor = 0.1f; //_sedentaryS
@@ -189,16 +189,13 @@ namespace Maux36.Rimbody
                     {
                         case string job when RimbodyDefLists.StrengthJob.Contains(job):
                             doingS = true;
-                            UIflag = 2;
                             strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
                             break;
                         case string job when RimbodyDefLists.BalanceJob.Contains(job):
                             doingB = true;
-                            UIflag = 2;
                             break;
                         case string job when RimbodyDefLists.CardioJob.Contains(job):
                             doingC = true;
-                            UIflag = 2;
                             break;
                     }
                 }
@@ -291,16 +288,13 @@ namespace Maux36.Rimbody
                                             break;
                                         case RimbodyTargetCategory.Strength:
                                             doingS = true;
-                                            UIflag = 2;
                                             strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
                                             break;
                                         case RimbodyTargetCategory.Balance:
                                             doingB = true;
-                                            UIflag = 2;
                                             break;
                                         case RimbodyTargetCategory.Cardio:
                                             doingC = true;
-                                            UIflag = 2;
                                             break;
                                     }
                                 }
@@ -327,8 +321,7 @@ namespace Maux36.Rimbody
                         valueToCompare = strengthFactor;
                         ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
                         strengthFactor *= memoryFactorOverride;
-                        cardioFactor *= memoryFactorOverride;
-                        if (valueToCompare >= 0.9 * strengthFactor)
+                        if (valueToCompare * 0.9 >= strengthFactor)
                         {
                             UIflag--;
                         }
@@ -337,7 +330,7 @@ namespace Maux36.Rimbody
                     {
                         valueToCompare = cardioFactor;
                         ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
-                        if (valueToCompare >= 0.9 * cardioFactor)
+                        if (valueToCompare * 0.9 >= cardioFactor)
                         {
                             UIflag--;
                         }
@@ -346,7 +339,6 @@ namespace Maux36.Rimbody
                     {
                         ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor);
                         strengthFactor *= memoryFactorOverride;
-                        cardioFactor *= memoryFactorOverride;
                     }
                 }
 
