@@ -11,7 +11,7 @@
     <effectWorking>ConstructMetal</effectWorking>
     <soundWorking>Recipe_Machining</soundWorking>
     <unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
-    <researchPrerequisite>Smithing</researchPrerequisite>
+    <researchPrerequisite>Rimbody_IndustrialEquipments</researchPrerequisite>
     <ingredients>
       <li>
         <filter>
@@ -78,7 +78,7 @@
     <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
     <effectWorking>CutStone</effectWorking>
     <soundWorking>Recipe_Machining</soundWorking>
-    <researchPrerequisite>Smithing</researchPrerequisite>
+    <researchPrerequisite>Rimbody_IndustrialEquipments</researchPrerequisite>
     <ingredients>
       <li>
         <filter>

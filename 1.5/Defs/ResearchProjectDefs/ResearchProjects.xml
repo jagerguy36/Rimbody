@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<ResearchProjectDef>
+		<defName>Rimbody_IndustrialEquipments</defName>
+		<label>industrial workout equipment</label>
+		<tab>Rimbody</tab>
+		<description>Industrial workout equipment.</description>
+		<baseCost>500</baseCost>
+		<techLevel>Industrial</techLevel>
+		<prerequisites>
+			<li>ComplexFurniture</li>
+			<li>Smithing</li>
+		</prerequisites>
+		<researchViewX>0</researchViewX>
+		<researchViewY>0</researchViewY>
+		<generalRules>
+			<rulesStrings>
+				<li>subject->Industrial workout equipment.</li>
+
+				<li>subject_story->led a push toward physical fitness</li>
+				<li>subject_story->engineered new ways to maintain muscle mass in low-stimulus environments</li>
+
+				<li>subject_gerund->developing advanced exercise machines</li>
+			</rulesStrings>
+		</generalRules>
+	</ResearchProjectDef>
+
+
+</Defs>

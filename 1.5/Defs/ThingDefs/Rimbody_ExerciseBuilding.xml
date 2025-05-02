@@ -79,8 +79,7 @@
 		<surfaceType>Item</surfaceType>
 		<canOverlapZones>false</canOverlapZones>
 		<researchPrerequisites>
-			<li>ComplexFurniture</li>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<comps>
 			<li Class="CompProperties_Facility">
@@ -158,8 +157,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>ComplexFurniture</li>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 	</ThingDef>
 
@@ -221,6 +219,7 @@
 		</thingCategories>
 		<researchPrerequisites>
 			<li>MicroelectronicsBasics</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
@@ -326,8 +325,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>ComplexFurniture</li>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
@@ -353,9 +351,9 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
+							<li>1</li>
 							<li>0.75</li>
-							<li>0.5</li>
-							<li>0.5</li>
+							<li>0.75</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -424,7 +422,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
@@ -547,7 +545,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
@@ -872,7 +870,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>Smithing</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
@@ -1028,7 +1026,7 @@
 			<li>BuildingsJoy</li>
 		</thingCategories>
 		<researchPrerequisites>
-			<li>ComplexFurniture</li>
+			<li>Rimbody_IndustrialEquipments</li>
 		</researchPrerequisites>
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
