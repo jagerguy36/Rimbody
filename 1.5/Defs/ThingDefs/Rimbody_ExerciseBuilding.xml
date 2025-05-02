@@ -244,10 +244,10 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0.25</li>
-							<li>0.5</li>
-							<li>0.5</li>
-							<li>0.5</li>
+							<li>0.1</li>
+							<li>0.4</li>
+							<li>0.4</li>
+							<li>0.4</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -353,7 +353,7 @@
 							<li>0</li>
 							<li>1</li>
 							<li>0.75</li>
-							<li>0.75</li>
+							<li>0.5</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -1070,10 +1070,10 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>2.5</li>
-							<li>0.5</li>
-							<li>0.5</li>
-							<li>0.5</li>
+							<li>1.5</li>
+							<li>0.25</li>
+							<li>0.25</li>
+							<li>0.25</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -1152,7 +1152,7 @@
 						<name>spinningdummy_name</name>
 						<reportString>spinningdummy_report</reportString>
 						<cardio>0.4</cardio>
-						<strength>2.0</strength>
+						<strength>1.2</strength>
 						<pawnDirection>center</pawnDirection>
 						<animationType>melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->

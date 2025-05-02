@@ -26,7 +26,7 @@
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>0.4</cardio>
-                <strength>0.8</strength>
+                <strength>0.4</strength>
             </li>
         </value>
     </Operation>
