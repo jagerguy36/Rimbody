@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using static HarmonyLib.Code;
 
 namespace Maux36.Rimbody
 {
@@ -13,24 +14,26 @@ namespace Maux36.Rimbody
     {
 
         //Strength
-        private static readonly float _workoutS = 2.0f; //[strength workout] 1.9 | [primive workout] 1.8 | [bodyweight workout], melee attack
-        private static readonly float _hardworkS = 1.2f; //
-        private static readonly float _workS = 0.8f; //
-        private static readonly float _sprintS = 0.25f; //LocomotionUrgency.Sprint [cardio workout]
-        private static readonly float _movingS = 0.2f; //LocomotionUrgency.Walk, LocomotionUrgency.Jog, light physical works
-        private static readonly float _ambleS = 0.15f; //LocomotionUrgency.Amble
-        private static readonly float _baseS = 0.1f; //[Sedentary Labor]: bills, standing
-        private static readonly float _lyingS = 0.0f; //laying down
+        //private static readonly float _workoutS = 2.0f; // [Strength]
+        //private static readonly float _hardworkS = 1.2f; // [Melee], [Balance], [HardLabor]
+        //private static readonly float _workS = 0.8f; // [NormalLabor]
+        //private static readonly float _lightworkS = 0.4f; // [LightLabor]
+        //private static readonly float _activityS = 0.3f; //[Activity]
+        private static readonly float _sprintS = 0.25f; // LocomotionUrgency.Sprint, [Cardio]
+        private static readonly float _movingS = 0.2f; // LocomotionUrgency.Walk, LocomotionUrgency.Jog
+        private static readonly float _ambleS = 0.15f; // LocomotionUrgency.Amble
+        private static readonly float _baseS = 0.1f; // [Base]
+        private static readonly float _lyingS = 0.0f; // [Rest]
 
         //Cardio
-        private static readonly float _sprintC = 2.0f; //LocomotionUrgency.Sprint [cardio workout]
-        private static readonly float _joggingC = 0.8f; //LocomotionUrgency.Jog
-        private static readonly float _hardworkC = 0.6f; //[Hard Labor]: construction, smoothing, mining, replanting, extractTrees
-        private static readonly float _workC = 0.5f; //[Light Labor]: harvesting, repairing, empty wasters, clean pollutions<- 0.85f
-        private static readonly float _walkingC = 0.4f; //LocomotionUrgency.Walk, light physical works, melee attack, [strength workout]
-        private static readonly float _ambleC = 0.35f; //LocomotionUrgency.Amble
-        private static readonly float _baseC = 0.3f; //[Sedentary Labor]: bills, standing
-        private static readonly float _lyingpC = 0.2f; //laying down
+        private static readonly float _sprintC = 2.0f; // LocomotionUrgency.Sprint [Cardio]
+        private static readonly float _joggingC = 0.8f; // LocomotionUrgency.Jog
+        //private static readonly float _hardworkC = 0.6f; // [HardLabor], [Melee]
+        //private static readonly float _workC = 0.5f; // [NormalLabor], [Strength Workout]
+        private static readonly float _walkingC = 0.4f; // LocomotionUrgency.Walk, [Light Labor]
+        private static readonly float _ambleC = 0.35f; // LocomotionUrgency.Amble, [Activity]
+        private static readonly float _baseC = 0.3f; // [Base]
+        private static readonly float _lyingpC = 0.2f; // [Rest]
 
         //Internals
         private Pawn parentPawnInt = null;
@@ -290,11 +293,18 @@ namespace Maux36.Rimbody
                             var jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
                             if (jobExtension != null)
                             {
-                                cardioFactor = jobExtension.cardio;
-                                strengthFactor = jobExtension.strength;
-                                if(jobExtension.strengthParts != null)
+                                if(jobExtension.JobCategory != RimbodyJobCategory.None)
                                 {
+                                    (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(jobExtension.JobCategory);
+                                }
+                                else
+                                {
+                                    strengthFactor = jobExtension.strength;
+                                    cardioFactor = jobExtension.cardio;
                                     partsToApplyFatigue = jobExtension.strengthParts;
+                                }
+                                if(partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
+                                {
                                     switch (jobExtension.TreatAs)
                                     {
                                         case RimbodyTargetCategory.Job:
@@ -327,8 +337,7 @@ namespace Maux36.Rimbody
                         }
                     }
                 }
-                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Factors: s:{strengthFactor}, c:{cardioFactor}");
-                //Apply partFatigue
+                //Apply partFatigue raises (partfactor * 0.001) per tick (partfactor * 2.5 per hour)
                 if (RimbodySettings.useFatigue && partsToApplyFatigue != null)
                 {
                     float valueToCompare;
@@ -357,7 +366,8 @@ namespace Maux36.Rimbody
                         strengthFactor *= memoryFactorOverride;
                     }
                 }
-                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Applied Factors: s:{strengthFactor}, c:{cardioFactor}");
+
+                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. Applied Factors: s:{strengthFactor}, c:{cardioFactor} with parts: {partsToApplyFatigue != null}");
 
                 //Tiredness reduces gain
                 if (parentPawn.needs.rest != null)
@@ -578,7 +588,6 @@ namespace Maux36.Rimbody
                 newMuscleMass = Mathf.Clamp(MuscleMass + muscleDelta, 0f, 50f);
                 //BodyChange Check
                 bool checkFlag = shouldCheckBody(fatDelta, muscleDelta, newBodyFat, newMuscleMass);
-                //Log.Message($"{parentPawn.Name} got past the null reference check. Adjusting with strenght: {strengthFactor}, cardio: {cardioFactor}");
 
                 //Manage fatigue and exhaustion
                 if (RimbodySettings.useFatigue)
@@ -1029,6 +1038,43 @@ namespace Maux36.Rimbody
                     return GetBalanceJobScore(workout.strengthParts, workout.strength);
             }
             return 0;
+        }
+
+        //Factor
+        public static (float, float, List<float>) GetFactor(RimbodyJobCategory jobCategory)
+        {
+            if (RimbodySettings.useFatigue)
+            {
+                return jobCategory switch
+                {
+                    //Strength, Cardio, Part
+                    RimbodyJobCategory.None => (0.1f, 0.3f, null),
+                    RimbodyJobCategory.Melee => (1.2f, 0.6f, [0.5f, 0.5f, 0.5f, 0.3f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.HardLabor => (1.2f, 0.6f, [0.4f, 0.3f, 0.4f, 0.3f, 0.2f, 0.2f, 0.2f, 0.2f, 0.1f]),
+                    RimbodyJobCategory.NormalLabor => (1.2f, 0.5f, [0.2f, 0.2f, 0.3f, 0.2f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.LightLabor => (1.2f, 0.4f, [0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.Activity => (0.3f, 0.35f, null),
+                    RimbodyJobCategory.Base => (0.1f, 0.3f, null),
+                    RimbodyJobCategory.Rest => (0f, 0.2f, null),
+                    _ => (0.1f, 0.3f, null)
+                };
+            }
+            else
+            {
+                return jobCategory switch
+                {
+                    //Strength, Cardio, Part
+                    RimbodyJobCategory.None => (0.1f, 0.3f, null),
+                    RimbodyJobCategory.Melee => (1.2f, 0.6f, null),
+                    RimbodyJobCategory.HardLabor => (1.2f, 0.6f, null),
+                    RimbodyJobCategory.NormalLabor => (0.8f, 0.5f, null),
+                    RimbodyJobCategory.LightLabor => (0.4f, 0.4f, null),
+                    RimbodyJobCategory.Activity => (0.3f, 0.35f, null),
+                    RimbodyJobCategory.Base => (0.1f, 0.3f, null),
+                    RimbodyJobCategory.Rest => (0f, 0.2f, null),
+                    _ => (0.1f, 0.3f, null)
+                };
+            }
         }
 
         public bool InMemory(string workoutName)

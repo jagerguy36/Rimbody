@@ -7,11 +7,12 @@ namespace Maux36.Rimbody
 {
     public class ModExtensionRimbodyJob : DefModExtension
     {
-        public float cardio = 1f;
-        public float strength = 1f;
+        public float cardio = 0.3f;
+        public float strength = 0.1f;
+        public List<float> strengthParts;
         public RimbodyTargetCategory Category = RimbodyTargetCategory.Job;
         public RimbodyTargetCategory TreatAs = RimbodyTargetCategory.Job;
-        public List<float> strengthParts;
+        public RimbodyJobCategory JobCategory = RimbodyJobCategory.None;
     }
 
     public enum RimbodyTargetCategory
@@ -25,6 +26,17 @@ namespace Maux36.Rimbody
     {
         Building,
         Item
+    }
+    public enum RimbodyJobCategory
+    {
+        None,
+        Melee,
+        HardLabor,
+        NormalLabor,
+        LightLabor,
+        Activity,
+        Base,
+        Rest
     }
     public enum Direction
     {

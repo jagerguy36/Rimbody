@@ -13,21 +13,32 @@ using Verse;
 
 namespace Muax36.Rimbody_GiddyUpCompatibility
 {
-
-    [HarmonyPatch(typeof(CompPhysique), "PhysiqueTick")]
-    public class CompPhysique_PhysiqueTick_Patch
+    [HarmonyPatch(typeof(CompPhysique), "HarmonyCheck")]
+    public class CompPhysique_HarmonyCheck_Patch
     {
-        public static bool Prefix(CompPhysique __instance, float forcedCardio, float forcedStrength)
+        public static bool Prefix(ref string __result, CompPhysique __instance, Pawn ___parent)
         {
-            var pawn = __instance.parent as Pawn;
-            if (pawn is not null && pawn.pather?.MovingNow == true && ExtendedDataStorage.isMounted.Contains(pawn.thingIDNumber))
+            if (___parent?.pather?.MovingNow == true && ExtendedDataStorage.isMounted.Contains(___parent.thingIDNumber))
             {
-                forcedCardio = 0.3f;
-                forcedStrength = 0.2f;
-                return true;
+                __result = "giddyup_mounted";
+                return false;
             }
             return true;
-            
+        }
+    }
+
+    [HarmonyPatch(typeof(CompPhysique), "HarmonyValues")]
+    public class CompPhysique_HarmonyValues_Patch
+    {
+        public static bool Prefix(ref (float, float, List<float>) __result, string harmonyKey)
+        {
+            if (harmonyKey == "giddyup_mounted")
+            {
+                __result = (0.3f, 0.35f, null); //Activity
+                return false;
+            }
+            return true;
+
         }
     }
 }
