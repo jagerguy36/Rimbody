@@ -16,21 +16,21 @@ namespace Maux36.Rimbody
         private static readonly float _workoutS = 2.0f; //[strength workout] 1.9 | [primive workout] 1.8 | [bodyweight workout], melee attack
         private static readonly float _hardworkS = 1.2f; //
         private static readonly float _workS = 0.8f; //
-        private static readonly float _sprintS = 0.25f; //[cardio workout]
-        private static readonly float _movingS = 0.2f; //light physical works
-        private static readonly float _ambleS = 0.15f; //
-        private static readonly float _sedentaryS = 0.1f; //sedentary, standing
+        private static readonly float _sprintS = 0.25f; //LocomotionUrgency.Sprint [cardio workout]
+        private static readonly float _movingS = 0.2f; //LocomotionUrgency.Walk, LocomotionUrgency.Jog, light physical works
+        private static readonly float _ambleS = 0.15f; //LocomotionUrgency.Amble
+        private static readonly float _baseS = 0.1f; //[Sedentary Labor]: bills, standing
         private static readonly float _lyingS = 0.0f; //laying down
 
         //Cardio
-        private static readonly float _sprintC = 2.0f; //[cardio workout]
-        private static readonly float _joggingC = 0.8f; //
-        private static readonly float _hardworkC = 0.6f; //construction, smoothing, mining, replanting, extractTrees<- 1.0f
-        private static readonly float _workC = 0.5f; //harvesting, repairing, empty wasters, clean pollutions<- 0.85f
-        private static readonly float _walkingC = 0.4f; //light physical works, melee attack, [strength workout]
-        private static readonly float _ambleC = 0.35f; //
-        private static readonly float _baseC = 0.3f; //sedentary works, standing
-        private static readonly float _sleepC = 0.2f; //laying down
+        private static readonly float _sprintC = 2.0f; //LocomotionUrgency.Sprint [cardio workout]
+        private static readonly float _joggingC = 0.8f; //LocomotionUrgency.Jog
+        private static readonly float _hardworkC = 0.6f; //[Hard Labor]: construction, smoothing, mining, replanting, extractTrees
+        private static readonly float _workC = 0.5f; //[Light Labor]: harvesting, repairing, empty wasters, clean pollutions<- 0.85f
+        private static readonly float _walkingC = 0.4f; //LocomotionUrgency.Walk, light physical works, melee attack, [strength workout]
+        private static readonly float _ambleC = 0.35f; //LocomotionUrgency.Amble
+        private static readonly float _baseC = 0.3f; //[Sedentary Labor]: bills, standing
+        private static readonly float _lyingpC = 0.2f; //laying down
 
         //Internals
         private Pawn parentPawnInt = null;
@@ -173,8 +173,8 @@ namespace Maux36.Rimbody
                 bool doingC = false;
                 int UIflag = 0;
 
-                float cardioFactor = 0.3f; //_baseC
-                float strengthFactor = 0.1f; //_sedentaryS
+                float strengthFactor = _baseS; //0.1f
+                float cardioFactor = _baseC; //0.3f
                 List<float> partsToApplyFatigue = null;
 
                 //Factor Calculation
@@ -186,14 +186,14 @@ namespace Maux36.Rimbody
                 }
                 else if (forceRest)
                 {
-                    cardioFactor = 0.2f;
-                    strengthFactor = 0.0f;
+                    strengthFactor = _lyingS; //0.0f
+                    cardioFactor = _lyingpC; //0.2f
                 }
                 //Get factors from dedicated Rimbody buildings and items
                 else if (jobOverride)
                 {
-                    cardioFactor = cardioOverride;
                     strengthFactor = strengthOverride;
+                    cardioFactor = cardioOverride;
                     partsToApplyFatigue = partsOverride;
                     switch (curJobDef.defName)
                     {
@@ -221,14 +221,14 @@ namespace Maux36.Rimbody
                         //Resting
                         if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
                         {
-                            cardioFactor = 0.2f;
-                            strengthFactor = 0.0f;
+                            strengthFactor = _lyingS; //0.0f
+                            cardioFactor = _lyingpC; //0.2f
                         }
                         //Moving, but not boarded
                         else if (pawnCaravan.pather.MovingNow)
                         {
-                            cardioFactor = 0.4f;  //Walking
-                            strengthFactor = 0.2f;
+                            strengthFactor = _movingS; //0.2f
+                            cardioFactor = _walkingC; //0.4f
                         }
                     }
                     else if (curJobDef != null && curDriver != null)
@@ -240,8 +240,8 @@ namespace Maux36.Rimbody
                             {
                                 case LocomotionUrgency.Sprint:
                                     {
-                                        cardioFactor = 2.0f; //_sprintC;
-                                        strengthFactor = 0.25f + (carryFactor * RimbodySettings.carryRateMultiplier);
+                                        strengthFactor = _sprintS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.25f
+                                        cardioFactor = _sprintC; //2.0f
                                         //Jogging
                                         doingC = true;
                                         if (curJobDef?.defName == "Rimbody_Jogging")
@@ -260,20 +260,20 @@ namespace Maux36.Rimbody
                                     break;
                                 case LocomotionUrgency.Jog:
                                     {
-                                        cardioFactor = 0.8f; //_joggingC;
-                                        strengthFactor = 0.2f + (carryFactor * RimbodySettings.carryRateMultiplier);
+                                        strengthFactor = _movingS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.2f
+                                        cardioFactor = _joggingC; //0.8f
                                     }
                                     break;
                                 case LocomotionUrgency.Walk:
                                     {
-                                        cardioFactor = 0.4f; //_walkingC;
-                                        strengthFactor = 0.2f + (carryFactor * RimbodySettings.carryRateMultiplier);
+                                        strengthFactor = _movingS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.2f
+                                        cardioFactor = _walkingC; //0.4f
                                     }
                                     break;
                                 default:
                                     {
-                                        cardioFactor = 0.35f; //_ambleC
-                                        strengthFactor = 0.15f + (carryFactor * RimbodySettings.carryRateMultiplier);
+                                        strengthFactor = _ambleS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.15f
+                                        cardioFactor = _ambleC; //0.35f
                                     }
                                     break;
                             }
@@ -281,8 +281,8 @@ namespace Maux36.Rimbody
                         //Special cases: Lying down
                         else if (curDriver?.CurToilString == "LayDown")
                         {
-                            cardioFactor = 0.2f;
-                            strengthFactor = 0.0f;
+                            strengthFactor = _lyingS; //0.0f
+                            cardioFactor = _lyingpC; //0.2f
                         }
                         else
                         {
@@ -429,19 +429,21 @@ namespace Maux36.Rimbody
                     case DevelopmentalStage.Adult:
                         if (isNonSen)
                         {
-                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.002f;
-                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.002f;
+                            var agepoint = (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25);
+                            fatgainF -= agepoint * 0.002f;
+                            fatloseF += agepoint * 0.002f;
 
-                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.005f;
-                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25) * 0.005f;
+                            musclegainF += agepoint * 0.005f;
+                            muscleloseF -= agepoint * 0.005f;
                         }
                         else
                         {
-                            fatgainF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.002f;
-                            fatloseF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.002f;
+                            var agepoint = (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25);
+                            fatgainF -= agepoint * 0.002f;
+                            fatloseF += agepoint * 0.002f;
 
-                            musclegainF += (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.005f;
-                            muscleloseF -= (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25) * 0.005f;
+                            musclegainF += agepoint * 0.005f;
+                            muscleloseF -= agepoint * 0.005f;
                         }
                         break;
                 }
@@ -586,10 +588,6 @@ namespace Maux36.Rimbody
                         RestorePartFatigue(restingCheck ? RimbodySettings.CalcEveryTick * 0.00015f : RimbodySettings.CalcEveryTick * 0.00005f); //restore 1 / 20000 per tick. triple when resting. A day is 60000 ticks, so awake, a pawn can restore 3 points per day. if asleep for 7H during a day, 5point total
                         
                     }
-                    //else
-                    //{
-                    //    AddPartFatigue(partsToApplyFatigue, (float)RimbodySettings.CalcEveryTick * 0.001f); //raises partfactor * 0.001 per tick (partfactor * 2.5 per hour)
-                    //}
                 }
                 if (RimbodySettings.useExhaustion)
                 {
