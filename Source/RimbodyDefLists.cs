@@ -98,7 +98,7 @@ namespace Maux36.Rimbody
                         if(jobDef.defName == "Rimbody_Jogging")
                         {
                             jogging_parts = jobExtension.strengthParts;
-                            jogging_parts_jogger = jobExtension.strengthParts.Select(x => x / 3f).ToList();
+                            jogging_parts_jogger = jobExtension.strengthParts.Select(x => x * 0.5f).ToList();
                         }
                         cardioHighscore = Math.Max(cardioHighscore, jobExtension.cardio);
                         CardioNonTargetJob[jobDef] = jobExtension;
