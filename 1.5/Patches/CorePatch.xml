@@ -206,8 +206,7 @@
         <xpath>Defs/JobDef[defName="BuildSnowman"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -256,8 +255,7 @@
         <xpath>Defs/JobDef[defName="Play_Horseshoes"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -266,8 +264,7 @@
         <xpath>Defs/JobDef[defName="Play_Hoopstone"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -516,8 +513,7 @@
         <xpath>Defs/JobDef[defName="AttackStatic"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>Melee</JobCategory>
             </li>
         </value>
     </Operation>
@@ -526,8 +522,7 @@
         <xpath>Defs/JobDef[defName="AttackMelee"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>Melee</JobCategory>
             </li>
         </value>
     </Operation>
@@ -536,8 +531,7 @@
         <xpath>Defs/JobDef[defName="SocialFight"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>Melee</JobCategory>
             </li>
         </value>
     </Operation>
@@ -646,8 +640,7 @@
         <xpath>Defs/JobDef[defName="TakeInventory"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -656,8 +649,7 @@
         <xpath>Defs/JobDef[defName="GiveToPackAnimal"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -716,8 +708,7 @@
         <xpath>Defs/JobDef[defName="RearmTurret"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -726,8 +717,7 @@
         <xpath>Defs/JobDef[defName="RearmTurretAtomic"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -736,8 +726,7 @@
         <xpath>Defs/JobDef[defName="Refuel"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -746,8 +735,7 @@
         <xpath>Defs/JobDef[defName="RefuelAtomic"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -766,8 +754,7 @@
         <xpath>Defs/JobDef[defName="FillFermentingBarrel"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -776,8 +763,7 @@
         <xpath>Defs/JobDef[defName="TakeBeerOutOfFermentingBarrel"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -796,8 +782,7 @@
         <xpath>Defs/JobDef[defName="UnloadInventory"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -806,8 +791,7 @@
         <xpath>Defs/JobDef[defName="UnloadYourInventory"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -836,8 +820,7 @@
         <xpath>Defs/JobDef[defName="ManTurret"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -896,8 +879,7 @@
         <xpath>Defs/JobDef[defName="ClearSnow"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.4</strength>
+                <JobCategory>LightLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1026,8 +1008,7 @@
         <xpath>Defs/JobDef[defName="EmptyThingContainer"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1062,35 +1043,32 @@
         </value>
     </Operation> -->
 
-    <!-- <Operation Class="PatchOperationAddModExtension">
+    <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="TakeCountToInventory"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>_</cardio>
-                <strength>_</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
-    </Operation> -->
+    </Operation>
 
-    <!-- <Operation Class="PatchOperationAddModExtension">
+    <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="TakeFromOtherInventory"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>_</cardio>
-                <strength>_</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
-    </Operation> -->
+    </Operation>
 
-    <!-- <Operation Class="PatchOperationAddModExtension">
+    <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="Carried"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>_</cardio>
-                <strength>_</strength>
+                <JobCategory>Rest</JobCategory>
             </li>
         </value>
-    </Operation> -->
+    </Operation>
 
     <!-- <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/JobDef[defName="Reading"]</xpath>
@@ -1126,8 +1104,7 @@
         <xpath>Defs/JobDef[defName="BeatFire"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1136,8 +1113,7 @@
         <xpath>Defs/JobDef[defName="ExtinguishSelf"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1146,8 +1122,7 @@
         <xpath>Defs/JobDef[defName="ExtinguishFiresNearby"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1196,8 +1171,7 @@
         <xpath>Defs/JobDef[defName="Lovin"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1396,8 +1370,7 @@
         <xpath>Defs/JobDef[defName="Slaughter"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1406,8 +1379,7 @@
         <xpath>Defs/JobDef[defName="Milk"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1416,8 +1388,7 @@
         <xpath>Defs/JobDef[defName="Shear"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1426,8 +1397,7 @@
         <xpath>Defs/JobDef[defName="Tame"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1506,8 +1476,7 @@
         <xpath>Defs/JobDef[defName="Replant"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1516,8 +1485,7 @@
         <xpath>Defs/JobDef[defName="FinishFrame"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1526,8 +1494,7 @@
         <xpath>Defs/JobDef[defName="Deconstruct"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1536,8 +1503,7 @@
         <xpath>Defs/JobDef[defName="Uninstall"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1546,8 +1512,7 @@
         <xpath>Defs/JobDef[defName="ExtractTree"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1556,8 +1521,7 @@
         <xpath>Defs/JobDef[defName="Repair"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1566,8 +1530,7 @@
         <xpath>Defs/JobDef[defName="FixBrokenDownBuilding"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1576,8 +1539,7 @@
         <xpath>Defs/JobDef[defName="BuildRoof"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1586,8 +1548,7 @@
         <xpath>Defs/JobDef[defName="RemoveRoof"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1596,8 +1557,7 @@
         <xpath>Defs/JobDef[defName="PaintBuilding"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1606,8 +1566,7 @@
         <xpath>Defs/JobDef[defName="PaintFloor"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1616,8 +1575,7 @@
         <xpath>Defs/JobDef[defName="RemovePaintBuilding"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1626,8 +1584,7 @@
         <xpath>Defs/JobDef[defName="RemovePaintFloor"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1676,8 +1633,7 @@
         <xpath>Defs/JobDef[defName="OperateDeepDrill"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1696,8 +1652,7 @@
         <xpath>Defs/JobDef[defName="Clean"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.35</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1736,8 +1691,7 @@
         <xpath>Defs/JobDef[defName="Mine"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1746,8 +1700,7 @@
         <xpath>Defs/JobDef[defName="SmoothFloor"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.0</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1756,8 +1709,7 @@
         <xpath>Defs/JobDef[defName="RemoveFloor"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1766,8 +1718,7 @@
         <xpath>Defs/JobDef[defName="SmoothWall"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.6</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1776,8 +1727,7 @@
         <xpath>Defs/JobDef[defName="Sow"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1786,8 +1736,7 @@
         <xpath>Defs/JobDef[defName="Harvest"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1796,8 +1745,7 @@
         <xpath>Defs/JobDef[defName="HarvestDesignated"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1806,8 +1754,7 @@
         <xpath>Defs/JobDef[defName="CutPlant"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1816,8 +1763,7 @@
         <xpath>Defs/JobDef[defName="CutPlantDesignated"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -1856,8 +1802,7 @@
         <xpath>Defs/JobDef[defName="PlantSeed"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.5</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>

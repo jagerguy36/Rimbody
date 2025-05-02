@@ -35,7 +35,7 @@
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                   <Category>Strength</Category>
-                  <cardio>0.4</cardio>
+                  <cardio>0.5</cardio>
                   <strength>1.8</strength>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                   <strengthParts>
@@ -61,7 +61,7 @@
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                   <Category>Strength</Category>
-                  <cardio>0.4</cardio>
+                  <cardio>0.5</cardio>
                   <strength>1.8</strength>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                   <strengthParts>
@@ -87,7 +87,7 @@
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                   <Category>Strength</Category>
-                  <cardio>0.4</cardio>
+                  <cardio>0.5</cardio>
                   <strength>1.8</strength>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                   <strengthParts>
@@ -113,7 +113,7 @@
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                   <Category>Strength</Category>
-                  <cardio>0.4</cardio>
+                  <cardio>0.5</cardio>
                   <strength>1.8</strength>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                   <strengthParts>

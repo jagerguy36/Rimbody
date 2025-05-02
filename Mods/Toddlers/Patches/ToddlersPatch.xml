@@ -25,8 +25,7 @@
         <xpath>Defs/JobDef[defName="ToddlerPlayToys"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -35,8 +34,7 @@
         <xpath>Defs/JobDef[defName="ToddlerPlayDecor"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -45,8 +43,7 @@
         <xpath>Defs/JobDef[defName="BePlayedWith"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -57,6 +54,18 @@
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                 <cardio>1.5</cardio>
                 <strength>1.2</strength>
+                <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                <strengthParts>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.5</li>
+                    <li>0.5</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                </strengthParts>
             </li>
         </value>
     </Operation>
@@ -65,8 +74,7 @@
         <xpath>Defs/JobDef[defName="RestIdleInCrib"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.2</cardio>
-                <strength>0.0</strength>
+                <JobCategory>Rest</JobCategory>
             </li>
         </value>
     </Operation>
@@ -75,8 +83,7 @@
         <xpath>Defs/JobDef[defName="LayAngleInCrib"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.2</cardio>
-                <strength>0.0</strength>
+                <JobCategory>Rest</JobCategory>
             </li>
         </value>
     </Operation>

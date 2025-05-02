@@ -25,8 +25,7 @@
         <xpath>Defs/WorkGiverDef[defName="DoBillsStonecut"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.4</strength>
+                <JobCategory>LightLabor</JobCategory>
             </li>
         </value>
     </Operation>

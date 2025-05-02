@@ -226,8 +226,7 @@
         <xpath>Defs/JobDef[defName="RepairMech"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -266,8 +265,7 @@
         <xpath>Defs/JobDef[defName="DisassembleMech"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -426,8 +424,7 @@
         <xpath>Defs/JobDef[defName="ClearPollution"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -446,8 +443,7 @@
         <xpath>Defs/JobDef[defName="PlayStatic"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -456,8 +452,7 @@
         <xpath>Defs/JobDef[defName="PlayWalking"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -466,8 +461,7 @@
         <xpath>Defs/JobDef[defName="PlayToys"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.4</cardio>
-                <strength>0.2</strength>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
@@ -476,8 +470,7 @@
         <xpath>Defs/JobDef[defName="EmptyWasteContainer"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>

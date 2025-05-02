@@ -25,8 +25,7 @@
         <xpath>Defs/WorkGiverDef[defName="DoBillsMine"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>

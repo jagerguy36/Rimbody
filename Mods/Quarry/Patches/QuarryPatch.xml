@@ -25,8 +25,7 @@
         <xpath>Defs/JobDef[defName="QRY_MineQuarry"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.0</cardio>
-                <strength>1.2</strength>
+                <JobCategory>HardLabor</JobCategory>
             </li>
         </value>
     </Operation>

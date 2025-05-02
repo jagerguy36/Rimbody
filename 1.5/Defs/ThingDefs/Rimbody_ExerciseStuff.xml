@@ -61,7 +61,7 @@
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>dumbbells_bicepcurl_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
@@ -87,7 +87,7 @@
 					<li>
 						<name>overheadshoulderpress_name</name>
 						<reportString>dumbbells_overheadshoulderpress_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
@@ -151,7 +151,7 @@
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>halteres_bicepcurl_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
@@ -177,7 +177,7 @@
 					<li>
 						<name>overheadshoulderpress_name</name>
 						<reportString>halteres_overheadshoulderpress_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
@@ -234,7 +234,7 @@
 					<li>
 						<name>kettlebellswing_name</name>
 						<reportString>kettlebellswing_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>item</animationType>
 						<movingpartAnimOffset>
