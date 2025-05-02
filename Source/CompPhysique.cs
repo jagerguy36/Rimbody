@@ -126,8 +126,8 @@ namespace Maux36.Rimbody
             //private static readonly float _sleepC = 0.2f; laying down
 
             //Strength
-            //private static readonly float _workoutS = 2.0f;  [strength workout]
-            //private static readonly float _hardworkS = 1.2f; melee attack
+            //private static readonly float _workoutS = 2.0f;  [strength workout] 1.9 | [primive workout] 1.8 | [bodyweight workout], melee attack
+            //private static readonly float _hardworkS = 1.2f; 
             //private static readonly float _workS = 0.8f;
             //private static readonly float _sprintS = 0.25f; [cardio workout]
             //private static readonly float _movingS = 0.2f; light physical works
@@ -926,7 +926,7 @@ namespace Maux36.Rimbody
                 }
             }
             fatigueFactor = fatigueFactor / total;
-            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.25f;
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.4f;
             strength = strength * (0.25f + (0.75f * fatigueFactor)) * fi;
             cardio = cardio * (fatigueFactor + 3f) * 0.25f;
         }
@@ -953,7 +953,7 @@ namespace Maux36.Rimbody
                 }
             }
             fatigueFactor = fatigueFactor / total;
-            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.25f;
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.4f;
             return strength * (0.25f+(0.75f*fatigueFactor)) * fi;
         }
 
@@ -979,7 +979,7 @@ namespace Maux36.Rimbody
                 }
             }
             fatigueFactor = fatigueFactor / total;
-            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.25f;
+            float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.4f;
             return strength * (0.25f + (0.75f * fatigueFactor)) * fi;
         }
 

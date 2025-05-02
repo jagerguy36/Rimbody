@@ -32,7 +32,7 @@ namespace Maux36.Rimbody
             base.ExposeData();
 
             Scribe_Values.Look(ref CalcEveryTick, "Rimbody_CalcEveryTick", 150, true);
-            //Scribe_Values.Look(ref RecoveryTick, "Rimbody_RecoveryTick", 200, true);
+            //Scribe_Values.Look(ref RecoveryTick, "Rimbody_RecoveryTick", 250, true);
             Scribe_Values.Look(ref fatThresholdFat, "Rimbody_fatThresholdFat", 30f, true);
             Scribe_Values.Look(ref fatThresholdThin, "Rimbody_fatThresholdThin", 15f, true);
             Scribe_Values.Look(ref muscleThresholdHulk, "Rimbody_muscleThresholdHulk", 30f, true);
