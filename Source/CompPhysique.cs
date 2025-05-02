@@ -439,7 +439,7 @@ namespace Maux36.Rimbody
                     case DevelopmentalStage.Adult:
                         if (isNonSen)
                         {
-                            var agepoint = (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint) - 25);
+                            var agepoint = (float)(25 - Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint));
                             fatgainF -= agepoint * 0.002f;
                             fatloseF += agepoint * 0.002f;
 
@@ -448,7 +448,7 @@ namespace Maux36.Rimbody
                         }
                         else
                         {
-                            var agepoint = (float)(Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125) - 25);
+                            var agepoint = (float)(25 - Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125));
                             fatgainF -= agepoint * 0.002f;
                             fatloseF += agepoint * 0.002f;
 
