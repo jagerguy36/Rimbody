@@ -11,6 +11,27 @@ namespace Maux36.Rimbody
 {
     public class CompPhysique : ThingComp
     {
+
+        //Strength
+        private static readonly float _workoutS = 2.0f; //[strength workout] 1.9 | [primive workout] 1.8 | [bodyweight workout], melee attack
+        private static readonly float _hardworkS = 1.2f; //
+        private static readonly float _workS = 0.8f; //
+        private static readonly float _sprintS = 0.25f; //[cardio workout]
+        private static readonly float _movingS = 0.2f; //light physical works
+        private static readonly float _ambleS = 0.15f; //
+        private static readonly float _sedentaryS = 0.1f; //sedentary, standing
+        private static readonly float _lyingS = 0.0f; //laying down
+
+        //Cardio
+        private static readonly float _sprintC = 2.0f; //[cardio workout]
+        private static readonly float _joggingC = 0.8f; //
+        private static readonly float _hardworkC = 0.6f; //construction, smoothing, mining, replanting, extractTrees<- 1.0f
+        private static readonly float _workC = 0.5f; //harvesting, repairing, empty wasters, clean pollutions<- 0.85f
+        private static readonly float _walkingC = 0.4f; //light physical works, melee attack, [strength workout]
+        private static readonly float _ambleC = 0.35f; //
+        private static readonly float _baseC = 0.3f; //sedentary works, standing
+        private static readonly float _sleepC = 0.2f; //laying down
+
         //Internals
         private Pawn parentPawnInt = null;
         private bool? isJoggerInt;
@@ -115,25 +136,6 @@ namespace Maux36.Rimbody
 
         private void PhysiqueTick()
         {
-            //Cardio
-            //private static readonly float _sprintC = 2.0f; [cardio workout]
-            //private static readonly float _joggingC = 0.8f;
-            //private static readonly float _hardworkC = 0.6f; construction, smoothing, mining, replanting, extractTrees <- 1.0f
-            //private static readonly float _workC = 0.5f; harvesting, repairing, empty wasters, clean pollutions <- 0.85f
-            //private static readonly float _walkingC = 0.4f; light physical works, melee attack, [strength workout]
-            //private static readonly float _ambleC = 0.35f;
-            //private static readonly float _baseC = 0.3f; sedentary works, standing
-            //private static readonly float _sleepC = 0.2f; laying down
-
-            //Strength
-            //private static readonly float _workoutS = 2.0f;  [strength workout] 1.9 | [primive workout] 1.8 | [bodyweight workout], melee attack
-            //private static readonly float _hardworkS = 1.2f; 
-            //private static readonly float _workS = 0.8f;
-            //private static readonly float _sprintS = 0.25f; [cardio workout]
-            //private static readonly float _movingS = 0.2f; light physical works
-            //private static readonly float _ambleS = 0.15f;
-            //private static readonly float _sedentaryS = 0.1f; sedentary, standing
-            //private static readonly float _lyingS = 0.0f; laying down
 
             if (isColonyMember(parentPawn) || parentPawn.IsPrisonerOfColony)
             {
@@ -155,6 +157,7 @@ namespace Maux36.Rimbody
 
                 //Set up
                 var tickRatio = RimbodySettings.CalcEveryTick / 150f;
+                var customRatio = RimbodySettings.rateFactor * 0.0025f;
                 var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevelPercentage, 0f, 1f);
                 var curJobDef = parentPawn.CurJobDef;
                 var curDriver = parentPawn.jobs?.curDriver;
@@ -489,7 +492,7 @@ namespace Maux36.Rimbody
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
                 float fatLoss = (BodyFat + 43f) * 0.025f * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
-                float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * RimbodySettings.rateFactor * 0.0025f;
+                float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * customRatio;
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
@@ -519,11 +522,11 @@ namespace Maux36.Rimbody
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
-                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
+                            muscleDelta += recoveryFactor * tickRatio * customRatio;
                         }
                         else if (gain > 0f)
                         {
-                            muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
+                            muscleDelta += customRatio * gain;
                             gain = 0f;
                         }
                         exhaustionDelta = 8f * exhaustionDelta;
@@ -538,11 +541,11 @@ namespace Maux36.Rimbody
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
-                            muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
+                            muscleDelta += recoveryFactor * tickRatio * customRatio;
                         }
                         else if (gain > 0f)
                         {
-                            muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
+                            muscleDelta += customRatio * gain;
                             gain = 0f;
                         }
                     }
@@ -560,16 +563,16 @@ namespace Maux36.Rimbody
                     if (gain - (recoveryFactor * tickRatio) > 0f)
                     {
                         gain -= recoveryFactor * tickRatio;
-                        muscleDelta += recoveryFactor * tickRatio * (RimbodySettings.rateFactor * 0.0025f);
+                        muscleDelta += recoveryFactor * tickRatio * customRatio;
                     }
                     else if (gain > 0f)
                     {
-                        muscleDelta += (RimbodySettings.rateFactor * 0.0025f) * gain;
+                        muscleDelta += customRatio * gain;
                         gain = 0f;
                     }
                     exhaustionDelta = 4f * exhaustionDelta;
                 }
-                muscleDelta -= muscleloseF * muscleLoss * tickRatio * RimbodySettings.rateFactor * 0.0025f;
+                muscleDelta -= muscleloseF * muscleLoss * tickRatio * customRatio;
                 newMuscleMass = Mathf.Clamp(MuscleMass + muscleDelta, 0f, 50f);
                 //BodyChange Check
                 bool checkFlag = shouldCheckBody(fatDelta, muscleDelta, newBodyFat, newMuscleMass);
