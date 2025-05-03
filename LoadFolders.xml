@@ -24,5 +24,6 @@
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
 		<li IfModActive="avius.prisonlabor">Mods/Prison Labor</li>
 		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2</li>
+		<li IfModActive="adaptive.storage.framework">Mods/ASF</li>
 	</v1.5>
 </loadFolders>

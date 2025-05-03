@@ -11,6 +11,7 @@ namespace Maux36.Rimbody
     public class Thing_WorkoutAnimated: ThingWithComps
     {
         public bool beingUsed = false;
+        public Rot4 drawRotation = Rot4.South;
         private string cachedDescriptionFlavor = null;
         public List<Graphic_Multi> graphics = null;
         public Vector3 ghostOffset = Vector3.zero;
@@ -93,13 +94,13 @@ namespace Maux36.Rimbody
         public void GetGraphicLong()
         {
             graphics = [];
-            if (RimbodyEx.rimbodyBuildingpartGraphics != null)
+            if (RimbodyEx.rimbodyTargetpartGraphics != null)
             {
                 try
                 {
-                    foreach (var buildingPartGraphic in RimbodyEx.rimbodyBuildingpartGraphics)
+                    foreach (var targetPartGraphic in RimbodyEx.rimbodyTargetpartGraphics)
                     {
-                        var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(buildingPartGraphic.texPath, buildingPartGraphic.shaderType != null ? buildingPartGraphic.shaderType.Shader : ShaderDatabase.DefaultShader, DrawSize, DrawColor);
+                        var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(targetPartGraphic.texPath, targetPartGraphic.shaderType != null ? targetPartGraphic.shaderType.Shader : ShaderDatabase.DefaultShader, DrawSize, DrawColor);
                         graphics.Add(newGraphic);
                     }
                 }
@@ -116,11 +117,11 @@ namespace Maux36.Rimbody
             {
                 for (int i = 0; i < GetGraphic.Count; i++)
                 {
-                    GetGraphic[i].Draw(drawLoc, flip ? Rotation.Opposite : Rotation, this);
                     if(ghostOffset != Vector3.zero)
                     {
-                        GetGraphic[i].Draw(drawLoc+ghostOffset, flip ? Rotation.Opposite : Rotation, this);
+                        GetGraphic[i].Draw(drawLoc+ghostOffset, drawRotation, this);
                     }
+                    GetGraphic[i].Draw(drawLoc, drawRotation, this);
                 }
                 Comps_PostDraw();
             }

@@ -101,7 +101,7 @@ namespace Maux36.Rimbody
         public RimbodyTargetType Type = RimbodyTargetType.Building;
         public RimbodyTargetCategory Category = RimbodyTargetCategory.Balance;
         public bool moveBase = false;
-        public List<GraphicData> rimbodyBuildingpartGraphics;
+        public List<GraphicData> rimbodyTargetpartGraphics;
         public List<WorkOut> workouts = new();
     }
 }

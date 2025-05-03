@@ -15,6 +15,7 @@ namespace Maux36.Rimbody
         private int workoutIndex = -1;
         private float memoryFactor = 1.0f;
         private float workoutEfficiencyValue = 1.0f;
+        private Vector3 pawnOffset = Vector3.zero;
         private Vector3 itemOffset = Vector3.zero;
         private static readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
 
@@ -25,6 +26,13 @@ namespace Maux36.Rimbody
                 return false;
             }
             return true;
+        }
+        public override Vector3 ForcedBodyOffset
+        {
+            get
+            {
+                return pawnOffset;
+            }
         }
         protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float uptime, float cycleDuration, float jitter_amount)
         {
@@ -42,34 +50,71 @@ namespace Maux36.Rimbody
                 {
                     nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
                 }
-                Vector3 woOffset = wo.movingpartAnimOffset.south;
-                Vector3 woNudge = wo.movingpartAnimPeak.south;
+                Vector3 woOffset = wo.movingpartAnimOffset.FromRot(pawn.Rotation);
+                Vector3 woNudge = wo.movingpartAnimPeak.FromRot(pawn.Rotation);
                 float armIndex;
 
                 switch (wo.animationType)
                 {
                     case InteractionType.item:
                         armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
-                        woOffset.x *= armIndex;
-                        woNudge.x *= armIndex;
-                        itemOffset = woOffset + nudgeMultiplier * woNudge;
-                        itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        if(pawn.Rotation == Rot4.South || pawn.Rotation == Rot4.North)
+                        {
+                            woOffset.x *= armIndex;
+                            woNudge.x *= armIndex;
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        }
+                        else
+                        {
+                            woOffset.z *= armIndex;
+                            woNudge.z *= armIndex;
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            itemOffset.z += Rand.Range(-jitter_amount, jitter_amount);
+                        }
                         break;
                     case InteractionType.itemEach:
                         armIndex = (cycleIndex % 2 == 0) ? 1f : -1f;
-                        woOffset.x *= armIndex;
-                        woNudge.x *= armIndex;
-                        var randValue = Rand.Range(-jitter_amount, jitter_amount);
-                        itemOffset = woOffset + nudgeMultiplier * woNudge;
-                        item.ghostOffset.x = -itemOffset.x * 2f;
-                        item.ghostOffset.z = -itemOffset.z + woOffset.z;
-                        itemOffset.x += randValue;
-                        item.ghostOffset.x -= randValue;
+                        if (pawn.Rotation == Rot4.South || pawn.Rotation == Rot4.North)
+                        {
+                            woOffset.x *= armIndex;
+                            woNudge.x *= armIndex;
+                            var randValue = Rand.Range(-jitter_amount, jitter_amount);
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.x = -itemOffset.x - woOffset.x;
+                            item.ghostOffset.z = -itemOffset.z + woOffset.z;
+                            itemOffset.x += randValue;
+                            item.ghostOffset.x -= randValue;
+                        }
+                        else
+                        {
+                            woOffset.z *= armIndex;
+                            var randValue = Rand.Range(-jitter_amount, jitter_amount);
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.z = -itemOffset.z - woOffset.z;
+                            item.ghostOffset.x = -itemOffset.x + woOffset.x;
+                            itemOffset.x += randValue;
+                            item.ghostOffset.x -= randValue;
+                            //item.ghostOffset.y -= armIndex * 0.03474903f;
+                            item.ghostOffset.y = armIndex * -0.03474903f;
+                        }
                         break;
                     case InteractionType.itemBoth:
-                        itemOffset = woOffset + nudgeMultiplier * woNudge;
-                        item.ghostOffset.x = -itemOffset.x * 2f + Rand.Range(-jitter_amount, jitter_amount);
-                        itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        if (pawn.Rotation == Rot4.South || pawn.Rotation == Rot4.North)
+                        {
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.x = -itemOffset.x -woOffset.x - nudgeMultiplier * woNudge.x;
+                            item.ghostOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        }
+                        else
+                        {
+                            itemOffset = woOffset + nudgeMultiplier * woNudge;
+                            item.ghostOffset.z = 0.45f;
+                            item.ghostOffset.y = -0.03474903f;
+                            item.ghostOffset.z += Rand.Range(-jitter_amount, jitter_amount);
+                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
+                        }
                         break;
                     default:
                         break;
@@ -158,7 +203,7 @@ namespace Maux36.Rimbody
             {
                 pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
             });
-            Toil chooseCell = FindSpotToWorkout(TargetIndex.C, ref workoutEfficiencyValue, exWorkout.useBench);
+            Toil chooseCell = FindSpotToWorkout(TargetIndex.B, TargetIndex.C, ref workoutEfficiencyValue, exWorkout.useBench);
             yield return chooseCell;
             yield return Toils_Reserve.Reserve(TargetIndex.C);
             yield return Toils_Goto.GotoCell(TargetIndex.C, PathEndMode.OnCell);
@@ -167,7 +212,17 @@ namespace Maux36.Rimbody
             workout.initAction = () =>
             {
                 pawn.pather.StopDead();
-                pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
+                if(TargetB.Thing != null)
+                {
+                    pawn.Rotation = TargetB.Thing.Rotation;
+                    thingAnimated.drawRotation = TargetB.Thing.Rotation;
+                    pawnOffset.z = 0.5f;
+                }
+                else
+                {
+                    pawn.Rotation =Rot4.South;
+                    thingAnimated.drawRotation = Rot4.South;
+                }
                 if (exWorkout.reportString != null)
                 {
                     job.reportStringOverride = exWorkout.reportString.Translate();
@@ -212,7 +267,7 @@ namespace Maux36.Rimbody
             });
             yield return workout;
         }
-        public static Toil FindSpotToWorkout(TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
+        public static Toil FindSpotToWorkout(TargetIndex foundBench, TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
         {
             Toil findCell = new Toil();
             bool usingBench = false;
@@ -238,6 +293,7 @@ namespace Maux36.Rimbody
                     if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
                     {
                         usingBench = true;
+                        curJob.SetTarget(foundBench, thing);
                         curJob.SetTarget(cellInd, workoutLocation);
                         return;
                     }

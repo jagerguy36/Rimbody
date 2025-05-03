@@ -49,7 +49,7 @@
 			<Flammability>1.0</Flammability>
 			<Beauty>0.5</Beauty>
 		</statBases>
-		<designationCategory MayRequire="adaptive.storage.framework">ASFstorage</designationCategory>
+		<designationCategory>Furniture</designationCategory>
 		<building>
 			<preventDeteriorationOnTop>true</preventDeteriorationOnTop>
 			<ignoreStoredThingsBeauty>true</ignoreStoredThingsBeauty>
@@ -432,14 +432,14 @@
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
 				<Category>Strength</Category>
-				<rimbodyBuildingpartGraphics>
+				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Building/Rimbody_buildings/AgRipnus/WeightBench/BenchBar</texPath>
 						<shaderType>CutoutComplex</shaderType>
 						<graphicClass>Graphic_Multi</graphicClass>
 						<drawOffset>(0,0.04,0)</drawOffset>
 					</li>
-				</rimbodyBuildingpartGraphics>
+				</rimbodyTargetpartGraphics>
 				<workouts>
 					<li>
 						<name>benchpress_name</name>
@@ -557,14 +557,14 @@
 				<Type>Building</Type>
 				<Category>Strength</Category>
 				<moveBase>true</moveBase>
-				<rimbodyBuildingpartGraphics>
+				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Building/Rimbody_buildings/AgRipnus/Barbell/Barbellpart</texPath>
 						<shaderType>CutoutComplex</shaderType>
 						<graphicClass>Graphic_Multi</graphicClass>
 						<drawOffset>(0,0.4,0)</drawOffset>
 					</li>
-				</rimbodyBuildingpartGraphics>
+				</rimbodyTargetpartGraphics>
 				<workouts>
 					<li>
 						<name>deadlift_name</name>
@@ -720,14 +720,14 @@
 				<Type>Building</Type>
 				<Category>Strength</Category>
 				<moveBase>true</moveBase>
-				<rimbodyBuildingpartGraphics>
+				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Building/Rimbody_buildings/PrimitiveBarbell/PrimitiveBarbellpart</texPath>
 						<shaderType>CutoutComplex</shaderType>
 						<graphicClass>Graphic_Multi</graphicClass>
 						<drawOffset>(0,0.4,0)</drawOffset>
 					</li>
-				</rimbodyBuildingpartGraphics>
+				</rimbodyTargetpartGraphics>
 				<workouts>
 					<li>
 						<name>deadlift_name</name>

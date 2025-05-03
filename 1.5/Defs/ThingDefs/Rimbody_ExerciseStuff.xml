@@ -51,12 +51,12 @@
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
 				<Category>Strength</Category>
-				<rimbodyBuildingpartGraphics>
+				<rimbodyTargetpartGraphics>
 					<li>
-						<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/Dumbbells_anim</texPath>
-						<graphicClass>Graphic_Single</graphicClass>
+						<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/DumbbellsAnim</texPath>
+						<graphicClass>Graphic_Multi</graphicClass>
 					</li>
-				</rimbodyBuildingpartGraphics>
+				</rimbodyTargetpartGraphics>
 				<workouts>
 					<li>
 						<name>bicepcurl_name</name>
@@ -66,10 +66,16 @@
 						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(+0.33,0,-0.2)</south>
+							<north>(0.33,0,-0.15)</north>
+							<east>(0.45,0,-0.2)</east>
+							<south>(0.33,0,-0.2)</south>
+							<west>(-0.45,0,-0.2)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
+							<north>(0,0,0.3)</north>
+							<east>(-0.05,0,0.3)</east>
 							<south>(0,0,0.3)</south>
+							<west>(0.05,0,0.3)</west>
 						</movingpartAnimPeak>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
@@ -92,10 +98,16 @@
 						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(0.4,0,0.25)</south>
+							<north>(0.4,0,0.35)</north>
+							<east>(0.15,0,0.15)</east>
+							<south>(0.4,0,0.35)</south>
+							<west>(-0.15,0,0.15)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
+							<north>(-0.05,0,0.45)</north>
+							<east>(-0.05,0,0.45)</east>
 							<south>(-0.05,0,0.45)</south>
+							<west>(0.05,0,0.45)</west>
 						</movingpartAnimPeak>
 						<strengthParts>
 							<li>3</li>
@@ -141,12 +153,12 @@
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
 				<Category>Strength</Category>
-				<rimbodyBuildingpartGraphics>
+				<rimbodyTargetpartGraphics>
 					<li>
-						<texPath>Things/Item/Rimbody_things/Halteres/Halteres_anim</texPath>
-						<graphicClass>Graphic_Single</graphicClass>
+						<texPath>Things/Item/Rimbody_things/Halteres/HalteresAnim</texPath>
+						<graphicClass>Graphic_Multi</graphicClass>
 					</li>
-				</rimbodyBuildingpartGraphics>
+				</rimbodyTargetpartGraphics>
 				<workouts>
 					<li>
 						<name>bicepcurl_name</name>
@@ -156,10 +168,16 @@
 						<animationType>itemEach</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(+0.2,0,-0.2)</south>
+							<north>(0.2,0,-0.15)</north>
+							<east>(0.45,0,-0.2)</east>
+							<south>(0.2,0,-0.2)</south>
+							<west>(-0.45,0,-0.2)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
+							<north>(0,0,0.3)</north>
+							<east>(-0.05,0,0.3)</east>
 							<south>(0,0,0.3)</south>
+							<west>(0.05,0,0.3)</west>
 						</movingpartAnimPeak>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
@@ -182,10 +200,16 @@
 						<animationType>itemBoth</animationType>
 						<useBench>true</useBench>
 						<movingpartAnimOffset>
-							<south>(0.4,0,0.25)</south>
+							<north>(0.4,0,0.35)</north>
+							<east>(0.15,0,0.15)</east>
+							<south>(0.4,0,0.35)</south>
+							<west>(-0.15,0,0.15)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
+							<north>(-0.05,0,0.45)</north>
+							<east>(-0.05,0,0.45)</east>
 							<south>(-0.05,0,0.45)</south>
+							<west>(0.05,0,0.45)</west>
 						</movingpartAnimPeak>
 						<strengthParts>
 							<li>3</li>

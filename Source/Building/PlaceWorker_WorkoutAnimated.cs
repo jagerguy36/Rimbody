@@ -14,7 +14,7 @@ namespace Maux36.Rimbody
 
         public override void DrawGhost(ThingDef def, IntVec3 loc, Rot4 rot, Color ghostCol, Thing thing = null)
         {
-            var partgraphics = def.GetModExtension<ModExtensionRimbodyTarget>().rimbodyBuildingpartGraphics;
+            var partgraphics = def.GetModExtension<ModExtensionRimbodyTarget>().rimbodyTargetpartGraphics;
 
             if (partgraphics != null && partgraphics.Count > 0)
             {

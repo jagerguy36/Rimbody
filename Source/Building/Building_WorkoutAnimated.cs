@@ -94,13 +94,13 @@ namespace Maux36.Rimbody
         public void GetGraphicLong()
         {
             graphics = [];
-            if (RimbodyEx.rimbodyBuildingpartGraphics != null)
+            if (RimbodyEx.rimbodyTargetpartGraphics != null)
             {
                 try
                 {
-                    foreach (var buildingPartGraphic in RimbodyEx.rimbodyBuildingpartGraphics)
+                    foreach (var targetPartGraphic in RimbodyEx.rimbodyTargetpartGraphics)
                     {
-                        var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(buildingPartGraphic.texPath, buildingPartGraphic.shaderType != null ? buildingPartGraphic.shaderType.Shader : ShaderDatabase.DefaultShader, DrawSize, DrawColor);
+                        var newGraphic = (Graphic_Multi)GraphicDatabase.Get<Graphic_Multi>(targetPartGraphic.texPath, targetPartGraphic.shaderType != null ? targetPartGraphic.shaderType.Shader : ShaderDatabase.DefaultShader, DrawSize, DrawColor);
                         graphics.Add(newGraphic);
                     }
                 }
@@ -115,7 +115,7 @@ namespace Maux36.Rimbody
         {
             for (int i = 0; i < GetGraphic.Count; i++)
             {
-                var graphicdata = RimbodyEx.rimbodyBuildingpartGraphics[i];
+                var graphicdata = RimbodyEx.rimbodyTargetpartGraphics[i];
                 GetGraphic[i].Draw(DrawPos + graphicdata.drawOffset + DrawAtOffset, graphicdata.drawRotated ? (flip ? Rotation.Opposite : Rotation) : Rot4.North, this);
             }
             if (RimbodyEx.moveBase)
