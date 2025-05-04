@@ -123,6 +123,7 @@ namespace Maux36.Rimbody
                 return 0;
             }
             Thing thing = null;
+            IntVec3 workoutLocation = IntVec3.Invalid;
             JobDef jobtogive = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
             if(thing != null)
@@ -139,16 +140,22 @@ namespace Maux36.Rimbody
                 JobDef bestJob = null;
                 bool chunkPredicate(Thing t)
                 {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
+                    //if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
+                    if (!pawn.CanReserve(t)) return false;
                     if (t.IsForbidden(pawn)) return false;
                     if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Haul) != null) return false;
                     return true;
                 }
                 Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
+                bool nearbyspotFound = CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map) && pawn.CanReserve(x), (Region x) => true, out workoutLocation);
 
                 foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
                 {
                     if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
+                    {
+                        continue;
+                    }
+                    else if (!nearbyspotFound)
                     {
                         continue;
                     }
@@ -205,7 +212,7 @@ namespace Maux36.Rimbody
                 }
                 else
                 {
-                    if (CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map), (Region x) => true, out IntVec3 workoutLocation))
+                    if (workoutLocation != IntVec3.Invalid)
                     {
                         Job job = JobMaker.MakeJob(jobtogive, workoutLocation);
                         return job;

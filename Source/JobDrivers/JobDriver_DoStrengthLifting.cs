@@ -267,7 +267,7 @@ namespace Maux36.Rimbody
             });
             yield return workout;
         }
-        public static Toil FindSpotToWorkout(TargetIndex foundBench, TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
+        public Toil FindSpotToWorkout(TargetIndex foundBench, TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
         {
             Toil findCell = new Toil();
             bool usingBench = false;
@@ -298,17 +298,29 @@ namespace Maux36.Rimbody
                         return;
                     }
                 }
-                workoutLocation = RCellFinder.RandomWanderDestFor(actor, actor.Position, 8, (Pawn p, IntVec3 c, IntVec3 root) => (root.GetRoom(p.Map) == null || WanderRoomUtility.IsValidWanderDest(p, c, root)) ? true : false, PawnUtility.ResolveMaxDanger(actor, Danger.Some));
+                workoutLocation = RCellFinder.RandomWanderDestFor(actor, actor.Position, 10, delegate (Pawn p, IntVec3 c, IntVec3 root)
+                {
+                    if ((root.GetRoom(p.Map) == null) || WanderRoomUtility.IsValidWanderDest(p, c, root))
+                    {
+                        if(p.CanReserveAndReach(c, PathEndMode.OnCell, Danger.Deadly))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                },PawnUtility.ResolveMaxDanger(actor, Danger.Some));
                 if (workoutLocation == IntVec3.Invalid)
                 {
-                    if (CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 5, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map), (Region x) => true, out workoutLocation))
+                    if (CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 20, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map) && actor.CanReserveAndReach(x, PathEndMode.OnCell, Danger.Deadly), (Region x) => true, out workoutLocation))
                     {
 
                         curJob.SetTarget(cellInd, workoutLocation);
                         return;
                     }
-                    curJob.SetTarget(cellInd, IntVec3.Invalid);
-                    return;
+                }
+                if (workoutLocation == IntVec3.Invalid)
+                {
+                    EndJobWith(JobCondition.Incompletable);
                 }
                 curJob.SetTarget(cellInd, workoutLocation);
                 return;
