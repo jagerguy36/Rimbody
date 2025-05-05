@@ -50,11 +50,11 @@
   <RimbodyCarryRateMultiplier>Carry Rate Multiplier</RimbodyCarryRateMultiplier>
   <RimbodyCarryRateMultiplierTooltip>The multiplier for how much the character gains muscle based on the weight of the carried object.</RimbodyCarryRateMultiplierTooltip>
   <RimbodyUseFatigue>Use part fatigue</RimbodyUseFatigue>
-  <RimbodyUseFatigueTooltip>Activates the fatigue system for specific body parts. As you exercise, the targeted part will become fatigued. Resting will help the fatigued area recover.</RimbodyUseFatigueTooltip>
+  <RimbodyUseFatigueTooltip>Activates the fatigue system for specific body parts. As a pawn works out or do labor, the areas used will accumulate fatigue. Exercises that use fatigued areas are less effective. Resting will help the fatigued area recover.</RimbodyUseFatigueTooltip>
   <RimbodyUseExhaustion>Use exhaustion</RimbodyUseExhaustion>
   <RimbodyUseExhaustionTooltip>Activates the exhaustion system. Exhaustion limits the amount of workouts you can do without rest.</RimbodyUseExhaustionTooltip>
   <RimbodyExhaustionTooltip>Exhaustion ({0}%)\n\nA pawn gains exhaustion while exercising. If their exhaustion reaches 100%, they must wait until it drops below 40% before they can work out again.</RimbodyExhaustionTooltip>
-  <RimbodyFatigueTooltip>As a pawn works out, the areas used in the exercise accumulate fatigue. Exercises that use fatigued areas are less effective.\n\nParts Fatigue\n\nShoulders: ({0}%)\nChest: ({1}%)\nBiceps: ({2}%)\nTriceps: ({3}%)\nBack: ({4}%)\nCore: ({5}%)\nGlutes: ({6}%)\nQuads: ({7}%)\nHamstrings: ({8}%)</RimbodyFatigueTooltip>
+  <RimbodyFatigueTooltip>As a pawn works out or do labor, the areas used will accumulate fatigue. Exercises that use fatigued areas are less effective.\n\nParts Fatigue\n\nShoulders: ({0}%)\nChest: ({1}%)\nBiceps: ({2}%)\nTriceps: ({3}%)\nBack: ({4}%)\nCore: ({5}%)\nGlutes: ({6}%)\nQuads: ({7}%)\nHamstrings: ({8}%)</RimbodyFatigueTooltip>
   <Rimbody_Description>[Available Workouts]</Rimbody_Description>
   <Rimbody_Shoulder>Shoulders</Rimbody_Shoulder>
   <Rimbody_Chest>Chest</Rimbody_Chest>
@@ -89,4 +89,6 @@
   <halteres_overheadshoulderpress_report>Doing overhead shoulder presses with halteres</halteres_overheadshoulderpress_report>
   <kettlebellswing_name>Kettlebell Swing</kettlebellswing_name>
   <kettlebellswing_report>Doing kettlebell swings</kettlebellswing_report>
+  <reactivetraining_name>Reactive Training</reactivetraining_name>
+  <reactivetraining_report>Doing reactive training with a spinning dummy</reactivetraining_report>
 </LanguageData>

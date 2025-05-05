@@ -9,13 +9,13 @@
 		      	  <Category>Strength</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>bench press</name>
+						<name>benchpress_name</name>
 						<reportString>benchpress_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>melee</animationType>
 						<playSound>true</playSound>
 						<pawnDirection>faceSame</pawnDirection>
+						<animationType>melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -43,9 +43,30 @@
 		      	  <Category>Strength</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>deadlift</name>
+						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
+						<strength>2.0</strength>
+						<animationType>melee</animationType>
+						<playSound>true</playSound>
+						<pawnDirection>faceOpposite</pawnDirection>
+						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+						<strengthParts>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0.5</li>
+							<li>1.5</li>
+							<li>0.5</li>
+							<li>1</li>
+							<li>0.5</li>
+							<li>1.5</li>
+						</strengthParts>
+		      	  	</li>
+		      	  	<li>
+						<name>squats_name</name>
+						<reportString>squats_report</reportString>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>melee</animationType>
 						<playSound>true</playSound>
@@ -56,11 +77,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>1.5</li>
+							<li>0</li>
 							<li>0.5</li>
-							<li>1</li>
-							<li>1</li>
-							<li>1.5</li>
+							<li>2</li>
+							<li>2</li>
+							<li>0.5</li>
 						</strengthParts>
 		      	  	</li>
 		      	  </workouts>
@@ -76,9 +97,9 @@
 		      	  <Category>Strength</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>pull-ups</name>
+						<name>pullups_name</name>
 						<reportString>pullups_report</reportString>
-						<cardio>0.4</cardio>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>melee</animationType>
 						<pawnDirection>faceOpposite</pawnDirection>
@@ -89,6 +110,26 @@
 							<li>1</li>
 							<li>0</li>
 							<li>3</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+						</strengthParts>
+		      	  	</li>
+		      	  	<li>
+						<name>dips_name</name>
+						<reportString>dips_report</reportString>
+						<cardio>0.5</cardio>
+						<strength>2.0</strength>
+						<animationType>melee</animationType>
+						<pawnDirection>faceOpposite</pawnDirection>
+						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+						<strengthParts>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>3.25</li>
+							<li>0</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -108,22 +149,22 @@
 		      	  <Category>Strength</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>reactive training</name>
-						<reportString>reactivetrain_report</reportString>
-						<cardio>0.4</cardio>
+						<name>reactivetraining_name</name>
+						<reportString>reactivetraining_report</reportString>
+						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>melee</animationType>
 						<pawnDirection>center</pawnDirection>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0.5</li>
-							<li>0</li>
-							<li>0</li>
 							<li>1</li>
-							<li>0</li>
-							<li>0.5</li>
 							<li>0.5</li>
 							<li>1</li>
+							<li>0.2</li>
+							<li>0.5</li>
+							<li>0.5</li>
+							<li>0.8</li>
 							<li>0.5</li>
 						</strengthParts>
 		      	  	</li>
@@ -141,11 +182,12 @@
 		      	  <Category>Cardio</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>run treadmill</name>
+						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>faceOpposite</pawnDirection>
+						<animationType>still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -153,10 +195,10 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0.5</li>
-							<li>0.5</li>
-							<li>0.5</li>
-							<li>0.5</li>
+							<li>0.1</li>
+							<li>0.4</li>
+							<li>0.4</li>
+							<li>0.4</li>
 						</strengthParts>
 		      	  	</li>
 		      	  </workouts>
@@ -173,11 +215,12 @@
 		      	  <Category>Cardio</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>cycling</name>
+						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>faceOpposite</pawnDirection>
+						<animationType>still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -186,8 +229,8 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
+							<li>1</li>
 							<li>0.75</li>
-							<li>0.5</li>
 							<li>0.5</li>
 						</strengthParts>
 		      	  	</li>
@@ -205,12 +248,24 @@
 		      	  <Category>Balance</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>standing ball balance</name>
-						<reportString>ballbalance_report</reportString>
+						<name>sbll_name</name>
+						<reportString>sbll_report</reportString>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<animationType>melee</animationType>
 						<pawnDirection>center</pawnDirection>
+						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+						<strengthParts>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>1.5</li>
+							<li>0.25</li>
+							<li>0.25</li>
+							<li>0.25</li>
+						</strengthParts>
 		      	  	</li>
 		      	  </workouts>
 		      	  
@@ -226,8 +281,8 @@
 		      	  <Category>Balance</Category>
 		      	  <workouts>
 		      	  	<li>
-						<name>balance walk</name>
-						<reportString>balancewalk_report</reportString>
+						<name>legacyBalanceBeam_name</name>
+						<reportString>legacyBalanceBeam_report</reportString>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<animationType>melee</animationType>

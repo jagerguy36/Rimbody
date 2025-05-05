@@ -1092,7 +1092,7 @@
 		<defName>Rimbody_SpinningDummy</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>spinning dummy</label>
-		<description>A spinning dummy used in martial arts and combat sports for striking and grappling practice.</description>
+		<description>A spinning dummy that mimics an opponent’s movement, helping improve strikes, timing, and reflexes.</description>
 		<minTechLevelToBuild>Neolithic</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
 		<graphicData>
@@ -1149,8 +1149,8 @@
 				<Category>Strength</Category>
 				<workouts>
 					<li>
-						<name>spinningdummy_name</name>
-						<reportString>spinningdummy_report</reportString>
+						<name>reactivetraining_name</name>
+						<reportString>reactivetraining_report</reportString>
 						<cardio>0.6</cardio>
 						<strength>1.2</strength>
 						<pawnDirection>center</pawnDirection>

@@ -119,7 +119,10 @@ namespace Maux36.Rimbody
                     {
                         RimWorld.SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
                     }
-                    pawn.Drawer.Notify_MeleeAttackOn(building);
+                    if (building != null)
+                    {
+                        pawn.Drawer.Notify_MeleeAttackOn(building);
+                    }
                 }
             }
 
@@ -191,7 +194,7 @@ namespace Maux36.Rimbody
             EndOnTired(this);
 
             RimbodyDefLists.BalanceTarget.TryGetValue(TargetThingA.def, out var ext);
-            Building_WorkoutAnimated buildingAnimated = (Building_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
+            Building_WorkoutAnimated buildingAnimated = job.GetTarget(TargetIndex.A).Thing as Building_WorkoutAnimated;
             if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext, out memoryFactor);
             var exWorkout = ext.workouts[workoutIndex];
             workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
@@ -220,7 +223,10 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
-                buildingAnimated.beingUsed = true;
+                if (buildingAnimated != null)
+                {
+                    buildingAnimated.beingUsed = true;
+                }
             };
             float uptime = 0.95f - (0.0004f * compPhysique.MuscleMass / 5000f);
             float cycleDuration = 125f - compPhysique.MuscleMass;
@@ -238,9 +244,9 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
-                buildingAnimated.beingUsed = false;
-                if (exWorkout.animationType == InteractionType.building)
+                if (buildingAnimated != null)
                 {
+                    buildingAnimated.beingUsed = false;
                     buildingAnimated.calculatedOffset = Vector3.zero;
                     pawnOffset = Vector3.zero;
                 }
