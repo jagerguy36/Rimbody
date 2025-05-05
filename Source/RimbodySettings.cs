@@ -27,6 +27,8 @@ namespace Maux36.Rimbody
         public static float WorkOutGainEfficiency = 1.0f;
         public static float carryRateMultiplier = 1.0f;
 
+        public static float gainMaxGracePeriod = 0.97f;
+
         public override void ExposeData()
         {
             base.ExposeData();

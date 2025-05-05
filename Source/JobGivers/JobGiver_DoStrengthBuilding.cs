@@ -19,7 +19,7 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
-            if (compPhysique.gain >= compPhysique.gainMax*0.95f)
+            if (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
             {
                 return 0f;
             }
@@ -147,7 +147,13 @@ namespace Maux36.Rimbody
                     return true;
                 }
                 Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
-                bool nearbyspotFound = CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map) && pawn.CanReserve(x), (Region x) => true, out workoutLocation);
+                workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
+                {
+                    if (!pawn.CanReserve(c)) return false;
+                    if (!c.Standable(pawn.Map)) return false;
+                    return true;
+                }, pawn: pawn);
+                bool nearbyspotFound = workoutLocation != IntVec3.Invalid;
 
                 foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
                 {

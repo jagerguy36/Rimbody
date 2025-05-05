@@ -128,6 +128,7 @@ namespace Maux36.Rimbody
             }
 
             Thing thing = null;
+            IntVec3 workoutLocation = IntVec3.Invalid;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
             tmpCandidates.Clear();
             workoutCache.Clear();
@@ -137,11 +138,17 @@ namespace Maux36.Rimbody
             {
 
                 var plankjobEx = DefOf_Rimbody.Rimbody_DoBodyWeightPlank.GetModExtension<ModExtensionRimbodyJob>();
-
                 float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
-                    if (CellFinder.TryFindRandomReachableNearbyCell(pawn.Position, pawn.Map, 5, TraverseParms.For(pawn), (IntVec3 x) => x.Standable(pawn.Map) && pawn.CanReserve(x), (Region x) => true, out IntVec3 workoutLocation))
+                    workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
+                    {
+                        if (!pawn.CanReserve(c)) return false;
+                        if (!c.Standable(pawn.Map)) return false;
+                        return true;
+                    }, pawn: pawn);
+
+                    if (workoutLocation != IntVec3.Invalid)
                     {
                         Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation);
                         return job;

@@ -14,14 +14,13 @@ namespace Maux36.Rimbody
         private int tickProgress = 0;
         private int workoutIndex = -1;
         private float memoryFactor = 1.0f;
-        private float workoutEfficiencyValue = 1.0f;
         private Vector3 pawnOffset = Vector3.zero;
         private Vector3 itemOffset = Vector3.zero;
         private static readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
             {
                 return false;
             }
@@ -173,7 +172,6 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
             Scribe_Values.Look(ref workoutIndex, "strengthlifting_workoutIndex", -1);
             Scribe_Values.Look(ref memoryFactor, "strengthlifting_memoryFactor", 1f);
-            Scribe_Values.Look(ref workoutEfficiencyValue, "strengthlifting_workoutEfficiencyValue", 1f);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -181,7 +179,7 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
 
             //Set up workout
@@ -192,21 +190,15 @@ namespace Maux36.Rimbody
                 workoutIndex = GetWorkoutInt(compPhysique, ext, out memoryFactor);
             }
             var exWorkout = ext.workouts[workoutIndex];
+            float workoutEfficiencyValue = 1f;
 
             yield return Toils_General.DoAtomic(delegate
             {
                 job.count = 1;
             });
-            yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
-            yield return Toils_General.DoAtomic(delegate
-            {
-                pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
-            });
-            Toil chooseCell = FindSpotToWorkout(TargetIndex.B, TargetIndex.C, ref workoutEfficiencyValue, exWorkout.useBench);
-            yield return chooseCell;
-            yield return Toils_Reserve.Reserve(TargetIndex.C);
-            yield return Toils_Goto.GotoCell(TargetIndex.C, PathEndMode.OnCell);
+            yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
+            yield return GotoSpotToWorkout(TargetIndex.B, exWorkout.useBench);
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
@@ -217,6 +209,7 @@ namespace Maux36.Rimbody
                     pawn.Rotation = TargetB.Thing.Rotation;
                     thingAnimated.drawRotation = TargetB.Thing.Rotation;
                     pawnOffset.z = 0.5f;
+                    workoutEfficiencyValue = 1.05f;
                 }
                 else
                 {
@@ -267,13 +260,12 @@ namespace Maux36.Rimbody
             });
             yield return workout;
         }
-        public Toil FindSpotToWorkout(TargetIndex foundBench, TargetIndex cellInd, ref float workoutEfficiencyValue, bool lookForBench = false)
+        public static Toil GotoSpotToWorkout(TargetIndex foundBench, bool lookForBench = false)
         {
-            Toil findCell = new Toil();
-            bool usingBench = false;
-            findCell.initAction = delegate
+            Toil toil = new Toil();
+            toil.initAction = delegate
             {
-                Pawn actor = findCell.actor;
+                Pawn actor = toil.actor;
                 Job curJob = actor.CurJob;
                 IntVec3 workoutLocation = IntVec3.Invalid;
                 if (lookForBench)
@@ -292,44 +284,33 @@ namespace Maux36.Rimbody
                     thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(benchDef), PathEndMode.OnCell, TraverseParms.For(actor), 30f, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
                     if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
                     {
-                        usingBench = true;
                         curJob.SetTarget(foundBench, thing);
-                        curJob.SetTarget(cellInd, workoutLocation);
+                        actor.Reserve(workoutLocation, actor.CurJob);
+                        actor.Map.pawnDestinationReservationManager.Reserve(actor, actor.CurJob, workoutLocation);
+                        actor.pather.StartPath(workoutLocation, PathEndMode.OnCell);
                         return;
                     }
                 }
-                workoutLocation = RCellFinder.RandomWanderDestFor(actor, actor.Position, 10, delegate (Pawn p, IntVec3 c, IntVec3 root)
+                workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
                 {
-                    if ((root.GetRoom(p.Map) == null) || WanderRoomUtility.IsValidWanderDest(p, c, root))
-                    {
-                        if(p.CanReserveAndReach(c, PathEndMode.OnCell, Danger.Deadly))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                },PawnUtility.ResolveMaxDanger(actor, Danger.Some));
+                    if (!actor.CanReserve(c)) return false;
+                    if (!c.Standable(actor.Map)) return false;
+                    return true;
+                }, pawn: actor);
+                //if (workoutLocation == IntVec3.Invalid)
+                //{
+                //    CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 20, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map) && actor.CanReserveAndReach(x, PathEndMode.OnCell, Danger.Deadly), (Region x) => true, out workoutLocation)
+                //}
                 if (workoutLocation == IntVec3.Invalid)
                 {
-                    if (CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 20, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map) && actor.CanReserveAndReach(x, PathEndMode.OnCell, Danger.Deadly), (Region x) => true, out workoutLocation))
-                    {
-
-                        curJob.SetTarget(cellInd, workoutLocation);
-                        return;
-                    }
+                    actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
                 }
-                if (workoutLocation == IntVec3.Invalid)
-                {
-                    EndJobWith(JobCondition.Incompletable);
-                }
-                curJob.SetTarget(cellInd, workoutLocation);
-                return;
+                actor.Reserve(workoutLocation, actor.CurJob);
+                actor.Map.pawnDestinationReservationManager.Reserve(actor, actor.CurJob, workoutLocation);
+                actor.pather.StartPath(workoutLocation, PathEndMode.OnCell);
             };
-            if (usingBench)
-            {
-                workoutEfficiencyValue = 1.05f;
-            }
-            return findCell;
+            toil.defaultCompleteMode = ToilCompleteMode.PatherArrival;
+            return toil;
         }
         public override bool ModifyCarriedThingDrawPos(ref Vector3 drawPos, ref bool flip)
         {

@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using Verse.AI;
 using Verse;
-using Verse.Sound;
-using System.Reflection;
 using UnityEngine;
-using System;
-using UnityEngine.Profiling;
-using static System.Net.Mime.MediaTypeNames;
-using static Verse.PawnRenderNodeProperties;
 
 namespace Maux36.Rimbody
 {
@@ -17,7 +11,9 @@ namespace Maux36.Rimbody
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
-        private Rot4 facing = Rot4.Invalid;
+        private float memoryFactor = 1.0f;
+        private float animBase = 0f;
+        private float animCoef = 0f;
         private Vector3 pawnNudge = Vector3.zero;
         private Rot4 lyingRotation = Rot4.Invalid;
         public override Vector3 ForcedBodyOffset
@@ -37,11 +33,10 @@ namespace Maux36.Rimbody
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
             {
                 return false;
             }
-
             return true;
         }
         private void AddMemory(CompPhysique compPhysique)
@@ -57,7 +52,9 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref tickProgress, "pushup_tickProgress", 0);
-            Scribe_Values.Look(ref facing, "pushup_facing", Rot4.Invalid);
+            Scribe_Values.Look(ref memoryFactor, "pushup_memoryFactor", 1.0f);
+            Scribe_Values.Look(ref animBase, "pushup_animBase", 0f);
+            Scribe_Values.Look(ref animCoef, "pushup_animCoef", 0f);
             Scribe_Values.Look(ref pawnNudge, "pushup_pawnNudget", Vector3.zero);
             Scribe_Values.Look(ref lyingRotation, "pushup_lyingRotation", Rot4.Invalid);
         }
@@ -66,25 +63,26 @@ namespace Maux36.Rimbody
         {
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);
 
-            var exWorkout = job.def.GetModExtension<ModExtensionRimbodyJob>();
-            float memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
+            //Set up workout
+            RimbodyDefLists.StrengthNonTargetJob.TryGetValue(job.def, out var exWorkout);
+            yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
-            if (facing == Rot4.Invalid)
-            {
-                facing = Rot4.Random;
-            }
-            float adjsusted =(facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f;
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
+                memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
                 pawn.pather.StopDead();
                 pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
+                Rot4 facing = facing = Rot4.Random;
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
+                animBase = facing.Opposite.AsAngle;
+                animCoef = (facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -15f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 15f : 0f;
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
                 {
@@ -112,10 +110,10 @@ namespace Maux36.Rimbody
                 {
                     nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
                 }
-                pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + adjsusted*(1f + nudgeMultiplier)*0.5f;
+                pawn.PawnBodyAngleOverride() = animBase + animCoef * (1f + nudgeMultiplier);
                 Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress);
                 pawnNudge = JitterVector + Vector3.forward*nudgeMultiplier*0.15f;
-                pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
+                pawn.needs?.joy?.GainJoy(joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -127,7 +125,9 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
+                TryGainGymThought();
                 AddMemory(compPhysique);
+                pawn.jobs.posture = PawnPosture.Standing;
                 pawn.PawnBodyAngleOverride() = -1;
             });
             yield return workout;

@@ -16,7 +16,7 @@ namespace Maux36.Rimbody
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
             {
                 return false;
             }
@@ -52,21 +52,20 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.TryGetComp<CompPhysique>();
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * 0.95f) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
+
+            //Set up workout
+            RimbodyDefLists.StrengthNonTargetJob.TryGetValue(job.def, out var exWorkout);
+            memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
+
             yield return Toils_General.DoAtomic(delegate
             {
                 job.count = 1;
             });
-            yield return Toils_Reserve.Reserve(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
-            yield return Toils_General.DoAtomic(delegate
-            {
-                pawn.carryTracker.TryStartCarry(TargetA.Thing, 1);
-            });
-
-            var exWorkout = this.job.def.GetModExtension<ModExtensionRimbodyJob>();
-            memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
+            yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
+            yield return JobDriver_DoStrengthLifting.GotoSpotToWorkout(TargetIndex.B, false);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");

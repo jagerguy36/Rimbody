@@ -11,7 +11,7 @@ namespace Maux36.Rimbody
         }
         public JobGiver_RecoverWander()
         {
-            wanderRadius = 5f;
+            wanderRadius = 7f;
             ticksBetweenWandersRange = new IntRange(RimbodySettings.RecoveryTick, 2 * RimbodySettings.RecoveryTick);
             locomotionUrgency = LocomotionUrgency.Amble;
             wanderDestValidator = (Pawn pawn, IntVec3 loc, IntVec3 root) => WanderRoomUtility.IsValidWanderDest(pawn, loc, root);
