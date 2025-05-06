@@ -145,30 +145,30 @@
         <xpath>Defs/ThingDef[defName="SpinningDummy"]</xpath>
         <value>
 		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Strength</Category>
-		      	  <workouts>
-		      	  	<li>
-						<name>reactivetraining_name</name>
-						<reportString>reactivetraining_report</reportString>
-						<cardio>0.5</cardio>
-						<strength>2.0</strength>
-						<animationType>melee</animationType>
+		      	<Type>Building</Type>
+		      	<Category>Strength</Category>
+				<workouts>
+					<li>
+						<name>dummymeleetraining_name</name>
+						<reportString>dummymeleetraining_report</reportString>
+						<cardio>0.6</cardio>
+						<strength>1.2</strength>
 						<pawnDirection>center</pawnDirection>
+						<animationType>melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0.5</li>
-							<li>1</li>
 							<li>0.5</li>
-							<li>1</li>
+							<li>0.5</li>
+							<li>0.3</li>
 							<li>0.2</li>
-							<li>0.5</li>
-							<li>0.5</li>
-							<li>0.8</li>
-							<li>0.5</li>
+							<li>0.2</li>
+							<li>0.1</li>
+							<li>0.1</li>
+							<li>0.1</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
+					</li>
+				</workouts>
 		      	  
 		      </li>
         </value>

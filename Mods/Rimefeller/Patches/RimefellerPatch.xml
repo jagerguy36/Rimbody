@@ -34,7 +34,7 @@
         <xpath>Defs/JobDef[defName="SuperviseDrilling"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <JobCategory>NormalLabor</JobCategory>
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>

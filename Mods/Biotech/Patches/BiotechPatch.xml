@@ -96,8 +96,8 @@
         <xpath>Defs/JobDef[defName="BabySuckle"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.7</cardio>
-                <strength>1.7</strength>
+                <cardio>0.5</cardio>
+                <strength>2.0</strength>
             </li>
         </value>
     </Operation>
@@ -106,8 +106,7 @@
         <xpath>Defs/JobDef[defName="BabyPlay"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>0.85</cardio>
-                <strength>0.8</strength>
+                <JobCategory>NormalLabor</JobCategory>
             </li>
         </value>
     </Operation>
@@ -126,8 +125,8 @@
         <xpath>Defs/JobDef[defName="NatureRunning"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>2.0</cardio>
-                <strength>0.25</strength>
+                <!-- Recognized as jogging during running anyway. This is just for the part where the child is studying interesting things. -->
+                <JobCategory>Activity</JobCategory>
             </li>
         </value>
     </Operation>
