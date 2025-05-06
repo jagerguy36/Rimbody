@@ -132,6 +132,7 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             if (numVarieties == 1)
             {
+                memoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[0].name) ? 0.9f : 1f;
                 return 0;
             }
             for (int i = 0; i < numVarieties; i++)
