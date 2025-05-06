@@ -379,6 +379,12 @@
 				<passability>PassThroughOnly</passability>
 			</value>
 	</Operation>
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]/altitudeLayer</xpath>
+			<value>
+				<altitudeLayer>Building</altitudeLayer>
+			</value>
+	</Operation>
 	<Operation Class="PatchOperationRemove">
 		<xpath>Defs/ThingDef[defName="SpinningDummy"]/researchPrerequisites</xpath>
 	</Operation>
