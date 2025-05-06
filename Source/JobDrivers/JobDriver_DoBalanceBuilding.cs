@@ -19,7 +19,7 @@ namespace Maux36.Rimbody
         private Rot4 lyingRotation = Rot4.Invalid;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, 0, null, errorOnFailed))
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
             {
                 return false;
             }
@@ -200,8 +200,6 @@ namespace Maux36.Rimbody
             var exWorkout = ext.workouts[workoutIndex];
             workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
 
-            yield return Toils_Reserve.Reserve(TargetIndex.A);
-            yield return Toils_Reserve.Reserve(TargetIndex.B);
             yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
 
             if (exWorkout.reportString != null)
@@ -276,7 +274,7 @@ namespace Maux36.Rimbody
         private void TryGainGymThought()
         {
             var room = pawn.GetRoom();
-            if (room == null)
+            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym)
             {
                 return;
             }

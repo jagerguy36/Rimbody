@@ -151,7 +151,7 @@ namespace Maux36.Rimbody
         private void TryGainGymThought()
         {
             var room = pawn.GetRoom();
-            if (room == null)
+            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym)
             {
                 return;
             }

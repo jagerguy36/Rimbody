@@ -145,6 +145,7 @@ namespace Maux36.Rimbody
                     {
                         if (!pawn.CanReserve(c)) return false;
                         if (!c.Standable(pawn.Map)) return false;
+                        if (c.GetRegion(pawn.Map).type == RegionType.Portal) return false;
                         return true;
                     }, pawn: pawn);
 

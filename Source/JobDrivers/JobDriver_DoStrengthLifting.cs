@@ -296,6 +296,7 @@ namespace Maux36.Rimbody
                 {
                     if (!actor.CanReserve(c)) return false;
                     if (!c.Standable(actor.Map)) return false;
+                    if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
                     return true;
                 }, pawn: actor);
                 //if (workoutLocation == IntVec3.Invalid)
@@ -340,7 +341,7 @@ namespace Maux36.Rimbody
         private void TryGainGymThought()
         {
             var room = pawn.GetRoom();
-            if (room == null)
+            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym)
             {
                 return;
             }
