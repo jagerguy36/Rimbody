@@ -1,7 +1,10 @@
 ﻿using LudeonTK;
+using RimWorld;
 using RimWorld.Planet;
+using System;
 using System.Linq;
 using Verse;
+using Verse.AI;
 
 namespace Maux36.Rimbody
 {
@@ -26,6 +29,55 @@ namespace Maux36.Rimbody
                 }
             }
         }
+
+        public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f)
+        {
+            foundSeat = null;
+            IntVec3 workoutLocation = IntVec3.Invalid;
+            if (lookForSeat)
+            {
+                Thing thing = null;
+                Predicate<Thing> baseChairValidator = delegate (Thing t)
+                {
+                    if (t.def.building == null) return false;
+                    if (t.IsForbidden(actor)) return false;
+                    if (!t.IsSociallyProper(actor)) return false;
+                    if (t.IsBurning()) return false;
+                    if (!TryFindFreeSittingSpotOnThing(t, actor, out var cell)) return false;
+                    if (!actor.CanReserve(cell, maxPawns)) return false;
+                    return true;
+                };
+                thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
+                if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
+                {
+                    foundSeat = thing;
+                    return workoutLocation;
+                }
+            }
+            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
+            {
+                if (!actor.CanReserve(c)) return false;
+                if (!c.Standable(actor.Map)) return false;
+                if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
+                return true;
+            }, pawn: actor);
+            return workoutLocation;
+        }
+
+        public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
+        {
+            foreach (IntVec3 item in t.OccupiedRect())
+            {
+                if (pawn.CanReserve(item, 1, -1, null, false)) //(pawn.CanReserveSittableOrSpot(item))
+                {
+                    cell = item;
+                    return true;
+                }
+            }
+            cell = default;
+            return false;
+        }
+
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void LogRimbodyValue(Pawn pawn)

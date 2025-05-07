@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Verse.AI;
 using Verse;
 using UnityEngine;
-using System;
 
 namespace Maux36.Rimbody
 {
@@ -16,7 +15,7 @@ namespace Maux36.Rimbody
         private float memoryFactor = 1.0f;
         private Vector3 pawnOffset = Vector3.zero;
         private Vector3 itemOffset = Vector3.zero;
-        private static readonly ThingDef benchDef = DefDatabase<ThingDef>.GetNamed("Rimbody_FlatBench");
+        private static readonly ThingDef benchDef = DefOf_Rimbody.Rimbody_FlatBench;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -261,7 +260,7 @@ namespace Maux36.Rimbody
             });
             yield return workout;
         }
-        public static Toil GotoSpotToWorkout(TargetIndex foundBench, bool lookForBench = false)
+        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, bool lookForBench = false)
         {
             Toil toil = new Toil();
             toil.initAction = delegate
@@ -269,44 +268,16 @@ namespace Maux36.Rimbody
                 Pawn actor = toil.actor;
                 Job curJob = actor.CurJob;
                 IntVec3 workoutLocation = IntVec3.Invalid;
-                if (lookForBench)
-                {
-                    Thing thing = null;
-                    Predicate<Thing> baseChairValidator = delegate (Thing t)
-                    {
-                        if (t.def.building == null) return false;
-                        if (t.IsForbidden(actor)) return false;
-                        if (!t.IsSociallyProper(actor)) return false;
-                        if (t.IsBurning()) return false;
-                        if (!TryFindFreeSittingSpotOnThing(t, actor, out var cell)) return false;
-                        if (!actor.CanReserve(cell)) return false;
-                        return true;
-                    };
-                    thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(benchDef), PathEndMode.OnCell, TraverseParms.For(actor), 30f, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
-                    if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
-                    {
-                        curJob.SetTarget(foundBench, thing);
-                        actor.Reserve(workoutLocation, actor.CurJob);
-                        actor.Map.pawnDestinationReservationManager.Reserve(actor, actor.CurJob, workoutLocation);
-                        actor.pather.StartPath(workoutLocation, PathEndMode.OnCell);
-                        return;
-                    }
-                }
-                workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
-                {
-                    if (!actor.CanReserve(c)) return false;
-                    if (!c.Standable(actor.Map)) return false;
-                    if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
-                    return true;
-                }, pawn: actor);
-                //if (workoutLocation == IntVec3.Invalid)
-                //{
-                //    CellFinder.TryFindRandomReachableNearbyCell(actor.Position, actor.Map, 20, TraverseParms.For(actor), (IntVec3 x) => x.Standable(actor.Map) && actor.CanReserveAndReach(x, PathEndMode.OnCell, Danger.Deadly), (Region x) => true, out workoutLocation)
-                //}
+                workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForBench, benchDef, out Thing foundSeat, 2);
                 if (workoutLocation == IntVec3.Invalid)
                 {
                     actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
                 }
+                if (foundSeat != null)
+                {
+                    curJob.SetTarget(benchIndex, foundSeat);
+                }
+                actor.Reserve(foundSeat, actor.CurJob, 2, 0);
                 actor.Reserve(workoutLocation, actor.CurJob);
                 actor.Map.pawnDestinationReservationManager.Reserve(actor, actor.CurJob, workoutLocation);
                 actor.pather.StartPath(workoutLocation, PathEndMode.OnCell);
@@ -356,19 +327,6 @@ namespace Maux36.Rimbody
                     ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
                         scoreStageIndex));
             }
-        }
-        public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
-        {
-            foreach (IntVec3 item in t.OccupiedRect())
-            {
-                if (pawn.CanReserve(item, 1, -1, null, false)) //(pawn.CanReserveSittableOrSpot(item))
-                {
-                    cell = item;
-                    return true;
-                }
-            }
-            cell = default;
-            return false;
         }
     }
 }
