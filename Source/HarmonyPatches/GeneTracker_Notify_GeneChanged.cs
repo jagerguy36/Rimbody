@@ -22,7 +22,7 @@ namespace Maux36.Rimbody
             var pawn = (Pawn)pawnField.GetValue(__instance);
             if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.defName== "DiseaseFree")
             {
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
+                var compPhysique = pawn.compPhysique();
 
                 if (compPhysique != null)
                 {
@@ -33,7 +33,7 @@ namespace Maux36.Rimbody
 
             if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.bodyType.HasValue)
             {
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
+                var compPhysique = pawn.compPhysique();
 
                 if (compPhysique != null)
                 {
@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
 
         static void Postfix(Pawn pawn)
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             if (compPhysique != null)
             {
                 compPhysique.PostGen = true;

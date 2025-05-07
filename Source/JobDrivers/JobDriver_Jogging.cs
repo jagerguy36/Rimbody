@@ -59,7 +59,7 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             var joyneed = pawn.needs?.joy;
             if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
             {

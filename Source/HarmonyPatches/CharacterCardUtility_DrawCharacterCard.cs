@@ -38,7 +38,7 @@ namespace Maux36.Rimbody
                 return;
             }
 
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             if (compPhysique == null || compPhysique.MuscleMass <= -1 || compPhysique.BodyFat <= -1)
             {
                 return;
