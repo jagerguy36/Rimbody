@@ -875,7 +875,7 @@
 		<placeWorkers>
 			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
 			<li>PlaceWorker_ShowFacilitiesConnections</li>
-			<li>Maux36.Rimbody.PlaceWorker_ShowDirection</li>
+			<li>Maux36.Rimbody.PlaceWorker_ShowEntry</li>
 		</placeWorkers>
 		<modExtensions>
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">

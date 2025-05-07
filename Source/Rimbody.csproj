@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Building\Building_WorkoutAnimated.cs" />
+    <Compile Include="Building\PlaceWorker_ShowEntry.cs" />
     <Compile Include="Building\PlaceWorker_ShowDirection.cs" />
     <Compile Include="Building\PlaceWorker_WorkoutAnimated.cs" />
     <Compile Include="CompPhysique.cs" />

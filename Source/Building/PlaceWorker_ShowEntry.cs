@@ -10,15 +10,15 @@ using Verse;
 namespace Maux36.Rimbody
 {
     [StaticConstructorOnStartup]
-    public class PlaceWorker_ShowDirection : PlaceWorker
+    public class PlaceWorker_ShowEntry : PlaceWorker
     {
 
-        private static readonly string IconPath = "UI/PlaceWorker/FacingDir";
+        private static readonly string IconPath = "UI/PlaceWorker/EntryPoint";
 
         private static readonly Material IconMat;
         private static readonly MaterialPropertyBlock GhostBlock;
 
-        static PlaceWorker_ShowDirection()
+        static PlaceWorker_ShowEntry()
         {
             IconMat = MaterialPool.MatFrom(IconPath, ShaderDatabase.MetaOverlay);
             GhostBlock = new MaterialPropertyBlock();
