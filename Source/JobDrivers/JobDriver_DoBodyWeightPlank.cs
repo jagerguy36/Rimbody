@@ -71,6 +71,8 @@ namespace Maux36.Rimbody
 
             //Set up workout
             RimbodyDefLists.BalanceNonTargetJob.TryGetValue(job.def, out var exWorkout);
+            float workoutEfficiencyValue = 1f;
+            yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
@@ -83,6 +85,7 @@ namespace Maux36.Rimbody
                 if (TargetThingB != null)
                 {
                     facing = TargetThingB.Rotation;
+                    workoutEfficiencyValue = 1.05f;
                 }
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + ((facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f);
@@ -93,8 +96,8 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = exWorkout.cardio;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
             };

@@ -37,6 +37,13 @@ namespace Maux36.Rimbody
             {
                 return false;
             }
+            if (job.targetB != null)
+            {
+                if (!pawn.Reserve(job.targetB, job, 1, -1, null, errorOnFailed))
+                {
+                    return false;
+                }
+            }
             return true;
         }
         private void AddMemory(CompPhysique compPhysique)
@@ -69,6 +76,7 @@ namespace Maux36.Rimbody
 
             //Set up workout
             RimbodyDefLists.StrengthNonTargetJob.TryGetValue(job.def, out var exWorkout);
+            float workoutEfficiencyValue = 1f;
             yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
 
@@ -80,6 +88,11 @@ namespace Maux36.Rimbody
                 pawn.pather.StopDead();
                 pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                 Rot4 facing = facing = Rot4.Random;
+                if (TargetThingB != null)
+                {
+                    facing = TargetThingB.Rotation;
+                    workoutEfficiencyValue = 1.05f;
+                }
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 animBase = facing.Opposite.AsAngle;
                 animCoef = (facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -15f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 15f : 0f;
@@ -89,8 +102,8 @@ namespace Maux36.Rimbody
                     joygainfactor = 0;
                 }
                 compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = exWorkout.cardio;
+                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
+                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
                 compPhysique.memoryFactorOverride = memoryFactor;
                 compPhysique.partsOverride = exWorkout.strengthParts;
             };

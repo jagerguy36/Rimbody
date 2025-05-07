@@ -147,14 +147,9 @@ namespace Maux36.Rimbody
                     return true;
                 }
                 Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
-                workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
-                {
-                    if (!pawn.CanReserve(c)) return false;
-                    if (!c.Standable(pawn.Map)) return false;
-                    if (c.GetRegion(pawn.Map).type == RegionType.Portal) return false;
-                    return true;
-                }, pawn: pawn);
+                workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMats, out Thing mattress, 1, 40f);
                 bool nearbyspotFound = workoutLocation != IntVec3.Invalid;
+                
 
                 foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
                 {
@@ -191,37 +186,34 @@ namespace Maux36.Rimbody
                     }
                     else
                     {
-                        thing = null;
+                        thing = mattress;
                     }
                 }
             }
 
             if (jobtogive != null)
             {
-                if (thing != null)
+                if (jobtogive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
                 {
-                    if (jobtogive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
+                    Job job = DoTryGiveTargetJob(pawn, thing);
+                    if (job != null)
                     {
-                        Job job = DoTryGiveTargetJob(pawn, thing);
-                        if (job != null)
-                        {
-                            return job;
-                        }
+                        return job;
                     }
-                    else if (jobtogive.defName.StartsWith("Rimbody_DoChunk") == true)
+                }
+                else if (jobtogive.defName.StartsWith("Rimbody_DoChunk") == true)
+                {
+                    Job job = DoTryGiveChunkJob(pawn, thing, jobtogive);
+                    if (job != null)
                     {
-                        Job job = DoTryGiveChunkJob(pawn, thing, jobtogive);
-                        if (job != null)
-                        {
-                            return job;
-                        }
+                        return job;
                     }
                 }
                 else
                 {
                     if (workoutLocation != IntVec3.Invalid)
                     {
-                        Job job = JobMaker.MakeJob(jobtogive, workoutLocation);
+                        Job job = JobMaker.MakeJob(jobtogive, workoutLocation, thing);
                         return job;
                     }
                 }
