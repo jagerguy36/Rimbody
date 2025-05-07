@@ -98,7 +98,7 @@ namespace Maux36.Rimbody
                 }
                 if (wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != null && wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != Vector3.zero)
                 {
-                    pawnOffset = nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation) + IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
+                    pawnOffset += nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation) + IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
                 }
                 //Building
                 if (wo?.movingpartAnimOffset?.FromRot(building.Rotation) != null)

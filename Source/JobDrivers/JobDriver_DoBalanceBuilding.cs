@@ -98,7 +98,7 @@ namespace Maux36.Rimbody
                 }
                 if (wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != null && wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != Vector3.zero)
                 {
-                    pawnOffset = nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation);
+                    pawnOffset += nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation);
                 }
                 //Building
                 if (wo?.movingpartAnimOffset?.FromRot(building.Rotation) != null)
