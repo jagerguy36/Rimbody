@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
     {
         static void Postfix(Pawn pawn)
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             if (pawn != null && compPhysique != null)
             {
                 if (compPhysique.BodyFat == -1f || compPhysique.MuscleMass == -1f)
@@ -28,7 +28,7 @@ namespace Maux36.Rimbody
         {
             if (!(ModsConfig.BiotechActive && pawn.DevelopmentalStage.Juvenile()))
             {
-                var compPhysique = pawn.TryGetComp<CompPhysique>();
+                var compPhysique = pawn.compPhysique();
                 //Can be null when a pawn is generated. This is for babies growing up.
                 if (compPhysique != null && compPhysique.BodyFat >= 0 && compPhysique.MuscleMass >= 0)
                 {

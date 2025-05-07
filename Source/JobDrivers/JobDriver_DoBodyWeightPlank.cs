@@ -57,7 +57,7 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);

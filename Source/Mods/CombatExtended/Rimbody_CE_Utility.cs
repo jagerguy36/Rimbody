@@ -21,7 +21,7 @@ namespace Maux36.Rimbody_CE
         {
             if (pawn?.needs != null && pawn.needs.food != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || pawn.IsColonist && pawn.GetCaravan() != null))
             {
-                CompPhysique compPhysique = pawn.TryGetComp<CompPhysique>();
+                CompPhysique compPhysique = pawn.compPhysique();
                 if (compPhysique != null)
                 {
                     UpdateCarryweight_CE(pawn, compPhysique);

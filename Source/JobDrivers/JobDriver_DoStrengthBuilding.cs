@@ -187,7 +187,7 @@ namespace Maux36.Rimbody
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);

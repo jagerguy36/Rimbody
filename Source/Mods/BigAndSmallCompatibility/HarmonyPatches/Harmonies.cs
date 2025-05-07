@@ -12,7 +12,7 @@ namespace Maux36.Rimbody_BigAndSmall
     {
         public static void Postfix(Pawn pawn, Corpse corpse)
         {
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             var corpsePhysique = corpse.InnerPawn.TryGetComp<CompPhysique>();
             compPhysique.BodyFat = corpsePhysique.BodyFat;
             compPhysique.MuscleMass = corpsePhysique.MuscleMass;

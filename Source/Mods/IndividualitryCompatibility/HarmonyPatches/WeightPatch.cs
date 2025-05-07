@@ -68,7 +68,7 @@ namespace Maux36.Rimbody_Individuality
         {
             if (pawn == null) return false;
 
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             if (compPhysique.BodyFat!=-2)
             {
                 return false;
@@ -94,7 +94,7 @@ namespace Maux36.Rimbody_Individuality
         public static bool Prefix(Rect rect, Pawn pawn)
         {
             var compIndividuality = pawn.TryGetComp<CompIndividuality>();
-            var compPhysique = pawn.TryGetComp<CompPhysique>();
+            var compPhysique = pawn.compPhysique();
             if (pawn == null || compIndividuality == null || compPhysique == null)
             {
                 return false;
