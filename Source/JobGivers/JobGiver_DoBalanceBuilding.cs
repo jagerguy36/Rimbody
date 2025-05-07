@@ -13,7 +13,7 @@ namespace Maux36.Rimbody
         private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
         public override float GetPriority(Pawn pawn)
         {
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick)
             {
                 return 0f;
@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
             if (TooTired(pawn)) return null;
             if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
 
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (compPhysique == null) return null;
             tmpCandidates.Clear();
             workoutCache.Clear();

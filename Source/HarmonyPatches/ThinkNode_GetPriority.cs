@@ -69,7 +69,7 @@ namespace Maux36.Rimbody
                 return true;
             }
 
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
 
             if (compPhysique?.useFatgoal == true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
             {

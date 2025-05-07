@@ -30,6 +30,24 @@ namespace Maux36.Rimbody_Individuality
         }
     }
 
+
+    //[HarmonyPatch(typeof(Need_Food), "NeedInterval")]
+    //public class NeedTickPatch
+    //{
+    //    [HarmonyAfter(["rimworld.mod.Maux.Rimbody"])]
+    //    public static void Postfix(Need_Food __instance)
+    //    {
+    //        var pawnField = typeof(Need).GetField("pawn", BindingFlags.NonPublic | BindingFlags.Instance);
+    //        var pawn = (Pawn)pawnField.GetValue(__instance);
+    //        var compIndividuality = pawn.TryGetComp<CompIndividuality>();
+    //        var compPhysique = pawn.TryGetComp<CompPhysique>();
+    //        if (compIndividuality != null && compPhysique.BodyFat != -2)
+    //        {
+    //            compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
+    //        }
+    //    }
+    //}
+
     [HarmonyPatch(typeof(CompPhysique), "PhysiqueTick")]
     public class CompPhysiqueTickPatch
     {
@@ -50,7 +68,7 @@ namespace Maux36.Rimbody_Individuality
         {
             if (pawn == null) return false;
 
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (compPhysique.BodyFat!=-2)
             {
                 return false;
@@ -76,7 +94,7 @@ namespace Maux36.Rimbody_Individuality
         public static bool Prefix(Rect rect, Pawn pawn)
         {
             var compIndividuality = pawn.TryGetComp<CompIndividuality>();
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (pawn == null || compIndividuality == null || compPhysique == null)
             {
                 return false;

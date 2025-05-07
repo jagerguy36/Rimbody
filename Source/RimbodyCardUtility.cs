@@ -21,7 +21,7 @@ namespace Maux36.Rimbody
 
         public static void DrawRimbodyCard(Rect rect, Pawn pawn)
         {
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (pawn == null || compPhysique == null)
             {
                 return;

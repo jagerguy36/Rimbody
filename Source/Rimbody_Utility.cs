@@ -19,7 +19,7 @@ namespace Maux36.Rimbody
         {
             if (pawn?.needs != null && pawn.needs.food != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || pawn.IsColonist && pawn.GetCaravan() != null))
             {
-                CompPhysique compPhysique = pawn.compPhysique();
+                CompPhysique compPhysique = pawn.TryGetComp<CompPhysique>();
                 if (compPhysique != null)
                 {
                     compPhysique.UpdateCarryweight();
@@ -30,7 +30,7 @@ namespace Maux36.Rimbody
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void LogRimbodyValue(Pawn pawn)
         {
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (compPhysique != null)
             {
                 Log.Message($"Rimbody for pawn {pawn.Name}\n\n BodyFat: {compPhysique.BodyFat}\n MuscleMass: {compPhysique.MuscleMass}\n isNonSen: {compPhysique.isNonSen}\n FatGainFactor: {compPhysique.FatGainFactor}\n FatLoseFactor: {compPhysique.FatLoseFactor}\n MuscleGainFactor: {compPhysique.MuscleGainFactor}\n MuscleLoseFactor: {compPhysique.MuscleLoseFactor}");
@@ -41,7 +41,7 @@ namespace Maux36.Rimbody
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void ResetRimbodyValue(Pawn pawn)
         {
-            var compPhysique = pawn.compPhysique();
+            var compPhysique = pawn.TryGetComp<CompPhysique>();
             if (compPhysique != null)
             {
                 Log.Message($"resetting rimbody for pawn {pawn.Name}");
