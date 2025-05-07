@@ -37,6 +37,9 @@ namespace Maux36.Rimbody
         public static ThoughtDef Rimbody_RunnerHigh;
         public static ThoughtDef Rimbody_GoodRun;
 
+        public static ThingDef Rimbody_FlatBench;
+        public static ThingDef Rimbody_ExerciseMats;
+
         static DefOf_Rimbody()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf_Rimbody));

@@ -1,7 +1,6 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Verse.AI;
 using Verse;
 
@@ -19,7 +18,7 @@ namespace Maux36.Rimbody
                 return 0f;
             }
 
-            float result = 4.0f;//4.0f;
+            float result = 4.0f;
 
             if(compPhysique.memory?.Count > 0)
             {
@@ -141,17 +140,10 @@ namespace Maux36.Rimbody
                 float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
-                    workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
-                    {
-                        if (!pawn.CanReserve(c)) return false;
-                        if (!c.Standable(pawn.Map)) return false;
-                        if (c.GetRegion(pawn.Map).type == RegionType.Portal) return false;
-                        return true;
-                    }, pawn: pawn);
-
+                    workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMats, out Thing mattress, 1, 40f);
                     if (workoutLocation != IntVec3.Invalid)
                     {
-                        Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation);
+                        Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation, mattress);
                         return job;
                     }
                 }

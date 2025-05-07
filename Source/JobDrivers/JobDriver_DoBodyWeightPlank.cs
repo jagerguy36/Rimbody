@@ -35,6 +35,13 @@ namespace Maux36.Rimbody
             {
                 return false;
             }
+            if (job.targetB != null)
+            {
+                if(!pawn.Reserve(job.targetB, job, 1, -1, null, errorOnFailed))
+                {
+                    return false;
+                }
+            }
             return true;
         }
         private void AddMemory(CompPhysique compPhysique)
@@ -64,12 +71,7 @@ namespace Maux36.Rimbody
 
             //Set up workout
             RimbodyDefLists.BalanceNonTargetJob.TryGetValue(job.def, out var exWorkout);
-            yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
-
-            //float memoryFactor = compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f;
-            //float adjsusted =(facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f;
-            //TODO: Check cell reserveable
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
@@ -78,6 +80,10 @@ namespace Maux36.Rimbody
                 pawn.pather.StopDead();
                 pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                 Rot4 facing = facing = Rot4.Random;
+                if (TargetThingB != null)
+                {
+                    facing = TargetThingB.Rotation;
+                }
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + ((facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f);
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;

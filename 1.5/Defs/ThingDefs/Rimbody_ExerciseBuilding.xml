@@ -161,6 +161,56 @@
 		</researchPrerequisites>
 	</ThingDef>
 
+	<ThingDef ParentName = "FurnitureBase">
+		<defName>Rimbody_ExerciseMats</defName>
+		<label>exercise mats</label>
+		<description>Exercise mats</description>
+		<minTechLevelToBuild>Medieval</minTechLevelToBuild>
+		<graphicData>
+			<texPath>Things/Building/Rimbody_buildings/ExerciseMats/ExerciseMats</texPath>
+			<!-- <shaderType>CutoutComplex</shaderType> -->
+			<drawSize>(1,1)</drawSize>
+			<graphicClass>Graphic_Multi</graphicClass>
+			<damageData>
+				<rect>(0.3,0.3,0.7,0.7)</rect>
+			</damageData>
+		</graphicData>
+		<uiIconPath>Things/Building/Rimbody_buildings/ExerciseMats/ExerciseMats</uiIconPath>
+		<altitudeLayer>Building</altitudeLayer>
+		<rotatable>true</rotatable>
+		<defaultPlacingRot>South</defaultPlacingRot>
+		<minifiedDef>MinifiedThing</minifiedDef>
+		<socialPropernessMatters>true</socialPropernessMatters>
+		<statBases>
+			<MaxHitPoints>80</MaxHitPoints> 
+			<Mass>5</Mass>
+			<WorkToBuild>200</WorkToBuild>
+			<Flammability>1.0</Flammability>
+			<Beauty>0.5</Beauty>
+			<Comfort>0.5</Comfort>
+		</statBases>
+		<size>(1,1)</size>
+		<costList>
+			<Steel>50</Steel>
+		</costList>
+		<costStuffCount>25</costStuffCount>
+		<stuffCategories>
+			<li>Fabric</li>
+			<li>Leathery</li>
+		</stuffCategories>
+		<passability>PassThroughOnly</passability>
+		<pathCost>10</pathCost>
+		<designationCategory>Joy</designationCategory>
+		<uiIconScale>0.9</uiIconScale>
+		<canOverlapZones>false</canOverlapZones>
+		<thingCategories>
+			<li>BuildingsJoy</li>
+		</thingCategories>
+		<placeWorkers>
+			<li>Maux36.Rimbody.PlaceWorker_ShowDirection</li>
+		</placeWorkers>
+	</ThingDef>
+
 	<ThingDef ParentName="BuildingBase_RimbodyWorkout">
 		<defName>Rimbody_Treadmill</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
