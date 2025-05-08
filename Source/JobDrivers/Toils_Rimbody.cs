@@ -6,7 +6,7 @@ namespace Maux36.Rimbody
 {
     internal class Toils_Rimbody
     {
-        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot = ItemSpot.None)
+        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot = ItemSpot.None, int maxPawns = 1)
         {
             Toil toil = new Toil();
             toil.initAction = delegate
@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
                     lookForSpot = true;
                     spotThingDef = DefOf_Rimbody.Rimbody_ExerciseMats;
                 }
-                workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForSpot, spotThingDef, out Thing foundSeat, 2);
+                workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForSpot, spotThingDef, out Thing foundSeat, maxPawns);
                 if (workoutLocation == IntVec3.Invalid)
                 {
                     actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
@@ -34,7 +34,7 @@ namespace Maux36.Rimbody
                 if (foundSeat != null)
                 {
                     curJob.SetTarget(benchIndex, foundSeat);
-                    actor.Reserve(foundSeat, actor.CurJob, 2, 0);
+                    actor.Reserve(foundSeat, actor.CurJob, maxPawns, 0);
                 }
                 actor.Reserve(workoutLocation, actor.CurJob);
                 actor.Map.pawnDestinationReservationManager.Reserve(actor, actor.CurJob, workoutLocation);

@@ -178,7 +178,7 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.compPhysique();
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
 
             //Set up workout
@@ -197,7 +197,7 @@ namespace Maux36.Rimbody
             });
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
-            yield return Toils_Rimbody.GotoSpotToWorkout(TargetIndex.B, exWorkout.spot);
+            yield return Toils_Rimbody.GotoSpotToWorkout(TargetIndex.B, exWorkout.spot, 2);
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>

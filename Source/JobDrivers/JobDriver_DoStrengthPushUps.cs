@@ -70,7 +70,7 @@ namespace Maux36.Rimbody
         {
             var compPhysique = pawn.compPhysique();
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             EndOnTired(this);
 

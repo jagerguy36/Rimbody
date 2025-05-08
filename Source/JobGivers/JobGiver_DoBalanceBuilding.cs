@@ -17,6 +17,10 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
+            if (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
+            {
+                return 0f;
+            }
 
             float result = 4.0f;
 

@@ -44,7 +44,7 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.compPhysique();
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
 
             //Set up workout
