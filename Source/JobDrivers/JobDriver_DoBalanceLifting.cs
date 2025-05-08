@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoStrengthLifting : JobDriver
+    internal class JobDriver_DoBalanceLifting : JobDriver
     {
-        private const int duration = 800;
+        private const int duration = 1500;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
         private int workoutIndex = -1;
@@ -31,7 +31,7 @@ namespace Maux36.Rimbody
                 return pawnOffset;
             }
         }
-        protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float uptime, float cycleDuration, float jitter_amount)
+        protected void WatchTickAction(Thing_WorkoutAnimated item, WorkOut wo, float uptime, float cycleDuration)
         {
             tickProgress++;
             if (wo.movingpartAnimOffset?.south != null && wo.movingpartAnimPeak?.south != null)
@@ -60,14 +60,12 @@ namespace Maux36.Rimbody
                             woOffset.x *= armIndex;
                             woNudge.x *= armIndex;
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                         }
                         else
                         {
                             woOffset.z *= armIndex;
                             woNudge.z *= armIndex;
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
-                            itemOffset.z += Rand.Range(-jitter_amount, jitter_amount);
                         }
                         break;
                     case InteractionType.ItemEach:
@@ -76,22 +74,16 @@ namespace Maux36.Rimbody
                         {
                             woOffset.x *= armIndex;
                             woNudge.x *= armIndex;
-                            var randValue = Rand.Range(-jitter_amount, jitter_amount);
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
                             item.ghostOffset.x = -itemOffset.x - woOffset.x;
                             item.ghostOffset.z = -itemOffset.z + woOffset.z;
-                            itemOffset.x += randValue;
-                            item.ghostOffset.x -= randValue;
                         }
                         else
                         {
                             woOffset.z *= armIndex;
-                            var randValue = Rand.Range(-jitter_amount, jitter_amount);
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
                             item.ghostOffset.z = -itemOffset.z - woOffset.z;
                             item.ghostOffset.x = -itemOffset.x + woOffset.x;
-                            itemOffset.x += randValue;
-                            item.ghostOffset.x -= randValue;
                             //item.ghostOffset.y -= armIndex * 0.03474903f;
                             item.ghostOffset.y = armIndex * -0.03474903f;
                         }
@@ -101,16 +93,12 @@ namespace Maux36.Rimbody
                         {
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
                             item.ghostOffset.x = -itemOffset.x -woOffset.x - nudgeMultiplier * woNudge.x;
-                            item.ghostOffset.x += Rand.Range(-jitter_amount, jitter_amount);
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                         }
                         else
                         {
                             itemOffset = woOffset + nudgeMultiplier * woNudge;
                             item.ghostOffset.z = 0.45f;
                             item.ghostOffset.y = -0.03474903f;
-                            item.ghostOffset.z += Rand.Range(-jitter_amount, jitter_amount);
-                            itemOffset.x += Rand.Range(-jitter_amount, jitter_amount);
                         }
                         break;
                     default:
@@ -130,13 +118,13 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             if (numVarieties == 1)
             {
-                memoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[0].name) ? 0.9f : 1f;
+                memoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[0].name) ? 0.9f : 1f;
                 return 0;
             }
             for (int i = 0; i < numVarieties; i++)
             {
-                float tmpMemoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? 0.9f : 1f;
-                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                float tmpMemoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? 0.9f : 1f;
+                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Balance, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;
@@ -160,17 +148,17 @@ namespace Maux36.Rimbody
             if (compPhysique != null)
             {
                 compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|{name}");
+                compPhysique.AddNewMemory($"balance|{name}");
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref joygainfactor, "strengthlifting_joygainfactor", 1.0f);
-            Scribe_Values.Look(ref tickProgress, "strengthlifting_tickProgress", 0);
-            Scribe_Values.Look(ref workoutIndex, "strengthlifting_workoutIndex", -1);
-            Scribe_Values.Look(ref memoryFactor, "strengthlifting_memoryFactor", 1f);
+            Scribe_Values.Look(ref joygainfactor, "balancelifting_joygainfactor", 1.0f);
+            Scribe_Values.Look(ref tickProgress, "balancelifting_tickProgress", 0);
+            Scribe_Values.Look(ref workoutIndex, "balancelifting_workoutIndex", -1);
+            Scribe_Values.Look(ref memoryFactor, "balancelifting_memoryFactor", 1f);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -182,7 +170,7 @@ namespace Maux36.Rimbody
             EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.StrengthTarget.TryGetValue(TargetThingA.def, out var ext);
+            RimbodyDefLists.BalanceTarget.TryGetValue(TargetThingA.def, out var ext);
             Thing_WorkoutAnimated thingAnimated = (Thing_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
             if (workoutIndex < 0)
             {
@@ -203,7 +191,7 @@ namespace Maux36.Rimbody
             workout.initAction = () =>
             {
                 pawn.pather.StopDead();
-                if(TargetB.Thing != null)
+                if (TargetB.Thing != null)
                 {
                     if (exWorkout.pawnDirection == Direction.LyingFrontSame)
                     {
@@ -215,12 +203,12 @@ namespace Maux36.Rimbody
                     if (TargetB.Thing?.def == DefOf_Rimbody.Rimbody_FlatBench)
                     {
                         pawnOffset.z = 0.5f;
-                    }    
+                    }
                     workoutEfficiencyValue = 1.05f;
                 }
                 else
                 {
-                    pawn.Rotation =Rot4.South;
+                    pawn.Rotation = Rot4.South;
                     thingAnimated.drawRotation = Rot4.South;
                 }
                 if (exWorkout.reportString != null)
@@ -239,12 +227,11 @@ namespace Maux36.Rimbody
                 compPhysique.partsOverride = exWorkout.strengthParts;
                 thingAnimated.beingUsed = true;
             };
-            float uptime = 0.95f - (0.004f * compPhysique.MuscleMass);
+            float uptime = 0.75f - (0.0001f * compPhysique.MuscleMass);
             float cycleDuration = 125f - compPhysique.MuscleMass;
-            float jitter_amount = 0.03f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f)));
             workout.tickAction = delegate
             {
-                WatchTickAction(thingAnimated, exWorkout, uptime, cycleDuration, jitter_amount);
+                WatchTickAction(thingAnimated, exWorkout, uptime, cycleDuration);
             };
             workout.handlingFacing = true;
             workout.defaultCompleteMode = ToilCompleteMode.Delay;

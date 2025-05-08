@@ -44,6 +44,10 @@ namespace Maux36.Rimbody
                 {
                     return 0f;
                 }
+                if (pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy))
+                {
+                    return 0f;
+                }
                 if (timeAssignmentDef == TimeAssignmentDefOf.Anything)
                 {
                     if (curLevel < 0.35f)

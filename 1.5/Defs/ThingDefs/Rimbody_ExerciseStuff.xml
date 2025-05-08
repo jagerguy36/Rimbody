@@ -63,8 +63,8 @@
 						<reportString>dumbbells_bicepcurl_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>itemEach</animationType>
-						<useBench>true</useBench>
+						<animationType>ItemEach</animationType>
+						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
 							<north>(0.33,0,-0.15)</north>
 							<east>(0.45,0,-0.2)</east>
@@ -95,8 +95,8 @@
 						<reportString>dumbbells_overheadshoulderpress_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>itemBoth</animationType>
-						<useBench>true</useBench>
+						<animationType>ItemBoth</animationType>
+						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
 							<north>(0.4,0,0.35)</north>
 							<east>(0.15,0,0.15)</east>
@@ -165,8 +165,8 @@
 						<reportString>halteres_bicepcurl_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
-						<animationType>itemEach</animationType>
-						<useBench>true</useBench>
+						<animationType>ItemEach</animationType>
+						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
 							<north>(0.2,0,-0.15)</north>
 							<east>(0.45,0,-0.2)</east>
@@ -197,8 +197,8 @@
 						<reportString>halteres_overheadshoulderpress_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
-						<animationType>itemBoth</animationType>
-						<useBench>true</useBench>
+						<animationType>ItemBoth</animationType>
+						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
 							<north>(0.4,0,0.35)</north>
 							<east>(0.15,0,0.15)</east>
@@ -260,7 +260,7 @@
 						<reportString>kettlebellswing_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>item</animationType>
+						<animationType>Item</animationType>
 						<movingpartAnimOffset>
 							<south>(0,0,-0.3)</south>
 						</movingpartAnimOffset>
@@ -278,6 +278,71 @@
 							<li>1.5</li>
 							<li>0.7</li>
 							<li>0.7</li>
+						</strengthParts>
+					</li>
+				</workouts>
+			</li>
+		</modExtensions>
+	</ThingDef>
+
+	<ThingDef ParentName="ThingBase_RimbodyWorkout">
+		<defName>Rimbody_ExerciseBall</defName>
+		<label>exercise ball</label>
+		<description>An inflatable, resilient ball used for yoga and fitness exercises to improve balance, core strength, and flexibility.</description>
+		<graphicData>
+			<texPath>Things/Item/Rimbody_things/AgRipnus/ExerciseBall/ExerciseBall</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<thingCategories>
+			<li>Rimbody_Workout_equipment</li>
+		</thingCategories>
+		<techLevel>Industrial</techLevel>
+		<statBases>
+			<MaxHitPoints>150</MaxHitPoints>
+			<Flammability>0.4</Flammability>
+			<DeteriorationRate>0</DeteriorationRate>
+			<Beauty>0</Beauty>
+			<Mass>20</Mass>
+		</statBases>
+		<altitudeLayer>Item</altitudeLayer>
+		<tickerType>Never</tickerType>
+		<tradeability>Sellable</tradeability>
+		<modExtensions>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Item</Type>
+				<Category>Balance</Category>
+				<workouts>
+					<li>
+						<name>sbll_name</name>
+						<reportString>sbll_report</reportString>
+						<cardio>1.5</cardio>
+						<strength>1.2</strength>
+						<animationType>Item</animationType>
+						<spot>ExerciseMats</spot>
+						<pawnDirection>LyingFrontSame</pawnDirection>
+						<movingpartAnimOffset>
+							<north>(0,0,0.2)</north>
+							<east>(0.2,0,0)</east>
+							<south>(0,0,-0.2)</south>
+							<west>(-0.2,0,0)</west>
+						</movingpartAnimOffset>
+						<movingpartAnimPeak>
+							<north>(0,0,0.3)</north>
+							<east>(0.3,0,0)</east>
+							<south>(0,0,-0.3)</south>
+							<west>(-0.3,0,0)</west>
+						</movingpartAnimPeak>
+						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+						<strengthParts>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>0</li>
+							<li>1.5</li>
+							<li>0.25</li>
+							<li>0.25</li>
+							<li>0.25</li>
 						</strengthParts>
 					</li>
 				</workouts>

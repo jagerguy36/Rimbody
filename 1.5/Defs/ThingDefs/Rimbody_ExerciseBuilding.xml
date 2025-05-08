@@ -285,8 +285,8 @@
 						<reportString>treadmill_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
-						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>still</animationType>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -391,8 +391,8 @@
 						<reportString>cycling_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
-						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>still</animationType>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -496,8 +496,8 @@
 						<reportString>benchpress_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<pawnDirection>lyingFrontSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>LyingFrontSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.65)</north>
 							<east>(0.85,3.5,0)</east>
@@ -621,8 +621,8 @@
 						<reportString>deadlift_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,0,0.05)</north>
 							<east>(0.15,3.0,-0.1)</east>
@@ -659,8 +659,8 @@
 						<reportString>squats_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.35)</north>
 							<east>(-0.15,3.0,0.1)</east>
@@ -784,8 +784,8 @@
 						<reportString>deadlift_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,0,0.05)</north>
 							<east>(0.15,3.0,-0.1)</east>
@@ -822,8 +822,8 @@
 						<reportString>squats_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.35)</north>
 							<east>(-0.15,3.0,0.1)</east>
@@ -938,8 +938,8 @@
 						<reportString>pullups_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0)</north>
 							<east>(0,0,0)</east>
@@ -976,8 +976,8 @@
 						<reportString>dips_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>building</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0)</north>
 							<east>(0,0,0)</east>
@@ -1007,123 +1007,6 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-						</strengthParts>
-					</li>
-				</workouts>
-			</li>
-		</modExtensions>
-		<comps>
-			<li Class="CompProperties_AffectedByFacilities">
-				<linkableFacilities>
-					<li>Rimbody_Rack</li>
-				</linkableFacilities>
-			</li>
-		</comps>
-	</ThingDef>
-
-
-	<ThingDef ParentName="BuildingBase_RimbodyWorkout">
-		<defName>Rimbody_YogaBall</defName>
-		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
-		<label>exercise ball</label>
-		<description>An inflatable, resilient ball used for yoga and fitness exercises to improve balance, core strength, and flexibility.</description>
-		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
-		<drawerType>RealtimeOnly</drawerType>
-		<graphicData>
-			<texPath>Things/Building/Rimbody_buildings/AgRipnus/YogaBall/YogaBall</texPath>
-			<drawRotated>false</drawRotated>
-			<drawSize>(0.8,0.8)</drawSize>
-			<graphicClass>Graphic_Single</graphicClass>
-			<damageData>
-				<rect>(0.3,0.3,0.7,0.7)</rect>
-			</damageData>
-		</graphicData>
-		<uiIconPath>Things/Building/Rimbody_buildings/AgRipnus/YogaBall/YogaBall</uiIconPath>
-		<altitudeLayer>Building</altitudeLayer>
-		<rotatable>true</rotatable>
-		<defaultPlacingRot>South</defaultPlacingRot>
-		<minifiedDef>MinifiedThing</minifiedDef>
-		<socialPropernessMatters>true</socialPropernessMatters>
-		<statBases>
-			<WorkToBuild>400</WorkToBuild>
-			<MaxHitPoints>80</MaxHitPoints>
-			<Flammability>1.3</Flammability>
-			<Beauty>2</Beauty>
-			<Mass>5</Mass>
-			<JoyGainFactor>1.0</JoyGainFactor>
-			<Rimbody_WorkoutEfficiency>1.0</Rimbody_WorkoutEfficiency>
-		</statBases>
-		<building>
-			<joyKind>Rimbody_WorkoutJoy</joyKind>
-		</building>
-		<size>(1,1)</size>
-		<costList>
-			<Steel>10</Steel>
-		</costList>
-		<costStuffCount>50</costStuffCount>
-		<stuffCategories>
-			<li>Fabric</li>
-			<li>Leathery</li>
-		</stuffCategories>
-		<passability>PassThroughOnly</passability>
-		<pathCost>10</pathCost>
-		<designationCategory>Joy</designationCategory>
-		<uiIconScale>1</uiIconScale>
-		<canOverlapZones>false</canOverlapZones>
-		<hasInteractionCell>true</hasInteractionCell>
-		<interactionCellOffset>(0, 0, 1)</interactionCellOffset>
-		<thingCategories>
-			<li>BuildingsJoy</li>
-		</thingCategories>
-		<researchPrerequisites>
-			<li>Rimbody_IndustrialEquipments</li>
-		</researchPrerequisites>
-		<placeWorkers>
-			<li>Maux36.Rimbody.PlaceWorker_WorkoutAnimated</li>
-			<li>PlaceWorker_ShowFacilitiesConnections</li>
-		</placeWorkers>
-		<modExtensions>
-			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-				<Type>Building</Type>
-				<Category>Balance</Category>
-				<moveBase>true</moveBase>
-				<workouts>
-					<li>
-						<name>sbll_name</name>
-						<reportString>sbll_report</reportString>
-						<cardio>1.5</cardio>
-						<strength>1.2</strength>
-						<pawnDirection>lyingFrontOpposite</pawnDirection>
-						<animationType>building</animationType>
-						<movingpartAnimOffset>
-							<north>(0,3.5,0.2)</north>
-							<east>(0.2,3.5,0)</east>
-							<south>(0,3.5,-0.2)</south>
-							<west>(-0.2,3.5,0)</west>
-						</movingpartAnimOffset>
-						<movingpartAnimPeak>
-							<north>(0,0,0.3)</north>
-							<east>(0.3,0,0)</east>
-							<south>(0,0,-0.3)</south>
-							<west>(-0.3,0,0)</west>
-						</movingpartAnimPeak>
-						<pawnAnimOffset>
-							<north>(0,0,-0.2)</north>
-							<east>(-0.2,0,0)</east>
-							<south>(0,0,0.2)</south>
-							<west>(0.2,0,0)</west>
-						</pawnAnimOffset>
-						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
-						<strengthParts>
-							<li>0</li>
-							<li>0</li>
-							<li>0</li>
-							<li>0</li>
-							<li>0</li>
-							<li>1.5</li>
-							<li>0.25</li>
-							<li>0.25</li>
-							<li>0.25</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -1203,8 +1086,8 @@
 						<reportString>reactivetraining_report</reportString>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
-						<pawnDirection>center</pawnDirection>
-						<animationType>melee</animationType>
+						<pawnDirection>Center</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0.5</li>
@@ -1222,5 +1105,4 @@
 			</li>
 		</modExtensions>
 	</ThingDef>
-
 </Defs>

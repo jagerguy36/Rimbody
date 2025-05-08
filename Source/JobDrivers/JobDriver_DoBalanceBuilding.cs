@@ -49,32 +49,32 @@ namespace Maux36.Rimbody
         {
             switch (direction)
             {
-                case Direction.center:
+                case Direction.Center:
                     pawn.rotationTracker.FaceCell(building.Position);
                     break;
-                case Direction.away:
+                case Direction.Away:
                     pawn.rotationTracker.FaceCell(2 * pawn.Position - building.Position);
                     break;
-                case Direction.faceSame:
+                case Direction.FaceSame:
                     pawn.Rotation = building.Rotation;
                     break;
-                case Direction.faceOpposite:
+                case Direction.FaceOpposite:
                     pawn.Rotation = building.Rotation.Opposite;
                     break;
-                case Direction.lyingFrontSame:
+                case Direction.LyingFrontSame:
                     pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
-                case Direction.lyingFrontOpposite:
+                case Direction.LyingFrontOpposite:
                     pawn.PawnBodyAngleOverride() = building.Rotation.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
-                case Direction.lyingDownSame:
+                case Direction.LyingDownSame:
                     pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                     lyingRotation = building.Rotation.Opposite == Rot4.South ? Rot4.North : building.Rotation.Opposite;
                     break;
-                case Direction.lyingUpSame:
+                case Direction.LyingUpSame:
                     pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
                     pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                     lyingRotation = building.Rotation == Rot4.North ? Rot4.South : building.Rotation;
@@ -84,7 +84,7 @@ namespace Maux36.Rimbody
         protected void WatchTickAction(Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration)
         {
             tickProgress++;
-            if (wo.animationType == InteractionType.building)
+            if (wo.animationType == InteractionType.Building)
             {
                 float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
                 float nudgeMultiplier;
@@ -111,7 +111,7 @@ namespace Maux36.Rimbody
                 }
                 building.calculatedOffset = buildingOffset;
             }
-            else if (wo.animationType == InteractionType.melee)
+            else if (wo.animationType == InteractionType.Melee)
             {
                 if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
                 {
@@ -227,7 +227,7 @@ namespace Maux36.Rimbody
                     buildingAnimated.beingUsed = true;
                 }
             };
-            float uptime = 0.95f - (0.0004f * compPhysique.MuscleMass / 5000f);
+            float uptime = 0.95f - (0.004f * compPhysique.MuscleMass);
             float cycleDuration = 125f - compPhysique.MuscleMass;
             workout.AddPreTickAction(delegate
             {

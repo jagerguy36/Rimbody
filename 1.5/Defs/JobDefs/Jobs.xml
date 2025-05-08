@@ -160,7 +160,14 @@
     <JobDef>
         <defName>Rimbody_DoStrengthLifting</defName>
         <driverClass>Maux36.Rimbody.JobDriver_DoStrengthLifting</driverClass>
-        <reportString>Lifting weight.</reportString>
+        <reportString>Doing strength work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoBalanceLifting</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoBalanceLifting</driverClass>
+        <reportString>Doing balanced work out.</reportString>
         <joyKind>Rimbody_WorkoutJoy</joyKind>
     </JobDef>
 

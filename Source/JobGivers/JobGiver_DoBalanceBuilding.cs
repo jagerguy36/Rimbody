@@ -59,10 +59,11 @@ namespace Maux36.Rimbody
 
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
+
             tmpCandidates.Clear();
             workoutCache.Clear();
             GetSearchSet(pawn, tmpCandidates);
-            Predicate<Thing> predicate = delegate (Thing t)
+            Predicate<Thing> targetPredicate = delegate (Thing t)
             {
                 if (t.IsForbidden(pawn)) return false;
 
@@ -91,7 +92,8 @@ namespace Maux36.Rimbody
                 }
                 else
                 {
-                    return false;
+                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
+                    return true;
                 }
             };
             float targethighscore = 0f;
@@ -125,10 +127,14 @@ namespace Maux36.Rimbody
                 }
                 return 0;
             }
-
             Thing thing = null;
             IntVec3 workoutLocation = IntVec3.Invalid;
-            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
+            JobDef jobtogive = null;
+            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
+            if (thing != null)
+            {
+                jobtogive = DefOf_Rimbody.Rimbody_DoBalanceBuilding;
+            }
             tmpCandidates.Clear();
             workoutCache.Clear();
 
@@ -185,12 +191,12 @@ namespace Maux36.Rimbody
             }
             else
             {
-                return null;//balance item not yet implemented.
-                //if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                //{
-                //    return null;
-                //}
+                if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
+                {
+                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceLifting, t);
+                }
             }
+            return null;
         }
 
         protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)

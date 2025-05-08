@@ -57,7 +57,7 @@ namespace Maux36.Rimbody
             });
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
-            yield return JobDriver_DoStrengthLifting.GotoSpotToWorkout(TargetIndex.B, false);
+            yield return Toils_Rimbody.GotoSpotToWorkout(TargetIndex.B, ItemSpot.None);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");

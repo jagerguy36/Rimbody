@@ -29,16 +29,16 @@ namespace Maux36.Rimbody
         {
             switch (direction)
             {
-                case Direction.center:
+                case Direction.Center:
                     pawn.rotationTracker.FaceCell(building.Position);
                     break;
-                case Direction.away:
+                case Direction.Away:
                     pawn.rotationTracker.FaceCell(2 * pawn.Position - building.Position);
                     break;
-                case Direction.faceSame:
+                case Direction.FaceSame:
                     pawn.Rotation = building.Rotation;
                     break;
-                case Direction.faceOpposite:
+                case Direction.FaceOpposite:
                     pawn.Rotation = building.Rotation.Opposite;
                     break;
             }

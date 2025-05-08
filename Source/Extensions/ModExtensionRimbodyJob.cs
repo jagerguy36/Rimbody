@@ -40,24 +40,30 @@ namespace Maux36.Rimbody
     }
     public enum Direction
     {
-        away,
-        center,
-        faceSame,
-        faceOpposite,
-        lyingFrontSame,
-        lyingFrontOpposite,
-        lyingDownSame,
-        lyingUpSame
-
+        Away,
+        Center,
+        FaceSame,
+        FaceOpposite,
+        LyingFrontSame,
+        LyingFrontOpposite,
+        LyingDownSame,
+        LyingUpSame,
+        Sit
     }
     public enum InteractionType
     {
-        still,
-        melee,
-        building,
-        item,
-        itemEach,
-        itemBoth
+        Still,
+        Melee,
+        Building,
+        Item,
+        ItemEach,
+        ItemBoth
+    }
+    public enum ItemSpot
+    {
+        None,
+        FlatBench,
+        ExerciseMats
     }
     public class vectorSet
     {
@@ -86,9 +92,9 @@ namespace Maux36.Rimbody
         public float cardio = 1f;
         public float strength = 1f;
         public bool playSound = false;
-        public bool useBench = false;
-        public InteractionType animationType = InteractionType.still;
-        public Direction pawnDirection = Direction.center;
+        public ItemSpot spot = ItemSpot.None;
+        public InteractionType animationType = InteractionType.Still;
+        public Direction pawnDirection = Direction.Center;
         public List<float> strengthParts;
         public vectorSet movingpartAnimOffset;
         public vectorSet movingpartAnimPeak;
