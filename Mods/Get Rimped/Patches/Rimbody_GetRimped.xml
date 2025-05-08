@@ -14,8 +14,8 @@
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<playSound>true</playSound>
-						<pawnDirection>faceSame</pawnDirection>
-						<animationType>melee</animationType>
+						<pawnDirection>FaceSame</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -47,9 +47,9 @@
 						<reportString>deadlift_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>melee</animationType>
 						<playSound>true</playSound>
-						<pawnDirection>faceOpposite</pawnDirection>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -68,9 +68,9 @@
 						<reportString>squats_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>melee</animationType>
 						<playSound>true</playSound>
-						<pawnDirection>faceOpposite</pawnDirection>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -101,8 +101,8 @@
 						<reportString>pullups_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>melee</animationType>
-						<pawnDirection>faceOpposite</pawnDirection>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -121,8 +121,8 @@
 						<reportString>dips_report</reportString>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
-						<animationType>melee</animationType>
-						<pawnDirection>faceOpposite</pawnDirection>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -153,8 +153,8 @@
 						<reportString>dummymeleetraining_report</reportString>
 						<cardio>0.6</cardio>
 						<strength>1.2</strength>
-						<pawnDirection>center</pawnDirection>
-						<animationType>melee</animationType>
+						<pawnDirection>Center</pawnDirection>
+						<animationType>Melee</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0.5</li>
@@ -186,8 +186,8 @@
 						<reportString>treadmill_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
-						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>still</animationType>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -219,8 +219,8 @@
 						<reportString>cycling_report</reportString>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
-						<pawnDirection>faceOpposite</pawnDirection>
-						<animationType>still</animationType>
+						<pawnDirection>FaceOpposite</pawnDirection>
+						<animationType>Still</animationType>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -252,8 +252,8 @@
 						<reportString>sbll_report</reportString>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
-						<animationType>melee</animationType>
-						<pawnDirection>center</pawnDirection>
+						<animationType>Melee</animationType>
+						<pawnDirection>Center</pawnDirection>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -285,8 +285,8 @@
 						<reportString>legacyBalanceBeam_report</reportString>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
-						<animationType>melee</animationType>
-						<pawnDirection>center</pawnDirection>
+						<animationType>Melee</animationType>
+						<pawnDirection>Center</pawnDirection>
 		      	  	</li>
 		      	  </workouts>
 		      	  
