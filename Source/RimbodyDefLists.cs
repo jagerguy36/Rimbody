@@ -20,7 +20,7 @@ namespace Maux36.Rimbody
         public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioNonTargetJob = new();
         public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceNonTargetJob = new();
         public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" };
-        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" };
+        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoBalanceLifting", "Rimbody_DoCardioBuilding" };
         public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceBuilding" };
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;

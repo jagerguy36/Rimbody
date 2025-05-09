@@ -33,7 +33,7 @@ namespace Maux36.Rimbody
         private static readonly float _walkingC = 0.4f; // LocomotionUrgency.Walk, [Light Labor]
         private static readonly float _ambleC = 0.35f; // LocomotionUrgency.Amble, [Activity]
         private static readonly float _baseC = 0.3f; // [Base]
-        private static readonly float _lyingpC = 0.2f; // [Rest]
+        private static readonly float _lyingC = 0.2f; // [Rest]
 
         //Internals
         private Pawn parentPawnInt = null;
@@ -190,7 +190,7 @@ namespace Maux36.Rimbody
                 else if (forceRest)
                 {
                     strengthFactor = _lyingS; //0.0f
-                    cardioFactor = _lyingpC; //0.2f
+                    cardioFactor = _lyingC; //0.2f
                 }
                 //Get factors from dedicated Rimbody workout jobs
                 else if (jobOverride)
@@ -225,7 +225,7 @@ namespace Maux36.Rimbody
                         if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
                         {
                             strengthFactor = _lyingS; //0.0f
-                            cardioFactor = _lyingpC; //0.2f
+                            cardioFactor = _lyingC; //0.2f
                         }
                         //Moving, but not boarded
                         else if (pawnCaravan.pather.MovingNow)
@@ -285,7 +285,7 @@ namespace Maux36.Rimbody
                         else if (curDriver?.CurToilString == "LayDown")
                         {
                             strengthFactor = _lyingS; //0.0f
-                            cardioFactor = _lyingpC; //0.2f
+                            cardioFactor = _lyingC; //0.2f
                         }
                         else
                         {

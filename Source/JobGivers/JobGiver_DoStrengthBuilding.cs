@@ -11,7 +11,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
+        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
@@ -97,9 +97,9 @@ namespace Maux36.Rimbody
                 if (RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
-                    if (workoutCache.ContainsKey(t.def))
+                    if (workoutCache.ContainsKey(t.def.defName))
                     {
-                        score = workoutCache[t.def];
+                        score = workoutCache[t.def.defName];
                         if (score > targethighscore)
                         {
                             targethighscore = score;

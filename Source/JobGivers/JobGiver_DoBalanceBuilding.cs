@@ -9,7 +9,7 @@ namespace Maux36.Rimbody
     internal class JobGiver_DoBalanceBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<ThingDef, float> workoutCache = new Dictionary<ThingDef, float>();
+        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
@@ -106,9 +106,9 @@ namespace Maux36.Rimbody
                 if (RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension))
                 {
                     float score = 0f;
-                    if (workoutCache.ContainsKey(t.def))
+                    if (workoutCache.ContainsKey(t.def.defName))
                     {
-                        score = workoutCache[t.def];
+                        score = workoutCache[t.def.defName];
                         if (score > targethighscore)
                         {
                             targethighscore = score;
@@ -146,7 +146,7 @@ namespace Maux36.Rimbody
             if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.balanceHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
 
-                var plankjobEx = DefOf_Rimbody.Rimbody_DoBodyWeightPlank.GetModExtension<ModExtensionRimbodyJob>();
+                RimbodyDefLists.BalanceNonTargetJob.TryGetValue(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, out var plankjobEx);
                 float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
@@ -162,10 +162,7 @@ namespace Maux36.Rimbody
             if (thing != null)
             {
                 Job job = DoTryGiveTargetJob(pawn, thing);
-                if (job != null)
-                {
-                    return job;
-                }
+                return job;
             }
             return null;
         }

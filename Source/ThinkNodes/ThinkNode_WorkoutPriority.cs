@@ -12,6 +12,11 @@ namespace Maux36.Rimbody
             if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
             {
                 TimeAssignmentDef timeAssignmentDef = ((pawn.timetable == null) ? TimeAssignmentDefOf.Anything : pawn.timetable.CurrentAssignment);
+                var compPhysique = pawn.compPhysique();
+                if (compPhysique == null)
+                {
+                    return 0;
+                }
                 //Workout schedule
                 if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
                 {
@@ -19,7 +24,6 @@ namespace Maux36.Rimbody
                     {
                         return 0f;
                     }
-                    var compPhysique = pawn.compPhysique();
                     if (compPhysique != null)
                     {
                         if (RimbodySettings.useExhaustion && compPhysique.resting)

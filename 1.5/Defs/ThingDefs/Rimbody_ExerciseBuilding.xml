@@ -16,9 +16,9 @@
 	</ThingDef>
 
 	<ThingDef ParentName = "FurnitureBase">
-		<defName>Rimbody_Rack</defName>
+		<defName>Rimbody_WeightRack</defName>
 		<thingClass>Building_Storage</thingClass>
-		<label>storage rack</label>
+		<label>weight rack</label>
 		<description>A weight rack designed to organize and store weights, ensuring easy access and a clutter-free workout area. Place it near a workout machine to gain a boost in exercise efficiency.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<altitudeLayer>Building</altitudeLayer>

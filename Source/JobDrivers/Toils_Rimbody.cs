@@ -6,7 +6,7 @@ namespace Maux36.Rimbody
 {
     internal class Toils_Rimbody
     {
-        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot = ItemSpot.None, int maxPawns = 1)
+        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot = ItemSpot.None)
         {
             Toil toil = new Toil();
             toil.initAction = delegate
@@ -16,10 +16,12 @@ namespace Maux36.Rimbody
                 IntVec3 workoutLocation = IntVec3.Invalid;
                 bool lookForSpot = false;
                 ThingDef spotThingDef = null;
+                int maxPawns = 1;
                 if (spot == ItemSpot.FlatBench)
                 {
                     lookForSpot = true;
                     spotThingDef = DefOf_Rimbody.Rimbody_FlatBench;
+                    maxPawns = 2;
                 }
                 if (spot == ItemSpot.ExerciseMats)
                 {
