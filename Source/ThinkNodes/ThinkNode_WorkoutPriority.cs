@@ -39,6 +39,10 @@ namespace Maux36.Rimbody
                 {
                     return 0f;
                 }
+                if (Find.TickManager.TicksGame < 60000) // No for joy workout for a day
+                {
+                    return 0f;
+                }
                 if (JoyUtility.LordPreventsGettingJoy(pawn))
                 {
                     return 0f;

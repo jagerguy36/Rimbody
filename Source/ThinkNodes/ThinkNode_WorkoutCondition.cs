@@ -5,9 +5,8 @@ using System;
 
 namespace Maux36.Rimbody
 {
-    internal class ThinkNode_WorkoutCondition : ThinkNode_Conditional
+    internal class ThinkNode_WorkoutCondition : ThinkNode_Conditional //Satisfy goal when Idle
     {
-        private const int GameStartNoIdleWorkoutTicks = 60000;
         protected override bool Satisfied(Pawn pawn)
         {
             if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
