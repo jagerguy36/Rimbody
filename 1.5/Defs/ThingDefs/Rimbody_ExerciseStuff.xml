@@ -50,7 +50,6 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
-				<Category>Strength</Category>
 				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/DumbbellsAnim</texPath>
@@ -61,6 +60,7 @@
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>dumbbells_bicepcurl_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>ItemEach</animationType>
@@ -93,6 +93,7 @@
 					<li>
 						<name>overheadshoulderpress_name</name>
 						<reportString>dumbbells_overheadshoulderpress_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>ItemBoth</animationType>
@@ -152,7 +153,6 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
-				<Category>Strength</Category>
 				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Item/Rimbody_things/Halteres/HalteresAnim</texPath>
@@ -163,6 +163,7 @@
 					<li>
 						<name>bicepcurl_name</name>
 						<reportString>halteres_bicepcurl_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<animationType>ItemEach</animationType>
@@ -195,6 +196,7 @@
 					<li>
 						<name>overheadshoulderpress_name</name>
 						<reportString>halteres_overheadshoulderpress_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<animationType>ItemBoth</animationType>
@@ -253,11 +255,11 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
-				<Category>Strength</Category>
 				<workouts>
 					<li>
 						<name>kettlebellswing_name</name>
 						<reportString>kettlebellswing_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<animationType>Item</animationType>
@@ -310,11 +312,11 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
-				<Category>Balance</Category>
 				<workouts>
 					<li>
 						<name>sbll_name</name>
 						<reportString>sbll_report</reportString>
+						<Category>Balance</Category>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<animationType>Item</animationType>

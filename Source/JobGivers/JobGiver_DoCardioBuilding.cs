@@ -114,7 +114,11 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore = compPhysique.GetWorkoutScore(RimbodyTargetCategory.Cardio, workout);
+                        if (workout.Category != RimbodyWorkoutCategory.Cardio)
+                        {
+                            continue;
+                        }
+                        float tmpScore = compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Cardio, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -140,15 +144,17 @@ namespace Maux36.Rimbody
                     if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                     {
                         //jogging is possible. Compare the score
-                        var joggingEx = DefOf_Rimbody.Rimbody_Jogging.GetModExtension<ModExtensionRimbodyJob>();
-                        float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
-                        if (targethighscore < joggingscore)
+                        var joggingEx = RimbodyDefLists.CardioNonTargetJob.TryGetValue(DefOf_Rimbody.Rimbody_Jogging);
+                        if(joggingEx != null)
                         {
-                            Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
-                            job.locomotionUrgency = LocomotionUrgency.Sprint;
-                            return job;
+                            float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
+                            if (targethighscore < joggingscore)
+                            {
+                                Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_Jogging, interestTarget);
+                                job.locomotionUrgency = LocomotionUrgency.Sprint;
+                                return job;
+                            }
                         }
-
                     }
                 }
             }
@@ -156,10 +162,7 @@ namespace Maux36.Rimbody
             if (thing != null)
             {
                 Job job = DoTryGiveJob(pawn, thing);
-                if (job != null)
-                {
-                    return job;
-                }
+                return job;
             }
             return null;
         }

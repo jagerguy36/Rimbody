@@ -144,8 +144,12 @@ namespace Maux36.Rimbody
             }
             for (int i = 0; i < numVarieties; i++)
             {
+                if (ext.workouts[i].Category != RimbodyWorkoutCategory.Strength)
+                {
+                    continue;
+                }
                 float tmpMemoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? 0.9f : 1f;
-                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, ext.workouts[i]);
+                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Strength, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;

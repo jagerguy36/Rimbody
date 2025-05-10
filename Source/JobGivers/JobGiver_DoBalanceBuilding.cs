@@ -117,7 +117,11 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore = (compPhysique.memory.Contains("balance|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Balance, workout);
+                        if (workout.Category != RimbodyWorkoutCategory.Balance)
+                        {
+                            continue;
+                        }
+                        float tmpScore = (compPhysique.memory.Contains("balance|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;

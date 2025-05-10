@@ -108,7 +108,11 @@ namespace Maux36.Rimbody
                     }
                     foreach (WorkOut workout in targetModExtension.workouts)
                     {
-                        float tmpScore = (compPhysique.memory.Contains("strength|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyTargetCategory.Strength, workout);
+                        if (workout.Category != RimbodyWorkoutCategory.Strength)
+                        {
+                            continue;
+                        }
+                        float tmpScore = (compPhysique.memory.Contains("strength|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Strength, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;

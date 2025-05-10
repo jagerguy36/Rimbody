@@ -10,12 +10,12 @@ namespace Maux36.Rimbody
         public float cardio = 0.3f;
         public float strength = 0.1f;
         public List<float> strengthParts;
-        public RimbodyTargetCategory Category = RimbodyTargetCategory.Job;
-        public RimbodyTargetCategory TreatAs = RimbodyTargetCategory.Job;
+        public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Job;
+        public RimbodyWorkoutCategory TreatAs = RimbodyWorkoutCategory.Job;
         public RimbodyJobCategory JobCategory = RimbodyJobCategory.None;
     }
 
-    public enum RimbodyTargetCategory
+    public enum RimbodyWorkoutCategory
     {
         Strength,
         Balance,
@@ -89,6 +89,7 @@ namespace Maux36.Rimbody
     {
         public string name;
         public string reportString;
+        public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Balance;
         public float cardio = 1f;
         public float strength = 1f;
         public bool playSound = false;
@@ -105,7 +106,6 @@ namespace Maux36.Rimbody
     {
 
         public RimbodyTargetType Type = RimbodyTargetType.Building;
-        public RimbodyTargetCategory Category = RimbodyTargetCategory.Balance;
         public bool moveBase = false;
         public List<GraphicData> rimbodyTargetpartGraphics;
         public List<WorkOut> workouts = new();

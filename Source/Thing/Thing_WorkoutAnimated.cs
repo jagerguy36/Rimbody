@@ -52,7 +52,7 @@ namespace Maux36.Rimbody
                     foreach (WorkOut wo in RimbodyEx.workouts)
                     {
                         stringBuilder.Append($"\n{wo.name.Translate()}");
-                        if (RimbodyEx.Category == RimbodyTargetCategory.Strength)
+                        if (wo.Category == RimbodyWorkoutCategory.Strength || wo.Category == RimbodyWorkoutCategory.Balance)
                         {
                             stringBuilder.Append($": ");
                             var topMuscles = wo.strengthParts

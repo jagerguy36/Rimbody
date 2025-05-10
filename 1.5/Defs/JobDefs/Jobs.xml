@@ -9,7 +9,7 @@
         <modExtensions>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
                   <Category>Cardio</Category>
-                  <cardio>2.0</cardio>
+                  <cardio>1.9</cardio>
                   <strength>0.25</strength>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                   <strengthParts>
@@ -17,11 +17,11 @@
                     <li>0</li>
                     <li>0</li>
                     <li>0</li>
-                    <li>0</li>
-                    <li>0.25</li>
-                    <li>0.5</li>
-                    <li>0.5</li>
-                    <li>0.5</li>
+                    <li>0.2</li>
+                    <li>0.2</li>
+                    <li>0.6</li>
+                    <li>0.6</li>
+                    <li>0.6</li>
                   </strengthParts>
               </li>
         </modExtensions>

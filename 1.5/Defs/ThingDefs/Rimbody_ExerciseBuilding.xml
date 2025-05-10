@@ -96,7 +96,7 @@
 	
 	<AdaptiveStorage.GraphicsDef MayRequire="adaptive.storage.framework">
 		<defName>Rimbody_StorageRackGraphics</defName>
-		<targetDef>Rimbody_Rack</targetDef>
+		<targetDef>Rimbody_WeightRack</targetDef>
 		<showContainedItems>false</showContainedItems>
 		<graphics>
 			<li>
@@ -278,11 +278,11 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Cardio</Category>
 				<workouts>
 					<li>
 						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
+						<Category>Cardio</Category>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -293,11 +293,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0</li>
 							<li>0.1</li>
-							<li>0.4</li>
-							<li>0.4</li>
-							<li>0.4</li>
+							<li>0.1</li>
+							<li>0.5</li>
+							<li>0.5</li>
+							<li>0.5</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -313,7 +313,7 @@
 			<li Class="CompProperties_Flickable"/>
 			<li Class="CompProperties_AffectedByFacilities">
 				<linkableFacilities>
-					<li>Rimbody_Rack</li>
+					<li>Rimbody_WeightRack</li>
 				</linkableFacilities>
 			</li>
 		</comps>
@@ -384,11 +384,11 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Cardio</Category>
 				<workouts>
 					<li>
 						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
+						<Category>Cardio</Category>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -401,8 +401,8 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>1</li>
-							<li>0.75</li>
+							<li>0.8</li>
+							<li>0.8</li>
 							<li>0.5</li>
 						</strengthParts>
 					</li>
@@ -412,7 +412,7 @@
 		<comps>
 			<li Class="CompProperties_AffectedByFacilities">
 				<linkableFacilities>
-					<li>Rimbody_Rack</li>
+					<li>Rimbody_WeightRack</li>
 				</linkableFacilities>
 			</li>
 		</comps>
@@ -481,7 +481,6 @@
 		<modExtensions>
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Strength</Category>
 				<rimbodyTargetpartGraphics>
 					<li>
 						<texPath>Things/Building/Rimbody_buildings/AgRipnus/WeightBench/BenchBar</texPath>
@@ -494,6 +493,7 @@
 					<li>
 						<name>benchpress_name</name>
 						<reportString>benchpress_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>LyingFrontSame</pawnDirection>
@@ -535,7 +535,7 @@
 		<comps>
 			<li Class="CompProperties_AffectedByFacilities">
 				<linkableFacilities>
-					<li>Rimbody_Rack</li>
+					<li>Rimbody_WeightRack</li>
 				</linkableFacilities>
 			</li>
 		</comps>
@@ -605,7 +605,6 @@
 		<modExtensions>
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Strength</Category>
 				<moveBase>true</moveBase>
 				<rimbodyTargetpartGraphics>
 					<li>
@@ -619,6 +618,7 @@
 					<li>
 						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceSame</pawnDirection>
@@ -657,6 +657,7 @@
 					<li>
 						<name>squats_name</name>
 						<reportString>squats_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceSame</pawnDirection>
@@ -704,7 +705,7 @@
 		<comps>
 			<li Class="CompProperties_AffectedByFacilities">
 				<linkableFacilities>
-					<li>Rimbody_Rack</li>
+					<li>Rimbody_WeightRack</li>
 				</linkableFacilities>
 			</li>
 		</comps>
@@ -768,7 +769,6 @@
 		<modExtensions>
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Strength</Category>
 				<moveBase>true</moveBase>
 				<rimbodyTargetpartGraphics>
 					<li>
@@ -782,6 +782,7 @@
 					<li>
 						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
@@ -820,6 +821,7 @@
 					<li>
 						<name>squats_name</name>
 						<reportString>squats_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
@@ -930,12 +932,12 @@
 		<modExtensions>
 		    <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Strength</Category>
 				<moveBase>true</moveBase>
 				<workouts>
 					<li>
 						<name>pullups_name</name>
 						<reportString>pullups_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -974,6 +976,7 @@
 					<li>
 						<name>dips_name</name>
 						<reportString>dips_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceSame</pawnDirection>
@@ -1015,7 +1018,7 @@
 		<comps>
 			<li Class="CompProperties_AffectedByFacilities">
 				<linkableFacilities>
-					<li>Rimbody_Rack</li>
+					<li>Rimbody_WeightRack</li>
 				</linkableFacilities>
 			</li>
 		</comps>
@@ -1079,11 +1082,11 @@
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Building</Type>
-				<Category>Balance</Category>
 				<workouts>
 					<li>
 						<name>reactivetraining_name</name>
 						<reportString>reactivetraining_report</reportString>
+						<Category>Balance</Category>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<pawnDirection>Center</pawnDirection>

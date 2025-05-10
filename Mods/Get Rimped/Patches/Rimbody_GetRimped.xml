@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Patch>
 	
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Strength</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="WeightBench"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>benchpress_name</name>
 						<reportString>benchpress_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<playSound>true</playSound>
@@ -28,23 +28,23 @@
 							<li>0</li>
 							<li>0</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
+					</li>
+					</workouts>
 
-		      </li>
-        </value>
-    </Operation>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="Barbell"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Strength</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="Barbell"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<playSound>true</playSound>
@@ -62,10 +62,11 @@
 							<li>0.5</li>
 							<li>1.5</li>
 						</strengthParts>
-		      	  	</li>
-		      	  	<li>
+						</li>
+					<li>
 						<name>squats_name</name>
 						<reportString>squats_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<playSound>true</playSound>
@@ -83,22 +84,22 @@
 							<li>2</li>
 							<li>0.5</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="PullupBars"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Strength</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="PullupBars"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>pullups_name</name>
 						<reportString>pullups_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -115,10 +116,11 @@
 							<li>0</li>
 							<li>0</li>
 						</strengthParts>
-		      	  	</li>
-		      	  	<li>
+					</li>
+					<li>
 						<name>dips_name</name>
 						<reportString>dips_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.5</cardio>
 						<strength>2.0</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -135,22 +137,22 @@
 							<li>0</li>
 							<li>0</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="SpinningDummy"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	<Type>Building</Type>
-		      	<Category>Strength</Category>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="SpinningDummy"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
 				<workouts>
 					<li>
 						<name>dummymeleetraining_name</name>
 						<reportString>dummymeleetraining_report</reportString>
+						<Category>Strength</Category>
 						<cardio>0.6</cardio>
 						<strength>1.2</strength>
 						<pawnDirection>Center</pawnDirection>
@@ -169,21 +171,20 @@
 						</strengthParts>
 					</li>
 				</workouts>
-		      	  
-		      </li>
-        </value>
-    </Operation>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Cardio</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="Treadmill"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
+						<Category>Cardio</Category>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -200,23 +201,22 @@
 							<li>0.4</li>
 							<li>0.4</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
-		      	  
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="ExerciseBike"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Cardio</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="ExerciseBike"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
+						<Category>Cardio</Category>
 						<cardio>2.0</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
@@ -233,23 +233,22 @@
 							<li>0.75</li>
 							<li>0.5</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
-		      	  
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 
     <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/ThingDef[defName="YogaBall"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Balance</Category>
-		      	  <workouts>
-		      	  	<li>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>sbll_name</name>
 						<reportString>sbll_report</reportString>
+						<Category>Balance</Category>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<animationType>Melee</animationType>
@@ -266,31 +265,29 @@
 							<li>0.25</li>
 							<li>0.25</li>
 						</strengthParts>
-		      	  	</li>
-		      	  </workouts>
-		      	  
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 
-    <Operation Class="PatchOperationAddModExtension">
-        <xpath>Defs/ThingDef[defName="BalanceBeam"]</xpath>
-        <value>
-		      <li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
-		      	  <Type>Building</Type>
-		      	  <Category>Balance</Category>
-		      	  <workouts>
-		      	  	<li>
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>Defs/ThingDef[defName="BalanceBeam"]</xpath>
+		<value>
+			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
+				<Type>Building</Type>
+				<workouts>
+					<li>
 						<name>legacyBalanceBeam_name</name>
 						<reportString>legacyBalanceBeam_report</reportString>
+						<Category>Balance</Category>
 						<cardio>1.5</cardio>
 						<strength>1.2</strength>
 						<animationType>Melee</animationType>
 						<pawnDirection>Center</pawnDirection>
-		      	  	</li>
-		      	  </workouts>
-		      	  
-		      </li>
-        </value>
-    </Operation>
+					</li>
+				</workouts>
+			</li>
+		</value>
+	</Operation>
 </Patch>

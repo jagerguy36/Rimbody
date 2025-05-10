@@ -61,7 +61,11 @@ namespace Maux36.Rimbody
             }
             for (int i = 0; i < numVarieties; i++)
             {
-                float tmpScore = compPhysique.GetWorkoutScore(RimbodyTargetCategory.Cardio, ext.workouts[i]);
+                if (ext.workouts[i].Category != RimbodyWorkoutCategory.Cardio)
+                {
+                    continue;
+                }
+                float tmpScore = compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Cardio, ext.workouts[i]);
                 if (tmpScore > score)
                 {
                     score = tmpScore;

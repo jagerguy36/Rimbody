@@ -26,7 +26,8 @@ namespace Maux36.Rimbody
         private static readonly float _lyingS = 0.0f; // [Rest]
 
         //Cardio
-        private static readonly float _sprintC = 2.0f; // LocomotionUrgency.Sprint [Cardio]
+        private static readonly float _workoutC = 2.0f; // [Cardio]
+        private static readonly float _sprintC = 1.9f; // LocomotionUrgency.Sprint
         private static readonly float _joggingC = 0.8f; // LocomotionUrgency.Jog
         //private static readonly float _hardworkC = 0.6f; // [HardLabor], [Melee]
         //private static readonly float _workC = 0.5f; // [NormalLabor], [Strength Workout]
@@ -82,25 +83,25 @@ namespace Maux36.Rimbody
 
         //Traits and Genes
         public bool isNonSen = false;
-        public bool isJogger
-        {
-            get
-            {
-                if(isJoggerInt is null)
-                {
-                    TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
-                    if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
-                    {
-                        isJoggerInt = true;
-                    }
-                    else
-                    {
-                        isJoggerInt = false;
-                    }
-                }
-                return isJoggerInt ?? false;
-            }
-        }
+        //public bool isJogger
+        //{
+        //    get
+        //    {
+        //        if(isJoggerInt is null)
+        //        {
+        //            if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+        //            {
+        //                isJoggerInt = true;
+        //            }
+        //            else
+        //            {
+        //                isJoggerInt = false;
+        //            }
+        //        }
+        //        return isJoggerInt ?? false;
+        //    }
+        //}
+        public bool isJogger => (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true);
 
         //Memory
         public Queue<string> memory = [];
@@ -110,6 +111,7 @@ namespace Maux36.Rimbody
 
         public CompProperties_Physique Props => (CompProperties_Physique)props;
 
+        private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
         private static readonly GeneDef GeneBodyFat = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Fat", true) : null;
         private static readonly GeneDef GeneBodyThin = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Thin", true) : null;
         private static readonly GeneDef GeneBodyHulk = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Hulk", true) : null;
@@ -244,7 +246,7 @@ namespace Maux36.Rimbody
                                 case LocomotionUrgency.Sprint:
                                     {
                                         strengthFactor = _sprintS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.25f
-                                        cardioFactor = _sprintC; //2.0f
+                                        cardioFactor = _sprintC; //1.9f
                                         //Jogging
                                         doingC = true;
                                         if (curJobDef?.defName == "Rimbody_Jogging" || curJobDef?.defName == "NatureRunning")
@@ -253,6 +255,7 @@ namespace Maux36.Rimbody
                                         }
                                         if (isJogger)
                                         {
+                                            cardioFactor = _workoutC; //2.0f
                                             partsToApplyFatigue = RimbodyDefLists.jogging_parts_jogger;
                                         }
                                         else
@@ -307,18 +310,18 @@ namespace Maux36.Rimbody
                                 {
                                     switch (jobExtension.TreatAs)
                                     {
-                                        case RimbodyTargetCategory.Job:
+                                        case RimbodyWorkoutCategory.Job:
                                             break;
-                                        case RimbodyTargetCategory.Strength:
+                                        case RimbodyWorkoutCategory.Strength:
                                             doingS = true;
                                             UIflag = 2;
                                             strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
                                             break;
-                                        case RimbodyTargetCategory.Balance:
+                                        case RimbodyWorkoutCategory.Balance:
                                             doingB = true;
                                             UIflag = 2;
                                             break;
-                                        case RimbodyTargetCategory.Cardio:
+                                        case RimbodyWorkoutCategory.Cardio:
                                             doingC = true;
                                             UIflag = 2;
                                             break;
@@ -926,7 +929,7 @@ namespace Maux36.Rimbody
             fatigueFactor = fatigueFactor / total;
             float fi = (total + ((0.1f * ((float)RimbodySettings.PartCount - spread)) * peak)) * 0.4f;
             strength = strength * (0.25f + (0.75f * fatigueFactor)) * fi;
-            cardio = cardio * (fatigueFactor + 3f) * 0.25f;
+            //cardio = cardio //Cardio is always fixed.
             return 1.35f * fatigueFactor;
         }
 
@@ -971,7 +974,7 @@ namespace Maux36.Rimbody
             {
                 if (strengthParts[i] > 0)
                 {
-                    fatigueFactor += strengthParts[i] * (10f - partFatigue[i]) / 10f;
+                    fatigueFactor += strengthParts[i] * (10f - partFatigue[i]) * 0.1f;
                     spread = spread + Math.Min(1f, strengthParts[i]);
                     total = total + strengthParts[i];
                     peak = Math.Max(peak, strengthParts[i]);
@@ -989,37 +992,35 @@ namespace Maux36.Rimbody
                 return cardio;
             }
             if (partFatigue == null || strengthParts.Count != RimbodySettings.PartCount) return 0f;
-            float fatigueFactor = 0f;
-            float total = 0;
+            float fatigueDet = 0f;
             for (int i = 0; i < RimbodySettings.PartCount; i++)
             {
                 if (strengthParts[i] > 0)
                 {
-                    fatigueFactor += strengthParts[i] * (10f - partFatigue[i]) / 10f;
-                    total = total + strengthParts[i];
+                    fatigueDet += strengthParts[i] * (1f + partFatigue[i]);
                 }
             }
-            fatigueFactor = fatigueFactor / total;
-            return cardio * (fatigueFactor + 3f) * 0.25f;
+            fatigueDet = 90f - fatigueDet;
+            return cardio * fatigueDet;
         }
 
-        public float GetWorkoutScore(RimbodyTargetCategory category, WorkOut workout)
+        public float GetWorkoutScore(RimbodyWorkoutCategory category, WorkOut workout)
         {
             switch (category)
             {
-                case RimbodyTargetCategory.Strength:
+                case RimbodyWorkoutCategory.Strength:
                     if(workout.strengthParts == null)
                     {
                         return 0f;
                     }
                     return  GetStrengthJobScore(workout.strengthParts, workout.strength);
-                case RimbodyTargetCategory.Cardio:
+                case RimbodyWorkoutCategory.Cardio:
                     if (workout.strengthParts == null)
                     {
                         return 0f;
                     }
                     return GetCardioJobScore(workout.strengthParts, workout.cardio);
-                case RimbodyTargetCategory.Balance:
+                case RimbodyWorkoutCategory.Balance:
                     if (workout.strengthParts == null)
                     {
                         return 0f;
