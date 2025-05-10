@@ -39,7 +39,7 @@ namespace Maux36.Rimbody
         public static ThoughtDef Rimbody_GoodRun;
 
         public static ThingDef Rimbody_FlatBench;
-        public static ThingDef Rimbody_ExerciseMats;
+        public static ThingDef Rimbody_ExerciseMat;
 
         static DefOf_Rimbody()
         {

@@ -19,7 +19,7 @@
 		<defName>Rimbody_WeightRack</defName>
 		<thingClass>Building_Storage</thingClass>
 		<label>weight rack</label>
-		<description>A weight rack designed to organize and store weights, ensuring easy access and a clutter-free workout area. Place it near a workout machine to gain a boost in exercise efficiency.</description>
+		<description>A sturdy rack used to store weights. Keeps equipment organized and easily accessible, improving workout efficiency of nearby workout equipment by allowing quick access to different weights.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<altitudeLayer>Building</altitudeLayer>
 		<graphicData>
@@ -62,6 +62,9 @@
 					<categories>
 						<li>Rimbody_Workout_equipment</li>
 					</categories>
+					<disallowedThingDefs>
+						<li>Rimbody_ExerciseBall</li>
+					</disallowedThingDefs>
 				</filter>
 			</fixedStorageSettings>
 			<defaultStorageSettings>
@@ -114,7 +117,7 @@
 	<ThingDef ParentName = "FurnitureBase">
 		<defName>Rimbody_FlatBench</defName>
 		<label>flat bench</label>
-		<description>A simple bench for your character to sit on while using exercise equipment. It provides stability, increasing workout efficiency.</description>
+		<description>A simple bench for your character to sit or lie on while using exercise equipment. It provides stability, increasing workout efficiency.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/AgRipnus/FlatBench/FlatBench</texPath>
@@ -162,12 +165,12 @@
 	</ThingDef>
 
 	<ThingDef ParentName = "FurnitureBase">
-		<defName>Rimbody_ExerciseMats</defName>
-		<label>exercise mats</label>
-		<description>Exercise mats</description>
+		<defName>Rimbody_ExerciseMat</defName>
+		<label>exercise mat</label>
+		<description>A cushioned mat for floor-based workouts. It enhances comfort and safety during exercises like yoga, stretching, or core training, increasing efficiency.</description>
 		<minTechLevelToBuild>Medieval</minTechLevelToBuild>
 		<graphicData>
-			<texPath>Things/Building/Rimbody_buildings/ExerciseMats/ExerciseMats</texPath>
+			<texPath>Things/Building/Rimbody_buildings/ExerciseMat/ExerciseMat</texPath>
 			<!-- <shaderType>CutoutComplex</shaderType> -->
 			<drawSize>(1,1)</drawSize>
 			<graphicClass>Graphic_Multi</graphicClass>
@@ -175,7 +178,7 @@
 				<rect>(0.3,0.3,0.7,0.7)</rect>
 			</damageData>
 		</graphicData>
-		<uiIconPath>Things/Building/Rimbody_buildings/ExerciseMats/ExerciseMats</uiIconPath>
+		<uiIconPath>Things/Building/Rimbody_buildings/ExerciseMat/ExerciseMat</uiIconPath>
 		<altitudeLayer>Building</altitudeLayer>
 		<rotatable>true</rotatable>
 		<defaultPlacingRot>South</defaultPlacingRot>
@@ -191,9 +194,9 @@
 		</statBases>
 		<size>(1,1)</size>
 		<costList>
-			<Steel>50</Steel>
+			<Cloth>10</Cloth>
 		</costList>
-		<costStuffCount>25</costStuffCount>
+		<costStuffCount>30</costStuffCount>
 		<stuffCategories>
 			<li>Fabric</li>
 			<li>Leathery</li>
@@ -215,7 +218,7 @@
 		<defName>Rimbody_Treadmill</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>treadmill</label>
-		<description>An indoor treadmill for cardiovascular fitness.</description>
+		<description>An indoor cardio machine that simulates walking or running. Ideal for improving stamina and cardiovascular health.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
 		<graphicData>
@@ -323,7 +326,7 @@
 		<defName>Rimbody_ExerciseBike</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>exercise bike</label>
-		<description>A stationary fitness machine resembling a bicycle, used for cardiovascular workouts by pedaling against resistance levels.</description>
+		<description>A stationary bike used for cardio training. Builds endurance and works the glutes and thighs more intensely than running.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
 		<graphicData>
@@ -545,7 +548,7 @@
 		<defName>Rimbody_Barbell</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>barbell</label>
-		<description>A long metal bar with adjustable weight plates on either side. Used for various strength training exercises.</description>
+		<description>A long metal bar with adjustable weight plates on either side. Essential for heavy strength training such as squats and deadlifts.</description>
 		<minTechLevelToBuild>Industrial</minTechLevelToBuild>
 		<drawerType>RealtimeOnly</drawerType>
 		<graphicData>
@@ -715,7 +718,7 @@
 		<defName>Rimbody_PrimitiveBarbell</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>primitive barbell</label>
-		<description>A rudimentary barbell crafted from stone and wood with fixed weight plates that cannot be adjusted. Used for various strength training exercises.</description>
+		<description>A rudimentary barbell crafted from stone and wood. Used for various strength training exercises.</description>
 		<drawerType>RealtimeOnly</drawerType>
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/PrimitiveBarbell/PrimitiveBarbell</texPath>
@@ -1028,7 +1031,7 @@
 		<defName>Rimbody_SpinningDummy</defName>
 		<thingClass>Maux36.Rimbody.Building_WorkoutAnimated</thingClass>
 		<label>spinning dummy</label>
-		<description>A spinning dummy that mimics an opponent’s movement, helping improve strikes, timing, and reflexes.</description>
+		<description>A rotating combat dummy used for agility, timing, and striking drills. Helps improve reflexes and balance.</description>
 		<minTechLevelToBuild>Neolithic</minTechLevelToBuild>
 		<drawerType>MapMeshOnly</drawerType>
 		<graphicData>

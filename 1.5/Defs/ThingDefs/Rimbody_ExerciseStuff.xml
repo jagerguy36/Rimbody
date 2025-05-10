@@ -27,7 +27,7 @@
 	<ThingDef ParentName="ThingBase_RimbodyWorkout">
 		<defName>Rimbody_Dumbbells</defName>
 		<label>dumbbells</label>
-		<description>Free weights for a variety of exercises targeting different muscle groups.</description>
+		<description>Compact weights for versatile strength training. They help target specific muscle groups.</description>
 		<stackLimit>1</stackLimit>
 		<graphicData>
 			<texPath>Things/Item/Rimbody_things/AgRipnus/Dumbbells/Dumbbells</texPath>
@@ -38,6 +38,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
+			<WorkToMake>1200</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -47,6 +48,26 @@
 		<altitudeLayer>Item</altitudeLayer>
 		<tickerType>Never</tickerType>
 		<tradeability>Sellable</tradeability>
+		<costStuffCount>40</costStuffCount>
+		<stuffCategories>
+			<li>Metallic</li>
+		</stuffCategories>
+		<recipeMaker>
+			<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+			<effectWorking>ConstructMetal</effectWorking>
+			<soundWorking>Recipe_Machining</soundWorking>
+			<recipeUsers>
+				<li>ElectricSmithy</li>
+				<li>FueledSmithy</li>
+			</recipeUsers>
+			<unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
+			<defaultIngredientFilter>
+				<categories>
+					<li>Root</li>
+				</categories>
+			</defaultIngredientFilter>
+			<researchPrerequisite>Rimbody_IndustrialEquipments</researchPrerequisite>
+		</recipeMaker>
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
@@ -130,7 +151,7 @@
 	<ThingDef ParentName="ThingBase_RimbodyWorkout">
 		<defName>Rimbody_Halteres</defName>
 		<label>halteres</label>
-		<description>Handheld weights for strengthening and toning muscles through a range of exercises.</description>
+		<description>A handheld weight used in ancient times, utilized for various exercises to strengthen muscles.</description>
 		<stackLimit>1</stackLimit>
 		<graphicData>
 			<texPath>Things/Item/Rimbody_things/Halteres/Halteres</texPath>
@@ -139,7 +160,6 @@
 		<thingCategories>
 			<li>Rimbody_Workout_equipment</li>
 		</thingCategories>
-		<techLevel>Industrial</techLevel>
 		<statBases>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
@@ -243,6 +263,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
+			<WorkToMake>1600</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -252,6 +273,26 @@
 		<altitudeLayer>Item</altitudeLayer>
 		<tickerType>Never</tickerType>
 		<tradeability>Sellable</tradeability>
+		<costStuffCount>60</costStuffCount>
+		<stuffCategories>
+			<li>Metallic</li>
+		</stuffCategories>
+		<recipeMaker>
+			<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+			<effectWorking>ConstructMetal</effectWorking>
+			<soundWorking>Recipe_Machining</soundWorking>
+			<recipeUsers>
+				<li>ElectricSmithy</li>
+				<li>FueledSmithy</li>
+			</recipeUsers>
+			<unfinishedThingDef>UnfinishedWeapon</unfinishedThingDef>
+			<defaultIngredientFilter>
+				<categories>
+					<li>Root</li>
+				</categories>
+			</defaultIngredientFilter>
+			<researchPrerequisite>Rimbody_IndustrialEquipments</researchPrerequisite>
+		</recipeMaker>
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>
@@ -300,15 +341,37 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
+			<WorkToMake>1000</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
 			<Beauty>0</Beauty>
-			<Mass>20</Mass>
+			<Mass>1</Mass>
 		</statBases>
 		<altitudeLayer>Item</altitudeLayer>
 		<tickerType>Never</tickerType>
 		<tradeability>Sellable</tradeability>
+		<costStuffCount>40</costStuffCount>
+		<stuffCategories>
+			<li>Fabric</li>
+			<li>Leathery</li>
+		</stuffCategories>
+		<recipeMaker>
+			<workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+			<effectWorking>Tailor</effectWorking>
+			<soundWorking>Recipe_Tailor</soundWorking>
+			<recipeUsers>
+				<li>ElectricTailoringBench</li>
+				<li>HandTailoringBench</li>
+			</recipeUsers>
+			<unfinishedThingDef>UnfinishedApparel</unfinishedThingDef>
+			<defaultIngredientFilter>
+				<categories>
+					<li>Root</li>
+				</categories>
+			</defaultIngredientFilter>
+			<researchPrerequisite>Rimbody_IndustrialEquipments</researchPrerequisite>
+		</recipeMaker>
 		<modExtensions>
 			<li Class="Maux36.Rimbody.ModExtensionRimbodyTarget">
 				<Type>Item</Type>

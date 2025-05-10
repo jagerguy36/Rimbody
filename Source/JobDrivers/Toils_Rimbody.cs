@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
                 if (spot == ItemSpot.ExerciseMats)
                 {
                     lookForSpot = true;
-                    spotThingDef = DefOf_Rimbody.Rimbody_ExerciseMats;
+                    spotThingDef = DefOf_Rimbody.Rimbody_ExerciseMat;
                 }
                 workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForSpot, spotThingDef, out Thing foundSeat, maxPawns);
                 if (workoutLocation == IntVec3.Invalid)
