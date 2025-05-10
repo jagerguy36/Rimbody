@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Patch>
 	<Operation Class="PatchOperationReplace">
-		<xpath>Defs/ThingDef[defName="Rimbody_Rack"]/designationCategory</xpath>
+		<xpath>Defs/ThingDef[defName="Rimbody_WeightRack"]/designationCategory</xpath>
 		  <value>
 		    <designationCategory>ASFstorage</designationCategory>
 		  </value>

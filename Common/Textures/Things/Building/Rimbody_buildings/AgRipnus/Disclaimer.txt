@@ -1,0 +1,7 @@
+Texture Attribution
+This folder includes textures originally created by AgRipnus for the GetRimped mod. Some of these assets are used as-is, while others have been modified to better fit the needs of this mod.
+
+Credit and Permissions
+All original artistic credit goes to AgRipnus.
+I do not claim ownership of any of these textures.
+If AgRipnus (or a representative) requests removal or changes to how the assets are used, I will comply immediately.

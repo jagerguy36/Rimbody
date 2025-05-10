@@ -4,9 +4,9 @@
 	<ResearchProjectDef>
 		<defName>Rimbody_IndustrialEquipments</defName>
 		<label>industrial workout equipment</label>
-		<tab>Rimbody</tab>
-		<description>Industrial workout equipment.</description>
-		<baseCost>500</baseCost>
+		<tab>RimbodyResearchTab</tab>
+		<description>Industrial workout equipment that helps you train more effectively.</description>
+		<baseCost>400</baseCost>
 		<techLevel>Industrial</techLevel>
 		<prerequisites>
 			<li>ComplexFurniture</li>

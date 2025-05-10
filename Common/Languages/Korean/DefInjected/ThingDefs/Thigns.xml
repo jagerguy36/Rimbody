@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <Rimbody_WeightRack.label>웨이트 랙</Rimbody_WeightRack.label>
+  <Rimbody_WeightRack.description>바벨과 무게를 보관하는 튼튼한 랙입니다. 다양한 무게를 사용할 수 있게 해 근처의 운동 장비들의 운동 효율성을 향상시킵니다.</Rimbody_WeightRack.description>
+  <Rimbody_FlatBench.label>평벤치</Rimbody_FlatBench.label>
+  <Rimbody_FlatBench.description>운동 중 앉거나 누울 수 있는 간단한 벤치입니다. 덤벨 리프트와 같은 운동에서 안정성을 제공해 운동 효율성을 증가시킵니다.</Rimbody_FlatBench.description>
+  <Rimbody_ExerciseMat.label>운동 매트</Rimbody_ExerciseMat.label>
+  <Rimbody_ExerciseMat.description>바닥에서 하는 운동을 위한 두터운 매트입니다. 요가, 스트레칭, 코어운동 등에 편안함과 안전을 향상시켜 운동 효율성을 높여줍니다.</Rimbody_ExerciseMat.description>
+  <Rimbody_Treadmill.label>런닝머신</Rimbody_Treadmill.label>
+  <Rimbody_Treadmill.description>걷기나 달릴 수 있는 실내 유산소 운동 기기입니다.</Rimbody_Treadmill.description>
+  <Rimbody_ExerciseBike.label>운동 자전거</Rimbody_ExerciseBike.label>
+  <Rimbody_ExerciseBike.description>유산소 운동을 위한 고정식 자전거입니다. 달리기 보다 둔부와 허벅지 근육을 더 강하게 자극합니다.</Rimbody_ExerciseBike.description>
+  <Rimbody_WeightBench.label>웨이트 벤치</Rimbody_WeightBench.label>
+  <Rimbody_WeightBench.description>벤치 프레스를 수행하기 위해 설계된 견고한 벤치로, 사용자가 가슴, 어깨, 삼두근을 목표로 하여 안전하게 무거운 중량을 들어 올릴 수 있게 합니다.</Rimbody_WeightBench.description>
+  <Rimbody_Barbell.label>바벨</Rimbody_Barbell.label>
+  <Rimbody_Barbell.description>양쪽에 무게를 얹을 수 있는 긴 금속 막대입니다. 스쿼트와 데드리프트 같은 강도 높은 근력 훈련에 필수적입니다.</Rimbody_Barbell.description>
+  <Rimbody_PrimitiveBarbell.label>석제 바벨</Rimbody_PrimitiveBarbell.label>
+  <Rimbody_PrimitiveBarbell.description>돌과 나무로 제작된 기본적인 바벨입니다. 다양한 근력 훈련 운동에 사용됩니다.</Rimbody_PrimitiveBarbell.description>
+  <Rimbody_PullupBars.label>풀업 바</Rimbody_PullupBars.label>
+  <Rimbody_PullupBars.description>풀업과 딥스 같은 자기 체중을 이용한 운동을 할 수 있도록 고정된 봉입니다. 등, 팔, 그리고 코어 근육을 강화하는 데 도움이 됩니다.</Rimbody_PullupBars.description>
+  <Rimbody_SpinningDummy.label>회전형 더미</Rimbody_SpinningDummy.label>
+  <Rimbody_SpinningDummy.description>민첩성, 타이밍, 타격 훈련을 위한 회전식 격투 더미입니다. 반사 신경과 균형을 향상시키는 데 도움이 됩니다.</Rimbody_SpinningDummy.description>
+  <Rimbody_Dumbbells.label>덤벨</Rimbody_Dumbbells.label>
+  <Rimbody_Dumbbells.description>다양한 근력 훈련에 사용되는 장비입니다. 특정 근육을 집중적으로 훈련할 수 있습니다.</Rimbody_Dumbbells.description>
+  <Rimbody_Halteres.label>할테레스</Rimbody_Halteres.label>
+  <Rimbody_Halteres.description>고대에 사용되었던 손에 들 수 있는 무게추, 근육 강화를 위한 다양한 운동에 사용됩니다.</Rimbody_Halteres.description>
+  <Rimbody_Kettlebell.label>케틀벨</Rimbody_Kettlebell.label>
+  <Rimbody_Kettlebell.description>손잡이가 달린 쇳덩어리. 근력 운동에 사용됩니다.</Rimbody_Kettlebell.description>
+  <Rimbody_ExerciseBall.label>짐볼</Rimbody_ExerciseBall.label>
+  <Rimbody_ExerciseBall.description>균형, 코어 강도, 유연성을 개선하는 요가 및 피트니스 운동에 사용되는 공기 주입식 탄력 있는 볼입니다.</Rimbody_ExerciseBall.description>
+</LanguageData>

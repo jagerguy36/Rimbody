@@ -5,8 +5,10 @@
     <supportedVersions>
         <li>1.5</li>
     </supportedVersions>
+    <modVersion>1.1.0</modVersion>
     <loadAfter>
         <li>brrainz.harmony</li>
+        <li>zetrith.prepatcher</li>
     </loadAfter>
     <loadBefore>
         <li>kones.getrimped</li>
@@ -17,6 +19,12 @@
             <displayName>Harmony</displayName>
             <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
             <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        </li>
+        <li>
+            <packageId>zetrith.prepatcher</packageId>
+            <displayName>Prepatcher</displayName>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2934420800</steamWorkshopUrl>
+            <downloadUrl>https://github.com/Zetrith/Prepatcher</downloadUrl>
         </li>
     </modDependencies>
     <packageId>Maux36.Rimbody</packageId>

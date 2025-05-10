@@ -45,4 +45,50 @@
   <RimbodyRefreshTooltip>다른 모드로 인해 근육량/지방량과 맞지 않는 체형을 가지게 된 경우 이 버튼으로 새로고침할 수 있습니다.</RimbodyRefreshTooltip>
   <RimbodyGainGoalTooltip>목표치가 근육량 보다 높으면 림은 더 자주 식사하고 근력 운동을 주로 합니다.</RimbodyGainGoalTooltip>
   <RimbodyDietGoalTooltip>목표치가 지방량보다 낮으면 림은 배고플 때만 식사를 하고 유산소 운동을 주로 합니다.</RimbodyDietGoalTooltip>
+  <RimbodyWorkOutGainEfficiency>근력 운동 효율</RimbodyWorkOutGainEfficiency>
+  <RimbodyWorkOutGainEfficiencyTooltip>근력 운동을 통한 근육 증가량 효율을 설정합니다.</RimbodyWorkOutGainEfficiencyTooltip>
+  <RimbodyCarryRateMultiplier>운반 중량 계수</RimbodyCarryRateMultiplier>
+  <RimbodyCarryRateMultiplierTooltip>운반하는 물체의 무게에 따른 근육 증가량에 영향을 주는 계수입니다.</RimbodyCarryRateMultiplierTooltip>
+  <RimbodyUseFatigue>부위 피로도 사용</RimbodyUseFatigue>
+  <RimbodyUseFatigueTooltip>신체 부위별 피로도 시스템을 활성화합니다. 노동이나 운동을 하면 해당 부위에 피로가 쌓이며, 피로한 부위를 사용하는 운동은 효과가 떨어집니다. 휴식을 통해 회복할 수 있습니다.</RimbodyUseFatigueTooltip>
+  <RimbodyUseExhaustion>탈진 시스템 사용</RimbodyUseExhaustion>
+  <RimbodyUseExhaustionTooltip>탈진 시스템을 활성화합니다. 탈진은 충분한 휴식 없이 운동할 수 있는 양을 제한합니다.</RimbodyUseExhaustionTooltip>
+  <RimbodyExhaustionTooltip>탈진도 ({0}%)\n\n운동할수록 탈진도가 증가합니다. 탈진도가 100%에 도달하면 탈진하여 40% 미만으로 회복될 때까지 운동할 수 없습니다.</RimbodyExhaustionTooltip>
+  <RimbodyFatigueTooltip>운동이나 노동시 신체에 피로가 누적됩니다. 피로가 쌓인 부위를 사용하는 운동은 효과가 떨어집니다.\n\n피로도\n\n어깨: ({0}%)\n가슴: ({1}%)\n이두: ({2}%)\n삼두: ({3}%)\n등: ({4}%)\n코어: ({5}%)\n둔부: ({6}%)\n대퇴사두: ({7}%)\n햄스트링: ({8}%)</RimbodyFatigueTooltip>
+  <Rimbody_Description>[가능한 운동]</Rimbody_Description>
+  <Rimbody_Shoulder>어깨</Rimbody_Shoulder>
+  <Rimbody_Chest>가슴</Rimbody_Chest>
+  <Rimbody_Biceps>이두</Rimbody_Biceps>
+  <Rimbody_Triceps>삼두</Rimbody_Triceps>
+  <Rimbody_Back>등</Rimbody_Back>
+  <Rimbody_Core>코어</Rimbody_Core>
+  <Rimbody_Glutes>둔부</Rimbody_Glutes>
+  <Rimbody_Quads>대퇴사두</Rimbody_Quads>
+  <Rimbody_Hams>햄스트링</Rimbody_Hams>
+  <treadmill_name>실내 달리기</treadmill_name>
+  <treadmill_report>러닝머신에서 달리는 중</treadmill_report>
+  <cycling_name>사이클링</cycling_name>
+  <cycling_report>사이클링 하는 중</cycling_report>
+  <benchpress_name>벤치프레스</benchpress_name>
+  <benchpress_report>벤치프레스를 하는 중</benchpress_report>
+  <deadlift_name>데드리프트</deadlift_name>
+  <deadlift_report>데드리프트 중</deadlift_report>
+  <squats_name>스쿼트</squats_name>
+  <squats_report>스쿼트 중</squats_report>
+  <pullups_name>턱걸이</pullups_name>
+  <pullups_report>턱걸이 중</pullups_report>
+  <dips_name>딥스</dips_name>
+  <dips_report>딥스 중</dips_report>
+  <sbll_name>스위스볼 레그 리프트</sbll_name>
+  <sbll_report>스위스볼 레그 리프트 중</sbll_report>
+  <bicepcurl_name>이두 컬</bicepcurl_name>
+  <dumbbells_bicepcurl_report>덤벨로 이두 컬 중</dumbbells_bicepcurl_report>
+  <halteres_bicepcurl_report>할테레스로 이두 컬 중</halteres_bicepcurl_report>
+  <overheadshoulderpress_name>오버헤드 숄더 프레스</overheadshoulderpress_name>
+  <dumbbells_overheadshoulderpress_report>덤벨로 오버헤드 숄더 프레스 중</dumbbells_overheadshoulderpress_report>
+  <halteres_overheadshoulderpress_report>할테레스로 오버헤드 숄더 프레스 중</halteres_overheadshoulderpress_report>
+  <kettlebellswing_name>케틀벨 스윙</kettlebellswing_name>
+  <kettlebellswing_report>케틀벨 스윙 중</kettlebellswing_report>
+  <reactivetraining_name>반응 훈련</reactivetraining_name>
+  <reactivetraining_report>회전형 더미로 반응 훈련 중</reactivetraining_report>
 </LanguageData>

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <Rimbody_Jogging.reportString>조깅 하는 중.</Rimbody_Jogging.reportString>
+  <Rimbody_DoStrengthPushUps.reportString>팔굽혀펴기 하는 중.</Rimbody_DoStrengthPushUps.reportString>
+  <Rimbody_DoChunkLifting.reportString>무거운 물건 들기 운동 중.</Rimbody_DoChunkLifting.reportString>
+  <Rimbody_DoChunkOverheadPress.reportString>무거운 물건으로 오버헤드 프레스 운동 중.</Rimbody_DoChunkOverheadPress.reportString>
+  <Rimbody_DoChunkSquats.reportString>무거은 물건을 들고 스쿼트 하는 중.</Rimbody_DoChunkSquats.reportString>
+  <Rimbody_DoBodyWeightPlank.reportString>플랭크 자세 유지 중.</Rimbody_DoBodyWeightPlank.reportString>
+  <Rimbody_DoStrengthLifting.reportString>근력 운동 하는 중.</Rimbody_DoStrengthLifting.reportString>
+  <Rimbody_DoBalanceLifting.reportString>균형 운동 하는 중.</Rimbody_DoBalanceLifting.reportString>
   <Rimbody_DoStrengthBuilding.reportString>근력 운동 하는 중.</Rimbody_DoStrengthBuilding.reportString>
   <Rimbody_DoBalanceBuilding.reportString>균형 운동 하는 중.</Rimbody_DoBalanceBuilding.reportString>
   <Rimbody_DoCardioBuilding.reportString>유산소 운동 하는 중.</Rimbody_DoCardioBuilding.reportString>

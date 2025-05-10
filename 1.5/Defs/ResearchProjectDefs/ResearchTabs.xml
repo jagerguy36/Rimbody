@@ -2,7 +2,7 @@
 <Defs>
 
 	<ResearchTabDef>
-		<defName>Rimbody</defName>
+		<defName>RimbodyResearchTab</defName>
 		<label>Workout Equipment</label>
 	</ResearchTabDef>
 
