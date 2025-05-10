@@ -182,6 +182,8 @@ namespace Maux36.Rimbody
                 float cardioFactor = _baseC; //0.3f
                 List<float> partsToApplyFatigue = null;
 
+                float appliedEfficiency = 1;
+
                 //Factor Calculation
                 //If factor is Forced
                 var harmonyCheckstring = HarmonyCheck();
@@ -197,9 +199,10 @@ namespace Maux36.Rimbody
                 //Get factors from dedicated Rimbody workout jobs
                 else if (jobOverride)
                 {
-                    strengthFactor = strengthOverride;
+                    strengthFactor = strengthOverride * memoryFactorOverride;
                     cardioFactor = cardioOverride;
                     partsToApplyFatigue = partsOverride;
+                    appliedEfficiency = memoryFactorOverride;
                     switch (curJobDef.defName)
                     {
                         case string job when RimbodyDefLists.StrengthJob.Contains(job):
@@ -340,9 +343,7 @@ namespace Maux36.Rimbody
                         }
                     }
                 }
-                float appliedEfficiency = memoryFactorOverride;
                 appliedEfficiency *= ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor, (float)RimbodySettings.CalcEveryTick * 0.001f); //Apply partFatigue. Raises (partfactor * 0.001) per tick (partfactor * 2.5 per hour)
-                strengthFactor *= memoryFactorOverride;
                 //Decide on the Fleck
                 if (doingS)
                 {
@@ -353,7 +354,7 @@ namespace Maux36.Rimbody
                 }
                 else if (doingC)
                 {
-                    if (cardioFactor <= 1.9)
+                    if (cardioFactor <= 1.8)
                     {
                         UIflag--;
                     }
@@ -1148,7 +1149,7 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref jobOverride, "Physique_jobOverride", false);
             Scribe_Values.Look(ref cardioOverride, "Physique_cardioOverride", 0f);
             Scribe_Values.Look(ref strengthOverride, "Physique_strengthOverride", 0f);
-            Scribe_Values.Look(ref memoryFactorOverride, "Physique_memoryFactorOverride", 0f); 
+            Scribe_Values.Look(ref memoryFactorOverride, "Physique_memoryFactorOverride", 1f); 
             Scribe_Collections.Look(ref partsOverride, "Physique_partsOverride", LookMode.Value);
             if (partsOverride == null || partsOverride.Count != RimbodySettings.PartCount)
             {

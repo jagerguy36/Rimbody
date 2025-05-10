@@ -7,8 +7,8 @@ namespace Maux36.Rimbody
         public const int PartCount = 9;
         public const int MaxFatiguePerPart = 10;
 
-        public static int CalcEveryTick = 150;
-        public static int RecoveryTick = 250;
+        public static int CalcEveryTick = 75;
+        public static int RecoveryTick = 200;
         public static float fatThresholdFat = 35f;
         public static float fatThresholdThin = 15f;
         public static float muscleThresholdHulk = 35f;
@@ -33,7 +33,7 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
 
-            Scribe_Values.Look(ref CalcEveryTick, "Rimbody_CalcEveryTick", 150, true);
+            Scribe_Values.Look(ref CalcEveryTick, "Rimbody_CalcEveryTick", 75, true);
             //Scribe_Values.Look(ref RecoveryTick, "Rimbody_RecoveryTick", 250, true);
             Scribe_Values.Look(ref fatThresholdFat, "Rimbody_fatThresholdFat", 30f, true);
             Scribe_Values.Look(ref fatThresholdThin, "Rimbody_fatThresholdThin", 15f, true);

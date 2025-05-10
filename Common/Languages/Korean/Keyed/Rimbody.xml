@@ -19,9 +19,9 @@
   <RimbodyShowFleck>운동 아이콘 보기</RimbodyShowFleck>
   <RimbodyShowFleckTooltip>림이 운동을 하고 있을 때 아이콘을 보여줍니다.</RimbodyShowFleckTooltip>
   <RimbodyPerformanceSetting>림바디 성능 세팅</RimbodyPerformanceSetting>
-  <RimbodyModePerformance>퍼포먼스 모드 (기본값)</RimbodyModePerformance>
+  <RimbodyModePerformance>퍼포먼스 모드 </RimbodyModePerformance>
   <RimbodyModeTooltipPerformance>림바디 정보가 욕구처럼 150틱마다 계산됩니다. 틱을 거의 안먹는 수준이지만 림들의 활동이 정확하게 감지되지 않을 수 있습니다.</RimbodyModeTooltipPerformance>
-  <RimbodyModeOptimized>최적화 모드</RimbodyModeOptimized>
+  <RimbodyModeOptimized>최적화 모드 (기본값)</RimbodyModeOptimized>
   <RimbodyModeTooltipOptimized>림바디 정보가 75틱마다 계산됩니다. 이 모드는 성능에 거의 영향을 주지 않으면서 나쁘지 않은 정확도를 보여줍니다.</RimbodyModeTooltipOptimized>
   <RimbodyModePrecision>정확도 모드 (추천)</RimbodyModePrecision>
   <RimbodyModeTooltipPrecision>림바디 정보가 30틱마다 계산됩니다. 매우 정확하고 좋은 성능을 보여줍니다.</RimbodyModeTooltipPrecision>

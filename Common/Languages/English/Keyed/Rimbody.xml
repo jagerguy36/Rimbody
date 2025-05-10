@@ -19,9 +19,9 @@
   <RimbodyShowFleck>Show fleck icon</RimbodyShowFleck>
   <RimbodyShowFleckTooltip>Show fleck icon when pawns are doing strength or cardio workouts.</RimbodyShowFleckTooltip>
   <RimbodyPerformanceSetting>Rimbody Performance Settings</RimbodyPerformanceSetting>
-  <RimbodyModePerformance>Performance (default)</RimbodyModePerformance>
+  <RimbodyModePerformance>Performance</RimbodyModePerformance>
   <RimbodyModeTooltipPerformance>Rimbody info is updated every 150 ticks, just like needs. It is extremely light, but may lead to some inaccuracies in detecting pawns' actions.</RimbodyModeTooltipPerformance>
-  <RimbodyModeOptimized>Optimized</RimbodyModeOptimized>
+  <RimbodyModeOptimized>Optimized (default)</RimbodyModeOptimized>
   <RimbodyModeTooltipOptimized>Rimbody info is updated every 75 ticks. This mode offers better detection than Performance mode with almost no effect on performance.</RimbodyModeTooltipOptimized>
   <RimbodyModePrecision>Precision (Recommended)</RimbodyModePrecision>
   <RimbodyModeTooltipPrecision>Rimbody info is updated every 30 ticks. Very accurate while maintaining decent performance.</RimbodyModeTooltipPrecision>
