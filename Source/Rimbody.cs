@@ -126,16 +126,18 @@ namespace Maux36.Rimbody
             if (listing_Standard.ButtonText("RimbodyDefaultSetting".Translate(), "RimbodyDefaultSettingTooltip".Translate()))
             {
                 RimbodySettings.rateFactor = 1f;
-                RimbodySettings.CalcEveryTick = 150;
+                RimbodySettings.WorkOutGainEfficiency = 1.0f;
+                RimbodySettings.carryRateMultiplier = 1.0f;
                 RimbodySettings.genderDifference = true;
                 RimbodySettings.showFleck = true;
+                RimbodySettings.useFatigue = true;
+                RimbodySettings.CalcEveryTick = 75;
                 RimbodySettings.fatThresholdFat = 35f;
                 RimbodySettings.fatThresholdThin = 15f;
                 RimbodySettings.muscleThresholdHulk = 35f;
                 RimbodySettings.muscleThresholdThin = 15f;
                 RimbodySettings.gracePeriod = 1f;
                 RimbodySettings.nonSenescentpoint = 25;
-                RimbodySettings.WorkOutGainEfficiency = 1.0f;
             }
 
             listing_Standard.End();

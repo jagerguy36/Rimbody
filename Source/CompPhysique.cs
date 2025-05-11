@@ -14,6 +14,7 @@ namespace Maux36.Rimbody
     {
 
         //Strength
+        private static readonly float fatiguelaborS = 1.4f;
         //private static readonly float _workoutS = 2.0f; // [Strength]
         //private static readonly float _hardworkS = 1.2f; // [Melee], [Balance], [HardLabor]
         //private static readonly float _workS = 0.8f; // [NormalLabor]
@@ -248,7 +249,7 @@ namespace Maux36.Rimbody
                             {
                                 case LocomotionUrgency.Sprint:
                                     {
-                                        strengthFactor = _sprintS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.25f
+                                        strengthFactor = _sprintS; //0.25f
                                         cardioFactor = _sprintC; //1.9f
                                         //Jogging
                                         doingC = true;
@@ -269,23 +270,24 @@ namespace Maux36.Rimbody
                                     break;
                                 case LocomotionUrgency.Jog:
                                     {
-                                        strengthFactor = _movingS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.2f
+                                        strengthFactor = _movingS; //0.2f
                                         cardioFactor = _joggingC; //0.8f
                                     }
                                     break;
                                 case LocomotionUrgency.Walk:
                                     {
-                                        strengthFactor = _movingS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.2f
+                                        strengthFactor = _movingS; //0.2f
                                         cardioFactor = _walkingC; //0.4f
                                     }
                                     break;
                                 default:
                                     {
-                                        strengthFactor = _ambleS + (carryFactor * RimbodySettings.carryRateMultiplier); //0.15f
+                                        strengthFactor = _ambleS; //0.15f
                                         cardioFactor = _ambleC; //0.35f
                                     }
                                     break;
                             }
+                            strengthFactor += carryFactor * RimbodySettings.carryRateMultiplier;
                         }
                         //Special cases: Lying down
                         else if (curDriver?.CurToilString == "LayDown")
@@ -295,11 +297,15 @@ namespace Maux36.Rimbody
                         }
                         else
                         {
+                            if (!RimbodyDefLists.JobExtensionCache.TryGetValue(curJobDef.defName, out var jobExtension))
+                            {
+                                jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
+                                RimbodyDefLists.JobExtensionCache.Add(curJobDef.defName, jobExtension);
+                            }
                             //get work factor
-                            var jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
                             if (jobExtension != null)
                             {
-                                if(jobExtension.JobCategory != RimbodyJobCategory.None)
+                                if (jobExtension.JobCategory != RimbodyJobCategory.None)
                                 {
                                     (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(jobExtension.JobCategory);
                                 }
@@ -331,13 +337,46 @@ namespace Maux36.Rimbody
                                     }
                                 }
                             }
-                            else
+                            else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef)
                             {
-                                var giverExtension = parentPawn?.CurJob?.workGiverDef?.GetModExtension<ModExtensionRimbodyJob>();
+                                if (!RimbodyDefLists.GiverExtensionCache.TryGetValue(workGiverDef.defName, out var giverExtension))
+                                {
+                                    giverExtension = workGiverDef.GetModExtension<ModExtensionRimbodyJob>();
+                                    RimbodyDefLists.GiverExtensionCache.Add(workGiverDef.defName, giverExtension);
+                                }
                                 if (giverExtension != null)
                                 {
-                                    cardioFactor = giverExtension.cardio;
-                                    strengthFactor = giverExtension.strength;
+                                    if (giverExtension.JobCategory != RimbodyJobCategory.None)
+                                    {
+                                        (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(giverExtension.JobCategory);
+                                    }
+                                    else
+                                    {
+                                        strengthFactor = giverExtension.strength;
+                                        cardioFactor = giverExtension.cardio;
+                                        partsToApplyFatigue = giverExtension.strengthParts;
+                                    }
+                                    if (partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
+                                    {
+                                        switch (giverExtension.TreatAs)
+                                        {
+                                            case RimbodyWorkoutCategory.Job:
+                                                break;
+                                            case RimbodyWorkoutCategory.Strength:
+                                                doingS = true;
+                                                UIflag = 2;
+                                                strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
+                                                break;
+                                            case RimbodyWorkoutCategory.Balance:
+                                                doingB = true;
+                                                UIflag = 2;
+                                                break;
+                                            case RimbodyWorkoutCategory.Cardio:
+                                                doingC = true;
+                                                UIflag = 2;
+                                                break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -359,7 +398,16 @@ namespace Maux36.Rimbody
                         UIflag--;
                     }
                 }
-                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. doingS: {doingS}, doingC: {doingC}. appliedEfficiency(memoryOverride): {appliedEfficiency}. Applied Factors: s:{strengthFactor}, c:{cardioFactor} with parts: {partsToApplyFatigue != null}");
+                //Dev Logging
+                //if (RimbodySettings.LogPhysique)
+                //{
+                //    Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. doingS: {doingS}, doingC: {doingC}. jobOverride: {jobOverride}, memoryFactorOverride: {memoryFactorOverride}, appliedEfficiency: {appliedEfficiency}. Applied Factors: s:{strengthFactor}, c:{cardioFactor} with parts: {partsToApplyFatigue != null}");
+                //}
+                //if (RimbodySettings.LogMemory)
+                //{
+                //    string memoery_String = string.Join(", ", memory);
+                //    Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
+                //}
 
                 //Tiredness reduces gain
                 if (parentPawn.needs.rest != null)
@@ -633,10 +681,6 @@ namespace Maux36.Rimbody
                     parentPawn.story.bodyType = GetValidBody();
                     parentPawn.Drawer.renderer.SetAllGraphicsDirty();
                 }
-                //Log Memory
-                //string memoery_String = string.Join(", ", memory);
-                //Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
-
             }
         }
 
@@ -1040,10 +1084,10 @@ namespace Maux36.Rimbody
                 {
                     //Strength, Cardio, Part
                     RimbodyJobCategory.None => (0.1f, 0.3f, null),
-                    RimbodyJobCategory.Melee => (1.2f, 0.6f, [0.5f, 0.5f, 0.5f, 0.3f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]),
-                    RimbodyJobCategory.HardLabor => (1.2f, 0.6f, [0.4f, 0.3f, 0.4f, 0.3f, 0.2f, 0.2f, 0.2f, 0.2f, 0.1f]),
-                    RimbodyJobCategory.NormalLabor => (1.2f, 0.5f, [0.2f, 0.2f, 0.3f, 0.2f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]),
-                    RimbodyJobCategory.LightLabor => (1.2f, 0.4f, [0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.Melee => (fatiguelaborS, 0.6f, [0.5f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.HardLabor => (fatiguelaborS, 0.6f, [0.4f, 0.3f, 0.4f, 0.3f, 0.2f, 0.2f, 0.2f, 0.2f, 0.1f]),
+                    RimbodyJobCategory.NormalLabor => (fatiguelaborS, 0.5f, [0.2f, 0.2f, 0.3f, 0.2f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]),
+                    RimbodyJobCategory.LightLabor => (fatiguelaborS, 0.4f, [0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f]),
                     RimbodyJobCategory.Activity => (0.2f, 0.35f, null),
                     RimbodyJobCategory.Base => (0.1f, 0.3f, null),
                     RimbodyJobCategory.Rest => (0f, 0.2f, null),

@@ -28,6 +28,9 @@ namespace Maux36.Rimbody
         public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
 
+        public static Dictionary<string, ModExtensionRimbodyJob> JobExtensionCache = new();
+        public static Dictionary<string, ModExtensionRimbodyJob> GiverExtensionCache = new();
+
         static RimbodyDefLists() // Static constructor
         {
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
@@ -46,6 +49,14 @@ namespace Maux36.Rimbody
                 {
                     AddJob(jobDef, jobExtension);
                 }
+                JobExtensionCache[jobDef.defName] = jobExtension;
+
+            }
+
+            foreach (var giverDef in DefDatabase<WorkGiverDef>.AllDefs)
+            {
+                var giverExtension = giverDef.GetModExtension<ModExtensionRimbodyJob>();
+                GiverExtensionCache[giverDef.defName] = giverExtension;
             }
         }
 
