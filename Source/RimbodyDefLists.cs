@@ -49,14 +49,20 @@ namespace Maux36.Rimbody
                 {
                     AddJob(jobDef, jobExtension);
                 }
-                JobExtensionCache[jobDef.defName] = jobExtension;
+                if(jobExtension != null)
+                {
+                    JobExtensionCache[jobDef.defName] = jobExtension;
+                }
 
             }
 
             foreach (var giverDef in DefDatabase<WorkGiverDef>.AllDefs)
             {
                 var giverExtension = giverDef.GetModExtension<ModExtensionRimbodyJob>();
-                GiverExtensionCache[giverDef.defName] = giverExtension;
+                if(giverExtension != null)
+                {
+                    GiverExtensionCache[giverDef.defName] = giverExtension;
+                }
             }
         }
 

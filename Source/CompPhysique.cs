@@ -297,13 +297,8 @@ namespace Maux36.Rimbody
                         }
                         else
                         {
-                            if (!RimbodyDefLists.JobExtensionCache.TryGetValue(curJobDef.defName, out var jobExtension))
-                            {
-                                jobExtension = curJobDef.GetModExtension<ModExtensionRimbodyJob>();
-                                RimbodyDefLists.JobExtensionCache.Add(curJobDef.defName, jobExtension);
-                            }
                             //get work factor
-                            if (jobExtension != null)
+                            if (RimbodyDefLists.JobExtensionCache.TryGetValue(curJobDef.defName, out var jobExtension))
                             {
                                 if (jobExtension.JobCategory != RimbodyJobCategory.None)
                                 {
@@ -339,12 +334,7 @@ namespace Maux36.Rimbody
                             }
                             else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef)
                             {
-                                if (!RimbodyDefLists.GiverExtensionCache.TryGetValue(workGiverDef.defName, out var giverExtension))
-                                {
-                                    giverExtension = workGiverDef.GetModExtension<ModExtensionRimbodyJob>();
-                                    RimbodyDefLists.GiverExtensionCache.Add(workGiverDef.defName, giverExtension);
-                                }
-                                if (giverExtension != null)
+                                if (RimbodyDefLists.GiverExtensionCache.TryGetValue(workGiverDef.defName, out var giverExtension))
                                 {
                                     if (giverExtension.JobCategory != RimbodyJobCategory.None)
                                     {
