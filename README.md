@@ -126,22 +126,25 @@ Male pawns find it easier to gain muscle, while female pawns require a bit more 
 Mod | Content
 --- | ---
 Biotech |  If your pawn has a specific gene that enforces a certain body type, the gain/loss rate of fat and muscle will be adjusted accordingly. This means a pawn with a thin-bodytype gene CAN have standard bodyType, but they will most likely revert back to thin very soon. Non-senescent pawns' bodies will be considered to be at age 25 (configurable in settings) if they get past this age. Pawns who do not need sleep will gain muscle without requiring rest.
-GetRimped | Pawns will use workout equipment during their workout schedule. Also fixes its bugs and Misc. Training compatibility problems when loaded together
-SYR Individuality [Continued] | The Rimbody window is merged with the Individuality window. Body weight now depends on muscle and fat.
-Big and Small - Framework | Androgynous body is correctly tracked. Mimic will take on the fat and muscle of the target.
-Toddlers | Baby wiggling and toddler play are considered strength and balance activities.
-Human Power Generator Mod | Cycling is classified as a cardio activity.
-Quary | Quarrying is considered hard manual labor.
-Rimfeller | Deep drilling is classified as manual labor.
-Misc. Training | Martial Art practice is classified as manual labor.
-Combat Extended | Hauling job strength factor correctly recognizes CE weight capacity.
-Combat Training (Continued) | Melee Training is classified as manual labor
+Adaptive Storage Framework | Storage Rack will use ASF and hide the content. Move storage rack to 'storage' category.
 Ball Games | Ball games are balance Exercise.
-Rimball | Practicing balls is balance Exercise.
-Vanilla Plants Epanded | Tilling is recognized as hard labor
-Eccentric Extras - Beach Stuff | Playing beach Ball is mix of balance and moving.
+Big and Small - Framework | Androgynous body is correctly tracked. Mimic will take on the fat and muscle of the target.
+Combat Extended | Hauling job strength factor correctly recognizes CE weight capacity.
+Combat Training (Continued) | Melee Training is classified as melee workout
+Eccentric Extras - Beach Stuff | Playing beach Ball is balance Exercise
+GiddyUp | mounting state is recognized as activity, not movement.
+Human Power Generator Mod | Cycling is classified as a cardio activity. But beware, the fatigue gain is much higher than the normal exercise bike.
 Mines 2.0 | Mining is recognized as hard labor
-Mountain Miner (Continued) | Mountain Mining is recognized as hard labor
+Misc. Training | Martial Art practice is classified as melee workout.
+Mountain Miner (Continued) | Mountain Mining is recognized as normal labor
+Quary | Quarrying is considered hard labor.
+Rimball | Practicing balls is balance Exercise.
+Rimfeller | Cleaning oil is now normal labor. Overseeing drilling is now activity.
+SYR Individuality [Continued] | The Rimbody window is merged with the Individuality window. Body weight now depends on muscle and fat.
+Toddlers | Baby wiggling is a sort of balance workout now. Baby play will incur slight fat burn and muscle gain.
+Vanilla Plants Epanded | Tilling is recognized as hard labor.
+VRE Androids | Android will not have muscle/fat
+VFE Medieval2 | Plowing is hard labor. Using training dummy is recognized as melee training
 
 ## Incompatibilities
 
