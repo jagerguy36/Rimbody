@@ -14,6 +14,11 @@ namespace Maux36.Rimbody
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
+            if (job.GetTarget(TargetIndex.A).Thing is Building_WorkoutAnimated buildingAnimated)
+            {
+                if (buildingAnimated.reserved) return false;
+                buildingAnimated.reserved = true;
+            }
             if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
             {
                 return false;
@@ -107,8 +112,12 @@ namespace Maux36.Rimbody
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             EndOnTired(this);
-
             RimbodyDefLists.CardioTarget.TryGetValue(TargetThingA.def, out var ext);
+            Building_WorkoutAnimated buildingAnimated = job.GetTarget(TargetIndex.A).Thing as Building_WorkoutAnimated;
+            this.AddFinishAction(delegate {
+                if (buildingAnimated != null) buildingAnimated.reserved = false;
+            });
+
             if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext);
             var exWorkout = ext.workouts[workoutIndex];
             workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);

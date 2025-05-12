@@ -45,6 +45,11 @@ namespace Maux36.Rimbody
             {
                 CombatExtendedLoaded = true;
             }
+
+            if (!ModsConfig.IsActive("zetrith.prepatcher"))
+            {
+                Log.Error("Rimbody could not find its required dependency: Prepatcher. This is a critical component, and your game will not work without it.");
+            }
         }
 
         public override string SettingsCategory()

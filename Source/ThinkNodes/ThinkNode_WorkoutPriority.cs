@@ -56,11 +56,13 @@ namespace Maux36.Rimbody
                 {
                     return 0f;
                 }
+                float continuousWorkoutOffset = 0;
+                if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f) continuousWorkoutOffset = 0.1f;
                 if (timeAssignmentDef == TimeAssignmentDefOf.Anything)
                 {
                     if (curLevel < 0.35f)
                     {
-                        return 6f;
+                        return 6f + continuousWorkoutOffset;
                     }
                     return 0f;
                 }
@@ -68,7 +70,7 @@ namespace Maux36.Rimbody
                 {
                     if (curLevel < 0.95f)
                     {
-                        return 7f;
+                        return 7f + continuousWorkoutOffset;
                     }
                     return 0f;
                 }
@@ -76,7 +78,7 @@ namespace Maux36.Rimbody
                 {
                     if (curLevel < 0.95f)
                     {
-                        return 2f;
+                        return 2f + continuousWorkoutOffset;
                     }
                     return 0f;
                 }

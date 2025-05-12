@@ -79,6 +79,10 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
+                    if (t is Building_WorkoutAnimated buildingAnimated)
+                    {
+                        if (buildingAnimated.reserved) return false;
+                    }
                     if (t.def.hasInteractionCell)
                     {
                         if (!pawn.CanReserveSittableOrSpot(t.InteractionCell))

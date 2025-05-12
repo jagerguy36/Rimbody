@@ -16,6 +16,11 @@ namespace Maux36.Rimbody
             locomotionUrgency = LocomotionUrgency.Amble;
             wanderDestValidator = (Pawn pawn, IntVec3 loc, IntVec3 root) => WanderRoomUtility.IsValidWanderDest(pawn, loc, root);
         }
+        protected override Job TryGiveJob(Pawn pawn)
+        {
+            pawn.mindState.nextMoveOrderIsWait = false;
+            return base.TryGiveJob(pawn);
+        }
 
         protected override IntVec3 GetWanderRoot(Pawn pawn)
         {
