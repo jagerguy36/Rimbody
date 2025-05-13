@@ -77,10 +77,6 @@ namespace Maux36.Rimbody
                             return false;
                         }
                     }
-                    if (t is Building_WorkoutAnimated buildingAnimated)
-                    {
-                        if (buildingAnimated.reserved) return false;
-                    }
                     else
                     {
                         if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;

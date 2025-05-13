@@ -10,7 +10,6 @@ namespace Maux36.Rimbody
 {
     public class Building_WorkoutAnimated: Building
     {
-        public bool reserved = false;
         public bool beingUsed = false;
         private string cachedDescriptionFlavor = null;
         public List<Graphic_Multi> graphics = null;
@@ -85,7 +84,6 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref beingUsed, "bwa_reserved", false);
             Scribe_Values.Look(ref beingUsed, "bwa_beingUsed", false);
             Scribe_Values.Look(ref calculatedOffset, "bwa_calculatedOffset", Vector3.zero);
         }
