@@ -27,8 +27,6 @@ namespace Maux36.Rimbody
             {
                 return false;
             }
-            job.targetA.Thing.Map.physicalInteractionReservationManager.Reserve(pawn, job, job.targetA.Thing);
-
             return true;
         }
         public override Vector3 ForcedBodyOffset
@@ -215,6 +213,7 @@ namespace Maux36.Rimbody
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
+                TargetThingA.Map.physicalInteractionReservationManager.Reserve(pawn, job, TargetThingA);
                 GetInPosition(TargetThingA, exWorkout.pawnDirection);
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 var joyneed = pawn.needs?.joy;

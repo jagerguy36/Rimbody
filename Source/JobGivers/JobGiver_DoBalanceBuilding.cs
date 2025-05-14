@@ -75,7 +75,11 @@ namespace Maux36.Rimbody
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
-                    if (!pawn.CanReserve(t))
+                    if (pawn.Map.reservationManager.IsReserved(t))
+                    {
+                        return false;
+                    }
+                    if (!pawn.CanReserve(t, ignoreOtherReservations:true))
                     {
                         return false;
                     }
