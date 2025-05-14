@@ -10,6 +10,24 @@ namespace Maux36.Rimbody
 {
     public class Rimbody_Utility
     {
+        public static bool isColonyMember(Pawn pawn)
+        {
+            if (pawn.Faction != null && pawn.Faction.IsPlayer && pawn.RaceProps.Humanlike && !pawn.IsMutant) //The same as isColonist Check minus the slave check
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool shouldTick(Pawn pawn)
+        {
+            if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static void TryUpdateWeight(ThingOwner owner)
         {
             if (owner?.Owner?.ParentHolder is Pawn pawn)
@@ -20,13 +38,10 @@ namespace Maux36.Rimbody
 
         public static void TryUpdateInventory(Pawn pawn)
         {
-            if (pawn?.needs != null && pawn.needs.food != null && (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony || pawn.IsColonist && pawn.GetCaravan() != null))
+            if (pawn.needs?.food != null && (isColonyMember(pawn) || pawn.IsPrisonerOfColony) && shouldTick(pawn))
             {
                 CompPhysique compPhysique = pawn.compPhysique();
-                if (compPhysique != null)
-                {
-                    compPhysique.UpdateCarryweight();
-                }
+                compPhysique?.UpdateCarryweight();
             }
         }
 

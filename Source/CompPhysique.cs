@@ -122,30 +122,12 @@ namespace Maux36.Rimbody
         private CompHoldingPlatformTarget platformComp;
         private CompHoldingPlatformTarget PlatformTarget => platformComp ?? (platformComp = parentPawn.TryGetComp<CompHoldingPlatformTarget>());
 
-        private bool isColonyMember(Pawn pawn)
-        {
-            if (pawn.Faction != null && pawn.Faction.IsPlayer && pawn.RaceProps.Humanlike && !pawn.IsMutant) //The same as isColonist Check minus the slave check
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private static bool shouldTick(Pawn pawn)
-        {
-            if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
-            {
-                return true;
-            }
-            return false;
-        }
-
         private void PhysiqueTick()
         {
 
-            if (isColonyMember(parentPawn) || parentPawn.IsPrisonerOfColony)
+            if (Rimbody_Utility.isColonyMember(parentPawn) || parentPawn.IsPrisonerOfColony)
             {
-                if (!shouldTick(parentPawn))
+                if (!Rimbody_Utility.shouldTick(parentPawn))
                 {
                     return;
                 }
