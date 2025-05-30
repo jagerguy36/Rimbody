@@ -6,7 +6,6 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using static HarmonyLib.Code;
 
 namespace Maux36.Rimbody
 {
@@ -39,7 +38,7 @@ namespace Maux36.Rimbody
 
         //Internals
         private Pawn parentPawnInt = null;
-        private bool? isJoggerInt;
+        //private bool? isJoggerInt;
         public bool PostGen = false;
         private Pawn parentPawn
         {
@@ -724,14 +723,24 @@ namespace Maux36.Rimbody
 
         public void UpdateCarryweight()
         {
+            var pawnInventoryCapacity = Rimbody_Utility.GetBaseInventoryCapacity(parentPawn);
             float inventoryWeight = MassUtility.GearAndInventoryMass(parentPawn);
+
             float capacityWeight = 0f;
             for (int i = 0; i < parentPawn.carryTracker.innerContainer.Count; i++)
             {
                 Thing thing = parentPawn.carryTracker.innerContainer[i];
                 capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
             }
-            carryFactor = 0.5f * Mathf.Clamp((inventoryWeight + capacityWeight) / (parentPawn.GetStatValue(StatDefOf.CarryingCapacity) + MassUtility.Capacity(parentPawn)), 0f, 1f);
+
+            carryFactor = 0.5f * Mathf.Clamp((inventoryWeight + capacityWeight) / pawnInventoryCapacity, 0f, 2f);
+            //Carry capacity is all about the numer of items that can be held in the innerContainer (volume). We assume that has nothing to do with strength.
+            //Inventory Cacpacity, on the other hand has to do with mass.
+            //We assume if the capcity is how much the pawn is comfortable carrying around on their back.
+
+            //If inventory + held item 's weight == inventory capacity, strength factor will be 0.5, just a bit over light labor.
+            //If inventory + held item 's weight > inventory capacity*2, strenght factor will be 1, a little less than hard labor.
+            //Log.Message($"{parentPawn.Name}'s inventoryWeight: {inventoryWeight} capacityWeight: {capacityWeight} / pawnInventoryCapacity: {Rimbody_Utility.GetBaseInventoryCapacity(parentPawn)}. FINAL: {carryFactor}");
         }
 
         public override void CompTick()

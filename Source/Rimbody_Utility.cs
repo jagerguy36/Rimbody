@@ -35,13 +35,19 @@ namespace Maux36.Rimbody
                 TryUpdateInventory(pawn);
             }
         }
+        public static float GetBaseInventoryCapacity(Pawn pawn)
+        {
+            return pawn.BodySize * 35f;//MassUtility.Capacity(pawn); // avoid returning 0
+        }
 
         public static void TryUpdateInventory(Pawn pawn)
         {
             if (pawn.needs?.food != null && (isColonyMember(pawn) || pawn.IsPrisonerOfColony) && shouldTick(pawn))
             {
                 CompPhysique compPhysique = pawn.compPhysique();
-                compPhysique?.UpdateCarryweight();
+                if (compPhysique == null) return;
+                if (compPhysique.BodyFat <= -1f || compPhysique.MuscleMass <= -1f) return;
+                compPhysique.UpdateCarryweight();
             }
         }
 
