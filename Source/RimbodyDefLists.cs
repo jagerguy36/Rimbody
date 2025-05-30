@@ -16,12 +16,12 @@ namespace Maux36.Rimbody
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> CardioTarget = new();
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> BalanceTarget = new();
         public static Dictionary<ThingDef, ModExtensionRimbodyTarget> WorkoutBuilding = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthNonTargetJob = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioNonTargetJob = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceNonTargetJob = new();
-        public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" };
-        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" };
-        public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceLifting", "Rimbody_DoBalanceBuilding" };
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthNonTargetJob = new(); //For JobGiver
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioNonTargetJob = new(); //For JobGiver
+        public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceNonTargetJob = new(); //For JobGiver
+        public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" }; //For Flags
+        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" }; //For Flags
+        public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceLifting", "Rimbody_DoBalanceBuilding" }; //For Flags
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;
         public static float strengthHighscore = 0;

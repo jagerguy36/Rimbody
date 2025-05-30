@@ -158,30 +158,28 @@ namespace Maux36.Rimbody
                 workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMat, out Thing mattress, 1, 40f);
                 bool nearbyspotFound = workoutLocation != IntVec3.Invalid;
                 
-
-                foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
+                if (nearbyspotFound)
                 {
-                    if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
+                    foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
                     {
-                        continue;
-                    }
-                    else if (!nearbyspotFound)
-                    {
-                        continue;
-                    }
-                    float nonTarget_score = (compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? 0.9f : 1f) * compPhysique.GetStrengthJobScore(strengthEx.strengthParts, strengthEx.strength);
-                    if (nonTarget_score > maxScore)
-                    {
-                        maxScore = nonTarget_score;
-                        tieCount = 1;
-                        bestJob = strengthJobdef;
-                    }
-                    else if (nonTarget_score == maxScore)
-                    {
-                        tieCount++;
-                        if (Rand.Chance(1f / tieCount))
+                        if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
                         {
-                            bestJob = strengthJobdef; // Reservoir sampling for random among ties
+                            continue;
+                        }
+                        float nonTarget_score = (compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? 0.9f : 1f) * compPhysique.GetStrengthJobScore(strengthEx.strengthParts, strengthEx.strength);
+                        if (nonTarget_score > maxScore)
+                        {
+                            maxScore = nonTarget_score;
+                            tieCount = 1;
+                            bestJob = strengthJobdef;
+                        }
+                        else if (nonTarget_score == maxScore)
+                        {
+                            tieCount++;
+                            if (Rand.Chance(1f / tieCount))
+                            {
+                                bestJob = strengthJobdef; // Reservoir sampling for random among ties
+                            }
                         }
                     }
                 }
