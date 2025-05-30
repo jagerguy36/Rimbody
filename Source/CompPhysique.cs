@@ -38,7 +38,7 @@ namespace Maux36.Rimbody
 
         //Internals
         private Pawn parentPawnInt = null;
-        //private bool? isJoggerInt;
+        private bool? isJoggerInt;
         public bool PostGen = false;
         private Pawn parentPawn
         {
@@ -46,6 +46,18 @@ namespace Maux36.Rimbody
             {
                 parentPawnInt ??= parent as Pawn;
                 return parentPawnInt;
+            }
+        }
+        public float? breInt;
+        public float bre
+        {
+            get
+            {
+                if (breInt is null)
+                {
+                    breInt = parentPawn.CurrentBed()?.GetStatValue(StatDefOf.BedRestEffectiveness) ?? 0.8f;
+                }
+                return breInt ?? 0.8f;
             }
         }
 
@@ -83,25 +95,25 @@ namespace Maux36.Rimbody
 
         //Traits and Genes
         public bool isNonSen = false;
-        //public bool isJogger
-        //{
-        //    get
-        //    {
-        //        if(isJoggerInt is null)
-        //        {
-        //            if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
-        //            {
-        //                isJoggerInt = true;
-        //            }
-        //            else
-        //            {
-        //                isJoggerInt = false;
-        //            }
-        //        }
-        //        return isJoggerInt ?? false;
-        //    }
-        //}
-        public bool isJogger => (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true);
+        public bool isJogger
+        {
+            get
+            {
+                if (isJoggerInt is null)
+                {
+                    if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+                    {
+                        isJoggerInt = true;
+                    }
+                    else
+                    {
+                        isJoggerInt = false;
+                    }
+                }
+                return isJoggerInt ?? false;
+            }
+        }
+        //public bool isJogger => (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true);
 
         //Memory
         public Queue<string> memory = [];
@@ -534,13 +546,12 @@ namespace Maux36.Rimbody
                 if (parentPawn.needs.rest != null)
                 {
                     //Grow on sleep
-                    if (forceRest || (pawnCaravan != null && (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())) || (pawnCaravan == null && parentPawn.jobs?.curDriver?.asleep == true))
+                    if (forceRest || parentPawn.needs.rest?.Resting == true)
                     {
                         restingCheck = true;
                         var swol = 2f;
                         var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
-                        var bre = parentPawn.CurrentBed()?.GetStatValue(StatDefOf.BedRestEffectiveness) ?? 0.8f;
-                        var recoveryFactor = swol * rrm * bre;
+                        var recoveryFactor = Mathf.Max( swol * rrm * bre, 0.2f);
 
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
@@ -663,6 +674,12 @@ namespace Maux36.Rimbody
         public (float, float, List<float>) HarmonyValues(string harmonyKey)
         {        
             return (0f, 0f, null); //(strengthHarmony, cardioOHarmony, partsHarmony);
+        }
+
+        //Utilities
+        public void DirtyTraitCache()
+        {
+            isJoggerInt = null;
         }
 
         public bool shouldCheckBody(float fatDelta, float muscleDelta, float newBodyFat, float newMuscleMass)
