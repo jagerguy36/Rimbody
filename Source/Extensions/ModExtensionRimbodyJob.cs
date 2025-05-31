@@ -101,6 +101,7 @@ namespace Maux36.Rimbody
         public vectorSet movingpartAnimPeak;
         public vectorSet pawnAnimOffset;
         public vectorSet pawnAnimPeak;
+        public string customWorkoutTickHandler;
     }
     public class ModExtensionRimbodyTarget : DefModExtension
     {

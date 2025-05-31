@@ -627,23 +627,30 @@
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
-							<north>(0,0,0.05)</north>
-							<east>(0.15,3.0,-0.1)</east>
-							<south>(0,3.5,-0.05)</south>
-							<west>(-0.15,3.0,-0.1)</west>
+							<north>(0,0,0.0)</north>
+							<east>(0,1.8,0)</east>
+							<south>(0,3.5,0)</south>
+							<west>(0,1.8,0)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
-							<north>(0,0,0.3)</north>
-							<east>(-0.08,0,0.1)</east>
-							<south>(0,0,0.3)</south>
-							<west>(0.08,0,0.1)</west>
+							<north>(0,0,0.15)</north>
+							<east>(-0.08,0,0.15)</east>
+							<south>(0,0,0.15)</south>
+							<west>(0.08,0,0.15)</west>
 						</movingpartAnimPeak>
 						<pawnAnimOffset>
-							<north>(0,0,0.3)</north>
-							<east>(-0.3,0,0.1)</east>
-							<south>(0,0,0.3)</south>
-							<west>(0.3,0,0.1)</west>
+							<north>(0,0,0.1)</north>
+							<east>(-0.2,0,0.15)</east>
+							<south>(0,0,0.2)</south>
+							<west>(0.2,0,0.15)</west>
 						</pawnAnimOffset>
+						<pawnAnimPeak>
+							<north>(0,0,0.03)</north>
+							<east>(-0.15,0,0.05)</east>
+							<south>(0,0,0.03)</south>
+							<west>(0.15,0,0.05)</west>
+						</pawnAnimPeak>
+						<customWorkoutTickHandler>Maux36.Rimbody.DeadliftTickhandler</customWorkoutTickHandler>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -791,23 +798,30 @@
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
-							<north>(0,0,0.05)</north>
-							<east>(0.15,3.0,-0.1)</east>
-							<south>(0,3.5,-0.05)</south>
-							<west>(-0.15,3.0,-0.1)</west>
+							<north>(0,0,0.0)</north>
+							<east>(0,1.8,0)</east>
+							<south>(0,3.5,0)</south>
+							<west>(0,1.8,0)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
-							<north>(0,0,0.3)</north>
-							<east>(-0.08,0,0.1)</east>
-							<south>(0,0,0.3)</south>
-							<west>(0.08,0,0.1)</west>
+							<north>(0,0,0.15)</north>
+							<east>(-0.08,0,0.15)</east>
+							<south>(0,0,0.15)</south>
+							<west>(0.08,0,0.15)</west>
 						</movingpartAnimPeak>
 						<pawnAnimOffset>
-							<north>(0,0,0.3)</north>
-							<east>(-0.3,0,0.1)</east>
-							<south>(0,0,0.3)</south>
-							<west>(0.3,0,0.1)</west>
+							<north>(0,0,0.1)</north>
+							<east>(-0.2,0,0.15)</east>
+							<south>(0,0,0.2)</south>
+							<west>(0.2,0,0.15)</west>
 						</pawnAnimOffset>
+						<pawnAnimPeak>
+							<north>(0,0,0.03)</north>
+							<east>(-0.15,0,0.05)</east>
+							<south>(0,0,0.03)</south>
+							<west>(0.15,0,0.05)</west>
+						</pawnAnimPeak>
+						<customWorkoutTickHandler>Maux36.Rimbody.DeadliftTickhandler</customWorkoutTickHandler>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>

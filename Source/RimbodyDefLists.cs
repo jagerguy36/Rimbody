@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Jobs;
 using Verse;
-using static UnityEngine.Scripting.GarbageCollector;
-using static Verse.AI.ThingCountTracker;
 
 namespace Maux36.Rimbody
 {
@@ -30,6 +27,8 @@ namespace Maux36.Rimbody
 
         public static Dictionary<string, ModExtensionRimbodyJob> JobExtensionCache = new();
         public static Dictionary<string, ModExtensionRimbodyJob> GiverExtensionCache = new();
+
+        public static readonly Dictionary<string, IWorkoutTickHandler> Handlers = new();
 
         static RimbodyDefLists() // Static constructor
         {
@@ -70,6 +69,18 @@ namespace Maux36.Rimbody
         {
             foreach (var workout in targetExtension.workouts)
             {
+                if (workout?.customWorkoutTickHandler != null)
+                {
+                    var type = Type.GetType(workout.customWorkoutTickHandler);
+                    if (type != null && typeof(IWorkoutTickHandler).IsAssignableFrom(type))
+                    {
+                        Handlers[workout.name] = (IWorkoutTickHandler)Activator.CreateInstance(type);
+                    }
+                    else
+                    {
+                        Log.Error($"Rimbody Could not load customWorkoutTickHandler '{workout.customWorkoutTickHandler}' for workout {workout.name}");
+                    }
+                }
                 switch (workout.Category)
                 {
                     case RimbodyWorkoutCategory.Strength:

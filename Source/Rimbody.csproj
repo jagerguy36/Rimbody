@@ -81,6 +81,8 @@
     <Compile Include="HarmonyPatches\Need_Rest_TickResting.cs" />
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
     <Compile Include="HarmonyPatches\Pawn_Notify_DisabledWorkTypesChanged.cs" />
+    <Compile Include="WorkoutTickHandlers\DeadliftTickhandler.cs" />
+    <Compile Include="WorkoutTickHandlers\IWorkoutTickHandler.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceLifting.cs" />
     <Compile Include="JobDrivers\Toils_Rimbody.cs" />
     <Compile Include="Thing\Thing_WorkoutAnimated.cs" />

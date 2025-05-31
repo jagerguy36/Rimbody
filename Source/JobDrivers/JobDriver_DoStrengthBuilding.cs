@@ -15,6 +15,7 @@ namespace Maux36.Rimbody
         private int workoutIndex = -1;
         private float memoryFactor = 1.0f;
         private float workoutEfficiencyValue = 1.0f;
+        private IWorkoutTickHandler externalHandler = null;
         private Vector3 pawnOffset = Vector3.zero;
         private Rot4 lyingRotation = Rot4.Invalid;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -83,44 +84,51 @@ namespace Maux36.Rimbody
         protected void WatchTickAction(Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration, float jitter_amount)
         {
             tickProgress++;
-            if (wo.animationType == InteractionType.Building)
+            if (externalHandler != null)
             {
-                float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
-                float nudgeMultiplier;
-                Vector3 buildingOffset = Vector3.zero;
-                if (cycleTime < uptime) nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
-                else nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
-                //Pawn
-                if (wo?.pawnAnimOffset?.FromRot(building.Rotation) != null)
-                {
-                    pawnOffset = wo.pawnAnimOffset.FromRot(building.Rotation);
-                }
-                if (wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != null && wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != Vector3.zero)
-                {
-                    pawnOffset += nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation) + IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
-                }
-                //Building
-                if (wo?.movingpartAnimOffset?.FromRot(building.Rotation) != null)
-                {
-                    buildingOffset = wo.movingpartAnimOffset.FromRot(building.Rotation);
-                }
-                if (wo?.movingpartAnimPeak?.FromRot(building.Rotation) != null)
-                {
-                    buildingOffset += nudgeMultiplier * wo.movingpartAnimPeak.FromRot(building.Rotation) + IntVec3.West.RotatedBy(building.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
-                }
-                building.calculatedOffset = buildingOffset;
+                externalHandler.TickAction(pawn, building, wo, uptime, cycleDuration, jitter_amount, tickProgress, ref pawnOffset, ref lyingRotation);
             }
-            else if (wo.animationType == InteractionType.Melee)
+            else
             {
-                if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
+                if (wo.animationType == InteractionType.Building)
                 {
-                    if (wo.playSound)
+                    float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;
+                    float nudgeMultiplier;
+                    Vector3 buildingOffset = Vector3.zero;
+                    if (cycleTime < uptime) nudgeMultiplier = Mathf.Lerp(0f, 1f, cycleTime / uptime);
+                    else nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
+                    //Pawn
+                    if (wo?.pawnAnimOffset?.FromRot(building.Rotation) != null)
                     {
-                        SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                        pawnOffset = wo.pawnAnimOffset.FromRot(building.Rotation);
                     }
-                    if(building != null)
+                    if (wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != null && wo?.pawnAnimPeak?.FromRot(pawn.Rotation) != Vector3.zero)
                     {
-                        pawn.Drawer.Notify_MeleeAttackOn(building);
+                        pawnOffset += nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation) + IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
+                    }
+                    //Building
+                    if (wo?.movingpartAnimOffset?.FromRot(building.Rotation) != null)
+                    {
+                        buildingOffset = wo.movingpartAnimOffset.FromRot(building.Rotation);
+                    }
+                    if (wo?.movingpartAnimPeak?.FromRot(building.Rotation) != null)
+                    {
+                        buildingOffset += nudgeMultiplier * wo.movingpartAnimPeak.FromRot(building.Rotation) + IntVec3.West.RotatedBy(building.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
+                    }
+                    building.calculatedOffset = buildingOffset;
+                }
+                else if (wo.animationType == InteractionType.Melee)
+                {
+                    if (pawn.IsHashIntervalTick(50 + Rand.Range(0, 10)))
+                    {
+                        if (wo.playSound)
+                        {
+                            SoundDefOf.MetalHitImportant.PlayOneShot(new TargetInfo(pawn.Position, pawn.Map));
+                        }
+                        if (building != null)
+                        {
+                            pawn.Drawer.Notify_MeleeAttackOn(building);
+                        }
                     }
                 }
             }
@@ -210,11 +218,16 @@ namespace Maux36.Rimbody
             {
                 this.job.reportStringOverride = exWorkout.reportString.Translate();
             }
+            if (exWorkout.customWorkoutTickHandler != null)
+            {
+                RimbodyDefLists.Handlers.TryGetValue(exWorkout.name, out externalHandler);
+            }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
                 TargetThingA.Map.physicalInteractionReservationManager.Reserve(pawn, job, TargetThingA);
+                pawn.pather.StopDead();
                 GetInPosition(TargetThingA, exWorkout.pawnDirection);
                 joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 var joyneed = pawn.needs?.joy;
@@ -255,6 +268,7 @@ namespace Maux36.Rimbody
                     buildingAnimated.calculatedOffset = Vector3.zero;
                     pawnOffset = Vector3.zero;
                 }
+                pawn.jobs.posture = PawnPosture.Standing;
                 pawn.PawnBodyAngleOverride() = -1;
                 lyingRotation = Rot4.Invalid;
                 TryGainGymThought();
