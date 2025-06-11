@@ -2,11 +2,13 @@
 using Verse.AI;
 using Verse;
 using UnityEngine;
+using RimWorld;
 
 namespace Maux36.Rimbody
 {
     internal class JobDriver_DoChunkLifting : JobDriver
     {
+        private bool shouldReturn = false;
         private const int duration = 800;
         private float joygainfactor = 1.0f;
         private int tickProgress = 0;
@@ -34,6 +36,7 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref shouldReturn, "chunklifting_shouldReturn", false);
             Scribe_Values.Look(ref joygainfactor, "chunklifting_joygainfactor", 1.0f);
             Scribe_Values.Look(ref tickProgress, "chunklifting_tickProgress", 0);
             Scribe_Values.Look(ref memoryFactor, "chunklifting_memoryFactor", 1.0f);
@@ -53,6 +56,7 @@ namespace Maux36.Rimbody
 
             yield return Toils_General.DoAtomic(delegate
             {
+                shouldReturn = TargetThingA.IsInValidStorage();
                 job.count = 1;
             });
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
@@ -107,7 +111,18 @@ namespace Maux36.Rimbody
                 compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
                 AddMemory(compPhysique);
-                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                if (shouldReturn)
+                {
+                    Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
+                    if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
+                    {
+                        pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                    }
+                }
+                else
+                {
+                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                }
             });
             yield return workout;
         }
