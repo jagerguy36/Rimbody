@@ -55,9 +55,10 @@ namespace Maux36.Rimbody
             {
                 if (breInt is null)
                 {
-                    breInt = parentPawn.CurrentBed()?.GetStatValue(StatDefOf.BedRestEffectiveness) ?? 0.8f;
+                    var bed = parentPawn.CurrentBed();
+                    breInt = ((bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness));
                 }
-                return breInt ?? 0.8f;
+                return breInt ?? StatDefOf.BedRestEffectiveness.valueIfMissing;
             }
         }
 
@@ -568,6 +569,7 @@ namespace Maux36.Rimbody
                     //Awake
                     else
                     {
+                        breInt = null;
                         //Store gain
                         gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
                         //Grow slowly
