@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BC52C2EB-1010-4312-BEC8-EDD1EDB4C8DF}</ProjectGuid>
+    <ProjectGuid>{0583E115-0A8B-4F58-BA38-84F7D78BF6B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CombatTrainingCompatibility</RootNamespace>
-    <AssemblyName>CombatTrainingCompatibility</AssemblyName>
+    <RootNamespace>GiddyUpCompatibility</RootNamespace>
+    <AssemblyName>GiddyUpCompatibility</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,7 +17,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Mods\CombatTraining\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\Mods\GiddyUp\1.5\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,19 +33,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Lib.Harmony.2.3.6\lib\net48\0Harmony.dll</HintPath>
+      <HintPath>..\..\packages\Lib.Harmony.2.3.6\lib\net48\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CombatTrainingMod">
-      <HintPath>..\..\..\..\..\..\..\workshop\content\294100\2778569619\1.5\Assemblies\CombatTrainingMod.dll</HintPath>
+    <Reference Include="GiddyUpCore">
+      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\3246108162\1.5\Assemblies\GiddyUpCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rimbody">
-      <HintPath>..\..\..\1.5\Assemblies\Rimbody.dll</HintPath>
+      <HintPath>..\..\..\..\1.5\Assemblies\Rimbody.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -56,10 +56,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HarmonyInit.cs" />
-    <Compile Include="HarmonyPatches\TrainingPatches.cs" />
+    <Compile Include="HarmonyPatches\MountingPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
