@@ -49,7 +49,7 @@
 			<Flammability>1.0</Flammability>
 			<Beauty>0.5</Beauty>
 		</statBases>
-		<designationCategory>Furniture</designationCategory>
+		<designationCategory>ASFstorage</designationCategory>
 		<building>
 			<preventDeteriorationOnTop>true</preventDeteriorationOnTop>
 			<ignoreStoredThingsBeauty>true</ignoreStoredThingsBeauty>

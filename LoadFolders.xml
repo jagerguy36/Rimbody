@@ -23,6 +23,5 @@
 		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner/1.5</li>
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
 		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2/1.5</li>
-		<li IfModActive="adaptive.storage.framework">Mods/ASF/1.5</li>
 	</v1.5>
 </loadFolders>

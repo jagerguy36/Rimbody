@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <Operation Class="PatchOperationFindMod">
+      <mods>
+        <li>Adaptive Storage Framework</li>
+      </mods>
+      <nomatch Class="PatchOperationReplace">
+        <xpath>Defs/ThingDef[defName="Rimbody_WeightRack"]/designationCategory</xpath>
+          <value>
+            <designationCategory>Furniture</designationCategory>
+          </value>
+      </nomatch>
+    </Operation>
+</Patch>
