@@ -5,24 +5,24 @@
 		<li>1.5</li>
 		<li>Common</li>
     	<li IfModActive="Ludeon.RimWorld.Biotech">Mods/Biotech</li>
-		<li IfModActive="kones.getrimped">Mods/Get Rimped</li>
+		<li IfModActive="kones.getrimped">Mods/Get Rimped/1.5</li>
 		<li IfModActive="mlie.syrindividuality">Mods/SYR Individuality/1.5</li>
 		<li IfModActive="redmattis.betterprerequisites">Mods/BigAndSmall/1.5</li>
-		<li IfModActive="dubwise.rimefeller">Mods/Rimefeller</li>
-		<li IfModActive="ogliss.thewhitecrayon.quarry" >Mods/Quarry</li>
-		<li IfModActive="flashpoint55.humanpowergeneratormod">Mods/Human Power Generator Mod</li>
-		<li IfModActive="haplo.miscellaneous.training,haplo.miscellaneous.trainingnotask">Mods/Misc Training</li>
+		<li IfModActive="dubwise.rimefeller">Mods/Rimefeller/1.5</li>
+		<li IfModActive="ogliss.thewhitecrayon.quarry" >Mods/Quarry/1.5</li>
+		<li IfModActive="flashpoint55.humanpowergeneratormod">Mods/Human Power Generator Mod/1.5</li>
+		<li IfModActive="haplo.miscellaneous.training,haplo.miscellaneous.trainingnotask">Mods/Misc Training/1.5</li>
 		<li IfModActive="ceteam.combatextended">Mods/CombatExtended/1.5</li>
 		<li IfModActive="owlchemist.giddyup">Mods/GiddyUp/1.5</li>
 		<li IfModActive="mlie.combattraining">Mods/CombatTraining/1.5</li>
-		<li IfModActive="kaitorisenkou.ballgames">Mods/BallGames</li>
-		<li IfModActive="arcjc007.rimball">Mods/Rimball</li>
-		<li IfModActive="cain.mineshaft">Mods/Mines 2.0</li>
-		<li IfModActive="aelanna.eccentrictech.beachstuff">Mods/BeachStuff</li>
-		<li IfModActive="cyanobot.toddlers">Mods/Toddlers</li>
-		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner</li>
+		<li IfModActive="kaitorisenkou.ballgames">Mods/BallGames/1.5</li>
+		<li IfModActive="arcjc007.rimball">Mods/Rimball/1.5</li>
+		<li IfModActive="cain.mineshaft">Mods/Mines 2.0/1.5</li>
+		<li IfModActive="aelanna.eccentrictech.beachstuff">Mods/BeachStuff/1.5</li>
+		<li IfModActive="cyanobot.toddlers">Mods/Toddlers/1.5</li>
+		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner/1.5</li>
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.5</li>
-		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2</li>
-		<li IfModActive="adaptive.storage.framework">Mods/ASF</li>
+		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2/1.5</li>
+		<li IfModActive="adaptive.storage.framework">Mods/ASF/1.5</li>
 	</v1.5>
 </loadFolders>
