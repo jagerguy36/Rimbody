@@ -67,16 +67,16 @@ namespace Maux36.Rimbody_Individuality
         public static bool Prefix(Pawn pawn)
         {
             if (pawn == null) return false;
-
             var compPhysique = pawn.compPhysique();
+            if(compPhysique == null)
+            {
+                return true;
+            }
             if (compPhysique.BodyFat!=-2)
             {
                 return false;
             }
-            else //Only show for HAR race
-            {
-                return true;
-            }
+            return true;
         }
     }
 
