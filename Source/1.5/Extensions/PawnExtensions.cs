@@ -1,18 +1,25 @@
-﻿using RimWorld;
-using Prepatcher;
+﻿using Prepatcher;
 using Verse;
 
 namespace Maux36.Rimbody
 {
     public static class PawnExtensions
     {
-        [PrepatcherField]
-        [Prepatcher.DefaultValue(-1f)]
-        public static extern ref float PawnBodyAngleOverride(this Pawn target);
+        private static float _defaultAngle = -1f;
+        public static ref float PawnBodyAngleOverride(this Pawn pawn)
+        {
+            var comp = pawn.compPhysique();
+            if (comp == null)
+                return ref _defaultAngle;
+
+            return ref comp.pawnBodyAngleOverride;
+        }
 
         [PrepatcherField]
         [InjectComponent]
-        public static extern CompPhysique compPhysique(this Pawn pawn);
-
+        public static CompPhysique compPhysique(this Pawn pawn)
+        {
+            return pawn.GetComp<CompPhysique>();
+        }
     }
 }

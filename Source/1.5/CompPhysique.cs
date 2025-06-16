@@ -62,6 +62,8 @@ namespace Maux36.Rimbody
             }
         }
 
+        public float pawnBodyAngleOverride = -1f;
+
         //Job Overrides
         public bool forceRest = false; //For mod compatibility.
         public bool jobOverride = false;
@@ -1188,7 +1190,7 @@ namespace Maux36.Rimbody
             base.PostExposeData();
             Scribe_Values.Look(ref PostGen, "Physique_PostGen", true);
             Scribe_Values.Look(ref forceRest, "Physique_boarded", false);
-
+            Scribe_Values.Look(ref pawnBodyAngleOverride, "Physique_pawnBodyAngleOverride", -1f);
 
             Scribe_Values.Look(ref jobOverride, "Physique_jobOverride", false);
             Scribe_Values.Look(ref cardioOverride, "Physique_cardioOverride", 0f);
