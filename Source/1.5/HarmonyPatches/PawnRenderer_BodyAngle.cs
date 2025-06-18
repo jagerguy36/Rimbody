@@ -14,7 +14,7 @@ namespace Maux36.Rimbody
     {
         public static bool Prefix(ref float __result, PawnRenderFlags flags, PawnRenderer __instance, Pawn ___pawn)
         {
-            var compPhysique = ___pawn.CompPhysique();
+            var compPhysique = ___pawn.compPhysique();
             if (compPhysique?.pawnBodyAngleOverride >= 0 )
             {
                 __result = compPhysique.pawnBodyAngleOverride;
