@@ -88,7 +88,7 @@ namespace Maux36.Rimbody
                     workoutEfficiencyValue = 1.05f;
                 }
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
-                pawn.PawnBodyAngleOverride() = facing.Opposite.AsAngle + ((facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f);
+                pawn.SetPawnBodyAngleOverride(facing.Opposite.AsAngle + ((facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f));
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 var joyneed = pawn.needs?.joy;
                 if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
@@ -127,7 +127,7 @@ namespace Maux36.Rimbody
                 TryGainGymThought();
                 AddMemory(compPhysique);
                 pawn.jobs.posture = PawnPosture.Standing;
-                pawn.PawnBodyAngleOverride() = -1;
+                pawn.SetPawnBodyAngleOverride(-1f);
             });
             yield return workout;
         }

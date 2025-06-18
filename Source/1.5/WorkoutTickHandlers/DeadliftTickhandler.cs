@@ -56,7 +56,7 @@ namespace Maux36.Rimbody
             {
                 pawnOffset += nudgeMultiplier * wo.pawnAnimPeak.FromRot(pawn.Rotation) + IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.Range(-jitter_amount, jitter_amount);
             }
-            pawn.PawnBodyAngleOverride() = animBase + (animCoef * nudgeMultiplier);
+            pawn.SetPawnBodyAngleOverride(animBase + (animCoef * nudgeMultiplier));
             //Building
             if (wo?.movingpartAnimOffset?.FromRot(building.Rotation) != null)
             {

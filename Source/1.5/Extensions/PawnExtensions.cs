@@ -5,14 +5,13 @@ namespace Maux36.Rimbody
 {
     public static class PawnExtensions
     {
-        private static float _defaultAngle = -1f;
-        public static ref float PawnBodyAngleOverride(this Pawn pawn)
+        public static void SetPawnBodyAngleOverride(this Pawn pawn, float angle)
         {
             var comp = pawn.compPhysique();
-            if (comp == null)
-                return ref _defaultAngle;
-
-            return ref comp.pawnBodyAngleOverride;
+            if (comp != null)
+            {
+                comp.pawnBodyAngleOverride = angle;
+            }
         }
 
         [PrepatcherField]

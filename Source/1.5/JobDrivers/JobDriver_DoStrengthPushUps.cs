@@ -123,7 +123,7 @@ namespace Maux36.Rimbody
                 {
                     nudgeMultiplier = Mathf.Lerp(1f, 0f, (cycleTime - uptime) / (1f - uptime));
                 }
-                pawn.PawnBodyAngleOverride() = animBase + animCoef * (1f + nudgeMultiplier);
+                pawn.SetPawnBodyAngleOverride(animBase + animCoef * (1f + nudgeMultiplier));
                 Vector3 JitterVector = IntVec3.West.RotatedBy(pawn.Rotation).ToVector3() * Rand.RangeSeeded(-jitter_amount, jitter_amount, tickProgress);
                 pawnNudge = JitterVector + Vector3.forward*nudgeMultiplier*0.15f;
                 pawn.needs?.joy?.GainJoy(joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
@@ -141,7 +141,7 @@ namespace Maux36.Rimbody
                 TryGainGymThought();
                 AddMemory(compPhysique);
                 pawn.jobs.posture = PawnPosture.Standing;
-                pawn.PawnBodyAngleOverride() = -1;
+                pawn.SetPawnBodyAngleOverride(-1f);
             });
             yield return workout;
         }

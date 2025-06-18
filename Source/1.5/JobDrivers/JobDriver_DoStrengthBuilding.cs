@@ -62,20 +62,20 @@ namespace Maux36.Rimbody
                     pawn.Rotation = building.Rotation.Opposite;
                     break;
                 case Direction.LyingFrontSame:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
                 case Direction.LyingFrontOpposite:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.AsAngle;
+                    pawn.SetPawnBodyAngleOverride(building.Rotation.AsAngle);
                     pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     break;
                 case Direction.LyingDownSame:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
                     pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                     lyingRotation = building.Rotation.Opposite == Rot4.South ? Rot4.North : building.Rotation.Opposite;
                     break;
                 case Direction.LyingUpSame:
-                    pawn.PawnBodyAngleOverride() = building.Rotation.Opposite.AsAngle;
+                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
                     pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                     lyingRotation = building.Rotation == Rot4.North ? Rot4.South : building.Rotation;
                     break;
@@ -269,7 +269,7 @@ namespace Maux36.Rimbody
                     pawnOffset = Vector3.zero;
                 }
                 pawn.jobs.posture = PawnPosture.Standing;
-                pawn.PawnBodyAngleOverride() = -1;
+                pawn.SetPawnBodyAngleOverride(-1f);
                 lyingRotation = Rot4.Invalid;
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);

@@ -211,7 +211,7 @@ namespace Maux36.Rimbody
                 {
                     if (exWorkout.pawnDirection == Direction.LyingFrontSame)
                     {
-                        pawn.PawnBodyAngleOverride() = TargetB.Thing.Rotation.Opposite.AsAngle;
+                        pawn.SetPawnBodyAngleOverride(TargetB.Thing.Rotation.Opposite.AsAngle);
                         pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
                     }
                     pawn.Rotation = TargetB.Thing.Rotation;
@@ -261,7 +261,7 @@ namespace Maux36.Rimbody
                 compPhysique.partsOverride = null;
                 thingAnimated.beingUsed = false;
                 thingAnimated.ghostOffset = Vector3.zero;
-                pawn.PawnBodyAngleOverride() = -1;
+                pawn.SetPawnBodyAngleOverride(-1f);
                 TryGainGymThought();
                 AddMemory(compPhysique, exWorkout.name);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
