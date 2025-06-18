@@ -5,9 +5,9 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    public class PhysiqueWorldComp : WorldComponent
+    public class RimbodyWorldComp : WorldComponent
     {
-        public PhysiqueWorldComp(World world) : base(world)
+        public RimbodyWorldComp(World world) : base(world)
         {
         }
 
