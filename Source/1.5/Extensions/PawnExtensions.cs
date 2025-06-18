@@ -18,7 +18,7 @@ namespace Maux36.Rimbody
         [InjectComponent]
         public static CompPhysique compPhysique(this Pawn pawn)
         {
-            return pawn.GetComp<CompPhysique>();
+            return PhysiqueCacheManager.GetCompPhysiqueCached(pawn);
         }
     }
 }

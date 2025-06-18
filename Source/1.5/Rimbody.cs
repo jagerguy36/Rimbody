@@ -48,7 +48,7 @@ namespace Maux36.Rimbody
 
             if (!ModsConfig.IsActive("zetrith.prepatcher"))
             {
-                Log.Error("Rimbody could not find its required dependency: Prepatcher. This is a critical component, and your game will not work without it.");
+                Log.Warning("[Rimbody] Prepatcher not detected. For optimal performance, Prepatcher is highly recommended.");
             }
         }
 
