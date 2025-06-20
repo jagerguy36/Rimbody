@@ -931,7 +931,7 @@
 		<passability>PassThroughOnly</passability>
 		<pathCost>10</pathCost>
 		<designationCategory>Joy</designationCategory>
-		<uiIconScale>1</uiIconScale>
+		<uiIconScale>1.1</uiIconScale>
 		<canOverlapZones>false</canOverlapZones>
 		<hasInteractionCell>true</hasInteractionCell>
 		<interactionCellOffset>(0, 0, 0)</interactionCellOffset>

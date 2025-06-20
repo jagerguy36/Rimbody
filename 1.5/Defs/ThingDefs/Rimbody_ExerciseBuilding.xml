@@ -895,7 +895,7 @@
 		<graphicData>
 			<texPath>Things/Building/Rimbody_buildings/AgRipnus/PullupBars/PullupBars</texPath>
 			<shaderType>CutoutComplex</shaderType>
-			<drawSize>(3,1.19)</drawSize>
+			<drawSize>(3.45,1.15)</drawSize>
 			<graphicClass>Graphic_Multi</graphicClass>
 			<damageData>
 				<rect>(0.3,0.3,0.7,0.7)</rect>
@@ -931,7 +931,7 @@
 		<passability>PassThroughOnly</passability>
 		<pathCost>10</pathCost>
 		<designationCategory>Joy</designationCategory>
-		<uiIconScale>0.9</uiIconScale>
+		<uiIconScale>1.1</uiIconScale>
 		<canOverlapZones>false</canOverlapZones>
 		<hasInteractionCell>true</hasInteractionCell>
 		<interactionCellOffset>(0, 0, 0)</interactionCellOffset>
