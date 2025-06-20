@@ -674,9 +674,9 @@
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
 							<north>(0,3.5,0.25)</north>
-							<east>(-0.15,1.8,0.1)</east>
+							<east>(-0.15,2.5,0.1)</east>
 							<south>(0,0,0.25)</south>
-							<west>(0.15,1.8,0.1)</west>
+							<west>(0.15,2.5,0.1)</west>
 						</movingpartAnimOffset>
 						<movingpartAnimPeak>
 							<north>(0,0,0.15)</north>
