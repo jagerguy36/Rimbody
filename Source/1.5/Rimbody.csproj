@@ -118,6 +118,7 @@
     <Compile Include="ThinkNodes\ThinkNode_WorkoutPriority.cs" />
     <Compile Include="ThinkNodes\ThinkNode_WorkoutCondition.cs" />
     <Compile Include="ThoughtWorker\ThoughtWorker_RunnerHigh.cs" />
+    <Compile Include="WorldComp\RimbodyWorldComp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

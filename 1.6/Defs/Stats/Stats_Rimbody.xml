@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <StatDef>
+    <defName>Rimbody_WorkoutEfficiency</defName>
+    <label>workout efficiency</label>
+    <description>How effective this object is at helping workouts.</description>
+    <category>Building</category>
+    <defaultBaseValue>1</defaultBaseValue>
+    <minValue>0.9</minValue>
+    <toStringStyle>PercentZero</toStringStyle>
+    <showIfUndefined>false</showIfUndefined>
+    <displayPriorityInCategory>4020</displayPriorityInCategory>
+  </StatDef>
+
+</Defs>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThinkTreeDef[defName="MainColonistBehaviorCore"]/thinkRoot/subNodes/li[@Class="ThinkNode_PrioritySorter"]/subNodes</xpath>
+        <order>Append</order>
+        <value>
+            <li Class="Maux36.Rimbody.ThinkNode_WorkoutPriority">
+                <subNodes>
+                    <li Class="ThinkNode_PrioritySorter">
+                        <subNodes>
+                            <li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
+                        </subNodes>
+                    </li>
+                </subNodes>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThinkTreeDef[defName="Humanlike"]/thinkRoot/subNodes/li[@Class="ThinkNode_ConditionalPrisoner"]/subNodes/li[@Class="ThinkNode_Tagger"][tagToGive="SatisfyingNeeds"]/subNodes/li[@Class="ThinkNode_PrioritySorter"]/subNodes</xpath>
+        <order>Append</order>
+        <value>
+            <li Class="Maux36.Rimbody.ThinkNode_WorkoutPriority">
+                <subNodes>
+                    <li Class="ThinkNode_PrioritySorter">
+                        <subNodes>
+                            <li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
+                        </subNodes>
+                    </li>
+                </subNodes>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThinkTreeDef[defName="Humanlike"]/thinkRoot/subNodes/li[@Class="ThinkNode_ConditionalPrisoner"]/subNodes/li[@Class="ThinkNode_Tagger"][tagToGive="Idle"]/subNodes</xpath>
+        <order>Prepend</order>
+        <value>
+            <li Class="Maux36.Rimbody.ThinkNode_WorkoutCondition">
+                <subNodes>
+                    <li Class="ThinkNode_PrioritySorter">
+                        <subNodes>
+                            <li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
+                            <li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
+                        </subNodes>
+                    </li>
+                </subNodes>
+            </li>
+        </value>
+    </Operation>
+
+</Patch>

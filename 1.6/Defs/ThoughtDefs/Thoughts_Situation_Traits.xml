@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<ThoughtDef>
+		<defName>Rimbody_RunnerHigh</defName>
+		<workerClass>Maux36.Rimbody.ThoughtWorker_RunnerHigh</workerClass>
+		<stages>
+		    <li>
+				<label>runner's high</label>
+				<description>I was made to chase the horizon; running sets me free.</description>
+				<baseMoodEffect>5</baseMoodEffect>
+		    </li>
+		</stages>
+	</ThoughtDef>
+  
+
+	<ThoughtDef>
+		<defName>Rimbody_GoodRun</defName>
+		<durationDays>0.2</durationDays>
+		<stackLimit>1</stackLimit>
+		<stages>
+			<li>
+				<label>Good run</label>
+				<description>Nothing feels better than the calm after a good run.</description>
+				<baseMoodEffect>3</baseMoodEffect>
+			</li>
+		</stages>
+	</ThoughtDef>
+
+</Defs>
