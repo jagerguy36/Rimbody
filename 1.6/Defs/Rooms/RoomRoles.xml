@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <RoomRoleDef>
+    <defName>Rimbody_Gym</defName>
+    <label>gym</label>
+    <workerClass>Maux36.Rimbody.RoomRoleWorker_Gym</workerClass>
+    <relatedStats>
+      <li>Beauty</li>
+      <li>Cleanliness</li>
+      <li>Wealth</li>
+      <li>Space</li>
+      <li>Impressiveness</li>
+    </relatedStats>
+  </RoomRoleDef>
+</Defs>

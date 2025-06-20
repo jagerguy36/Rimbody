@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    
+    <JobDef>
+        <defName>Rimbody_Jogging</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_Jogging</driverClass>
+        <reportString>Jogging.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Cardio</Category>
+                  <cardio>1.9</cardio>
+                  <strength>0.25</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0.2</li>
+                    <li>0.2</li>
+                    <li>0.6</li>
+                    <li>0.6</li>
+                    <li>0.6</li>
+                  </strengthParts>
+              </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoStrengthPushUps</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoStrengthPushUps</driverClass>
+        <reportString>Doing Pushups.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Strength</Category>
+                  <cardio>0.5</cardio>
+                  <strength>1.8</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0.5</li>
+                    <li>2</li>
+                    <li>0</li>
+                    <li>1</li>
+                    <li>0</li>
+                    <li>0.25</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                  </strengthParts>
+            </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoChunkLifting</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoChunkLifting</driverClass>
+        <reportString>Lifting Chunk.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Strength</Category>
+                  <cardio>0.5</cardio>
+                  <strength>1.8</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0.5</li>
+                    <li>1</li>
+                    <li>2</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0.25</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                  </strengthParts>
+            </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoChunkOverheadPress</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoChunkOverheadPress</driverClass>
+        <reportString>Doing Chunk overhead press.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Strength</Category>
+                  <cardio>0.5</cardio>
+                  <strength>1.8</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>2</li>
+                    <li>0.5</li>
+                    <li>0</li>
+                    <li>1</li>
+                    <li>0</li>
+                    <li>0.25</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                  </strengthParts>
+            </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoChunkSquats</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoChunkSquats</driverClass>
+        <reportString>Doing Chunk squats.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Strength</Category>
+                  <cardio>0.5</cardio>
+                  <strength>1.8</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0.5</li>
+                    <li>2</li>
+                    <li>1</li>
+                    <li>0.25</li>
+                  </strengthParts>
+            </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoBodyWeightPlank</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoBodyWeightPlank</driverClass>
+        <reportString>Doing Plank</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+        <modExtensions>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                  <Category>Balance</Category>
+                  <cardio>1.5</cardio>
+                  <strength>1.2</strength>
+                  <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                  <strengthParts>
+                    <li>0.75</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>0</li>
+                    <li>1</li>
+                    <li>0.5</li>
+                    <li>0.25</li>
+                    <li>0</li>
+                  </strengthParts>
+            </li>
+        </modExtensions>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoStrengthLifting</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoStrengthLifting</driverClass>
+        <reportString>Doing strength work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoBalanceLifting</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoBalanceLifting</driverClass>
+        <reportString>Doing balanced work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoStrengthBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoStrengthBuilding</driverClass>
+        <reportString>Doing strength work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoBalanceBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoBalanceBuilding</driverClass>
+        <reportString>Doing balanced work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+    <JobDef>
+        <defName>Rimbody_DoCardioBuilding</defName>
+        <driverClass>Maux36.Rimbody.JobDriver_DoCardioBuilding</driverClass>
+        <reportString>Doing cardio work out.</reportString>
+        <joyKind>Rimbody_WorkoutJoy</joyKind>
+    </JobDef>
+
+</Defs>

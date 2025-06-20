@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_MaxGain</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_GainIcon_maxed</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+	
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_Gain</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_GainIcon</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_GainLimited</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_GainIcon_limited</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_Cardio</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_CardioIcon</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_CardioLimited</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_CardioIcon_limited</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Mote_Rimbody_Plank</defName>
+		<graphicData>
+			<texPath>UI/Rimbody_PlankIcon</texPath>
+		</graphicData>
+		<altitudeLayer>MetaOverlays</altitudeLayer>
+		<fadeInTime>0.08</fadeInTime>
+		<solidTime>1.4</solidTime>
+		<fadeOutTime>1.5</fadeOutTime>
+	</FleckDef>
+</Defs>
