@@ -46,10 +46,10 @@ namespace Maux36.Rimbody
                 CombatExtendedLoaded = true;
             }
 
-            if (!ModsConfig.IsActive("zetrith.prepatcher"))
-            {
-                Log.Warning("[Rimbody] Prepatcher not detected. For optimal performance, Prepatcher is highly recommended.");
-            }
+            //if (!ModsConfig.IsActive("zetrith.prepatcher"))
+            //{
+            //    Log.Warning("[Rimbody] Prepatcher not detected. For optimal performance, Prepatcher is highly recommended.");
+            //}
         }
 
         public override string SettingsCategory()

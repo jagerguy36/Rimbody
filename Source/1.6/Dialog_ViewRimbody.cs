@@ -19,14 +19,7 @@ namespace Maux36.Rimbody
             closeOnAccept = true;
             closeOnCancel = true;
             var rect = new Rect(inRect.x - 10f, inRect.y, inRect.width + 10f, inRect.height);
-            if (Find.WindowStack.IsOpen(typeof(Dialog_Trade)) || Current.ProgramState != ProgramState.Playing)
-            {
-                RimbodyCardUtility.DrawRimbodyCard(rect, editFor);
-            }
-            else
-            {
-                RimbodyCardUtility.DrawRimbodyCard(rect, Find.Selector.SingleSelectedThing as Pawn);
-            }
+            RimbodyCardUtility.DrawRimbodyCard(rect, editFor);
         }
     }
 }
