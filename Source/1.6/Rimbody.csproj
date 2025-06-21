@@ -68,9 +68,10 @@
     <Compile Include="Building\PlaceWorker_ShowEntry.cs" />
     <Compile Include="Building\PlaceWorker_ShowDirection.cs" />
     <Compile Include="Building\PlaceWorker_WorkoutAnimated.cs" />
-    <Compile Include="CompPhysique.cs" />
-    <Compile Include="CompProperties_Physique.cs" />
-    <Compile Include="CompToHumanlikes.cs" />
+    <Compile Include="CompPhysique\CompPhysique.cs" />
+    <Compile Include="CompPhysique\CompProperties_Physique.cs" />
+    <Compile Include="CompPhysique\CompToHumanlikes.cs" />
+    <Compile Include="CompPhysique\PhysiqueCacheManager.cs" />
     <Compile Include="Extensions\PawnExtensions.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
