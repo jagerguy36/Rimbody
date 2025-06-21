@@ -36,7 +36,7 @@ namespace Maux36.Rimbody
             {
                 return comp;
             }
-            comp = pawn.GetComp<CompPhysique>();
+            comp = pawn.TryGetComp<CompPhysique>();
             if (comp != null)
             {
                 CompPhysiqueCache.Add(pawn, comp);
