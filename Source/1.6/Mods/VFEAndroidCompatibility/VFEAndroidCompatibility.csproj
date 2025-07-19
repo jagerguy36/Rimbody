@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Mods\VFEAndroids\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\Mods\VFEAndroids\1.6\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lib.Harmony.2.3.6\lib\net48\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
@@ -41,7 +41,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Rimbody">
-      <HintPath>..\..\..\..\1.5\Assemblies\Rimbody.dll</HintPath>
+      <HintPath>..\..\..\..\1.6\Assemblies\Rimbody.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -53,7 +53,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="VREAndroids">
-      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\2975771801\1.5\Assemblies\VREAndroids.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\2975771801\1.6\Assemblies\VREAndroids.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

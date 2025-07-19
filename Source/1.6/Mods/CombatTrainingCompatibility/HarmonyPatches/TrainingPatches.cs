@@ -1,10 +1,6 @@
 ﻿using HarmonyLib;
 using Maux36.Rimbody;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Maux36.Rimbody_CombatTrainingCompatibility

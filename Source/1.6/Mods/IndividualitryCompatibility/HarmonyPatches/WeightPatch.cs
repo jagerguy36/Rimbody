@@ -10,15 +10,9 @@ using Verse.Sound;
 
 namespace Maux36.Rimbody_Individuality
 {
-    [HarmonyPatch]
+    [HarmonyPatch(typeof(CompPhysique), "PhysiqueValueSetup")]
     public class WeightPatch
     {
-        static MethodBase TargetMethod()
-        {
-            Type classType = AccessTools.TypeByName("Maux36.Rimbody.CompPhysique");
-            return AccessTools.Method(classType, "PhysiqueValueSetup");
-        }
-
         static void Postfix(CompPhysique __instance)
         {
             var compPhysique = __instance;

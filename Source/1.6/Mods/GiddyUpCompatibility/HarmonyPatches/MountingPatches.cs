@@ -1,14 +1,7 @@
 ﻿using GiddyUp;
 using HarmonyLib;
 using Maux36.Rimbody;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using Verse;
 
 namespace Muax36.Rimbody_GiddyUpCompatibility
@@ -16,7 +9,7 @@ namespace Muax36.Rimbody_GiddyUpCompatibility
     [HarmonyPatch(typeof(CompPhysique), "HarmonyCheck")]
     public class CompPhysique_HarmonyCheck_Patch
     {
-        public static bool Prefix(ref string __result, CompPhysique __instance, Pawn ___parent)
+        public static bool Prefix(ref string __result, Pawn ___parent)
         {
             if (___parent?.pather?.MovingNow == true && ExtendedDataStorage.isMounted.Contains(___parent.thingIDNumber))
             {

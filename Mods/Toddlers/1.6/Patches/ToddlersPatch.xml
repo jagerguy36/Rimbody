@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cardio Values -->
+<!-- _sprintC = 2.0f; -->
+<!-- _hardworkC = 1.0f; -->
+<!-- _workC = 0.85f; -->
+<!-- _joggingC = 0.8f; -->
+<!-- _walkingC = 0.4f; -->
+<!-- _ambleC = 0.35f; -->
+<!-- _baseC = 0.3f; (default)-->
+<!-- _sleepC = 0.2f; -->
+
+<!-- Strength Values -->
+<!-- _workoutS = 2.0f; -->
+<!-- _hardworkS = 1.2f; -->
+<!-- _workS = 0.8f; -->
+<!-- _sprintS = 0.25f; -->
+<!-- _movingS = 0.2f; -->
+<!-- _ambleS = 0.15f; -->
+<!-- _sedentaryS = 0.1f; (default)-->
+<!-- _lyingS = 0.0f; -->
+
+<Patch>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ToddlerPlayToys"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <JobCategory>Activity</JobCategory>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="ToddlerPlayDecor"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <JobCategory>Activity</JobCategory>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="BePlayedWith"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <JobCategory>Activity</JobCategory>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="WiggleInCrib"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <cardio>1.5</cardio>
+                <strength>1.2</strength>
+                <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
+                <strengthParts>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.5</li>
+                    <li>0.5</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                    <li>0.8</li>
+                </strengthParts>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="RestIdleInCrib"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <JobCategory>Rest</JobCategory>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/JobDef[defName="LayAngleInCrib"]</xpath>
+        <value>
+            <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
+                <JobCategory>Rest</JobCategory>
+            </li>
+        </value>
+    </Operation>
+
+</Patch>

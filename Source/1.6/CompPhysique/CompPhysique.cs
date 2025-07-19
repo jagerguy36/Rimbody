@@ -3,6 +3,7 @@ using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -671,12 +672,13 @@ namespace Maux36.Rimbody
         }
 
         //Harmony hook for mod compatibility.
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public string HarmonyCheck()
         {
             return string.Empty;
         }
         public (float, float, List<float>) HarmonyValues(string harmonyKey)
-        {        
+        {
             return (0f, 0f, null); //(strengthHarmony, cardioOHarmony, partsHarmony);
         }
 

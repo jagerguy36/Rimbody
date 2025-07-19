@@ -19,7 +19,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Mods\BigAndSmall\1.5\Assemblies\</OutputPath>
+    <OutputPath>..\..\..\..\Mods\BigAndSmall\1.6\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,20 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lib.Harmony.2.3.6\lib\net48\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BetterPrerequisites">
-      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\2925432336\1.5\Main\Assemblies\BetterPrerequisites.dll</HintPath>
+    <Reference Include="BigAndSmall">
+      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\2925432336\1.6\Base\Assemblies\BigAndSmall.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rimbody">
-      <HintPath>..\..\..\..\1.5\Assemblies\Rimbody.dll</HintPath>
+      <HintPath>..\..\..\..\1.6\Assemblies\Rimbody.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
