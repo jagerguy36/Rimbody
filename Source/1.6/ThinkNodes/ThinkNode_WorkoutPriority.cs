@@ -70,6 +70,7 @@ namespace Maux36.Rimbody
                 {
                     if (curLevel < 0.95f)
                     {
+                        if (!RimbodySettings.workoutDuringRecTime) return 5f + continuousWorkoutOffset;
                         return 7f + continuousWorkoutOffset;
                     }
                     return 0f;

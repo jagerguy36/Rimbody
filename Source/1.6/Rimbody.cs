@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
         }
 
         private static Vector2 scrollPosition = new Vector2(0f, 0f);
-        private static float totalContentHeight = ModsConfig.BiotechActive?770f:720f;
+        private static float totalContentHeight = ModsConfig.BiotechActive?790f:740f;
         private const float ScrollBarWidthMargin = 18f;
         public override void DoSettingsWindowContents(Rect inRect)
         {
@@ -82,6 +82,8 @@ namespace Maux36.Rimbody
             listing_Standard.CheckboxLabeled("RimbodyGenderDifference".Translate(), ref RimbodySettings.genderDifference, "RimbodyGenderDifferenceTooltip".Translate());
             listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyShowFleck".Translate(), ref RimbodySettings.showFleck, "RimbodyShowFleckTooltip".Translate());
+            listing_Standard.Gap(6f);
+            listing_Standard.CheckboxLabeled("RimbodyRecreationExercise".Translate(), ref RimbodySettings.workoutDuringRecTime, "RimbodyRecreationExerciseToolTip".Translate());
             listing_Standard.Gap(6f);
             //listing_Standard.CheckboxLabeled("RimbodyUseExhaustion".Translate(), ref RimbodySettings.useExhaustion, "RimbodyUseExhaustionTooltip".Translate());
             //listing_Standard.Gap(6f);
