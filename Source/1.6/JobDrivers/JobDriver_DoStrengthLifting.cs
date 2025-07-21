@@ -259,6 +259,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.partsOverride = null;
+                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - tickProgress);
                 thingAnimated.beingUsed = false;
                 thingAnimated.ghostOffset = Vector3.zero;
                 pawn.SetPawnBodyAngleOverride(-1f);

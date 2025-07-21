@@ -247,6 +247,7 @@ namespace Maux36.Rimbody
                 compPhysique.cardioOverride = 0f;
                 compPhysique.memoryFactorOverride = 1f;
                 compPhysique.partsOverride = null;
+                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick- tickProgress);
                 if (buildingAnimated != null)
                 {
                     buildingAnimated.beingUsed = false;

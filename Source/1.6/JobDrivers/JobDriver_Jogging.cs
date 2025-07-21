@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -84,6 +85,7 @@ namespace Maux36.Rimbody
             });
             toil.AddFinishAction(delegate
             {
+                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - (2500 - ticksLeft));
                 AddMemory(compPhysique);
                 if (ticksLeft < 5 && compPhysique.isJogger)
                 {

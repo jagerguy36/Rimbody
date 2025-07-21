@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using Verse.AI;
+using UnityEngine;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -9,6 +10,7 @@ namespace Maux36.Rimbody
     {
         private const int duration = 2500;
         private float joygainfactor = 1.0f;
+        private int tickProgress = 0;
         private int workoutIndex = -1;
         private float workoutEfficiencyValue = 1.0f;
 
@@ -44,6 +46,7 @@ namespace Maux36.Rimbody
         }
         protected void WatchTickAction()
         {
+            tickProgress++;
             if (joygainfactor > 0)
             {
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
@@ -85,6 +88,7 @@ namespace Maux36.Rimbody
         {
             base.ExposeData();
             Scribe_Values.Look(ref joygainfactor, "cardiobuilding_joygainfactor", 1.0f);
+            Scribe_Values.Look(ref tickProgress, "cardiobuilding_tickProgress", 0);
             Scribe_Values.Look(ref workoutIndex, "cardiobuilding_workoutIndex", -1);
             Scribe_Values.Look(ref workoutEfficiencyValue, "cardiobuilding_workoutEfficiencyValue", 1f);
         }
@@ -149,6 +153,7 @@ namespace Maux36.Rimbody
                 compPhysique.strengthOverride = 0f;
                 compPhysique.cardioOverride = 0f;
                 compPhysique.partsOverride = null;
+                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - tickProgress);
                 TryGainGymThought();
                 AddMemory(compPhysique, ext.workouts[workoutIndex].name);
             });

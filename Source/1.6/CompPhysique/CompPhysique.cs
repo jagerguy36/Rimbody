@@ -123,6 +123,7 @@ namespace Maux36.Rimbody
         public Queue<string> memory = [];
         public string lastMemory = string.Empty;
         public int lastWorkoutTick = 0;
+        public int AssignedTick = 0;
         public float carryFactor = 0f;
 
         public CompProperties_Physique Props => (CompProperties_Physique)props;
@@ -1228,6 +1229,7 @@ namespace Maux36.Rimbody
             }
             Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
             Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
+            Scribe_Values.Look(ref AssignedTick, "Physique_AssignedTick", 0);
             Scribe_Values.Look(ref carryFactor, "Physique_carryFactor", 0f);
             var wo_memory_tmp = new List<string>();
             while (memory.Any()) wo_memory_tmp.Add(memory.Dequeue());

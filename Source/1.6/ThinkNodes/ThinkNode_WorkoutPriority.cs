@@ -18,9 +18,14 @@ namespace Maux36.Rimbody
                     return 0;
                 }
                 //Workout schedule
+
+                if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                {
+                    return 0f;
+                }
                 if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
                 {
-                    if (pawn.needs?.rest?.CurLevel < 0.17f || HealthAIUtility.ShouldSeekMedicalRest(pawn)) //Should rest
+                    if (pawn.needs?.rest?.CurLevel < 0.17f) //Should rest
                     {
                         return 0f;
                     }
@@ -57,30 +62,33 @@ namespace Maux36.Rimbody
                     return 0f;
                 }
                 float continuousWorkoutOffset = 0;
-                if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f) continuousWorkoutOffset = 0.1f;
+                if (compPhysique.AssignedTick > 0)
+                {
+                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
+                    {
+                        continuousWorkoutOffset = 0.2f;
+                    }
+                    else
+                    {
+                        compPhysique.AssignedTick = 0;
+                    }
+                }
                 if (timeAssignmentDef == TimeAssignmentDefOf.Anything)
                 {
-                    if (curLevel < 0.35f)
-                    {
-                        return 6f + continuousWorkoutOffset;
-                    }
+                    if (curLevel < 0.35f) return 5.9f;
                     return 0f;
                 }
                 if (timeAssignmentDef == TimeAssignmentDefOf.Joy)
                 {
                     if (curLevel < 0.95f)
                     {
-                        if (!RimbodySettings.workoutDuringRecTime) return 5f + continuousWorkoutOffset;
-                        return 7f + continuousWorkoutOffset;
+                        if (!RimbodySettings.workoutDuringRecTime) return 4.9f + continuousWorkoutOffset;
+                        return 6.9f + continuousWorkoutOffset;
                     }
                     return 0f;
                 }
                 if (timeAssignmentDef == TimeAssignmentDefOf.Sleep)
                 {
-                    if (curLevel < 0.95f)
-                    {
-                        return 2f + continuousWorkoutOffset;
-                    }
                     return 0f;
                 }
             }
