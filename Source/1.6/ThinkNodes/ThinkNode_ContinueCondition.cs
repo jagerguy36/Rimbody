@@ -21,7 +21,7 @@ namespace Maux36.Rimbody
                 }
                 if (compPhysique.AssignedTick > 0)
                 {
-                    if (timeAssignmentDef == TimeAssignmentDefOf.Anything || timeAssignmentDef == TimeAssignmentDefOf.Joy)
+                    if (timeAssignmentDef == TimeAssignmentDefOf.Anything || timeAssignmentDef == TimeAssignmentDefOf.Joy || timeAssignmentDef == TimeAssignmentDefOf.Sleep)
                     {
                         if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
                         {
