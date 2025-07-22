@@ -8,7 +8,7 @@ using Unity.Jobs;
 
 namespace Maux36.Rimbody
 {
-    internal class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
+    public class JobGiver_DoStrengthBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
         private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
@@ -23,7 +23,12 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
+            return GetActualPriority(compPhysique);
 
+        }
+
+        public static float GetActualPriority(CompPhysique compPsysique)
+        {
             float result = 5.0f;
 
             if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
