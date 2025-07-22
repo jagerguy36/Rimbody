@@ -27,7 +27,7 @@ namespace Maux36.Rimbody
 
         }
 
-        public static float GetActualPriority(CompPhysique compPsysique)
+        public static float GetActualPriority(CompPhysique compPhysique)
         {
             float result = 5.0f;
 
@@ -42,21 +42,14 @@ namespace Maux36.Rimbody
             return result;
         }
 
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted) return null;
-            if (TooTired(pawn)) return null;
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
+            return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
+        }
 
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<string, float> workoutCache)
+        {
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
 
@@ -139,7 +132,7 @@ namespace Maux36.Rimbody
             IntVec3 workoutLocation = IntVec3.Invalid;
             JobDef jobtogive = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
-            if(thing != null)
+            if (thing != null)
             {
                 jobtogive = DefOf_Rimbody.Rimbody_DoStrengthBuilding;
             }
@@ -162,7 +155,7 @@ namespace Maux36.Rimbody
                 Thing Chunk = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map, ThingRequest.ForGroup(ThingRequestGroup.Chunk), PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 20f, chunkPredicate);
                 workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMat, out Thing mattress, 1, 40f);
                 bool nearbyspotFound = workoutLocation != IntVec3.Invalid;
-                
+
                 if (nearbyspotFound)
                 {
                     foreach (var (strengthJobdef, strengthEx) in RimbodyDefLists.StrengthNonTargetJob)
@@ -191,7 +184,7 @@ namespace Maux36.Rimbody
                 if (maxScore > targethighscore)
                 {
                     jobtogive = bestJob;
-                    if (bestJob?.defName.StartsWith("Rimbody_DoChunk")==true)
+                    if (bestJob?.defName.StartsWith("Rimbody_DoChunk") == true)
                     {
                         thing = Chunk;
                     }
@@ -232,7 +225,7 @@ namespace Maux36.Rimbody
 
             return null;
         }
-        public Job DoTryGiveTargetJob(Pawn pawn, Thing t)
+        public static Job DoTryGiveTargetJob(Pawn pawn, Thing t)
         {
             RimbodyDefLists.StrengthTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
@@ -265,7 +258,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        public Job DoTryGiveChunkJob(Pawn pawn, Thing t, JobDef jobtogive)
+        public static Job DoTryGiveChunkJob(Pawn pawn, Thing t, JobDef jobtogive)
         {
             if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
             {
@@ -274,7 +267,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
+        protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
             if (RimbodyDefLists.StrengthTarget == null || RimbodyDefLists.StrengthTarget.Count == 0)

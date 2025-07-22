@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <JoyGiverDef>
+    <defName>Rimbody_WorkoutJoy</defName>
+    <giverClass>Maux36.Rimbody.JoyGiver_Workout</giverClass>
+    <baseChance>6</baseChance>
+    <joyKind>Rimbody_WorkoutJoy</joyKind>
+  </JoyGiverDef>
+  
+</Defs>

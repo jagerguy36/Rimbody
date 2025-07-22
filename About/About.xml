@@ -21,7 +21,7 @@
             <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
         </li>
     </modDependencies>
-    <packageId>Maux36.RimbodyDEV</packageId>
+    <packageId>Maux36.Rimbody</packageId>
     <description># Rimbody
 
 ## Features

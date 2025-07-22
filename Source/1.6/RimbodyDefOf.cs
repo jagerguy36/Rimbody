@@ -18,6 +18,8 @@ namespace Maux36.Rimbody
         public static JobDef Rimbody_DoBalanceBuilding;
         public static JobDef Rimbody_DoBodyWeightPlank;
         public static JobDef Rimbody_DoCardioBuilding;
+        public static JobDef Rimbody_RecoverWander;
+        public static JobDef Rimbody_RecoverWait;
 
         public static StatDef Rimbody_WorkoutEfficiency;
 

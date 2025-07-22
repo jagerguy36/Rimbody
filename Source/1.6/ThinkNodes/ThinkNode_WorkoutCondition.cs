@@ -17,6 +17,8 @@ namespace Maux36.Rimbody
                 }
                 if (pawn.IsColonist || pawn.IsPrisonerOfColony)
                 {
+                    if (pawn.Downed || pawn.Drafted) return false;
+                    if (Rimbody_Utility.TooTired(pawn)) return false;
                     var compPhysique = pawn.compPhysique();
                     if (compPhysique == null)
                     {

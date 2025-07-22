@@ -78,6 +78,7 @@
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
     <Compile Include="HarmonyPatches\Pawn_Notify_DisabledWorkTypesChanged.cs" />
     <Compile Include="JoyGiver\JoyGiver_Workout.cs" />
+    <Compile Include="ThinkNodes\ThinkNode_ContinueCondition.cs" />
     <Compile Include="WorkoutTickHandlers\DeadliftTickhandler.cs" />
     <Compile Include="WorkoutTickHandlers\IWorkoutTickHandler.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceLifting.cs" />

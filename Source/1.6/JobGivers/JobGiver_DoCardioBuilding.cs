@@ -21,7 +21,7 @@ namespace Maux36.Rimbody
             return GetActualPriority(compPhysique);
         }
 
-        public static float GetActualPriority(CompPhysique compPsysique)
+        public static float GetActualPriority(CompPhysique compPhysique)
         {
             float result = 5.0f;
 
@@ -36,25 +36,18 @@ namespace Maux36.Rimbody
             return result;
         }
 
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted) return null;
-            if (TooTired(pawn)) return null;
+            return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
+        }
 
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<string, float> workoutCache)
+        {
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
 
             //Joggers will always try to jog if possible.
-            if(compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn))
+            if (compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn))
             {
                 if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                 {
@@ -153,7 +146,7 @@ namespace Maux36.Rimbody
                     {
                         //jogging is possible. Compare the score
                         var joggingEx = RimbodyDefLists.CardioNonTargetJob.TryGetValue(DefOf_Rimbody.Rimbody_Jogging);
-                        if(joggingEx != null)
+                        if (joggingEx != null)
                         {
                             float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
                             if (targethighscore < joggingscore)
@@ -175,7 +168,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        public Job DoTryGiveJob(Pawn pawn, Thing t)
+        public static Job DoTryGiveJob(Pawn pawn, Thing t)
         {
             RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
@@ -208,7 +201,7 @@ namespace Maux36.Rimbody
             }
         }
 
-        protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
+        protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
             if (RimbodyDefLists.CardioTarget == null || RimbodyDefLists.CardioTarget.Count == 0)

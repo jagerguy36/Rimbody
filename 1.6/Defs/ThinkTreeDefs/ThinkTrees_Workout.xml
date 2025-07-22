@@ -20,4 +20,21 @@
 		</thinkRoot>
 	</ThinkTreeDef>
 	
+	<ThinkTreeDef>
+		<defName>Rimbody_ContinueWorkout</defName>
+		<insertTag>Humanlike_PostDuty</insertTag>
+		<insertPriority>10</insertPriority>
+		<thinkRoot Class="Maux36.Rimbody.ThinkNode_ContinueCondition">
+			<subNodes>
+				<li Class="ThinkNode_PrioritySorter">
+					<subNodes>
+						<li Class="Maux36.Rimbody.JobGiver_RecoverWander"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoCardioBuilding"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoBalanceBuilding"/>
+						<li Class="Maux36.Rimbody.JobGiver_DoStrengthBuilding"/>
+					</subNodes>
+				</li>
+			</subNodes>
+		</thinkRoot>
+	</ThinkTreeDef>
 </Defs>

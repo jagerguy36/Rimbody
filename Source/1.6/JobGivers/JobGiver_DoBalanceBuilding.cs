@@ -24,7 +24,7 @@ namespace Maux36.Rimbody
             return GetActualPriority(compPhysique);
         }
 
-        public static float GetActualPriority(CompPhysique compPsysique)
+        public static float GetActualPriority(CompPhysique compPhysique)
         {
             float result = 4.0f;
             if(compPhysique.memory?.Count > 0)
@@ -49,21 +49,13 @@ namespace Maux36.Rimbody
             return result;
         }
 
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (pawn.Downed || pawn.Drafted) return null;
-            if (TooTired(pawn)) return null;
+            return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
+        }
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<string, float> workoutCache)
+        {
             if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
-
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
 
@@ -82,7 +74,7 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
-                    if (!pawn.CanReserve(t, ignoreOtherReservations:true))
+                    if (!pawn.CanReserve(t, ignoreOtherReservations: true))
                     {
                         return false;
                     }
@@ -178,7 +170,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        public Job DoTryGiveTargetJob(Pawn pawn, Thing t)
+        public static Job DoTryGiveTargetJob(Pawn pawn, Thing t)
         {
             RimbodyDefLists.BalanceTarget.TryGetValue(t.def, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
@@ -211,7 +203,7 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        protected virtual void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
+        protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
             if (RimbodyDefLists.BalanceTarget == null || RimbodyDefLists.BalanceTarget.Count == 0)

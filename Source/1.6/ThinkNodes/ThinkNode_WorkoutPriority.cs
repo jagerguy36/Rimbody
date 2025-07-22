@@ -11,6 +11,8 @@ namespace Maux36.Rimbody
         {
             if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
             {
+                if (pawn.Downed || pawn.Drafted) return 0f;
+                if (Rimbody_Utility.TooTired(pawn)) return 0f;
                 TimeAssignmentDef timeAssignmentDef = ((pawn.timetable == null) ? TimeAssignmentDefOf.Anything : pawn.timetable.CurrentAssignment);
                 var compPhysique = pawn.compPhysique();
                 if (compPhysique == null)
@@ -25,10 +27,6 @@ namespace Maux36.Rimbody
                 }
                 if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
                 {
-                    if (pawn.needs?.rest?.CurLevel < 0.17f) //Should rest
-                    {
-                        return 0f;
-                    }
                     if (compPhysique != null)
                     {
                         if (RimbodySettings.useExhaustion && compPhysique.resting)
@@ -37,58 +35,6 @@ namespace Maux36.Rimbody
                         }
                         return 9f;
                     }
-                    return 0f;
-                }
-                //For joy
-                if (pawn.needs.joy == null)
-                {
-                    return 0f;
-                }
-                if (Find.TickManager.TicksGame < 60000) // No for joy workout for a day
-                {
-                    return 0f;
-                }
-                if (JoyUtility.LordPreventsGettingJoy(pawn))
-                {
-                    return 0f;
-                }
-                float curLevel = pawn.needs.joy.CurLevel;
-                if (!timeAssignmentDef.allowJoy)
-                {
-                    return 0f;
-                }
-                if (pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy))
-                {
-                    return 0f;
-                }
-                float continuousWorkoutOffset = 0;
-                if (compPhysique.AssignedTick > 0)
-                {
-                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
-                    {
-                        continuousWorkoutOffset = 0.2f;
-                    }
-                    else
-                    {
-                        compPhysique.AssignedTick = 0;
-                    }
-                }
-                if (timeAssignmentDef == TimeAssignmentDefOf.Anything)
-                {
-                    if (curLevel < 0.35f) return 5.9f;
-                    return 0f;
-                }
-                if (timeAssignmentDef == TimeAssignmentDefOf.Joy)
-                {
-                    if (curLevel < 0.95f)
-                    {
-                        if (!RimbodySettings.workoutDuringRecTime) return 4.9f + continuousWorkoutOffset;
-                        return 6.9f + continuousWorkoutOffset;
-                    }
-                    return 0f;
-                }
-                if (timeAssignmentDef == TimeAssignmentDefOf.Sleep)
-                {
                     return 0f;
                 }
             }
