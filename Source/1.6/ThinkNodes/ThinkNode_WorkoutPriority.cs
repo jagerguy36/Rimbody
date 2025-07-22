@@ -20,22 +20,17 @@ namespace Maux36.Rimbody
                     return 0;
                 }
                 //Workout schedule
-
-                if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                {
-                    return 0f;
-                }
                 if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
                 {
-                    if (compPhysique != null)
+                    if (RimbodySettings.useExhaustion && compPhysique.resting)
                     {
-                        if (RimbodySettings.useExhaustion && compPhysique.resting)
-                        {
-                            return 0f;
-                        }
-                        return 9f;
+                        return 0f;
                     }
-                    return 0f;
+                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                    {
+                        return 0f;
+                    }
+                    return 9f;
                 }
             }
             return 0f;

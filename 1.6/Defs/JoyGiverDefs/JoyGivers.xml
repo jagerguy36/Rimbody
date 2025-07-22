@@ -4,7 +4,7 @@
   <JoyGiverDef>
     <defName>Rimbody_WorkoutJoy</defName>
     <giverClass>Maux36.Rimbody.JoyGiver_Workout</giverClass>
-    <baseChance>6</baseChance>
+    <baseChance>1</baseChance>
     <joyKind>Rimbody_WorkoutJoy</joyKind>
   </JoyGiverDef>
   
