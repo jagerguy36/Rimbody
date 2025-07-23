@@ -40,11 +40,11 @@ namespace Maux36.Rimbody
                     {
                         return null;
                     }
-                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick)
                     {
                         return null;
                     }
-                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick)
+                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
                     {
                         return null;
                     }

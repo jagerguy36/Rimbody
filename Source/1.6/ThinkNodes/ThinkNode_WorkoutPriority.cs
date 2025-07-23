@@ -14,14 +14,14 @@ namespace Maux36.Rimbody
                 if (pawn.Downed || pawn.Drafted) return 0f;
                 if (Rimbody_Utility.TooTired(pawn)) return 0f;
                 TimeAssignmentDef timeAssignmentDef = ((pawn.timetable == null) ? TimeAssignmentDefOf.Anything : pawn.timetable.CurrentAssignment);
-                var compPhysique = pawn.compPhysique();
-                if (compPhysique == null)
-                {
-                    return 0;
-                }
                 //Workout schedule
                 if (timeAssignmentDef == DefOf_Rimbody.Rimbody_Workout)
                 {
+                    var compPhysique = pawn.compPhysique();
+                    if (compPhysique == null)
+                    {
+                        return 0;
+                    }
                     if (RimbodySettings.useExhaustion && compPhysique.resting)
                     {
                         return 0f;

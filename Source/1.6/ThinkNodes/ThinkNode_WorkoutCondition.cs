@@ -11,10 +11,6 @@ namespace Maux36.Rimbody
         {
             if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
             {
-                if (pawn.needs?.rest?.CurLevel < 0.17f) //Too tired
-                {
-                    return false;
-                }
                 if (pawn.IsColonist || pawn.IsPrisonerOfColony)
                 {
                     if (pawn.Downed || pawn.Drafted) return false;
@@ -28,18 +24,22 @@ namespace Maux36.Rimbody
                     {
                         return false;
                     }
-                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                    {
-                        return false;
-                    }
                     //Meet Goal
                     if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
                     {
+                        if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                        {
+                            return false;
+                        }
                         return true;
                     }
                     if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
                     {
                         if(compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
+                        {
+                            return false;
+                        }
+                        if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
                         {
                             return false;
                         }
