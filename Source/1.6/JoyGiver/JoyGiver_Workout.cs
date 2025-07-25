@@ -18,6 +18,10 @@ namespace Maux36.Rimbody
         };
         public override float GetChance(Pawn pawn)
         {
+            if (!RimbodySettings.workoutDuringRecTime)
+            {
+                return 0f;
+            }
             return base.GetChance(pawn);
         }
 

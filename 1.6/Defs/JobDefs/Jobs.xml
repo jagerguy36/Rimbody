@@ -195,12 +195,12 @@
   <JobDef>
     <defName>Rimbody_RecoverWander</defName>
     <driverClass>JobDriver_Goto</driverClass>
-    <reportString>wandering.</reportString>
+    <reportString>recovering.</reportString>
   </JobDef>
 
   <JobDef>
     <defName>Rimbody_RecoverWait</defName>
     <driverClass>JobDriver_Wait</driverClass>
-    <reportString>wandering.</reportString>
+    <reportString>recovering.</reportString>
   </JobDef>
 </Defs>

@@ -11,4 +11,6 @@
   <Rimbody_DoStrengthBuilding.reportString>근력 운동 하는 중.</Rimbody_DoStrengthBuilding.reportString>
   <Rimbody_DoBalanceBuilding.reportString>균형 운동 하는 중.</Rimbody_DoBalanceBuilding.reportString>
   <Rimbody_DoCardioBuilding.reportString>유산소 운동 하는 중.</Rimbody_DoCardioBuilding.reportString>
+  <Rimbody_RecoverWander.reportString >휴식하는 중.</Rimbody_RecoverWander.reportString>
+  <Rimbody_RecoverWait.reportString >휴식하는 중.</Rimbody_RecoverWait.reportString>
 </LanguageData>

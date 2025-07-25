@@ -55,7 +55,7 @@
   <RimbodyUseExhaustionTooltip>Activates the exhaustion system. Exhaustion limits the amount of workouts you can do without rest.</RimbodyUseExhaustionTooltip>
   <RimbodyExhaustionTooltip>Exhaustion ({0}%)\n\nA pawn gains exhaustion while exercising. If their exhaustion reaches 100%, they must wait until it drops below 40% before they can work out again.</RimbodyExhaustionTooltip>
   <RimbodyRecreationExercise>Recreation Workout</RimbodyRecreationExercise>
-  <RimbodyRecreationExerciseToolTip>Pawns will prioritize working out as much as using joy objects during their recreation schedules. Turn this off to make them prioritize other joy objects during recreation schedule.</RimbodyRecreationExerciseToolTip>
+  <RimbodyRecreationExerciseToolTip>Allow pawns to work out for joy.</RimbodyRecreationExerciseToolTip>
   <RimbodyFatigueTooltip>As a pawn works out or do labor, the areas used will accumulate fatigue. Exercises that use fatigued areas are less effective.\n\nParts Fatigue\n\nShoulders: ({0}%)\nChest: ({1}%)\nBiceps: ({2}%)\nTriceps: ({3}%)\nBack: ({4}%)\nCore: ({5}%)\nGlutes: ({6}%)\nQuads: ({7}%)\nHamstrings: ({8}%)</RimbodyFatigueTooltip>
   <Rimbody_Description>[Available Workouts]</Rimbody_Description>
   <Rimbody_Shoulder>Shoulders</Rimbody_Shoulder>

@@ -25,7 +25,7 @@ namespace Maux36.Rimbody
                     {
                         if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
                         {
-                            if (!timeAssignmentDef.allowJoy || pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy || HealthAIUtility.ShouldSeekMedicalRest(pawn)))
+                            if (!timeAssignmentDef.allowJoy || pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) || HealthAIUtility.ShouldSeekMedicalRest(pawn))
                             {
                                 compPhysique.AssignedTick = 0;
                                 return false;

@@ -49,19 +49,19 @@ namespace Maux36.Rimbody
                 return parentPawnInt;
             }
         }
-        public float? breInt;
-        public float bre
-        {
-            get
-            {
-                if (breInt is null)
-                {
-                    var bed = parentPawn.CurrentBed();
-                    breInt = ((bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness));
-                }
-                return breInt ?? StatDefOf.BedRestEffectiveness.valueIfMissing;
-            }
-        }
+        //public float? breInt;
+        //public float bre
+        //{
+        //    get
+        //    {
+        //        if (breInt is null)
+        //        {
+        //            var bed = parentPawn.CurrentBed();
+        //            breInt = (bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness);
+        //        }
+        //        return breInt ?? StatDefOf.BedRestEffectiveness.valueIfMissing;
+        //    }
+        //}
 
         public float pawnBodyAngleOverride = -1f;
 
@@ -536,7 +536,7 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.045f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
+                float muscleGain = 0.03f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
                 float muscleLoss = (51.5f / (BodyFat + 50f)) * ((MuscleMass + 25f) * 0.008f) * Mathf.Pow(((curFood + 0.125f) * 8f), -0.5f);//(51.5f / (BodyFat + 50f)) * ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
                 float muscleDelta = 0f;
 
@@ -554,26 +554,31 @@ namespace Maux36.Rimbody
                     if (forceRest || parentPawn.needs.rest?.Resting == true)
                     {
                         restingCheck = true;
-                        var swol = 2f;
-                        var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
-                        var recoveryFactor = Mathf.Max( swol * rrm * bre, 0.2f);
+                        if (gain > 0f)
+                        {
+                            var swol = 2f;
+                            var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
+                            var bed = parentPawn.CurrentBed();
+                            var bre = (bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness);
+                            var recoveryFactor = Mathf.Max(swol * rrm * bre, 0.2f);
 
-                        if (gain - (recoveryFactor * tickRatio) > 0f)
-                        {
-                            gain -= recoveryFactor * tickRatio;
-                            muscleDelta += recoveryFactor * tickRatio * customRatio;
-                        }
-                        else if (gain > 0f)
-                        {
-                            muscleDelta += customRatio * gain;
-                            gain = 0f;
+                            if (gain - (recoveryFactor * tickRatio) > 0f)
+                            {
+                                gain -= recoveryFactor * tickRatio;
+                                muscleDelta += recoveryFactor * tickRatio * customRatio;
+                            }
+                            else
+                            {
+                                muscleDelta += customRatio * gain;
+                                gain = 0f;
+                            }
                         }
                         exhaustionDelta = 8f * exhaustionDelta;
                     }
                     //Awake
                     else
                     {
-                        breInt = null;
+                        //breInt = null;
                         //Store gain
                         gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
                         //Grow slowly
