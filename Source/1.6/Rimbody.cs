@@ -85,6 +85,8 @@ namespace Maux36.Rimbody
             listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyRecreationExercise".Translate(), ref RimbodySettings.workoutDuringRecTime, "RimbodyRecreationExerciseToolTip".Translate());
             listing_Standard.Gap(6f);
+            listing_Standard.CheckboxLabeled("RimbodyTARecreationSelect".Translate(), ref RimbodySettings.useRecToSelect, "RimbodyTARecreationSelectToolTip".Translate());
+            listing_Standard.Gap(6f);
             //listing_Standard.CheckboxLabeled("RimbodyUseExhaustion".Translate(), ref RimbodySettings.useExhaustion, "RimbodyUseExhaustionTooltip".Translate());
             //listing_Standard.Gap(6f);
             listing_Standard.CheckboxLabeled("RimbodyUseFatigue".Translate(), ref RimbodySettings.useFatigue, "RimbodyUseFatigueTooltip".Translate());

@@ -54,9 +54,11 @@
   <RimbodyUseExhaustion>탈진 시스템 사용</RimbodyUseExhaustion>
   <RimbodyUseExhaustionTooltip>탈진 시스템을 활성화합니다. 탈진은 충분한 휴식 없이 운동할 수 있는 양을 제한합니다.</RimbodyUseExhaustionTooltip>
   <RimbodyExhaustionTooltip>탈진도 ({0}%)\n\n운동할수록 탈진도가 증가합니다. 탈진도가 100%에 도달하면 탈진하여 40% 미만으로 회복될 때까지 운동할 수 없습니다.</RimbodyExhaustionTooltip>
-  <RimbodyFatigueTooltip>운동이나 노동시 신체에 피로가 누적됩니다. 피로가 쌓인 부위를 사용하는 운동은 효과가 떨어집니다.\n\n피로도\n\n어깨: ({0}%)\n가슴: ({1}%)\n이두: ({2}%)\n삼두: ({3}%)\n등: ({4}%)\n코어: ({5}%)\n둔부: ({6}%)\n대퇴사두: ({7}%)\n햄스트링: ({8}%)</RimbodyFatigueTooltip>
   <RimbodyRecreationExercise>오락 운동</RimbodyRecreationExercise>
   <RimbodyRecreationExerciseToolTip>재미를 위해 운동하는 것을 허용합니다.</RimbodyRecreationExerciseToolTip>
+  <RimbodyTARecreationSelect>통합 시간 슬롯</RimbodyTARecreationSelect>
+  <RimbodyTARecreationSelectToolTip>시간정책에서 운동시간 선택 옵션을 오락 시간과 같은 칸에 표시합니다. 이 옵션을 활성화하면 오락/운동칸 클릭하여 오락 시간 또는 운동 시간을 선택할 수 있습니다.</RimbodyTARecreationSelectToolTip>
+  <RimbodyFatigueTooltip>운동이나 노동시 신체에 피로가 누적됩니다. 피로가 쌓인 부위를 사용하는 운동은 효과가 떨어집니다.\n\n피로도\n\n어깨: ({0}%)\n가슴: ({1}%)\n이두: ({2}%)\n삼두: ({3}%)\n등: ({4}%)\n코어: ({5}%)\n둔부: ({6}%)\n대퇴사두: ({7}%)\n햄스트링: ({8}%)</RimbodyFatigueTooltip>
   <Rimbody_Description>[가능한 운동]</Rimbody_Description>
   <Rimbody_Shoulder>어깨</Rimbody_Shoulder>
   <Rimbody_Chest>가슴</Rimbody_Chest>
