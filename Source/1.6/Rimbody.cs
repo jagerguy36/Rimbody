@@ -58,7 +58,7 @@ namespace Maux36.Rimbody
         }
 
         private static Vector2 scrollPosition = new Vector2(0f, 0f);
-        private static float totalContentHeight = ModsConfig.BiotechActive?790f:740f;
+        private static float totalContentHeight = ModsConfig.BiotechActive?820f:770f;
         private const float ScrollBarWidthMargin = 18f;
         public override void DoSettingsWindowContents(Rect inRect)
         {
