@@ -46,5 +46,6 @@
 		<li IfModActive="mlie.mountainminer">Mods/Mountain Miner/1.6</li>
 		<li IfModActive="vanillaracesexpanded.android">Mods/VFEAndroids/1.6</li>
 		<li IfModActive="oskarpotocki.vfe.medieval2">Mods/VFEMedieval2/1.6</li>
+		<li IfModActive="dubwise.dubsbadhygiene">Mods/DubsBadHygiene/1.6</li>
 	</v1.6>
 </loadFolders>

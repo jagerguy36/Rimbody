@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndividualityCompatibility"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VFEAndroidCompatibility", "Mods\VFEAndroidCompatibility\VFEAndroidCompatibility.csproj", "{C77AB277-7A00-4795-8648-9322D8AA40A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DubsBadHygieneCompatibility", "Mods\DubsBadHygieneCompatibility\DubsBadHygieneCompatibility.csproj", "{CC449178-5D60-404B-A00C-95D839BC446B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C77AB277-7A00-4795-8648-9322D8AA40A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC449178-5D60-404B-A00C-95D839BC446B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC449178-5D60-404B-A00C-95D839BC446B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC449178-5D60-404B-A00C-95D839BC446B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC449178-5D60-404B-A00C-95D839BC446B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

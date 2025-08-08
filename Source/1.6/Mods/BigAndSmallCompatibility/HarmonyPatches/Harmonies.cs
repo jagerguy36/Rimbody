@@ -2,6 +2,8 @@
 using HarmonyLib;
 using Maux36.Rimbody;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace Maux36.Rimbody_BigAndSmall
@@ -39,6 +41,37 @@ namespace Maux36.Rimbody_BigAndSmall
                 }
             }
 
+        }
+    }
+
+    [StaticConstructorOnStartup]
+    public static class RimbodyCompFixer
+    {
+        static RimbodyCompFixer()
+        {
+            bool defRemoved = false;
+            List<ThingDef> defToRemove = new();
+            foreach (var defName in PhysiqueCacheManager.TrackingDef)
+            {
+                var def = ThingDef.Named(defName);
+                if (def.GetRaceExtensions().SelectMany(x => x.PawnExtensionOnRace).Any(x => x.isMechanical))
+                {
+                    defToRemove.Add(def);
+                }
+            }
+            foreach (var def in defToRemove)
+            {
+                var removed = def.comps.RemoveAll(c => c is CompProperties_Physique);
+                if (removed > 0)
+                {
+                    defRemoved = true;
+                    PhysiqueCacheManager.TrackingDef.Remove(def.defName);
+                }
+            }
+            if(defRemoved)
+            {
+                Log.Message("[Rimbody] Big and Small's mechanical Life forms have been excluded from tracking");
+            }
         }
     }
 
