@@ -75,17 +75,61 @@ namespace Maux36.Rimbody
 
         //Fat
         public float BodyFat = -1f;
-        public float FatGainFactor = 1f;
-        public float FatLoseFactor = 1f;
+        public float _geneFatGainFactor = -1f;
+        public float _geneFatLoseFactor = -1f;
         public bool useFatgoal = false;
         public float FatGoal = 25f;
+        public float FatGainFactor
+        {
+            get
+            {
+                if (_geneFatGainFactor < 0)
+                {
+                    ApplyGene();
+                }
+                return _geneFatGainFactor;
+            }
+        }
+        public float FatLoseFactor
+        {
+            get
+            {
+                if (_geneFatLoseFactor < 0)
+                {
+                    ApplyGene();
+                }
+                return _geneFatLoseFactor;
+            }
+        }
 
         //Muscle
         public float MuscleMass = -1f;
-        public float MuscleGainFactor = 1f;
-        public float MuscleLoseFactor = 1f;
+        public float _geneMuscleGainFactor = -1f;
+        public float _geneMuscleLoseFactor = -1f;
         public bool useMuscleGoal = false;
         public float MuscleGoal = 25f;
+        public float MuscleGainFactor
+        {
+            get
+            {
+                if (_geneMuscleGainFactor < 0)
+                {
+                    ApplyGene();
+                }
+                return _geneMuscleGainFactor;
+            }
+        }
+        public float MuscleLoseFactor
+        {
+            get
+            {
+                if (_geneMuscleLoseFactor < 0)
+                {
+                    ApplyGene();
+                }
+                return _geneMuscleLoseFactor;
+            }
+        }
 
         //Gain
         public float gain = 0f;
@@ -98,6 +142,16 @@ namespace Maux36.Rimbody
         public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
 
         //Traits and Genes
+        public HashSet<string>  _relevantActiveGenes = null;
+        public HashSet<string>  RelevantActiveGenes
+        {
+            get
+            {
+                _relevantActiveGenes = _relevantActiveGenes ?? GetRelevantActiveGenes();
+                return _relevantActiveGenes;
+            }
+        }
+
         public bool isNonSen = false;
         public bool isJogger
         {
@@ -417,74 +471,11 @@ namespace Maux36.Rimbody
                 }
 
                 //Gain and Lose Factor
-                var fatgainF = FatGainFactor;
-                var fatloseF = FatLoseFactor;
-                var musclegainF = MuscleGainFactor;
-                var muscleloseF = MuscleLoseFactor;
-
-                //Gender
-                if (RimbodySettings.genderDifference == true)
-                {
-                    if (parentPawn.gender == Gender.Male)
-                    {
-                        musclegainF += RimbodySettings.maleMusclegain;
-                    }
-                    else
-                    {
-                        musclegainF -= RimbodySettings.maleMusclegain;
-                    }
-                }
-                //Age Factors in
-                switch (parentPawn.ageTracker?.CurLifeStage?.developmentalStage)
-                {
-                    case DevelopmentalStage.None:
-                        break;
-
-                    case DevelopmentalStage.Newborn:
-                        fatgainF -= 0.024f;
-                        fatloseF += 0.024f;
-
-                        musclegainF += 0.125f;
-                        muscleloseF -= 0.125f;
-                        break;
-
-                    case DevelopmentalStage.Baby:
-                        fatgainF -= 0.024f;
-                        fatloseF += 0.024f;
-
-                        musclegainF += 0.125f;
-                        muscleloseF -= 0.125f;
-                        break;
-
-                    case DevelopmentalStage.Child:
-                        fatgainF -= 0.024f;
-                        fatloseF += 0.024f;
-
-                        musclegainF += 0.06f;
-                        muscleloseF -= 0.06f;
-                        break;
-
-                    case DevelopmentalStage.Adult:
-                        if (isNonSen)
-                        {
-                            var agepoint = (float)(25 - Math.Min(parentPawn.ageTracker.AgeBiologicalYears, RimbodySettings.nonSenescentpoint));
-                            fatgainF -= agepoint * 0.002f;
-                            fatloseF += agepoint * 0.002f;
-
-                            musclegainF += agepoint * 0.005f;
-                            muscleloseF -= agepoint * 0.005f;
-                        }
-                        else
-                        {
-                            var agepoint = (float)(25 - Math.Min(parentPawn.ageTracker.AgeBiologicalYears, 125));
-                            fatgainF -= agepoint * 0.002f;
-                            fatloseF += agepoint * 0.002f;
-
-                            musclegainF += agepoint * 0.005f;
-                            muscleloseF -= agepoint * 0.005f;
-                        }
-                        break;
-                }
+                var fatgainF;
+                var fatloseF;
+                var musclegainF;
+                var muscleloseF;
+                (fatgainF,fatloseF,musclegainF,muscleloseF) = GetFactors();
                 gainF = musclegainF;
 
                 //UI
@@ -923,7 +914,6 @@ namespace Maux36.Rimbody
             if (parentPawn != null && ((BodyFat == -1f || MuscleMass == -1f) || reset))
             {
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType();
-                ApplyGene();
             }
         }
 
@@ -1147,49 +1137,140 @@ namespace Maux36.Rimbody
             
         }
 
-        //Biotech
-        public void ApplyGene()
+        private (float, float, float, float) GetFactors()
         {
-            if (!ModsConfig.BiotechActive || parentPawn is null)
+            var fGain = FatGainFactor;
+            var fLose = FatLoseFactor;
+            var mGain = MuscleGainFactor;
+            var mLose = MuscleLoseFactor;
+            DevelopmentalStage DevStage = parentPawn.ageTracker?.CurLifeStage?.developmentalStage ?? DevelopmentalStage.None;
+            switch (DevStage)
             {
-                return;
-            }
-            if (parentPawn.genes is null) return;
-            
-            if (parentPawn.genes.HasActiveGene(NonSenescent))
-            {
-                isNonSen = true;
-            }
-            else
-            {
-                isNonSen= false;
-            }
+                case DevelopmentalStage.None:
+                    break;
 
-            if (parentPawn.genes.HasActiveGene(GeneBodyFat))
-            {
-                FatGainFactor = 1.25f;
-                FatLoseFactor = 0.85f;
+                case DevelopmentalStage.Newborn:
+                    fGain -= 0.024f;
+                    fLose += 0.024f;
+
+                    mGain += 0.125f;
+                    mLose -= 0.125f;
+                    break;
+
+                case DevelopmentalStage.Baby:
+                    fGain -= 0.024f;
+                    fLose += 0.024f;
+
+                    mGain += 0.125f;
+                    mLose -= 0.125f;
+                    break;
+
+                case DevelopmentalStage.Child:
+                    fGain -= 0.024f;
+                    fLose += 0.024f;
+
+                    mGain += 0.06f;
+                    mLose -= 0.06f;
+                    break;
+
+                case DevelopmentalStage.Adult:
+                    var pawnAge = parentPawn.ageTracker.AgeBiologicalYears;
+                    if (isNonSen)
+                    {
+                        var agepoint = (float)(25 - Math.Min(pawnAge, RimbodySettings.nonSenescentpoint));
+                        fGain -= agepoint * 0.002f;
+                        fLose += agepoint * 0.002f;
+
+                        mGain += agepoint * 0.005f;
+                        mLose -= agepoint * 0.005f;
+                    }
+                    else
+                    {
+                        var agepoint = (float)(25 - Math.Min(pawnAge, 125));
+                        fGain -= agepoint * 0.002f;
+                        fLose += agepoint * 0.002f;
+
+                        mGain += agepoint * 0.005f;
+                        mLose -= agepoint * 0.005f;
+                    }
+                    break;
             }
-            else if (parentPawn.genes.HasActiveGene(GeneBodyThin))
+            //Gender
+            if (RimbodySettings.genderDifference == true)
             {
-                FatGainFactor = 0.75f;
-                FatLoseFactor = 1.15f;
+                if (parentPawn.gender == Gender.Male)
+                {
+                    mGain += RimbodySettings.maleMusclegain;
+                }
+                else
+                {
+                    mGain -= RimbodySettings.maleMusclegain;
+                }
             }
-            else if (parentPawn.genes.HasActiveGene(GeneBodyHulk))
+            return (fGain, fLose, mGain, mLose);
+        }
+
+        private (float, float, float, float) ApplyGene()
+        {
+            _geneFatGainFactor = 1f;
+            _geneFatLoseFactor = 1f;
+            _geneMuscleGainFactor = 1f;
+            _geneMuscleLoseFactor = 1f;
+            if (ModsConfig.BiotechActive)
             {
-                MuscleGainFactor = 1.25f;
-                MuscleLoseFactor = 0.85f;
+                if (RelevantActiveGenes.Contains("Body_Fat"))
+                {
+                    _geneFatGainFactor = 1.25f;
+                    _geneFatLoseFactor = 0.85f;
+                }
+                else if (RelevantActiveGenes.Contains("Body_Thin"))
+                {
+                    _geneFatGainFactor = 0.75f;
+                    _geneFatLoseFactor = 1.15f;
+                }
+                else if (RelevantActiveGenes.Contains("Body_Hulk"))
+                {
+                    _geneMuscleGainFactor = 1.25f;
+                    _geneMuscleLoseFactor = 0.85f;
+                }
+                else if (RelevantActiveGenes.Contains("Body_Standard"))
+                {
+                    _geneMuscleGainFactor = 1.15f;
+                    _geneFatGainFactor = 0.85f;
+                }
+                if (RelevantActiveGenes.Contains("DiseaseFree"))
+                {
+                    isNonSen = true;
+                }
             }
-            else if (parentPawn.genes.HasActiveGene(GeneBodyStandard))
+        }
+
+        public HashSet<string> GetRelevantActiveGenes()
+        {
+            HashSet<string> relevantGeneSet = new();
+            var genesListForReading = parentPawn.genes?.GenesListForReading;
+            if (genesListForReading == null)
             {
-                MuscleGainFactor = 1.15f;
-                FatGainFactor = 0.85f;
+                return relevantGeneSet;
             }
-            else
-            {
-                MuscleGainFactor = 1.0f;
-                FatGainFactor = 1.0f;
-            }
+			for (int i = 0; i < genesListForReading.Count; i++)
+			{
+				if (RimbodyDefLists.RelevantGenes.Contains(genesListForReading[i].def.defName) && genesListForReading[i].Active)
+				{
+					return relevantGeneSet.Add(def.defName);
+				}
+			}
+            return relevantGeneSet;
+        }
+
+        public void NotifyActiveGeneCacheDirty()
+        {
+            _relevantActiveGenes = null;
+            _geneFatGainFactor = -1f;
+            _geneFatLoseFactor = -1f;
+            _geneMuscleGainFactor = -1f;
+            _geneMuscleLoseFactor = -1f;
+            isNonSen = false;
         }
 
         //Scribe
@@ -1211,18 +1292,12 @@ namespace Maux36.Rimbody
             }
 
             Scribe_Values.Look(ref BodyFat, "Physique_BodyFat", -1f);
-            Scribe_Values.Look(ref FatGainFactor, "Physique_FatGainFactor", 1f);
-            Scribe_Values.Look(ref FatLoseFactor, "Physique_FatLoseFactor", 1f);
             Scribe_Values.Look(ref useFatgoal, "Physique_useFatgoal", false);
             Scribe_Values.Look(ref FatGoal, "Physique_Fatgoal", 25f);
 
             Scribe_Values.Look(ref MuscleMass, "Physique_MuscleMass", -1f);
-            Scribe_Values.Look(ref MuscleGainFactor, "Physique_MuscleGainFactor", 1f);
-            Scribe_Values.Look(ref MuscleLoseFactor, "Physique_MuscleLoseFactor", 1f);
             Scribe_Values.Look(ref useMuscleGoal, "Physique_useMuscleGoal", false);
             Scribe_Values.Look(ref MuscleGoal, "Physique_MuscleGoal", 25f);
-
-            Scribe_Values.Look(ref isNonSen, "Physique_isNonSen", parentPawn.genes != null ? parentPawn.genes.HasActiveGene(NonSenescent) : false);
 
             Scribe_Values.Look(ref gain, "Physique_gain", 0f);
             Scribe_Values.Look(ref exhaustion, "Physique_exhaustion", 0f);

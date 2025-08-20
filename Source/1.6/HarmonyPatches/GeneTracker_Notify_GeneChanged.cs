@@ -26,7 +26,7 @@ namespace Maux36.Rimbody
 
                 if (compPhysique != null)
                 {
-                    compPhysique.ApplyGene();
+                    compPhysique.NotifyActiveGeneCacheDirty();
                 }
 
             }
@@ -39,12 +39,12 @@ namespace Maux36.Rimbody
                 {
                     if (compPhysique.PostGen)
                     {
-                        compPhysique.ApplyGene();
+                        compPhysique.NotifyActiveGeneCacheDirty();
                         compPhysique.ResetBody();
                     }
                     else
                     {
-                        compPhysique.ApplyGene();
+                        compPhysique.NotifyActiveGeneCacheDirty();
                         (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
                     }
                 }

@@ -30,6 +30,8 @@ namespace Maux36.Rimbody
 
         public static readonly Dictionary<string, IWorkoutTickHandler> Handlers = new();
 
+        public static HashSet<string> RelevantGenes = new HashSet<string>{"Body_Fat", "Body_Thin", "Body_Hulk", "Body_Standard", "DiseaseFree"};
+
         static RimbodyDefLists() // Static constructor
         {
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
