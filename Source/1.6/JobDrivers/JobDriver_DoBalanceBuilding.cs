@@ -104,6 +104,7 @@ namespace Maux36.Rimbody
             {
                 TargetThingA.Map.physicalInteractionReservationManager.Reserve(pawn, job, TargetThingA);
                 GetInPosition(TargetThingA, exWorkout.pawnDirection);
+                joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
                 AdjustJoygainFactor();
                 StartWorkout(compPhysique, exWorkout);
                 if (buildingAnimated != null)

@@ -107,7 +107,6 @@ namespace Maux36.Rimbody
         }
         protected void AdjustJoygainFactor()
         {
-            joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
             var joyneed = pawn.needs?.joy;
             if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
             {
@@ -115,6 +114,14 @@ namespace Maux36.Rimbody
             }
         }
         protected void StartWorkout(CompPhysique compPhysique, WorkOut workout)
+        {
+            compPhysique.jobOverride = true;
+            compPhysique.strengthOverride = workout.strength * workoutEfficiencyValue;
+            compPhysique.cardioOverride = workout.cardio * workoutEfficiencyValue;
+            compPhysique.memoryFactorOverride = memoryFactor;
+            compPhysique.partsOverride = workout.strengthParts;
+        }
+        protected void StartWorkoutJob(CompPhysique compPhysique, ModExtensionRimbodyJob workout)
         {
             compPhysique.jobOverride = true;
             compPhysique.strengthOverride = workout.strength * workoutEfficiencyValue;
