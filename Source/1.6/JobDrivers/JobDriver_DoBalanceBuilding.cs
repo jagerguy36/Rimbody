@@ -7,78 +7,14 @@ using UnityEngine;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoBalanceBuilding : JobDriver
+    internal class JobDriver_DoBalanceBuilding : JobDriver_RimbodyBaseDriver
     {
         private const int duration = 1500;
-        private float joygainfactor = 1.0f;
-        private int tickProgress = 0;
-        private int workoutIndex = -1;
-        private float memoryFactor = 1.0f;
-        private float workoutEfficiencyValue = 1.0f;
-        private Vector3 pawnOffset = Vector3.zero;
-        private Rot4 lyingRotation = Rot4.Invalid;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
-            {
-                return false;
-            }
-            if (!pawn.ReserveSittableOrSpot(job.targetB.Cell, job, errorOnFailed))
-            {
-                return false;
-            }
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed)) return false;
+            if (!pawn.ReserveSittableOrSpot(job.targetB.Cell, job, errorOnFailed)) return false;
             return true;
-        }
-        public override Vector3 ForcedBodyOffset
-        {
-            get
-            {
-                return pawnOffset;
-            }
-        }
-        public override Rot4 ForcedLayingRotation
-        {
-            get
-            {
-                return lyingRotation;
-            }
-        }
-
-        protected void GetInPosition(Thing building, Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Center:
-                    pawn.rotationTracker.FaceCell(building.Position);
-                    break;
-                case Direction.Away:
-                    pawn.rotationTracker.FaceCell(2 * pawn.Position - building.Position);
-                    break;
-                case Direction.FaceSame:
-                    pawn.Rotation = building.Rotation;
-                    break;
-                case Direction.FaceOpposite:
-                    pawn.Rotation = building.Rotation.Opposite;
-                    break;
-                case Direction.LyingFrontSame:
-                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
-                    break;
-                case Direction.LyingFrontOpposite:
-                    pawn.SetPawnBodyAngleOverride(building.Rotation.AsAngle);
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundFaceUp;
-                    break;
-                case Direction.LyingDownSame:
-                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
-                    lyingRotation = building.Rotation.Opposite == Rot4.South ? Rot4.North : building.Rotation.Opposite;
-                    break;
-                case Direction.LyingUpSame:
-                    pawn.SetPawnBodyAngleOverride(building.Rotation.Opposite.AsAngle);
-                    pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
-                    lyingRotation = building.Rotation == Rot4.North ? Rot4.South : building.Rotation;
-                    break;
-            }
         }
         protected void WatchTickAction(Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration)
         {
@@ -130,43 +66,6 @@ namespace Maux36.Rimbody
                 pawn.needs?.joy?.GainJoy(1.0f * joygainfactor * 0.36f / 2500f, DefOf_Rimbody.Rimbody_WorkoutJoy);
             }
         }
-        private int GetWorkoutInt(CompPhysique compPhysique, ModExtensionRimbodyTarget ext, out float memoryFactor)
-        {
-            float score = 0f;
-            memoryFactor = 1f;
-            int indexBest = -1;
-            var numVarieties = ext.workouts.Count;
-            if (numVarieties == 1)
-            {
-                memoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[0].name) ? 0.9f : 1f;
-                return 0;
-            }
-            for (int i = 0; i < numVarieties; i++)
-            {
-                if (ext.workouts[i].Category != RimbodyWorkoutCategory.Balance)
-                {
-                    continue;
-                }
-                float tmpMemoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? 0.9f : 1f;
-                float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, ext.workouts[i]);
-                if (tmpScore > score)
-                {
-                    score = tmpScore;
-                    memoryFactor = tmpMemoryFactor;
-                    indexBest = i;
-                }
-                else if (tmpScore == score)
-                {
-                    if (Rand.Chance(0.5f))
-                    {
-                        score = tmpScore;
-                        memoryFactor = tmpMemoryFactor;
-                        indexBest = i;
-                    }
-                }
-            }
-            return indexBest;
-        }
         public override void ExposeData()
         {
             base.ExposeData();
@@ -178,16 +77,6 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref pawnOffset, "balancebuilding_pawnOffset", Vector3.zero);
             Scribe_Values.Look(ref lyingRotation, "balancebuilding_lyingRotation", Rot4.Invalid);
         }
-
-        private void AddMemory(CompPhysique compPhysique, string name)
-        {
-            if (compPhysique != null)
-            {
-                compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"balance|{name}");
-            }
-        }
-
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.compPhysique();
@@ -195,11 +84,11 @@ namespace Maux36.Rimbody
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            EndOnTired(this);
-            RimbodyDefLists.BalanceTarget.TryGetValue(TargetThingA.def, out var ext);
-            Building_WorkoutAnimated buildingAnimated = job.GetTarget(TargetIndex.A).Thing as Building_WorkoutAnimated;
+            Rimbody_Utility.EndOnTired(this);
+            RimbodyDefLists.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
+            Building_WorkoutAnimated buildingAnimated = TargetThingA as Building_WorkoutAnimated;
 
-            if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext, out memoryFactor);
+            if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext, RimbodyWorkoutCategory.Balance, out memoryFactor);
             var exWorkout = ext.workouts[workoutIndex];
             workoutEfficiencyValue = TargetThingA.GetStatValue(DefOf_Rimbody.Rimbody_WorkoutEfficiency);
 
@@ -215,17 +104,8 @@ namespace Maux36.Rimbody
             {
                 TargetThingA.Map.physicalInteractionReservationManager.Reserve(pawn, job, TargetThingA);
                 GetInPosition(TargetThingA, exWorkout.pawnDirection);
-                joygainfactor = TargetThingA.def.GetStatValueAbstract(StatDefOf.JoyGainFactor);
-                var joyneed = pawn.needs?.joy;
-                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
-                {
-                    joygainfactor = 0;
-                }
-                compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
-                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
-                compPhysique.memoryFactorOverride = memoryFactor;
-                compPhysique.partsOverride = exWorkout.strengthParts;
+                AdjustJoygainFactor();
+                StartWorkout(compPhysique, exWorkout);
                 if (buildingAnimated != null)
                 {
                     buildingAnimated.beingUsed = true;
@@ -242,58 +122,20 @@ namespace Maux36.Rimbody
             workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
-                compPhysique.jobOverride = false;
-                compPhysique.strengthOverride = 0f;
-                compPhysique.cardioOverride = 0f;
-                compPhysique.memoryFactorOverride = 1f;
-                compPhysique.partsOverride = null;
-                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick- tickProgress);
+                FinishWorkout(compPhysique);
                 if (buildingAnimated != null)
                 {
                     buildingAnimated.beingUsed = false;
                     buildingAnimated.calculatedOffset = Vector3.zero;
                     pawnOffset = Vector3.zero;
                 }
+                pawn.jobs.posture = PawnPosture.Standing;
                 pawn.SetPawnBodyAngleOverride(-1f);
                 lyingRotation = Rot4.Invalid;
-                TryGainGymThought();
-                AddMemory(compPhysique, ext.workouts[workoutIndex].name);
+                Rimbody_Utility.TryGainGymThought(pawn);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Balance, ext.workouts[workoutIndex].name);
             });
             yield return workout;
-        }
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
-        }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-        private void TryGainGymThought()
-        {
-            var room = pawn.GetRoom();
-            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym)
-            {
-                return;
-            }
-
-            //get the impressive stage index for the current room
-            var scoreStageIndex =
-                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
-            //if the stage index exists in the definition (in xml), gain the memory (and buff)
-            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
-            {
-                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
-                    ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
-                        scoreStageIndex));
-            }
         }
     }
 }
