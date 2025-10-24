@@ -39,7 +39,7 @@ namespace Maux36.Rimbody
 
         //Internals
         private Pawn parentPawnInt = null;
-        private bool? isJoggerInt;
+        private bool isJoggerInt = false;
         public bool PostGen = false;
         private Pawn parentPawn
         {
@@ -73,12 +73,17 @@ namespace Maux36.Rimbody
         public float memoryFactorOverride = 1f;
         public List<float> partsOverride = null;
 
+        //Cache control
+        private bool geneCacheDirty = true;
+        private bool traitCacheDirty = true;
+
         //Fat
         public float BodyFat = -1f;
         private float _geneFatGainFactor = 1f;
         private float _geneFatLoseFactor = 1f;
         public bool useFatgoal = false;
         public float FatGoal = 25f;
+
         public float FatGainFactor
         {
             get
@@ -142,8 +147,7 @@ namespace Maux36.Rimbody
         public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
 
         //Traits and Genes
-        private bool _geneCacheDirty = true;
-        public bool _isNonSenInt = false;
+        public bool isNonSenInt = false;
         public bool isNonSen
         {
             get
@@ -152,14 +156,14 @@ namespace Maux36.Rimbody
                 {
                     ApplyGene();
                 }
-                return _isNonSenInt;
+                return isNonSenInt;
             }
         }
         public bool isJogger
         {
             get
             {
-                if (isJoggerInt is null)
+                if (traitCacheDirty)
                 {
                     if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
                     {
@@ -170,7 +174,7 @@ namespace Maux36.Rimbody
                         isJoggerInt = false;
                     }
                 }
-                return isJoggerInt ?? false;
+                return isJoggerInt;
             }
         }
         //public bool isJogger => (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true);
@@ -185,10 +189,6 @@ namespace Maux36.Rimbody
         public CompProperties_Physique Props => (CompProperties_Physique)props;
 
         private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
-        private static readonly GeneDef GeneBodyFat = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Fat", true) : null;
-        private static readonly GeneDef GeneBodyThin = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Thin", true) : null;
-        private static readonly GeneDef GeneBodyHulk = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Hulk", true) : null;
-        private static readonly GeneDef GeneBodyStandard = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("Body_Standard", true) : null;
         private static readonly GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
 
         private CompHoldingPlatformTarget platformComp;
@@ -258,18 +258,18 @@ namespace Maux36.Rimbody
                     cardioFactor = cardioOverride;
                     partsToApplyFatigue = partsOverride;
                     appliedEfficiency = memoryFactorOverride;
-                    switch (curJobDef.defName)
+                    switch (curJobDef.shortHash)
                     {
-                        case string job when RimbodyDefLists.StrengthJob.Contains(job):
+                        case ushort jobHash when RimbodyDefLists.StrengthJobHash.Contains(jobHash):
                             doingS = true;
                             UIflag = 2;
                             strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
                             break;
-                        case string job when RimbodyDefLists.BalanceJob.Contains(job):
+                        case ushort jobHash when RimbodyDefLists.BalanceJobHash.Contains(jobHash):
                             doingB = true;
                             UIflag = 2;
                             break;
-                        case string job when RimbodyDefLists.CardioJob.Contains(job):
+                        case ushort jobHash when RimbodyDefLists.CardioJobHash.Contains(jobHash):
                             doingC = true;
                             UIflag = 2;
                             break;
@@ -352,7 +352,7 @@ namespace Maux36.Rimbody
                         else
                         {
                             //get work factor
-                            if (RimbodyDefLists.JobExtensionCache.TryGetValue(curJobDef.defName, out var jobExtension))
+                            if (RimbodyDefLists.JobModExDB.TryGetValue(curJobDef.shortHash, out var jobExtension))
                             {
                                 if (jobExtension.JobCategory != RimbodyJobCategory.None)
                                 {
@@ -388,7 +388,7 @@ namespace Maux36.Rimbody
                             }
                             else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef)
                             {
-                                if (RimbodyDefLists.GiverExtensionCache.TryGetValue(workGiverDef.defName, out var giverExtension))
+                                if (RimbodyDefLists.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
                                 {
                                     if (giverExtension.JobCategory != RimbodyJobCategory.None)
                                     {
@@ -473,11 +473,7 @@ namespace Maux36.Rimbody
                 }
 
                 //Gain and Lose Factor
-                var fatgainF;
-                var fatloseF;
-                var musclegainF;
-                var muscleloseF;
-                (fatgainF,fatloseF,musclegainF,muscleloseF) = GetFactors();
+                (float fatgainF, float fatloseF, float musclegainF, float muscleloseF) = GetFactors();
                 gainF = musclegainF;
 
                 //UI
@@ -684,7 +680,7 @@ namespace Maux36.Rimbody
         //Utilities
         public void DirtyTraitCache()
         {
-            isJoggerInt = null;
+            traitCacheDirty = true;
         }
 
         public bool shouldCheckBody(float fatDelta, float muscleDelta, float newBodyFat, float newMuscleMass)
@@ -1214,39 +1210,27 @@ namespace Maux36.Rimbody
 
         private void ApplyGene()
         {
-            _geneCacheDirty = false;
+            geneCacheDirty = false;
             if (!ModsConfig.BiotechActive) return;
             var genesListForReading = parentPawn.genes?.GenesListForReading;
             if (genesListForReading == null) return;
+            float fg = 1f;
+            float fl = 1f;
+            float mg = 1f;
+            float ml = 1f;
             for (int i = 0; i < genesListForReading.Count; i++)
-			{
-				if (RimbodyDefLists.RelevantGenes.Contains(genesListForReading[i].def.defName) && genesListForReading[i].Active)
+            {
+                if (genesListForReading[i].def.shortHash == NonSenescent.shortHash && genesListForReading[i].Active)
+                {
+                    isNonSenInt = true;
+                }
+                else if (RimbodyDefLists.GeneFactors.TryGetValue(genesListForReading[i].def.shortHash, out (float, float, float, float) factors) && genesListForReading[i].Active)
 				{
-					return relevantGeneSet.Add(def.defName);
-                    if (def.defName == "Body_Fat")
-                    {
-                        _geneFatGainFactor = 1.25f;
-                        _geneFatLoseFactor = 0.85f;
-                    }
-                    else if (def.defName == "Body_Thin")
-                    {
-                        _geneFatGainFactor = 0.75f;
-                        _geneFatLoseFactor = 1.15f;
-                    }
-                    else if (def.defName == "Body_Hulk")
-                    {
-                        _geneMuscleGainFactor = 1.25f;
-                        _geneMuscleLoseFactor = 0.85f;
-                    }
-                    else if (def.defName == "Body_Standard")
-                    {
-                        _geneMuscleGainFactor = 1.15f;
-                        _geneFatGainFactor = 0.85f;
-                    }
-                    if (def.defName == "DiseaseFree")
-                    {
-                        _isNonSenInt = true;
-                    }
+                    (fg, fl, mg, ml) = factors;
+                    _geneFatGainFactor *= fg;
+                    _geneFatLoseFactor *= fl;
+                    _geneMuscleGainFactor *= mg;
+                    _geneMuscleLoseFactor *= ml;
 				}
 			}
         }
@@ -1257,7 +1241,7 @@ namespace Maux36.Rimbody
             _geneFatLoseFactor = 1f;
             _geneMuscleGainFactor = 1f;
             _geneMuscleLoseFactor = 1f;
-            _isNonSenInt = false;
+            isNonSenInt = false;
             geneCacheDirty = true;
         }
 

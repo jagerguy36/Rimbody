@@ -6,14 +6,10 @@ using UnityEngine;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoBodyWeightPlank : JobDriver
+    internal class JobDriver_DoBodyWeightPlank : JobDriver_RimbodyBaseDriver
     {
         private const int duration = 1000;
-        private float joygainfactor = 1.0f;
-        private int tickProgress = 0;
-        private float memoryFactor = 1.0f;
         private Vector3 pawnNudge = Vector3.zero;
-        private Rot4 lyingRotation = Rot4.Invalid;
         public override Vector3 ForcedBodyOffset
         {
             get
@@ -21,44 +17,23 @@ namespace Maux36.Rimbody
                 return pawnNudge;
             }
         }
-        public override Rot4 ForcedLayingRotation
-        {
-            get
-            {
-                return lyingRotation;
-            }
-        }
-
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
-            {
-                return false;
-            }
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed)) return false;
             if (job.targetB != null)
             {
-                if(!pawn.Reserve(job.targetB, job, 1, -1, null, errorOnFailed))
-                {
-                    return false;
-                }
+                if(!pawn.Reserve(job.targetB, job, 1, -1, null, errorOnFailed)) return false;
             }
             return true;
-        }
-        private void AddMemory(CompPhysique compPhysique)
-        {
-            if (compPhysique != null)
-            {
-                compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"balance|{job.def.defName}");
-            }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref joygainfactor, "plank_joygainfactor", 1.0f);
             Scribe_Values.Look(ref tickProgress, "plank_tickProgress", 0);
             Scribe_Values.Look(ref memoryFactor, "plank_memoryFactor", 1.0f);
-            Scribe_Values.Look(ref pawnNudge, "plank_pawnNudget", Vector3.zero);
+            Scribe_Values.Look(ref workoutEfficiencyValue, "plank_workoutEfficiencyValue", 1f);
             Scribe_Values.Look(ref lyingRotation, "plank_lyingRotation", Rot4.Invalid);
         }
 
@@ -67,18 +42,17 @@ namespace Maux36.Rimbody
             var compPhysique = pawn.compPhysique();
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-            EndOnTired(this);
+            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.BalanceNonTargetJob.TryGetValue(job.def, out var exWorkout);
-            float workoutEfficiencyValue = 1f;
+            RimbodyDefLists.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
+            memoryFactor = compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f;
             yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
             workout.initAction = () =>
             {
-                memoryFactor = compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f;
                 pawn.pather.StopDead();
                 pawn.jobs.posture = PawnPosture.LayingOnGroundNormal;
                 Rot4 facing = facing = Rot4.Random;
@@ -90,16 +64,8 @@ namespace Maux36.Rimbody
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
                 pawn.SetPawnBodyAngleOverride(facing.Opposite.AsAngle + ((facing.Opposite.AsAngle > 0 && facing.Opposite.AsAngle < 180) ? -30f : (facing.Opposite.AsAngle > 180 && facing.Opposite.AsAngle < 360) ? 30f : 0f));
                 lyingRotation = facing.Opposite == Rot4.South ? Rot4.North : facing.Opposite;
-                var joyneed = pawn.needs?.joy;
-                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
-                {
-                    joygainfactor = 0;
-                }
-                compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength * workoutEfficiencyValue;
-                compPhysique.cardioOverride = exWorkout.cardio * workoutEfficiencyValue;
-                compPhysique.memoryFactorOverride = memoryFactor;
-                compPhysique.partsOverride = exWorkout.strengthParts;
+                AdjustJoygainFactor();
+                StartWorkoutJob(compPhysique, exWorkout);
             };
             float jitter_amount = 3f * Mathf.Max(0f, (1f - (compPhysique.MuscleMass / 35f))) / 100f;
             workout.tickAction = delegate
@@ -119,53 +85,13 @@ namespace Maux36.Rimbody
             workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
-                compPhysique.jobOverride = false;
-                compPhysique.strengthOverride = 0f;
-                compPhysique.cardioOverride = 0f;
-                compPhysique.memoryFactorOverride = 1f;
-                compPhysique.partsOverride = null;
-                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - tickProgress);
-                TryGainGymThought();
-                AddMemory(compPhysique);
+                FinishWorkout(compPhysique);
+                Rimbody_Utility.TryGainGymThought(pawn);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Balance, job.def.defName);
                 pawn.jobs.posture = PawnPosture.Standing;
                 pawn.SetPawnBodyAngleOverride(-1f);
             });
             yield return workout;
-        }
-
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
-        }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-        private void TryGainGymThought()
-        {
-            var room = pawn.GetRoom();
-            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym)
-            {
-                return;
-            }
-
-            //get the impressive stage index for the current room
-            var scoreStageIndex =
-                RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
-            //if the stage index exists in the definition (in xml), gain the memory (and buff)
-            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
-            {
-                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(
-                    ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,
-                        scoreStageIndex));
-            }
         }
     }
 }

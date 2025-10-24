@@ -9,8 +9,8 @@ namespace Maux36.Rimbody
     public class JoyGiver_Workout : JoyGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
-        private static readonly (RimbodyWorkoutCategory type, Func<CompPhysique, float> getPriority, Func<Pawn, List<Thing>, Dictionary<string, float>, Job> tryGiveJob)[] WorkoutGivers =
+        private static Dictionary<int, float> workoutCache = new Dictionary<int, float>();
+        private static readonly (RimbodyWorkoutCategory type, Func<CompPhysique, float> getPriority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[] WorkoutGivers =
         {
             (RimbodyWorkoutCategory.Strength, JobGiver_DoStrengthBuilding.GetActualPriority, JobGiver_DoStrengthBuilding.TryGiveJobActual),
             (RimbodyWorkoutCategory.Balance, JobGiver_DoBalanceBuilding.GetActualPriority, JobGiver_DoBalanceBuilding.TryGiveJobActual),
@@ -36,24 +36,12 @@ namespace Maux36.Rimbody
                 }
                 if (pawn.IsColonist || pawn.IsPrisonerOfColony)
                 {
-                    if (compPhysique == null)
-                    {
-                        return null;
-                    }
-                    if (RimbodySettings.useExhaustion && compPhysique.resting)
-                    {
-                        return null;
-                    }
-                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick)
-                    {
-                        return null;
-                    }
-                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                    {
-                        return null;
-                    }
+                    if (compPhysique == null) return null;
+                    if (RimbodySettings.useExhaustion && compPhysique.resting) return null;
+                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick) return null;
+                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn)) return null;
                     bool noStrength = compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod;
-                    var topGivers = new (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<string, float>, Job> tryGiveJob)[3];
+                    var topGivers = new (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[3];
                     int count = 0;
 
                     foreach (var giver in WorkoutGivers)

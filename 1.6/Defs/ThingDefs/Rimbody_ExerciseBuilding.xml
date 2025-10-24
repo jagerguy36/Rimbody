@@ -650,7 +650,7 @@
 							<south>(0,0,0.03)</south>
 							<west>(0.15,0,0.05)</west>
 						</pawnAnimPeak>
-						<customWorkoutTickHandler>Maux36.Rimbody.DeadliftTickhandler</customWorkoutTickHandler>
+						<customWorkoutTickHandler Class="Maux36.Rimbody.DeadliftTickhandler"/>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
@@ -821,7 +821,7 @@
 							<south>(0,0,0.03)</south>
 							<west>(0.15,0,0.05)</west>
 						</pawnAnimPeak>
-						<customWorkoutTickHandler>Maux36.Rimbody.DeadliftTickhandler</customWorkoutTickHandler>
+						<customWorkoutTickHandler Class="Maux36.Rimbody.DeadliftTickhandler"/>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>

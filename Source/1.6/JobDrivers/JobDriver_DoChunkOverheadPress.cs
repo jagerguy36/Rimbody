@@ -6,31 +6,16 @@ using RimWorld;
 
 namespace Maux36.Rimbody
 {
-    internal class JobDriver_DoChunkOverheadPress : JobDriver
+    internal class JobDriver_DoChunkOverheadPress : JobDriver_RimbodyBaseDriver
     {
         private bool shouldReturn = false;
         private const int duration = 800;
-        private float joygainfactor = 1.0f;
-        private int tickProgress = 0;
-        private float memoryFactor = 1.0f;
         private Vector3 itemOffset = new Vector3(0f, 1f / 26f, 0f);
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed))
-            {
-                return false;
-            }
+            if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed)) return false;
             return true;
-        }
-
-        private void AddMemory(CompPhysique compPhysique)
-        {
-            if (compPhysique != null)
-            {
-                compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-                compPhysique.AddNewMemory($"strength|{job.def.defName}");
-            }
         }
 
         public override void ExposeData()
@@ -48,12 +33,11 @@ namespace Maux36.Rimbody
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            EndOnTired(this);
+            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.StrengthNonTargetJob.TryGetValue(job.def, out var exWorkout);
+            RimbodyDefLists.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
             memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
-
             yield return Toils_General.DoAtomic(delegate
             {
                 shouldReturn = TargetThingA.IsInValidStorage();
@@ -69,16 +53,8 @@ namespace Maux36.Rimbody
             {
                 pawn.pather.StopDead();
                 pawn.rotationTracker.FaceCell(pawn.Position + new IntVec3(0, 0, -1));
-                var joyneed = pawn.needs?.joy;
-                if (joyneed?.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) == true)
-                {
-                    joygainfactor = 0;
-                }
-                compPhysique.jobOverride = true;
-                compPhysique.strengthOverride = exWorkout.strength;
-                compPhysique.cardioOverride = exWorkout.cardio;
-                compPhysique.memoryFactorOverride = memoryFactor;
-                compPhysique.partsOverride = exWorkout.strengthParts;
+                AdjustJoygainFactor();
+                StartWorkoutJob(compPhysique, exWorkout);
             };
             float uptime = 0.95f - (0.008f * compPhysique.MuscleMass);
             float cycleDuration = 150f - compPhysique.MuscleMass;
@@ -105,20 +81,13 @@ namespace Maux36.Rimbody
             workout.defaultDuration = duration;
             workout.AddFinishAction(delegate
             {
-                compPhysique.jobOverride = false;
-                compPhysique.strengthOverride = 0f;
-                compPhysique.cardioOverride = 0f;
-                compPhysique.memoryFactorOverride = 1f;
-                compPhysique.partsOverride = null;
-                compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - tickProgress);
-                AddMemory(compPhysique);
+                FinishWorkout(compPhysique);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, job.def.defName);
                 if (shouldReturn)
                 {
                     Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
-                    if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
-                    {
-                        pawn.jobs.jobQueue.EnqueueFirst(haulJob);
-                    }
+                    if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false) pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                    else pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
                 }
                 else
                 {
@@ -133,22 +102,6 @@ namespace Maux36.Rimbody
             if (tickProgress > 0)
             {
                 drawPos += itemOffset;
-                return true;
-            }
-            return false;
-        }
-
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
-        }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
                 return true;
             }
             return false;

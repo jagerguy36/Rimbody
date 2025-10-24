@@ -41,7 +41,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="CombatExtended">
-      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\3495749827\Assemblies\CombatExtended.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\workshop\content\294100\2890901044\Assemblies\CombatExtended.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Rimbody">
