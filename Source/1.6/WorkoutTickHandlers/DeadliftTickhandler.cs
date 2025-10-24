@@ -4,7 +4,7 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    public class DeadliftTickhandler : IWorkoutTickHandler
+    public class DeadliftTickhandler : WorkoutTickHandler
     {
         public void TickAction(Pawn pawn, Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration, float jitter_amount, int tickProgress, ref Vector3 pawnOffset, ref Rot4 lyingRotation)
         {

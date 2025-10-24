@@ -3,9 +3,9 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    public interface IWorkoutTickHandler
+    public abstract class WorkoutTickHandler
     {
-        void TickAction(
+        public abstract void TickAction(
         Pawn pawn,
         Building_WorkoutAnimated building,
         WorkOut workout,

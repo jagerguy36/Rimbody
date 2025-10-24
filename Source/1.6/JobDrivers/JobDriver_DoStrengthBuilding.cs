@@ -15,7 +15,7 @@ namespace Maux36.Rimbody
         private int workoutIndex = -1;
         private float memoryFactor = 1.0f;
         private float workoutEfficiencyValue = 1.0f;
-        private IWorkoutTickHandler externalHandler = null;
+        private WorkoutTickHandler externalHandler = null;
         private Vector3 pawnOffset = Vector3.zero;
         private Rot4 lyingRotation = Rot4.Invalid;
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -220,7 +220,7 @@ namespace Maux36.Rimbody
             }
             if (exWorkout.customWorkoutTickHandler != null)
             {
-                RimbodyDefLists.Handlers.TryGetValue(exWorkout.name, out externalHandler);
+                externalHandler = customWorkoutTickHandler;
             }
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");
