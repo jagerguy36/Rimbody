@@ -12,14 +12,8 @@ namespace Maux36.Rimbody
             for (int i = 0; i < containedAndAdjacentThings.Count; i++)
             {
                 Thing thing = containedAndAdjacentThings[i];
-                if (thing.def.IsBed && thing.def.building.bed_humanlike)
-                {
-                    return 0f;
-                }
-                if (RimbodyDefLists.WorkoutBuilding.ContainsKey(thing.def))
-                {
-                    num++;
-                }
+                if (thing.def.IsBed && thing.def.building.bed_humanlike) return 0f;
+                if (RimbodyDefLists.WorkoutBuildingHash.Contains(thing.def.shortHash)) num++;
             }
 
             return num * 8f;

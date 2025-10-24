@@ -6,7 +6,7 @@ namespace Maux36.Rimbody
 {
     public class DeadliftTickhandler : WorkoutTickHandler
     {
-        public void TickAction(Pawn pawn, Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration, float jitter_amount, int tickProgress, ref Vector3 pawnOffset, ref Rot4 lyingRotation)
+        public override void TickAction(Pawn pawn, Building_WorkoutAnimated building, WorkOut wo, float uptime, float cycleDuration, float jitter_amount, int tickProgress, ref Vector3 pawnOffset, ref Rot4 lyingRotation)
         {
             cycleDuration += 50f;
             float cycleTime = (tickProgress % (int)cycleDuration) / cycleDuration;

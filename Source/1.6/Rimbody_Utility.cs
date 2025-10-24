@@ -28,11 +28,6 @@ namespace Maux36.Rimbody
             return false;
         }
 
-        public static bool TooTired(Pawn actor)
-        {
-            return actor?.needs?.rest?.CurLevel < 0.17f;
-        }
-
         public static void TryUpdateWeight(ThingOwner owner)
         {
             if (owner?.Owner?.ParentHolder is Pawn pawn)
@@ -40,6 +35,7 @@ namespace Maux36.Rimbody
                 TryUpdateInventory(pawn);
             }
         }
+
         public static float GetBaseInventoryCapacity(Pawn pawn)
         {
             return pawn.BodySize * 35f;//MassUtility.Capacity(pawn); // avoid returning 0
@@ -103,8 +99,7 @@ namespace Maux36.Rimbody
             cell = default;
             return false;
         }
-
-        public void TryGainGymThought(Pawn pawn)
+        public static void TryGainGymThought(Pawn pawn)
         {
             var room = pawn.GetRoom();
             if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym) return;
@@ -114,7 +109,8 @@ namespace Maux36.Rimbody
                 pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,scoreStageIndex));
             }
         }
-        public void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, string name)
+
+        public static void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, string name)
         {
             if (compPhysique == null) return;
             if (category == RimbodyWorkoutCategory.Job) return;
@@ -135,6 +131,11 @@ namespace Maux36.Rimbody
             }
         }
 
+        public static bool TooTired(Pawn actor)
+        {
+            return actor?.needs?.rest?.CurLevel < 0.17f;
+        }
+
         public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
         {
             Pawn actor = f.GetActor();
@@ -142,15 +143,6 @@ namespace Maux36.Rimbody
             f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
             return f;
         }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
-        }
-
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void LogRimbodyValue(Pawn pawn)

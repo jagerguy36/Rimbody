@@ -12,6 +12,9 @@ namespace Maux36.Rimbody
         public static List<ThingDef> StrengthTargets = new();
         public static List<ThingDef> CardioTargets = new();
         public static List<ThingDef> BalanceTargets = new();
+        public static List<JobDef> StrengthNontargetJobs = new();
+        public static List<JobDef> CardioNontargetJobs = new();
+        public static List<JobDef> BalanceNontargetJobs = new();
         public static Dictionary<int, ModExtensionRimbodyTarget> ThingModExDB = new();
         public static Dictionary<int, ModExtensionRimbodyJob> JobModExDB = new();
         public static Dictionary<int, ModExtensionRimbodyJob> GiverModExDB = new();
@@ -54,22 +57,22 @@ namespace Maux36.Rimbody
             }
             //These JobDefs don't have any jobModEx because they are target jobs.
             //But they need to be added to the job Hash in order to show motes.
-            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthLifting").shortHash)
-            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthBuilding").shortHash)
-            CardioJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoCardioBuilding").shortHash)
-            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceLifting").shortHash)
-            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceBuilding").shortHash)
+            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthLifting").shortHash);
+            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthBuilding").shortHash);
+            CardioJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoCardioBuilding").shortHash);
+            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceLifting").shortHash);
+            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceBuilding").shortHash);
 
             foreach (var giverDef in DefDatabase<WorkGiverDef>.AllDefs)
             {
                 var giverExtension = giverDef.GetModExtension<ModExtensionRimbodyJob>();
                 if(giverExtension != null)
                 {
-                    GiverExtensionCache[giverDef.defName] = giverExtension;
+                    GiverModExDB[giverDef.shortHash] = giverExtension;
                 }
             }
 
-            RegisterGeneFactors(GeneFactors)
+            RegisterGeneFactors(GeneFactors);
         }
 
         private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
@@ -93,7 +96,7 @@ namespace Maux36.Rimbody
 
             if (targetExtension.Type == RimbodyTargetType.Building)
             {
-                WorkoutBuildingHash.Add(targetDef.int);
+                WorkoutBuildingHash.Add(targetDef.shortHash);
             }
         }
 
@@ -106,7 +109,7 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
-                        StrengthJobHash.Add(jobDef.shortHash);
+                        StrengthNontargetJobs.Add(jobDef);
                     }
                     break;
                 case RimbodyWorkoutCategory.Balance:
@@ -114,7 +117,7 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         balanceHighscore = Math.Max(balanceHighscore, os);
-                        BalanceJobHash.Add(jobDef.shortHash);
+                        BalanceNontargetJobs.Add(jobDef);
                     }
                     break;
                 case RimbodyWorkoutCategory.Cardio:
@@ -126,7 +129,7 @@ namespace Maux36.Rimbody
                             jogging_parts_jogger = jobExtension.strengthParts.Select(x => x * 0.5f).ToList();
                         }
                         cardioHighscore = Math.Max(cardioHighscore, GetOptimalCardioJobScore(jobExtension.strengthParts, jobExtension.cardio));
-                        CardioJobHash.Add(jobDef.shortHash);
+                        CardioNontargetJobs.Add(jobDef);
                     }   
                     break;
             }
@@ -136,13 +139,14 @@ namespace Maux36.Rimbody
         {
             if (!ModsConfig.BiotechActive) return;
             //f_gain, f_lose, m_gain, m_lose, 
-            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Fat", false);
+            GeneDef geneDef;
+            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Fat", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (1.25f, 0.85f, 1f, 1f);
-            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Thin", false);
+            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Thin", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.75f, 1.15f, 1f, 1f);
-            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Hulk", false);
+            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Hulk", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (1f, 1f, 1.25f, 0.85f);
-            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Standard", false);
+            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Standard", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1.15f, 1f);
             return;
         }

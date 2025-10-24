@@ -80,7 +80,7 @@
     <Compile Include="JoyGiver\JoyGiver_Workout.cs" />
     <Compile Include="ThinkNodes\ThinkNode_ContinueCondition.cs" />
     <Compile Include="WorkoutTickHandlers\DeadliftTickhandler.cs" />
-    <Compile Include="WorkoutTickHandlers\IWorkoutTickHandler.cs" />
+    <Compile Include="WorkoutTickHandlers\WorkoutTickHandler.cs" />
     <Compile Include="JobDrivers\JobDriver_DoBalanceLifting.cs" />
     <Compile Include="JobDrivers\Toils_Rimbody.cs" />
     <Compile Include="Thing\Thing_WorkoutAnimated.cs" />

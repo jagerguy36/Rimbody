@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
     public class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
     {
         private static List<Thing> tmpCandidates = [];
-        private static Dictionary<string, float> workoutCache = new Dictionary<string, float>();
+        private static Dictionary<int, float> workoutCache = new Dictionary<int, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
@@ -41,7 +41,7 @@ namespace Maux36.Rimbody
             return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
         }
 
-        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<string, float> workoutCache)
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<int, float> workoutCache)
         {
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
@@ -65,24 +65,15 @@ namespace Maux36.Rimbody
             {
                 if (t.IsForbidden(pawn)) return false;
 
-                RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
+                RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
-                    if (pawn.Map.reservationManager.IsReserved(t))
-                    {
-                        return false;
-                    }
-                    if (!pawn.CanReserve(t, ignoreOtherReservations: true))
-                    {
-                        return false;
-                    }
+                    if (pawn.Map.reservationManager.IsReserved(t)) return false;
+                    if (!pawn.CanReserve(t, ignoreOtherReservations: true)) return false;
                     if (t.def.hasInteractionCell)
                     {
-                        if (!pawn.CanReserveSittableOrSpot(t.InteractionCell))
-                        {
-                            return false;
-                        }
+                        if (!pawn.CanReserveSittableOrSpot(t.InteractionCell)) return false;
                     }
                     else
                     {
@@ -101,12 +92,12 @@ namespace Maux36.Rimbody
             float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
-                if (RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension))
+                if (RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
                 {
                     float score = 0f;
-                    if (workoutCache.ContainsKey(t.def.defName))
+                    if (workoutCache.ContainsKey(t.def.shortHash))
                     {
-                        score = workoutCache[t.def.defName];
+                        score = workoutCache[t.def.shortHash];
                         if (score > targethighscore)
                         {
                             targethighscore = score;
@@ -145,7 +136,7 @@ namespace Maux36.Rimbody
                     if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                     {
                         //jogging is possible. Compare the score
-                        var joggingEx = RimbodyDefLists.CardioNonTargetJob.TryGetValue(DefOf_Rimbody.Rimbody_Jogging);
+                        var joggingEx = RimbodyDefLists.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_Jogging.shortHash);
                         if (joggingEx != null)
                         {
                             float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
@@ -170,7 +161,7 @@ namespace Maux36.Rimbody
 
         public static Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            RimbodyDefLists.CardioTarget.TryGetValue(t.def, out var targetModExtension);
+            RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
                 if (t.def.hasInteractionCell)
@@ -204,11 +195,8 @@ namespace Maux36.Rimbody
         protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.CardioTarget == null || RimbodyDefLists.CardioTarget.Count == 0)
-            {
-                return;
-            }
-            foreach (var buildingDef in RimbodyDefLists.CardioTarget.Keys)
+            if (RimbodyDefLists.CardioTargets == null || RimbodyDefLists.CardioTargets.Count == 0) return;
+            foreach (var buildingDef in RimbodyDefLists.CardioTargets)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }
