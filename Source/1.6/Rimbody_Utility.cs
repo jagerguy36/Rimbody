@@ -30,11 +30,7 @@ namespace Maux36.Rimbody
 
         public static bool TooTired(Pawn actor)
         {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
+            return actor?.needs?.rest?.CurLevel < 0.17f;
         }
 
         public static void TryUpdateWeight(ThingOwner owner)
