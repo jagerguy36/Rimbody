@@ -9,28 +9,25 @@ namespace Maux36.Rimbody
     [StaticConstructorOnStartup]
     public class RimbodyDefLists
     {
-        public static List<Thing> StrengthTarget = new();
-        public static List<Thing> CardioTarget = new();
-        public static List<Thing> BalanceTarget = new();
+        public static List<ThingDef> StrengthTargets = new();
+        public static List<ThingDef> CardioTargets = new();
+        public static List<ThingDef> BalanceTargets = new();
         public static Dictionary<int, ModExtensionRimbodyTarget> ThingModExDB = new();
         public static Dictionary<int, ModExtensionRimbodyJob> JobModExDB = new();
         public static Dictionary<int, ModExtensionRimbodyJob> GiverModExDB = new();
         public static HashSet<int> WorkoutBuildingHash = new();
 
-        public static HashSet<int> StrengthJob = new();
-        public static HashSet<int> CardioJob = new();
-        public static HashSet<int> BalanceJob = new();
-        public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" }; //For Flags
-        public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" }; //For Flags
-        public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceLifting", "Rimbody_DoBalanceBuilding" }; //For Flags
+        public static HashSet<int> StrengthJobHash = new();
+        public static HashSet<int> CardioJobHash = new();
+        public static HashSet<int> BalanceJobHash = new();
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;
+        //Highscore for workouts without target
         public static float strengthHighscore = 0;
         public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
-
-        public static HashSet<int> RelevantGenes = new();
-        // public static HashSet<string> RelevantGenes = new HashSet<string>{"Body_Fat", "Body_Thin", "Body_Hulk", "Body_Standard", "DiseaseFree"};
+        //hash,f_gain, f_lose, m_gain, m_lose, 
+        public static Dictionary<int, (float, float, float, float)> GeneFactors = new();
 
         static RimbodyDefLists() // Static constructor
         {
@@ -39,23 +36,29 @@ namespace Maux36.Rimbody
                 var buildingExtension = thingDef.GetModExtension<ModExtensionRimbodyTarget>();
                 if (buildingExtension != null)
                 {
-                    AddTarget(thingDef, buildingExtension);
+                    AddWorkoutTarget(thingDef, buildingExtension);
                 }
             }
 
             foreach (var jobDef in DefDatabase<JobDef>.AllDefs)
             {
                 var jobExtension = jobDef.GetModExtension<ModExtensionRimbodyJob>();
-                if (jobExtension?.Category !=null && jobExtension?.Category != RimbodyWorkoutCategory.Job)
-                {
-                    AddJob(jobDef, jobExtension);
-                }
                 if(jobExtension != null)
                 {
-                    JobExtensionCache[jobDef.defName] = jobExtension;
+                    if (jobExtension?.Category !=null && jobExtension?.Category != RimbodyWorkoutCategory.Job)
+                    {
+                        AddWorkoutJob(jobDef, jobExtension);
+                    }
+                    JobModExDB[jobDef.shortHash] = jobExtension;
                 }
-
             }
+            //These JobDefs don't have any jobModEx because they are target jobs.
+            //But they need to be added to the job Hash in order to show motes.
+            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthLifting").shortHash)
+            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthBuilding").shortHash)
+            CardioJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoCardioBuilding").shortHash)
+            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceLifting").shortHash)
+            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceBuilding").shortHash)
 
             foreach (var giverDef in DefDatabase<WorkGiverDef>.AllDefs)
             {
@@ -66,12 +69,10 @@ namespace Maux36.Rimbody
                 }
             }
 
-            RegisterGeneFactors();
-
-            RegisterJobs();
+            RegisterGeneFactors(GeneFactors)
         }
 
-        private static void AddTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
+        private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
         {
             foreach (var workout in targetExtension.workouts)
             {
@@ -79,13 +80,13 @@ namespace Maux36.Rimbody
                 switch (workout.Category)
                 {
                     case RimbodyWorkoutCategory.Strength:
-                        StrengthTarget.Add(targetDef);
+                        StrengthTargets.Add(targetDef);
                         break;
                     case RimbodyWorkoutCategory.Balance:
-                        BalanceTarget.Add(targetDef);
+                        BalanceTargets.Add(targetDef);
                         break;
                     case RimbodyWorkoutCategory.Cardio:
-                        CardioTarget.Add(targetDef);
+                        CardioTargets.Add(targetDef);
                         break;
                 }
             }
@@ -96,7 +97,7 @@ namespace Maux36.Rimbody
             }
         }
 
-        private static void AddJob(JobDef jobDef, ModExtensionRimbodyJob jobExtension)
+        private static void AddWorkoutJob(JobDef jobDef, ModExtensionRimbodyJob jobExtension)
         {
             switch (jobExtension.Category)
             {
@@ -105,8 +106,7 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
-                        JobModExDB[jobDef.shortHash] = jobExtension;
-                        StrengthJob.Add(jobDef.shortHash);
+                        StrengthJobHash.Add(jobDef.shortHash);
                     }
                     break;
                 case RimbodyWorkoutCategory.Balance:
@@ -114,8 +114,7 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         balanceHighscore = Math.Max(balanceHighscore, os);
-                        JobModExDB[jobDef.shortHash] = jobExtension;
-                        BalanceJob.Add(jobDef.shortHash);
+                        BalanceJobHash.Add(jobDef.shortHash);
                     }
                     break;
                 case RimbodyWorkoutCategory.Cardio:
@@ -127,16 +126,25 @@ namespace Maux36.Rimbody
                             jogging_parts_jogger = jobExtension.strengthParts.Select(x => x * 0.5f).ToList();
                         }
                         cardioHighscore = Math.Max(cardioHighscore, GetOptimalCardioJobScore(jobExtension.strengthParts, jobExtension.cardio));
-                        JobModExDB[jobDef.shortHash] = jobExtension;
-                        CardioJob.Add(jobDef.shortHash);
+                        CardioJobHash.Add(jobDef.shortHash);
                     }   
                     break;
             }
         }
 
-        public static void RegisterGeneFactors()
+        public static void RegisterGeneFactors(Dictionary<int, (float, float, float, float)> GeneFactors)
         {
-
+            if (!ModsConfig.BiotechActive) return;
+            //f_gain, f_lose, m_gain, m_lose, 
+            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Fat", false);
+            if (geneDef != null) GeneFactors[geneDef.shortHash] = (1.25f, 0.85f, 1f, 1f);
+            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Thin", false);
+            if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.75f, 1.15f, 1f, 1f);
+            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Hulk", false);
+            if (geneDef != null) GeneFactors[geneDef.shortHash] = (1f, 1f, 1.25f, 0.85f);
+            var geneDef = DefDatabase<GeneDef>.GetNamed("Body_Standard", false);
+            if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1.15f, 1f);
+            return;
         }
 
         public static float GetOptimalStrengthPartScore(List<float> strengthParts, float strength)
