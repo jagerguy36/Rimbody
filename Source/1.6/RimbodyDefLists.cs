@@ -9,13 +9,17 @@ namespace Maux36.Rimbody
     [StaticConstructorOnStartup]
     public class RimbodyDefLists
     {
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> StrengthTarget = new();
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> CardioTarget = new();
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> BalanceTarget = new();
-        public static Dictionary<ThingDef, ModExtensionRimbodyTarget> WorkoutBuilding = new();
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> StrengthNonTargetJob = new(); //For JobGiver
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> CardioNonTargetJob = new(); //For JobGiver
-        public static Dictionary<JobDef, ModExtensionRimbodyJob> BalanceNonTargetJob = new(); //For JobGiver
+        public static List<Thing> StrengthTarget = new();
+        public static List<Thing> CardioTarget = new();
+        public static List<Thing> BalanceTarget = new();
+        public static Dictionary<int, ModExtensionRimbodyTarget> ThingModExDB = new();
+        public static Dictionary<int, ModExtensionRimbodyJob> JobModExDB = new();
+        public static Dictionary<int, ModExtensionRimbodyJob> GiverModExDB = new();
+        public static HashSet<int> WorkoutBuildingHash = new();
+
+        public static HashSet<int> StrengthJob = new();
+        public static HashSet<int> CardioJob = new();
+        public static HashSet<int> BalanceJob = new();
         public static HashSet<string> StrengthJob = new HashSet<string>{ "Rimbody_DoStrengthLifting", "Rimbody_DoStrengthBuilding" }; //For Flags
         public static HashSet<string> CardioJob = new HashSet<string> { "Rimbody_DoCardioBuilding" }; //For Flags
         public static HashSet<string> BalanceJob = new HashSet<string> { "Rimbody_DoBalanceLifting", "Rimbody_DoBalanceBuilding" }; //For Flags
@@ -25,12 +29,8 @@ namespace Maux36.Rimbody
         public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
 
-        public static Dictionary<string, ModExtensionRimbodyJob> JobExtensionCache = new();
-        public static Dictionary<string, ModExtensionRimbodyJob> GiverExtensionCache = new();
-
-        public static readonly Dictionary<string, IWorkoutTickHandler> Handlers = new();
-
-        public static HashSet<string> RelevantGenes = new HashSet<string>{"Body_Fat", "Body_Thin", "Body_Hulk", "Body_Standard", "DiseaseFree"};
+        public static HashSet<int> RelevantGenes = new();
+        // public static HashSet<string> RelevantGenes = new HashSet<string>{"Body_Fat", "Body_Thin", "Body_Hulk", "Body_Standard", "DiseaseFree"};
 
         static RimbodyDefLists() // Static constructor
         {
@@ -65,41 +65,34 @@ namespace Maux36.Rimbody
                     GiverExtensionCache[giverDef.defName] = giverExtension;
                 }
             }
+
+            RegisterGeneFactors();
+
+            RegisterJobs();
         }
 
         private static void AddTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
         {
             foreach (var workout in targetExtension.workouts)
             {
-                if (workout?.customWorkoutTickHandler != null)
-                {
-                    var type = Type.GetType(workout.customWorkoutTickHandler);
-                    if (type != null && typeof(IWorkoutTickHandler).IsAssignableFrom(type))
-                    {
-                        Handlers[workout.name] = (IWorkoutTickHandler)Activator.CreateInstance(type);
-                    }
-                    else
-                    {
-                        Log.Error($"Rimbody Could not load customWorkoutTickHandler '{workout.customWorkoutTickHandler}' for workout {workout.name}");
-                    }
-                }
+                ThingModExDB[targetDef.shortHash] = targetExtension;
                 switch (workout.Category)
                 {
                     case RimbodyWorkoutCategory.Strength:
-                        StrengthTarget[targetDef] = targetExtension;
+                        StrengthTarget.Add(targetDef);
                         break;
                     case RimbodyWorkoutCategory.Balance:
-                        BalanceTarget[targetDef] = targetExtension;
+                        BalanceTarget.Add(targetDef);
                         break;
                     case RimbodyWorkoutCategory.Cardio:
-                        CardioTarget[targetDef] = targetExtension;
+                        CardioTarget.Add(targetDef);
                         break;
                 }
             }
 
             if (targetExtension.Type == RimbodyTargetType.Building)
             {
-                WorkoutBuilding[targetDef] = targetExtension;
+                WorkoutBuildingHash.Add(targetDef.int);
             }
         }
 
@@ -112,8 +105,8 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
-                        StrengthNonTargetJob[jobDef] = jobExtension;
-                        StrengthJob.Add(jobDef.defName);
+                        JobModExDB[jobDef.shortHash] = jobExtension;
+                        StrengthJob.Add(jobDef.shortHash);
                     }
                     break;
                 case RimbodyWorkoutCategory.Balance:
@@ -121,8 +114,8 @@ namespace Maux36.Rimbody
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         balanceHighscore = Math.Max(balanceHighscore, os);
-                        BalanceNonTargetJob[jobDef] = jobExtension;
-                        BalanceJob.Add(jobDef.defName);
+                        JobModExDB[jobDef.shortHash] = jobExtension;
+                        BalanceJob.Add(jobDef.shortHash);
                     }
                     break;
                 case RimbodyWorkoutCategory.Cardio:
@@ -134,11 +127,16 @@ namespace Maux36.Rimbody
                             jogging_parts_jogger = jobExtension.strengthParts.Select(x => x * 0.5f).ToList();
                         }
                         cardioHighscore = Math.Max(cardioHighscore, GetOptimalCardioJobScore(jobExtension.strengthParts, jobExtension.cardio));
-                        CardioNonTargetJob[jobDef] = jobExtension;
-                        CardioJob.Add(jobDef.defName);
+                        JobModExDB[jobDef.shortHash] = jobExtension;
+                        CardioJob.Add(jobDef.shortHash);
                     }   
                     break;
             }
+        }
+
+        public static void RegisterGeneFactors()
+        {
+
         }
 
         public static float GetOptimalStrengthPartScore(List<float> strengthParts, float strength)
