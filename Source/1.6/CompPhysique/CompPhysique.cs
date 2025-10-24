@@ -75,15 +75,15 @@ namespace Maux36.Rimbody
 
         //Fat
         public float BodyFat = -1f;
-        public float _geneFatGainFactor = -1f;
-        public float _geneFatLoseFactor = -1f;
+        private float _geneFatGainFactor = 1f;
+        private float _geneFatLoseFactor = 1f;
         public bool useFatgoal = false;
         public float FatGoal = 25f;
         public float FatGainFactor
         {
             get
             {
-                if (_geneFatGainFactor < 0)
+                if (geneCacheDirty)
                 {
                     ApplyGene();
                 }
@@ -94,7 +94,7 @@ namespace Maux36.Rimbody
         {
             get
             {
-                if (_geneFatLoseFactor < 0)
+                if (geneCacheDirty)
                 {
                     ApplyGene();
                 }
@@ -104,15 +104,15 @@ namespace Maux36.Rimbody
 
         //Muscle
         public float MuscleMass = -1f;
-        public float _geneMuscleGainFactor = -1f;
-        public float _geneMuscleLoseFactor = -1f;
+        public float _geneMuscleGainFactor = 1f;
+        public float _geneMuscleLoseFactor = 1f;
         public bool useMuscleGoal = false;
         public float MuscleGoal = 25f;
         public float MuscleGainFactor
         {
             get
             {
-                if (_geneMuscleGainFactor < 0)
+                if (geneCacheDirty)
                 {
                     ApplyGene();
                 }
@@ -123,7 +123,7 @@ namespace Maux36.Rimbody
         {
             get
             {
-                if (_geneMuscleLoseFactor < 0)
+                if (geneCacheDirty)
                 {
                     ApplyGene();
                 }
@@ -142,17 +142,19 @@ namespace Maux36.Rimbody
         public List<float> partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
 
         //Traits and Genes
-        public HashSet<string>  _relevantActiveGenes = null;
-        public HashSet<string>  RelevantActiveGenes
+        private bool _geneCacheDirty = true;
+        public bool _isNonSenInt = false;
+        public bool isNonSen
         {
             get
             {
-                _relevantActiveGenes = _relevantActiveGenes ?? GetRelevantActiveGenes();
-                return _relevantActiveGenes;
+                if (geneCacheDirty)
+                {
+                    ApplyGene();
+                }
+                return _isNonSenInt;
             }
         }
-
-        public bool isNonSen = false;
         public bool isJogger
         {
             get
@@ -1210,67 +1212,53 @@ namespace Maux36.Rimbody
             return (fGain, fLose, mGain, mLose);
         }
 
-        private (float, float, float, float) ApplyGene()
+        private void ApplyGene()
+        {
+            _geneCacheDirty = false;
+            if (!ModsConfig.BiotechActive) return;
+            var genesListForReading = parentPawn.genes?.GenesListForReading;
+            if (genesListForReading == null) return;
+            for (int i = 0; i < genesListForReading.Count; i++)
+			{
+				if (RimbodyDefLists.RelevantGenes.Contains(genesListForReading[i].def.defName) && genesListForReading[i].Active)
+				{
+					return relevantGeneSet.Add(def.defName);
+                    if (def.defName == "Body_Fat")
+                    {
+                        _geneFatGainFactor = 1.25f;
+                        _geneFatLoseFactor = 0.85f;
+                    }
+                    else if (def.defName == "Body_Thin")
+                    {
+                        _geneFatGainFactor = 0.75f;
+                        _geneFatLoseFactor = 1.15f;
+                    }
+                    else if (def.defName == "Body_Hulk")
+                    {
+                        _geneMuscleGainFactor = 1.25f;
+                        _geneMuscleLoseFactor = 0.85f;
+                    }
+                    else if (def.defName == "Body_Standard")
+                    {
+                        _geneMuscleGainFactor = 1.15f;
+                        _geneFatGainFactor = 0.85f;
+                    }
+                    if (def.defName == "DiseaseFree")
+                    {
+                        _isNonSenInt = true;
+                    }
+				}
+			}
+        }
+
+        public void NotifyActiveGeneCacheDirty()
         {
             _geneFatGainFactor = 1f;
             _geneFatLoseFactor = 1f;
             _geneMuscleGainFactor = 1f;
             _geneMuscleLoseFactor = 1f;
-            if (ModsConfig.BiotechActive)
-            {
-                if (RelevantActiveGenes.Contains("Body_Fat"))
-                {
-                    _geneFatGainFactor = 1.25f;
-                    _geneFatLoseFactor = 0.85f;
-                }
-                else if (RelevantActiveGenes.Contains("Body_Thin"))
-                {
-                    _geneFatGainFactor = 0.75f;
-                    _geneFatLoseFactor = 1.15f;
-                }
-                else if (RelevantActiveGenes.Contains("Body_Hulk"))
-                {
-                    _geneMuscleGainFactor = 1.25f;
-                    _geneMuscleLoseFactor = 0.85f;
-                }
-                else if (RelevantActiveGenes.Contains("Body_Standard"))
-                {
-                    _geneMuscleGainFactor = 1.15f;
-                    _geneFatGainFactor = 0.85f;
-                }
-                if (RelevantActiveGenes.Contains("DiseaseFree"))
-                {
-                    isNonSen = true;
-                }
-            }
-        }
-
-        public HashSet<string> GetRelevantActiveGenes()
-        {
-            HashSet<string> relevantGeneSet = new();
-            var genesListForReading = parentPawn.genes?.GenesListForReading;
-            if (genesListForReading == null)
-            {
-                return relevantGeneSet;
-            }
-			for (int i = 0; i < genesListForReading.Count; i++)
-			{
-				if (RimbodyDefLists.RelevantGenes.Contains(genesListForReading[i].def.defName) && genesListForReading[i].Active)
-				{
-					return relevantGeneSet.Add(def.defName);
-				}
-			}
-            return relevantGeneSet;
-        }
-
-        public void NotifyActiveGeneCacheDirty()
-        {
-            _relevantActiveGenes = null;
-            _geneFatGainFactor = -1f;
-            _geneFatLoseFactor = -1f;
-            _geneMuscleGainFactor = -1f;
-            _geneMuscleLoseFactor = -1f;
-            isNonSen = false;
+            _isNonSenInt = false;
+            geneCacheDirty = true;
         }
 
         //Scribe
