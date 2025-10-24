@@ -108,6 +108,53 @@ namespace Maux36.Rimbody
             return false;
         }
 
+        public void TryGainGymThought(Pawn pawn)
+        {
+            var room = pawn.GetRoom();
+            if (room == null || room.Role != DefOf_Rimbody.Rimbody_Gym) return;
+            var scoreStageIndex = RoomStatDefOf.Impressiveness.GetScoreStageIndex(room.GetStat(RoomStatDefOf.Impressiveness));
+            if (DefOf_Rimbody.WorkedOutInImpressiveGym.stages[scoreStageIndex] != null)
+            {
+                pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,scoreStageIndex));
+            }
+        }
+        public void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, string name)
+        {
+            if (compPhysique == null) return;
+            if (category == RimbodyWorkoutCategory.Job) return;
+            compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
+            switch (category)
+            {
+                case RimbodyWorkoutCategory.Strength:
+                    compPhysique.AddNewMemory($"strength|{name}");
+                    break;
+                case RimbodyWorkoutCategory.Balance:
+                    compPhysique.AddNewMemory($"balance|{name}");
+                    break;
+                case RimbodyWorkoutCategory.Cardio:
+                    compPhysique.AddNewMemory($"cardio|{name}");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
+        {
+            Pawn actor = f.GetActor();
+            bool isTired = TooTired(actor);
+            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
+            return f;
+        }
+        public static bool TooTired(Pawn actor)
+        {
+            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]
         public static void LogRimbodyValue(Pawn pawn)
