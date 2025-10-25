@@ -5,7 +5,7 @@
     <label>make halteres</label>
     <description>make halteres.</description>
     <jobString>making halteres.</jobString>
-    <workAmount>1600</workAmount>
+    <workAmount>1000</workAmount>
     <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
     <effectWorking>CutStone</effectWorking>
     <soundWorking>Recipe_MakeStoneBlocks</soundWorking>

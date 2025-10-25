@@ -38,7 +38,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>1200</WorkToMake>
+			<WorkToMake>600</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -161,6 +161,7 @@
 			<li>Rimbody_Workout_equipment</li>
 		</thingCategories>
 		<statBases>
+			<MarketValue>30</MarketValue>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -263,7 +264,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>1600</WorkToMake>
+			<WorkToMake>600</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -341,7 +342,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>1000</WorkToMake>
+			<WorkToMake>300</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
