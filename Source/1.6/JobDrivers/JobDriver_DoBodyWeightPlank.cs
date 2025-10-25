@@ -34,6 +34,7 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref tickProgress, "plank_tickProgress", 0);
             Scribe_Values.Look(ref memoryFactor, "plank_memoryFactor", 1.0f);
             Scribe_Values.Look(ref workoutEfficiencyValue, "plank_workoutEfficiencyValue", 1f);
+            Scribe_Values.Look(ref pawnNudge, "plank_pawnNudget", Vector3.zero);
             Scribe_Values.Look(ref lyingRotation, "plank_lyingRotation", Rot4.Invalid);
         }
 

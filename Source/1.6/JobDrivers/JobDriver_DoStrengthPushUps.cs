@@ -32,13 +32,14 @@ namespace Maux36.Rimbody
         public override void ExposeData()
         {
             base.ExposeData();
+            Scribe_Values.Look(ref joygainfactor, "pushup_joygainfactor", 1.0f);
             Scribe_Values.Look(ref tickProgress, "pushup_tickProgress", 0);
             Scribe_Values.Look(ref memoryFactor, "pushup_memoryFactor", 1.0f);
+            Scribe_Values.Look(ref workoutEfficiencyValue, "pushup_workoutEfficiencyValue", 1.0f);
             Scribe_Values.Look(ref animBase, "pushup_animBase", 0f);
             Scribe_Values.Look(ref animCoef, "pushup_animCoef", 0f);
             Scribe_Values.Look(ref pawnNudge, "pushup_pawnNudget", Vector3.zero);
             Scribe_Values.Look(ref lyingRotation, "pushup_lyingRotation", Rot4.Invalid);
-            Scribe_Values.Look(ref workoutEfficiencyValue, "pushup_workoutEfficiencyValue", 1.0f);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
