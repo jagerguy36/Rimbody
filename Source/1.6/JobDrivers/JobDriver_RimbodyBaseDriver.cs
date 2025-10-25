@@ -120,6 +120,7 @@ namespace Maux36.Rimbody
             compPhysique.cardioOverride = workout.cardio * workoutEfficiencyValue;
             compPhysique.memoryFactorOverride = memoryFactor;
             compPhysique.partsOverride = workout.strengthParts;
+            compPhysique.curWorkoutCategory = workout.Category;
         }
         protected void StartWorkoutJob(CompPhysique compPhysique, ModExtensionRimbodyJob workout)
         {
@@ -128,6 +129,7 @@ namespace Maux36.Rimbody
             compPhysique.cardioOverride = workout.cardio * workoutEfficiencyValue;
             compPhysique.memoryFactorOverride = memoryFactor;
             compPhysique.partsOverride = workout.strengthParts;
+            compPhysique.curWorkoutCategory = workout.Category;
         }
         protected void FinishWorkout(CompPhysique compPhysique)
         {
@@ -136,6 +138,7 @@ namespace Maux36.Rimbody
             compPhysique.cardioOverride = 0f;
             compPhysique.memoryFactorOverride = 1f;
             compPhysique.partsOverride = null;
+            compPhysique.curWorkoutCategory = RimbodyWorkoutCategory.Job;
             compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - tickProgress);
         }
     }

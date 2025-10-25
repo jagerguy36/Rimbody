@@ -83,7 +83,7 @@
 						<reportString>dumbbells_bicepcurl_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<animationType>ItemEach</animationType>
 						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
@@ -102,7 +102,7 @@
 						<strengthParts>
 							<li>0</li>
 							<li>0</li>
-							<li>3.25</li>
+							<li>2.75</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -116,7 +116,7 @@
 						<reportString>dumbbells_overheadshoulderpress_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<animationType>ItemBoth</animationType>
 						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
@@ -132,7 +132,7 @@
 							<west>(0.05,0,0.45)</west>
 						</movingpartAnimPeak>
 						<strengthParts>
-							<li>3</li>
+							<li>2.5</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
@@ -185,7 +185,7 @@
 						<reportString>halteres_bicepcurl_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.9</strength>
+						<strength>1.5</strength>
 						<animationType>ItemEach</animationType>
 						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
@@ -204,7 +204,7 @@
 						<strengthParts>
 							<li>0</li>
 							<li>0</li>
-							<li>3.25</li>
+							<li>2.75</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -218,7 +218,7 @@
 						<reportString>halteres_overheadshoulderpress_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.9</strength>
+						<strength>1.5</strength>
 						<animationType>ItemBoth</animationType>
 						<spot>FlatBench</spot>
 						<movingpartAnimOffset>
@@ -234,7 +234,7 @@
 							<west>(0.05,0,0.45)</west>
 						</movingpartAnimPeak>
 						<strengthParts>
-							<li>3</li>
+							<li>2.5</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
@@ -302,7 +302,7 @@
 						<reportString>kettlebellswing_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<animationType>Item</animationType>
 						<movingpartAnimOffset>
 							<south>(0,0,-0.3)</south>
@@ -312,15 +312,15 @@
 						</movingpartAnimPeak>
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
-							<li>1</li>
+							<li>0.75</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
 							<li>0.5</li>
-							<li>1.5</li>
-							<li>1</li>
-							<li>1</li>
+							<li>1.25</li>
+							<li>0.75</li>
+							<li>0.75</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -380,7 +380,7 @@
 						<name>sbll_name</name>
 						<reportString>sbll_report</reportString>
 						<Category>Balance</Category>
-						<cardio>1.5</cardio>
+						<cardio>1</cardio>
 						<strength>1.2</strength>
 						<animationType>Item</animationType>
 						<spot>ExerciseMats</spot>

@@ -15,14 +15,12 @@ namespace Maux36.Rimbody
         public static List<JobDef> StrengthNontargetJobs = new();
         public static List<JobDef> CardioNontargetJobs = new();
         public static List<JobDef> BalanceNontargetJobs = new();
-        public static Dictionary<int, ModExtensionRimbodyTarget> ThingModExDB = new();
-        public static Dictionary<int, ModExtensionRimbodyJob> JobModExDB = new();
-        public static Dictionary<int, ModExtensionRimbodyJob> GiverModExDB = new();
-        public static HashSet<int> WorkoutBuildingHash = new();
+        public static Dictionary<ushort, ModExtensionRimbodyTarget> ThingModExDB = new();
+        public static Dictionary<ushort, ModExtensionRimbodyJob> JobModExDB = new();
+        public static Dictionary<ushort, ModExtensionRimbodyJob> GiverModExDB = new();
+        public static HashSet<ushort> WorkoutBuildingHash = new();
 
-        public static HashSet<int> StrengthJobHash = new();
-        public static HashSet<int> CardioJobHash = new();
-        public static HashSet<int> BalanceJobHash = new();
+        public static HashSet<ushort> RunningJobHash = new();
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;
         //Highscore for workouts without target
@@ -30,7 +28,7 @@ namespace Maux36.Rimbody
         public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
         //hash,f_gain, f_lose, m_gain, m_lose, 
-        public static Dictionary<int, (float, float, float, float)> GeneFactors = new();
+        public static Dictionary<ushort, (float, float, float, float)> GeneFactors = new();
 
         static RimbodyDefLists() // Static constructor
         {
@@ -55,13 +53,6 @@ namespace Maux36.Rimbody
                     JobModExDB[jobDef.shortHash] = jobExtension;
                 }
             }
-            //These JobDefs don't have any jobModEx because they are target jobs.
-            //But they need to be added to the job Hash in order to show motes.
-            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthLifting").shortHash);
-            StrengthJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoStrengthBuilding").shortHash);
-            CardioJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoCardioBuilding").shortHash);
-            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceLifting").shortHash);
-            BalanceJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_DoBalanceBuilding").shortHash);
 
             foreach (var giverDef in DefDatabase<WorkGiverDef>.AllDefs)
             {
@@ -73,6 +64,10 @@ namespace Maux36.Rimbody
             }
 
             RegisterGeneFactors(GeneFactors);
+
+            RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_Jogging").shortHash);
+            RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("NatureRunning").shortHash);
+
         }
 
         private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension)
@@ -135,7 +130,7 @@ namespace Maux36.Rimbody
             }
         }
 
-        public static void RegisterGeneFactors(Dictionary<int, (float, float, float, float)> GeneFactors)
+        public static void RegisterGeneFactors(Dictionary<ushort, (float, float, float, float)> GeneFactors)
         {
             if (!ModsConfig.BiotechActive) return;
             //f_gain, f_lose, m_gain, m_lose, 

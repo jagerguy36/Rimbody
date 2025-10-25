@@ -25,7 +25,7 @@
         <xpath>Defs/JobDef[defName="BeachStuff_PlayWithBeachBall"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.5</cardio>
+                <cardio>1</cardio>
                 <strength>1.2</strength>
                 <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                 <strengthParts>

@@ -25,7 +25,7 @@
         <xpath>Defs/JobDef[defName="HPGMcycling"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                  <cardio>2.0</cardio>
+                  <cardio>1.5</cardio>
                   <strength>0.25</strength>
                   <TreatAs>Cardio</TreatAs>
                   <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
@@ -36,9 +36,9 @@
                     <li>0</li>
                     <li>0</li>
                     <li>0</li>
-                    <li>1.5</li>
                     <li>1.25</li>
-                    <li>1</li>
+                    <li>1.25</li>
+                    <li>0.75</li>
                   </strengthParts>
             </li>
         </value>

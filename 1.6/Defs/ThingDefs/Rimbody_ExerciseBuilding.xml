@@ -286,7 +286,7 @@
 						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>2.0</cardio>
+						<cardio>1.5</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
@@ -392,7 +392,7 @@
 						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>2.0</cardio>
+						<cardio>1.5</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
@@ -404,9 +404,9 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>0.8</li>
-							<li>0.8</li>
-							<li>0.5</li>
+							<li>1</li>
+							<li>0.75</li>
+							<li>0.25</li>
 						</strengthParts>
 					</li>
 				</workouts>
@@ -498,7 +498,7 @@
 						<reportString>benchpress_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<pawnDirection>LyingFrontSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -522,9 +522,9 @@
 						<!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
 						<strengthParts>
 							<li>0</li>
-							<li>3</li>
+							<li>2.5</li>
 							<li>0</li>
-							<li>1</li>
+							<li>0.75</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -623,7 +623,7 @@
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -657,11 +657,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>1.5</li>
+							<li>1.25</li>
 							<li>0.5</li>
 							<li>1</li>
 							<li>0.5</li>
-							<li>1.5</li>
+							<li>1</li>
 						</strengthParts>
 					</li>
 					<li>
@@ -669,7 +669,7 @@
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -704,8 +704,8 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>2</li>
-							<li>2</li>
+							<li>1.75</li>
+							<li>1.5</li>
 							<li>0.5</li>
 						</strengthParts>
 					</li>
@@ -794,7 +794,7 @@
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.9</strength>
+						<strength>1.5</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -828,11 +828,11 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>1.5</li>
+							<li>1.25</li>
 							<li>0.5</li>
 							<li>1</li>
 							<li>0.5</li>
-							<li>1.5</li>
+							<li>1</li>
 						</strengthParts>
 					</li>
 					<li>
@@ -840,7 +840,7 @@
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.9</strength>
+						<strength>1.5</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -875,8 +875,8 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0.5</li>
-							<li>2</li>
-							<li>2</li>
+							<li>1.75</li>
+							<li>1.5</li>
 							<li>0.5</li>
 						</strengthParts>
 					</li>
@@ -956,7 +956,7 @@
 						<reportString>pullups_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -981,9 +981,9 @@
 						<strengthParts>
 							<li>0</li>
 							<li>0</li>
-							<li>1</li>
+							<li>0.75</li>
 							<li>0</li>
-							<li>3</li>
+							<li>2.5</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -995,7 +995,7 @@
 						<reportString>dips_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>2.0</strength>
+						<strength>1.6</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -1021,7 +1021,7 @@
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
-							<li>3.25</li>
+							<li>2.75</li>
 							<li>0</li>
 							<li>0</li>
 							<li>0</li>
@@ -1104,7 +1104,7 @@
 						<name>reactivetraining_name</name>
 						<reportString>reactivetraining_report</reportString>
 						<Category>Balance</Category>
-						<cardio>1.5</cardio>
+						<cardio>1</cardio>
 						<strength>1.2</strength>
 						<pawnDirection>Center</pawnDirection>
 						<animationType>Melee</animationType>

@@ -25,7 +25,7 @@
         <xpath>Defs/JobDef[defName="Job_Volleyball"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.5</cardio>
+                <cardio>1</cardio>
                 <strength>1.2</strength>
                 <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                 <strengthParts>
@@ -47,7 +47,7 @@
         <xpath>Defs/JobDef[defName="Job_Basketball"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.5</cardio>
+                <cardio>1</cardio>
                 <strength>1.2</strength>
                 <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                 <strengthParts>
@@ -69,7 +69,7 @@
         <xpath>Defs/JobDef[defName="Job_Soccer"]</xpath>
         <value>
             <li Class="Maux36.Rimbody.ModExtensionRimbodyJob">
-                <cardio>1.5</cardio>
+                <cardio>1</cardio>
                 <strength>1.2</strength>
                 <!-- shoulders, chest, biceps, triceps, back, core, glutes, quads, hams   -->
                 <strengthParts>
