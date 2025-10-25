@@ -44,17 +44,9 @@ namespace Maux36.Rimbody
         private static readonly float _lyingC = 0.2f; // [Rest]
 
         //Internals
-        private Pawn parentPawnInt = null;
         private bool isJoggerInt = false;
         public bool PostGen = false;
-        private Pawn parentPawn
-        {
-            get
-            {
-                parentPawnInt ??= parent as Pawn;
-                return parentPawnInt;
-            }
-        }
+        public Pawn parentPawn;
         //public float? breInt;
         //public float bre
         //{
@@ -170,9 +162,6 @@ namespace Maux36.Rimbody
         public int lastWorkoutTick = 0;
         public int AssignedTick = 0;
         public float carryFactor = 0f;
-
-        public CompProperties_Physique Props => (CompProperties_Physique)props;
-
 
         private CompHoldingPlatformTarget platformComp;
         private CompHoldingPlatformTarget PlatformTarget => platformComp ?? (platformComp = parentPawn.TryGetComp<CompHoldingPlatformTarget>());
@@ -474,8 +463,8 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.03f * ((MuscleMass + 75f) / (MuscleMass - 55f) + 25f);
-                float muscleLoss = (51.5f / (BodyFat + 50f)) * ((MuscleMass + 25f) * 0.008f) * Mathf.Pow(((curFood + 0.125f) * 8f), -0.5f);//(51.5f / (BodyFat + 50f)) * ((MuscleMass + 50f) / 125f) * Mathf.Pow(((curFood + 0.125f) / 0.125f), -0.5f);
+                float muscleGain = 0.02f * ((MuscleMass + 10f) / (MuscleMass - 53f) + 20f);//0.4~[0.375]~0
+                float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * Mathf.Pow((curFood + 0.1f), -0.5f);//0~[0.8]~0.15
                 float muscleDelta = 0f;
 
                 //exhaustion recovery
@@ -699,6 +688,7 @@ namespace Maux36.Rimbody
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
+            parentPawn = parent as Pawn;
             PhysiqueValueSetup();
         }
 
@@ -1140,6 +1130,7 @@ namespace Maux36.Rimbody
                     _geneMuscleLoseFactor *= ml;
 				}
 			}
+            //Log.Message($"{parentPawn.Name} gene applied: {_geneFatGainFactor} {_geneFatLoseFactor} {_geneMuscleGainFactor} {_geneMuscleLoseFactor}");
         }
 
         public void NotifyActiveGeneCacheDirty()

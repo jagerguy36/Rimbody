@@ -26,30 +26,10 @@ namespace Maux36.Rimbody
                 HARCompat.Active = true;
             }
 
-            if (ModsConfig.IsActive("mlie.syrindividuality"))
-            {
-                IndividualityLoaded = true;
-            }
-
-            if (ModsConfig.IsActive("divinederivative.romance"))
-            {
-                WayBetterRomanceLoaded = true;
-            }
-
-            if (ModsConfig.IsActive("aoba.exosuit.framework"))
-            {
-                ExosuitFrameworkLoaded = true;
-            }
-
-            if (ModsConfig.IsActive("ceteam.combatextended"))
-            {
-                CombatExtendedLoaded = true;
-            }
-
-            //if (!ModsConfig.IsActive("zetrith.prepatcher"))
-            //{
-            //    Log.Warning("[Rimbody] Prepatcher not detected. For optimal performance, Prepatcher is highly recommended.");
-            //}
+            if (ModsConfig.IsActive("mlie.syrindividuality")) IndividualityLoaded = true;
+            if (ModsConfig.IsActive("divinederivative.romance")) WayBetterRomanceLoaded = true;
+            if (ModsConfig.IsActive("aoba.exosuit.framework")) ExosuitFrameworkLoaded = true;
+            if (ModsConfig.IsActive("ceteam.combatextended")) CombatExtendedLoaded = true;
         }
 
         public override string SettingsCategory()

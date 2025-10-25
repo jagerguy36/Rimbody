@@ -140,7 +140,7 @@ namespace Maux36.Rimbody
             geneDef = DefDatabase<GeneDef>.GetNamed("Body_Thin", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.75f, 1.15f, 1f, 1f);
             geneDef = DefDatabase<GeneDef>.GetNamed("Body_Hulk", false);
-            if (geneDef != null) GeneFactors[geneDef.shortHash] = (1f, 1f, 1.25f, 0.85f);
+            if (geneDef != null) GeneFactors[geneDef.shortHash] = (1f, 1f, 1.25f, 0.75f);
             geneDef = DefDatabase<GeneDef>.GetNamed("Body_Standard", false);
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1.15f, 1f);
             return;

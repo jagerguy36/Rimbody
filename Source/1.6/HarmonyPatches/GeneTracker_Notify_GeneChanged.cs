@@ -1,12 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -16,39 +11,22 @@ namespace Maux36.Rimbody
     public static class GeneTracker_Notify_GeneChanged
     {
 
-        static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene)
+        static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene, Pawn ___pawn)
         {
-            var pawnField = typeof(Pawn_GeneTracker).GetField("pawn");
-            var pawn = (Pawn)pawnField.GetValue(__instance);
-            if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.defName== "DiseaseFree")
+            if (ModsConfig.BiotechActive && RimbodyDefLists.GeneFactors.Keys.Contains(addedOrRemovedGene.shortHash))
             {
-                var compPhysique = pawn.compPhysique();
-
-                if (compPhysique != null)
+                var compPhysique = ___pawn.compPhysique();
+                if (compPhysique == null) return;
+                compPhysique.NotifyActiveGeneCacheDirty();
+                if (compPhysique.PostGen)
                 {
-                    compPhysique.NotifyActiveGeneCacheDirty();
+                    compPhysique.ResetBody();
                 }
-
-            }
-
-            if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.bodyType.HasValue)
-            {
-                var compPhysique = pawn.compPhysique();
-
-                if (compPhysique != null)
+                else
                 {
-                    if (compPhysique.PostGen)
-                    {
-                        compPhysique.NotifyActiveGeneCacheDirty();
-                        compPhysique.ResetBody();
-                    }
-                    else
-                    {
-                        compPhysique.NotifyActiveGeneCacheDirty();
-                        (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
-                    }
+                    (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
                 }
-            }            
+            }        
         }
     }
 
