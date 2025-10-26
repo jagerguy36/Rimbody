@@ -126,7 +126,7 @@ namespace Maux36.Rimbody
         //Gain
         public float gain = 0f;
         public float gainF = 1f;
-        public float gainMax => (2f * MuscleMass * gainF) + 100f;
+        public float gainMax => (MuscleMass * gainF) + 80f;
 
         //Fatigue and Exhuastion
         public float exhaustion = 0f;
@@ -479,12 +479,14 @@ namespace Maux36.Rimbody
                 if (parentPawn.needs.rest != null)
                 {
                     //Grow on sleep
-                    if (forceRest || parentPawn.needs.rest?.Resting == true)
+                    //Rvert resting check due to Need_Sleep Resting check change in 1.6
+                    //if (forceRest || parentPawn.needs.rest?.Resting == true)
+                    if (forceRest || (pawnCaravan != null && (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())) || (pawnCaravan == null && parentPawn.jobs?.curDriver?.asleep == true))
                     {
                         restingCheck = true;
                         if (gain > 0f)
                         {
-                            var swol = 2f;
+                            var swol = 1f;
                             var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
                             var bed = parentPawn.CurrentBed();
                             var bre = (bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness);
@@ -510,7 +512,7 @@ namespace Maux36.Rimbody
                         //Store gain
                         gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
                         //Grow slowly
-                        var recoveryFactor = 0.2f;
+                        var recoveryFactor = 0.1f;
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
