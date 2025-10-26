@@ -464,7 +464,8 @@ namespace Maux36.Rimbody
 
                 //Muscle
                 float muscleGain = 0.02f * ((MuscleMass + 10f) / (MuscleMass - 53f) + 20f);//0.4~[0.375]~0
-                float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * Mathf.Pow((curFood + 0.1f), -0.5f);//0~[0.8]~0.15
+                float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * (0.55f + (0.5f / ((curFood + 0.1f) + 0.09f)));//0~[0.8]~0.15
+                //Mathf.Pow(x,-0.5f) approximated to 0.55f + (0.5f/(x+0.09))
                 float muscleDelta = 0f;
 
                 //exhaustion recovery
