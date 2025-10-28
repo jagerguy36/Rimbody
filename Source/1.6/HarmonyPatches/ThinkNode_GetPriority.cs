@@ -60,27 +60,24 @@ namespace Maux36.Rimbody
     }
 
     [HarmonyPatch(typeof(JobGiver_GetFood), "GetPriority")]
-    public class GetRestPriorityPatch
+    public class GetFoodPriorityPatch
     {
         public static bool Prefix(Pawn pawn, ref float __result)
         {
-            if (pawn == null)
+            if (pawn == null) return true;
+            var compPhysique = pawn.compPhysique();
+            if (compPhysique == null) return true;
+            Need_Food food = pawn.needs.food;
+            if (food == null)
             {
-                return true;
+                __result = 0f;
+                return false;
             }
 
-            var compPhysique = pawn.compPhysique();
-
-            if (compPhysique?.useFatgoal == true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
+            if (compPhysique.useFatgoal == true && compPhysique.BodyFat > compPhysique.FatGoal) //Fat goal not satisfied
             {
-
                 //If Both not satisfied
-                if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal)
-                {
-                    return true; //return normal behavior
-                }
-
-                Need_Food food = pawn.needs.food;
+                if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal) return true; //return normal behavior
                 //Muscle goal is satisfied: only fat goal matters
                 if ((int)food.CurCategory < (int)HungerCategory.UrgentlyHungry)
                 {
@@ -96,7 +93,6 @@ namespace Maux36.Rimbody
             //Fat goal is satisfied already
             else if (compPhysique?.useMuscleGoal == true && compPhysique.MuscleMass < compPhysique.MuscleGoal) //Fat goal satisfied and Muscle goal not satisfied
             {
-                Need_Food food = pawn.needs.food;
                 if (food.CurLevelPercentage < 0.5f)
                 {
                     __result = 9.5f;
