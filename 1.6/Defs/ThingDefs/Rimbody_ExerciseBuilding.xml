@@ -498,7 +498,7 @@
 						<reportString>benchpress_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.6</strength>
+						<strength>2</strength>
 						<pawnDirection>LyingFrontSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -623,7 +623,7 @@
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.6</strength>
+						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -669,7 +669,7 @@
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.6</strength>
+						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -794,7 +794,7 @@
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.5</strength>
+						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -840,7 +840,7 @@
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.5</strength>
+						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -956,7 +956,7 @@
 						<reportString>pullups_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.6</strength>
+						<strength>2</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
@@ -995,7 +995,7 @@
 						<reportString>dips_report</reportString>
 						<Category>Strength</Category>
 						<cardio>0.5</cardio>
-						<strength>1.6</strength>
+						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
 						<movingpartAnimOffset>
