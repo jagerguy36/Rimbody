@@ -126,7 +126,7 @@ namespace Maux36.Rimbody
         //Gain
         public float gain = 0f;
         public float gainF = 1f;
-        public float gainMax => (MuscleMass * gainF) + 80f;
+        public float gainMax => (MuscleMass * gainF) + 40f;
 
         //Fatigue and Exhuastion
         public float exhaustion = 0f;
@@ -463,7 +463,7 @@ namespace Maux36.Rimbody
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
                 //Muscle
-                float muscleGain = 0.02f * ((MuscleMass + 10f) / (MuscleMass - 53f) + 20f);//0.4~[0.375]~0
+                float muscleGain = 0.0125f * ((MuscleMass + 10f) / (MuscleMass - 53f) + 20f);//0.4~[0.375]~0
                 float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * (0.55f + (0.5f / ((curFood + 0.1f) + 0.09f)));//0~[0.8]~0.15
                 //Mathf.Pow(x,-0.5f) approximated to 0.55f + (0.5f/(x+0.09))
                 float muscleDelta = 0f;
@@ -668,13 +668,13 @@ namespace Maux36.Rimbody
                 capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
             }
 
-            carryFactor = 0.5f * Mathf.Clamp((inventoryWeight + capacityWeight) / pawnInventoryCapacity, 0f, 2f);
+            carryFactor = _lightworkS * Mathf.Clamp((inventoryWeight + capacityWeight) / pawnInventoryCapacity, 0f, 2f);
             //Carry capacity is all about the numer of items that can be held in the innerContainer (volume). We assume that has nothing to do with strength.
             //Inventory Cacpacity, on the other hand has to do with mass.
             //We assume if the capcity is how much the pawn is comfortable carrying around on their back.
 
-            //If inventory + held item 's weight == inventory capacity, strength factor will be 0.5, just a bit over light labor.
-            //If inventory + held item 's weight > inventory capacity*2, strenght factor will be 1, a little less than hard labor.
+            //If inventory + held item 's weight == inventory capacity, strength factor will be _lightworkS.
+            //If inventory + held item 's weight > inventory capacity*2, strenght factor will be 2 * _lightworkS.
             //Log.Message($"{parentPawn.Name}'s inventoryWeight: {inventoryWeight} capacityWeight: {capacityWeight} / pawnInventoryCapacity: {Rimbody_Utility.GetBaseInventoryCapacity(parentPawn)}. FINAL: {carryFactor}");
         }
 
