@@ -66,7 +66,10 @@ namespace Maux36.Rimbody
             RegisterGeneFactors(GeneFactors);
 
             RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_Jogging").shortHash);
-            RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("NatureRunning").shortHash);
+            if (ModsConfig.BiotechActive)
+            {
+                RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("NatureRunning").shortHash);
+            }
 
         }
 
