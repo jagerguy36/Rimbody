@@ -4,7 +4,6 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 
 namespace Maux36.Rimbody
@@ -24,7 +23,7 @@ namespace Maux36.Rimbody
 
         private static AccessTools.FieldRef<object, List<BodyTypeDef>> bodyTypes;
 
-        private static Dictionary<string, bool> _cache = new Dictionary<string, bool>();
+        private static Dictionary<int, bool> _cache = new Dictionary<int, bool>();
 
         [UsedImplicitly]
         public static void Activate()
@@ -63,7 +62,7 @@ namespace Maux36.Rimbody
         public static bool CompatibleRace(ThingDef pawnDef)
         {
 
-            if (_cache.TryGetValue(pawnDef.defName, out bool cachedResult))
+            if (_cache.TryGetValue(pawnDef.shortHash, out bool cachedResult))
             {
                 return cachedResult;
             }
@@ -89,14 +88,19 @@ namespace Maux36.Rimbody
             var human = DefDatabase<ThingDef>.GetNamed("Human", true);
             var expectedLifestages = human.race.lifeStageAges;
 
-            var allowedBodyTypes = AllowedBodyTypes(pawnDef).ToHashSet();
+            var allowedBodyTypes = AllowedBodyTypes(pawnDef)?.ToHashSet();
+            if (allowedBodyTypes == null)
+            {
+                _cache[pawnDef.shortHash] = false;
+                return false;
+            }
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
 
             var lifestages = pawnDef.race.lifeStageAges;
             bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
 
             bool isValid = allPresent && ageEqual;
-            _cache[pawnDef.defName] = isValid;
+            _cache[pawnDef.shortHash] = isValid;
             //string shower = string.Join(", ", allowedBodyTypes.Select(thingDef => thingDef.defName));
             //Log.Message(shower);
             //string shower2 = string.Join(", ", expectedBodyTypes.Select(thingDef => thingDef.defName));
