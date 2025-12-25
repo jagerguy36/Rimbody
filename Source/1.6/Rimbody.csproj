@@ -117,7 +117,7 @@
     <Compile Include="RimbodyDefOf.cs" />
     <Compile Include="RimbodySettings.cs" />
     <Compile Include="Rimbody_Utility.cs" />
-    <Compile Include="RoomRoleWorker_Gym.cs" />
+    <Compile Include="Room\RoomRoleWorker_Gym.cs" />
     <Compile Include="ThinkNodes\ThinkNode_WorkoutPriority.cs" />
     <Compile Include="ThinkNodes\ThinkNode_WorkoutCondition.cs" />
     <Compile Include="ThoughtWorker\ThoughtWorker_RunnerHigh.cs" />

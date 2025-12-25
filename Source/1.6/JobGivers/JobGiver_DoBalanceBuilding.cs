@@ -130,12 +130,7 @@ namespace Maux36.Rimbody
             }
             Thing thing = null;
             IntVec3 workoutLocation = IntVec3.Invalid;
-            JobDef jobtogive = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
-            if (thing != null)
-            {
-                jobtogive = DefOf_Rimbody.Rimbody_DoBalanceBuilding;
-            }
             tmpCandidates.Clear();
             workoutCache.Clear();
 

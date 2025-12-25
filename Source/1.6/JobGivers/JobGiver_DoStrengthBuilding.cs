@@ -121,11 +121,11 @@ namespace Maux36.Rimbody
             }
             Thing thing = null;
             IntVec3 workoutLocation = IntVec3.Invalid;
-            JobDef jobtogive = null;
+            JobDef jobDefToGive = null;
             thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
             if (thing != null)
             {
-                jobtogive = DefOf_Rimbody.Rimbody_DoStrengthBuilding;
+                jobDefToGive = DefOf_Rimbody.Rimbody_DoStrengthBuilding;
             }
             tmpCandidates.Clear();
             workoutCache.Clear();
@@ -134,7 +134,7 @@ namespace Maux36.Rimbody
             {
                 float maxScore = -1f;
                 int tieCount = 0;
-                JobDef bestJob = null;
+                JobDef bestJobDef = null;
                 bool chunkPredicate(Thing t)
                 {
                     //if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
@@ -152,7 +152,7 @@ namespace Maux36.Rimbody
                     foreach (var strengthJobdef in RimbodyDB.StrengthNontargetJobs)
                     {
                         var strengthEx = RimbodyDB.JobModExDB.TryGetValue(strengthJobdef.shortHash);
-                        if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
+                        if (RimbodyDB.ChunkJobHash.Contains(strengthJobdef.shortHash) && Chunk == null)
                         {
                             continue;
                         }
@@ -161,22 +161,22 @@ namespace Maux36.Rimbody
                         {
                             maxScore = nonTarget_score;
                             tieCount = 1;
-                            bestJob = strengthJobdef;
+                            bestJobDef = strengthJobdef;
                         }
                         else if (nonTarget_score == maxScore)
                         {
                             tieCount++;
                             if (Rand.Chance(1f / tieCount))
                             {
-                                bestJob = strengthJobdef; // Reservoir sampling for random among ties
+                                bestJobDef = strengthJobdef; // Reservoir sampling for random among ties
                             }
                         }
                     }
                 }
                 if (maxScore > targethighscore)
                 {
-                    jobtogive = bestJob;
-                    if (bestJob?.defName.StartsWith("Rimbody_DoChunk") == true)
+                    jobDefToGive = bestJobDef;
+                    if (RimbodyDB.ChunkJobHash.Contains(bestJobDef.shortHash))
                     {
                         thing = Chunk;
                     }
@@ -187,9 +187,9 @@ namespace Maux36.Rimbody
                 }
             }
 
-            if (jobtogive != null)
+            if (jobDefToGive != null)
             {
-                if (jobtogive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
+                if (jobDefToGive == DefOf_Rimbody.Rimbody_DoStrengthBuilding)
                 {
                     Job job = DoTryGiveTargetJob(pawn, thing);
                     if (job != null)
@@ -197,9 +197,9 @@ namespace Maux36.Rimbody
                         return job;
                     }
                 }
-                else if (jobtogive.defName.StartsWith("Rimbody_DoChunk") == true)
+                else if (RimbodyDB.ChunkJobHash.Contains(jobDefToGive.shortHash))
                 {
-                    Job job = DoTryGiveChunkJob(pawn, thing, jobtogive);
+                    Job job = DoTryGiveChunkJob(pawn, thing, jobDefToGive);
                     if (job != null)
                     {
                         return job;
@@ -209,7 +209,7 @@ namespace Maux36.Rimbody
                 {
                     if (workoutLocation != IntVec3.Invalid)
                     {
-                        Job job = JobMaker.MakeJob(jobtogive, workoutLocation, thing);
+                        Job job = JobMaker.MakeJob(jobDefToGive, workoutLocation, thing);
                         return job;
                     }
                 }
@@ -250,11 +250,11 @@ namespace Maux36.Rimbody
             return null;
         }
 
-        public static Job DoTryGiveChunkJob(Pawn pawn, Thing t, JobDef jobtogive)
+        public static Job DoTryGiveChunkJob(Pawn pawn, Thing t, JobDef jobDefToGive)
         {
             if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some, 1, -1, null, false))
             {
-                return JobMaker.MakeJob(jobtogive, t);
+                return JobMaker.MakeJob(jobDefToGive, t);
             }
             return null;
         }

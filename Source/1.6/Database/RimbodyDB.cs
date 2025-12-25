@@ -21,6 +21,7 @@ namespace Maux36.Rimbody
         public static HashSet<ushort> WorkoutBuildingHash = new();
 
         public static HashSet<ushort> RunningJobHash = new();
+        public static HashSet<ushort> ChunkJobHash = new();
         public static List<float> jogging_parts;
         public static List<float> jogging_parts_jogger;
         //Highscore for workouts without target
@@ -108,6 +109,8 @@ namespace Maux36.Rimbody
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
                         StrengthNontargetJobs.Add(jobDef);
+                        if(jobDef.defName.StartsWith("Rimbody_DoChunk"))
+                            ChunkJobHash.Add(jobDef.shortHash);
                     }
                     break;
                 case RimbodyWorkoutCategory.Balance:
