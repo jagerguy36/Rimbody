@@ -207,10 +207,10 @@ namespace Maux36.Rimbody
 
                 //Factor Calculation
                 //If factor is Forced
-                var harmonyCheckstring = HarmonyCheck();
-                if (harmonyCheckstring != string.Empty)
+                var harmonyCheckInt = HarmonyCheck();
+                if (harmonyCheckInt != -1)
                 {
-                    (strengthFactor, cardioFactor, partsToApplyFatigue) = HarmonyValues(harmonyCheckstring);
+                    (strengthFactor, cardioFactor, partsToApplyFatigue) = HarmonyValues(harmonyCheckInt);
                 }
                 else if (forceRest)
                 {
@@ -609,11 +609,11 @@ namespace Maux36.Rimbody
 
         //Harmony hook for mod compatibility.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public string HarmonyCheck()
+        public int HarmonyCheck()
         {
-            return string.Empty;
+            return -1;
         }
-        public (float, float, List<float>) HarmonyValues(string harmonyKey)
+        public (float, float, List<float>) HarmonyValues(int harmonyKey)
         {
             return (0f, 0f, null); //(strengthHarmony, cardioHarmony, partsHarmony);
         }

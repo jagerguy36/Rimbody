@@ -30,6 +30,11 @@ namespace Maux36.Rimbody
         public static float balanceHighscore = 0;
         //hash,f_gain, f_lose, m_gain, m_lose, 
         public static Dictionary<ushort, (float, float, float, float)> GeneFactors = new();
+        public static Dictionary<string, int> HarmonyInjectorID = new Dictionary<string, int> {
+            { "GiddyUp", 0 },
+            { "CombatTraining", 1 },
+        };
+
 
         static RimbodyDB() // Static constructor
         {
