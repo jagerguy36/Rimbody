@@ -13,7 +13,7 @@ namespace Maux36.Rimbody
 
         static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene, Pawn ___pawn)
         {
-            if (ModsConfig.BiotechActive && RimbodyDefLists.GeneFactors.Keys.Contains(addedOrRemovedGene.shortHash))
+            if (ModsConfig.BiotechActive && RimbodyDB.GeneFactors.Keys.Contains(addedOrRemovedGene.shortHash))
             {
                 var compPhysique = ___pawn.compPhysique();
                 if (compPhysique == null) return;

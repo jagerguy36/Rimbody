@@ -23,7 +23,7 @@ namespace Maux36.Rimbody
                     if (!HARCompat.Active || HARCompat.CompatibleRace(allDef))
                     {
                         allDef.comps.Add(new CompProperties_Physique());
-                        PhysiqueCacheManager.TrackingDef.Add(allDef.defName);
+                        PhysiqueCacheManager.TrackingDefHashSet.Add(allDef.shortHash);
                     }
                 }
             }

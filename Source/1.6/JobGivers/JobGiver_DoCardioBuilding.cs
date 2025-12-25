@@ -65,7 +65,7 @@ namespace Maux36.Rimbody
             {
                 if (t.IsForbidden(pawn)) return false;
 
-                RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+                RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
@@ -92,7 +92,7 @@ namespace Maux36.Rimbody
             float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
-                if (RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
+                if (RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
                 {
                     float score = 0f;
                     if (workoutCache.ContainsKey(t.def.shortHash))
@@ -129,14 +129,14 @@ namespace Maux36.Rimbody
             tmpCandidates.Clear();
             workoutCache.Clear();
 
-            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.cardioHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDB.cardioHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
                 if (!compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn)) //Already checked outside condition for jogger.
                 {
                     if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                     {
                         //jogging is possible. Compare the score
-                        var joggingEx = RimbodyDefLists.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_Jogging.shortHash);
+                        var joggingEx = RimbodyDB.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_Jogging.shortHash);
                         if (joggingEx != null)
                         {
                             float joggingscore = compPhysique.GetCardioJobScore(joggingEx.strengthParts, joggingEx.cardio);
@@ -161,7 +161,7 @@ namespace Maux36.Rimbody
 
         public static Job DoTryGiveJob(Pawn pawn, Thing t)
         {
-            RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+            RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
                 if (t.def.hasInteractionCell)
@@ -195,8 +195,8 @@ namespace Maux36.Rimbody
         protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.CardioTargets == null || RimbodyDefLists.CardioTargets.Count == 0) return;
-            foreach (var buildingDef in RimbodyDefLists.CardioTargets)
+            if (RimbodyDB.CardioTargets == null || RimbodyDB.CardioTargets.Count == 0) return;
+            foreach (var buildingDef in RimbodyDB.CardioTargets)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }

@@ -49,11 +49,11 @@ namespace Maux36.Rimbody_BigAndSmall
     {
         static RimbodyCompFixer()
         {
-            bool defRemoved = false;
             List<ThingDef> defToRemove = new();
-            foreach (var defName in PhysiqueCacheManager.TrackingDef)
+            foreach (var def in DefDatabase<ThingDef>.AllDefs)
             {
-                var def = ThingDef.Named(defName);
+                if (!PhysiqueCacheManager.TrackingDefHashSet.Contains(def.shortHash))
+                    continue;
                 if (def.GetRaceExtensions().SelectMany(x => x.PawnExtensionOnRace).Any(x => x.isMechanical))
                 {
                     defToRemove.Add(def);
@@ -64,13 +64,9 @@ namespace Maux36.Rimbody_BigAndSmall
                 var removed = def.comps.RemoveAll(c => c is CompProperties_Physique);
                 if (removed > 0)
                 {
-                    defRemoved = true;
-                    PhysiqueCacheManager.TrackingDef.Remove(def.defName);
+                    Log.Message($"[Rimbody] Big and Small's mechanical Life form {def.defName} been excluded from tracking");
+                    PhysiqueCacheManager.TrackingDefHashSet.Remove(def.shortHash);
                 }
-            }
-            if(defRemoved)
-            {
-                Log.Message("[Rimbody] Big and Small's mechanical Life forms have been excluded from tracking");
             }
         }
     }

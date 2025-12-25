@@ -118,7 +118,7 @@ namespace Maux36.Rimbody
             Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
+            RimbodyDB.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
             Thing_WorkoutAnimated thingAnimated = (Thing_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
             if (workoutIndex < 0)
             {

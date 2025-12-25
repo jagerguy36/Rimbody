@@ -39,7 +39,7 @@ namespace Maux36.Rimbody
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             Rimbody_Utility.EndOnTired(this);
-            RimbodyDefLists.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
+            RimbodyDB.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
             Building_WorkoutAnimated buildingAnimated = TargetThingA as Building_WorkoutAnimated;
 
             if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext, RimbodyWorkoutCategory.Cardio, out _);

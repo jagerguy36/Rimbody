@@ -7,7 +7,7 @@ using Verse;
 namespace Maux36.Rimbody
 {
     [StaticConstructorOnStartup]
-    public class RimbodyDefLists
+    public class RimbodyDB
     {
         public static List<ThingDef> StrengthTargets = new();
         public static List<ThingDef> CardioTargets = new();
@@ -30,7 +30,7 @@ namespace Maux36.Rimbody
         //hash,f_gain, f_lose, m_gain, m_lose, 
         public static Dictionary<ushort, (float, float, float, float)> GeneFactors = new();
 
-        static RimbodyDefLists() // Static constructor
+        static RimbodyDB() // Static constructor
         {
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {

@@ -57,7 +57,7 @@ namespace Maux36.Rimbody
             {
                 if (t.IsForbidden(pawn)) return false;
 
-                RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+                RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
                 if (targetModExtension.Type == RimbodyTargetType.Building)
                 {
                     if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
@@ -87,7 +87,7 @@ namespace Maux36.Rimbody
             float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
-                if (RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
+                if (RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
                 {
                     float score = 0f;
                     if (workoutCache.ContainsKey(t.def.shortHash))
@@ -130,7 +130,7 @@ namespace Maux36.Rimbody
             tmpCandidates.Clear();
             workoutCache.Clear();
 
-            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.strengthHighscore) || (!RimbodySettings.useFatigue && thing == null)) //If chunk job can be better, try to get chunk job to compare
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDB.strengthHighscore) || (!RimbodySettings.useFatigue && thing == null)) //If chunk job can be better, try to get chunk job to compare
             {
                 float maxScore = -1f;
                 int tieCount = 0;
@@ -149,9 +149,9 @@ namespace Maux36.Rimbody
 
                 if (nearbyspotFound)
                 {
-                    foreach (var strengthJobdef in RimbodyDefLists.StrengthNontargetJobs)
+                    foreach (var strengthJobdef in RimbodyDB.StrengthNontargetJobs)
                     {
-                        var strengthEx = RimbodyDefLists.JobModExDB.TryGetValue(strengthJobdef.shortHash);
+                        var strengthEx = RimbodyDB.JobModExDB.TryGetValue(strengthJobdef.shortHash);
                         if (strengthJobdef.defName.StartsWith("Rimbody_DoChunk") && Chunk == null)
                         {
                             continue;
@@ -219,7 +219,7 @@ namespace Maux36.Rimbody
         }
         public static Job DoTryGiveTargetJob(Pawn pawn, Thing t)
         {
-            RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+            RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
                 if (t.def.hasInteractionCell)
@@ -262,8 +262,8 @@ namespace Maux36.Rimbody
         protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
         {
             outCandidates.Clear();
-            if (RimbodyDefLists.StrengthTargets == null || RimbodyDefLists.StrengthTargets.Count == 0) return;
-            foreach (var buildingDef in RimbodyDefLists.StrengthTargets)
+            if (RimbodyDB.StrengthTargets == null || RimbodyDB.StrengthTargets.Count == 0) return;
+            foreach (var buildingDef in RimbodyDB.StrengthTargets)
             {
                 outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }

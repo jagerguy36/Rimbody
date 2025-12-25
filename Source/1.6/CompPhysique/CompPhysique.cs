@@ -275,15 +275,15 @@ namespace Maux36.Rimbody
                                         cardioFactor = _sprintC;
                                         //Jogging
                                         doingC = true;
-                                        if (RimbodyDefLists.RunningJobHash.Contains(curJobDef.shortHash)) UIflag = 2;
+                                        if (RimbodyDB.RunningJobHash.Contains(curJobDef.shortHash)) UIflag = 2;
                                         if (isJogger)
                                         {
                                             cardioFactor = _workoutC;
-                                            partsToApplyFatigue = RimbodyDefLists.jogging_parts_jogger;
+                                            partsToApplyFatigue = RimbodyDB.jogging_parts_jogger;
                                         }
                                         else
                                         {
-                                            partsToApplyFatigue = RimbodyDefLists.jogging_parts;
+                                            partsToApplyFatigue = RimbodyDB.jogging_parts;
                                         }
                                     }
                                     break;
@@ -317,7 +317,7 @@ namespace Maux36.Rimbody
                         else
                         {
                             //get work factor
-                            if (RimbodyDefLists.JobModExDB.TryGetValue(curJobDef.shortHash, out var jobExtension))
+                            if (RimbodyDB.JobModExDB.TryGetValue(curJobDef.shortHash, out var jobExtension))
                             {
                                 if (jobExtension.JobCategory != RimbodyJobCategory.None)
                                 {
@@ -353,7 +353,7 @@ namespace Maux36.Rimbody
                             }
                             else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef)
                             {
-                                if (RimbodyDefLists.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
+                                if (RimbodyDB.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
                                 {
                                     if (giverExtension.JobCategory != RimbodyJobCategory.None)
                                     {
@@ -1124,7 +1124,7 @@ namespace Maux36.Rimbody
                 {
                     isNonSenInt = true;
                 }
-                else if (RimbodyDefLists.GeneFactors.TryGetValue(genesListForReading[i].def.shortHash, out (float, float, float, float) factors) && genesListForReading[i].Active)
+                else if (RimbodyDB.GeneFactors.TryGetValue(genesListForReading[i].def.shortHash, out (float, float, float, float) factors) && genesListForReading[i].Active)
 				{
                     (fg, fl, mg, ml) = factors;
                     _geneFatGainFactor *= fg;

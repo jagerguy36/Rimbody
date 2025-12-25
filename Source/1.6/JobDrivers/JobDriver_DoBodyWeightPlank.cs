@@ -46,7 +46,7 @@ namespace Maux36.Rimbody
             Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
+            RimbodyDB.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
             memoryFactor = compPhysique.memory.Contains("balance|" + job.def.defName) ? 0.9f : 1f;
             yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
