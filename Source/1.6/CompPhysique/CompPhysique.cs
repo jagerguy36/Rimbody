@@ -35,11 +35,11 @@ namespace Maux36.Rimbody
         //Cardio
         private static readonly float _workoutC = 1.5f; // [Cardio]
         private static readonly float _sprintC = 1.35f; // LocomotionUrgency.Sprint
-        private static readonly float _joggingC = 1f; // LocomotionUrgency.Jog
-        private static readonly float _hardworkC = 0.8f; // [HardLabor], [Melee]
-        private static readonly float _workC = 0.6f; // [NormalLabor], [Strength Workout]
+        private static readonly float _joggingC = 0.85f; // LocomotionUrgency.Jog
+        private static readonly float _hardworkC = 0.5f; // [HardLabor], [Melee]
+        private static readonly float _workC = 0.45f; // [NormalLabor]
         private static readonly float _walkingC = 0.4f; // LocomotionUrgency.Walk, [Light Labor]
-        private static readonly float _ambleC = 0.35f; // LocomotionUrgency.Amble, [Activity]
+        private static readonly float _ambleC = 0.35f; // LocomotionUrgency.Amble, [Activity], [Strength Workout]
         private static readonly float _baseC = 0.3f; // [Base]
         private static readonly float _lyingC = 0.2f; // [Rest]
 
@@ -458,7 +458,7 @@ namespace Maux36.Rimbody
 
                 //Fat
                 float fatGain = Mathf.Pow(curFood, 0.5f);
-                float fatLoss = (BodyFat + 43f) * 0.025f * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
+                float fatLoss = (BodyFat + 42.5f) * 0.025f * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
                 float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * customRatio;
                 newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
