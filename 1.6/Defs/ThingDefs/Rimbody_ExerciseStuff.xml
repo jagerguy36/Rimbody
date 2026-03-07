@@ -39,7 +39,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>600</WorkToMake>
+			<WorkToMake>1200</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -265,7 +265,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>600</WorkToMake>
+			<WorkToMake>1600</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -343,7 +343,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>300</WorkToMake>
+			<WorkToMake>1000</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
