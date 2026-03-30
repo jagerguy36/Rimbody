@@ -18,18 +18,20 @@ namespace Maux36.Rimbody
         }
         static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene, Pawn ___pawn)
         {
-            if (RimbodyDB.GeneFactors.Keys.Contains(addedOrRemovedGene.shortHash) || addedOrRemovedGene.def == DefOf_Rimbody.DiseaseFree)
+            if (RimbodyDB.ObservedGeneHash.Contains(addedOrRemovedGene.shortHash))
             {
                 var compPhysique = ___pawn.compPhysique();
                 if (compPhysique == null) return;
                 compPhysique.NotifyActiveGeneCacheDirty();
                 if (compPhysique.PostGen)
                 {
+                    //For genes that should change bodytype immediately.
                     compPhysique.ResetBody();
                 }
                 else
                 {
-                    (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
+                    //During generation, recalculate body composition based on the genes.
+                    compPhysique.PhysiqueValueSetup(true);
                 }
             }        
         }

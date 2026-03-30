@@ -12,11 +12,8 @@ namespace Maux36.Rimbody
 {
     public class CompPhysique : ThingComp
     {
-        //Defs
-        private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
-        private static readonly GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
-        public static bool Uninitialized => (BodyFat == -1f || MuscleMass == -1f);
-        public static bool IsValid => (BodyFat >= 0f && MuscleMass >= 0f);
+        public bool Uninitialized => (BodyFat == -1f || MuscleMass == -1f);
+        public bool IsValid => (BodyFat >= 0f && MuscleMass >= 0f);
 
         //Strength
         private static readonly float _fatiguelaborS = 1.4f;
@@ -151,7 +148,7 @@ namespace Maux36.Rimbody
             {
                 if (traitCacheDirty)
                 {
-                    if (parentPawn.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true) isJoggerInt = true;
+                    if (parentPawn.story?.traits?.HasTrait(DefOf_Rimbody.SpeedOffset, 2) == true) isJoggerInt = true;
                     else isJoggerInt = false;
                 }
                 return isJoggerInt;
@@ -687,13 +684,6 @@ namespace Maux36.Rimbody
         {
             base.Initialize(props);
             parentPawn = parent as Pawn;
-            PhysiqueValueSetup();
-        }
-
-        public override void PostSpawnSetup(bool respawningAfterLoad)
-        {
-            base.PostSpawnSetup(respawningAfterLoad);
-            PhysiqueValueSetup();
         }
 
         public void ResetBody()
@@ -793,29 +783,28 @@ namespace Maux36.Rimbody
             return true;
         }
 
-        public (float, float) RandomCompPhysiqueByBodyType()
-        {
-            if (parentPawn.story?.bodyType != null)
-            {
-                var fat = parentPawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
-                    parentPawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f) :
-                    parentPawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.01f) :
-                    GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f);
-
-                var muscle = parentPawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.01f) :
-                    parentPawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.01f) :
-                    GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod), 0.01f);
-
-                return (Mathf.Clamp(fat, 0f, 50f), Mathf.Clamp(muscle, 0f, 50f));
-            }
-            return (-1f, -1f);
-        }
-
         public void PhysiqueValueSetup(bool reset = false)
         {
             if (reset || Uninitialized)
             {
-                (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType();
+                if (parentPawn.story?.bodyType != null)
+                {
+                    var fat = parentPawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
+                        parentPawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f) :
+                        parentPawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdThin), 0.01f) :
+                        GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f);
+
+                    var muscle = parentPawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdHulk, 50f), 0.01f) :
+                        parentPawn.story.bodyType == BodyTypeDefOf.Thin ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.muscleThresholdThin), 0.01f) :
+                        GenMath.RoundTo(Rand.Range(RimbodySettings.muscleThresholdThin + RimbodySettings.gracePeriod, RimbodySettings.muscleThresholdHulk - RimbodySettings.gracePeriod), 0.01f);
+                    BodyFat = Mathf.Clamp(fat, 0f, 50f);
+                    MuscleMass = Mathf.Clamp(muscle, 0f, 50f);
+                }
+                else
+                {
+                    BodyFat = -1f;
+                    MuscleMass = -1f;
+                }
             }
         }
 
@@ -1119,7 +1108,7 @@ namespace Maux36.Rimbody
             float fg = 1f, fl = 1f, mg = 1f, ml = 1f;
             for (int i = 0; i < genesListForReading.Count; i++)
             {
-                if (genesListForReading[i].def == NonSenescent && genesListForReading[i].Active)
+                if (genesListForReading[i].def == DefOf_Rimbody.DiseaseFree && genesListForReading[i].Active)
                 {
                     isNonSenInt = true;
                 }
@@ -1187,6 +1176,10 @@ namespace Maux36.Rimbody
             if (wo_memory_tmp!=null)
             {
                 foreach (var mem in wo_memory_tmp) memory.Enqueue(mem);
+            }
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                PhysiqueValueSetup();
             }
 
         }

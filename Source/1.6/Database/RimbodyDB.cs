@@ -29,6 +29,7 @@ namespace Maux36.Rimbody
         public static float cardioHighscore = 0;
         public static float balanceHighscore = 0;
         //hash,f_gain, f_lose, m_gain, m_lose, 
+        public static HashSet<ushort> ObservedGeneHash = new();
         public static Dictionary<ushort, (float, float, float, float)> GeneFactors = new();
         public static Dictionary<string, int> HarmonyInjectorID = new Dictionary<string, int> {
             { "GiddyUp", 0 },
@@ -70,8 +71,19 @@ namespace Maux36.Rimbody
             }
 
             RegisterGeneFactors(GeneFactors);
+            if(ModsConfig.BiotechActive)
+            {
+                foreach (var geneDef in DefDatabase<GeneDef>.AllDefs)
+                {
+                    if(geneDef.endogeneCategory == EndogeneCategory.BodyType)
+                    {
+                        ObservedGeneHash.Add(geneDef.shortHash);
+                    }
+                }
+                ObservedGeneHash.Add(DefOf_Rimbody.DiseaseFree.shortHash);
+            }
 
-            RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("Rimbody_Jogging").shortHash);
+            RunningJobHash.Add(DefOf_Rimbody.Rimbody_Jogging.shortHash);
             if (ModsConfig.BiotechActive)
             {
                 RunningJobHash.Add(DefDatabase<JobDef>.GetNamed("NatureRunning").shortHash);
@@ -129,7 +141,7 @@ namespace Maux36.Rimbody
                 case RimbodyWorkoutCategory.Cardio:
                     if (jobExtension.strengthParts != null)
                     {
-                        if(jobDef.defName == "Rimbody_Jogging")
+                        if(jobDef == DefOf_Rimbody.Rimbody_Jogging)
                         {
                             jogging_parts = jobExtension.strengthParts;
                             jogging_parts_jogger = jobExtension.strengthParts.Select(x => x * 0.5f).ToList();
@@ -146,13 +158,13 @@ namespace Maux36.Rimbody
             if (!ModsConfig.BiotechActive) return;
             //f_gain, f_lose, m_gain, m_lose, 
             GeneDef geneDef;
-            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Fat", false);
+            geneDef = DefOf_Rimbody.Body_Fat;
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (1.25f, 0.85f, 1f, 1f);
-            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Thin", false);
+            geneDef = DefOf_Rimbody.Body_Thin;
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.75f, 1.15f, 1f, 1f);
-            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Hulk", false);
+            geneDef = DefOf_Rimbody.Body_Hulk;
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (1f, 1f, 1.25f, 0.75f);
-            geneDef = DefDatabase<GeneDef>.GetNamed("Body_Standard", false);
+            geneDef = DefOf_Rimbody.Body_Standard;
             if (geneDef != null) GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1.15f, 1f);
             return;
         }

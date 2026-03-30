@@ -22,9 +22,18 @@ namespace Maux36.Rimbody_BigAndSmall
                 {
                     GeneDef geneDef;
                     geneDef = DefDatabase<GeneDef>.GetNamed("BS_NoFood", false);
-                    if (geneDef != null) RimbodyDB.GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1f, 1.15f);
+                    if (geneDef != null)
+                    {
+                        RimbodyDB.GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1f, 1.15f);
+                        RimbodyDB.ObservedGeneHash.Add(geneDef.shortHash);
+                    }
                     geneDef = DefDatabase<GeneDef>.GetNamed("BS_NoFood_Hemogenic", false);
-                    if (geneDef != null) RimbodyDB.GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1f, 1.15f);
+                    if (geneDef != null)
+                    {
+                        RimbodyDB.GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1f, 1.15f);
+                        RimbodyDB.ObservedGeneHash.Add(geneDef.shortHash);
+                    }
+
                 }
             }
             catch (Exception e)
