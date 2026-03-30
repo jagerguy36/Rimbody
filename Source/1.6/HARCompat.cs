@@ -85,7 +85,7 @@ namespace Maux36.Rimbody
                 BodyTypeDefOf.Thin
             };
 
-            var human = DefDatabase<ThingDef>.GetNamed("Human", true);
+            var human = ThingDefOf.Human;
             var expectedLifestages = human.race.lifeStageAges;
 
             var allowedBodyTypes = AllowedBodyTypes(pawnDef)?.ToHashSet();

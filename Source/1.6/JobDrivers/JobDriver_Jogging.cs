@@ -11,8 +11,6 @@ namespace Maux36.Rimbody
         private bool recorded = false;
         private float joygainfactor = 1.0f;
         private int ticksLeft = 2500;
-        
-        private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
 
         private static readonly IntRange WaitTicksRange = new IntRange(10, 50);
         public override bool TryMakePreToilReservations(bool errorOnFailed)

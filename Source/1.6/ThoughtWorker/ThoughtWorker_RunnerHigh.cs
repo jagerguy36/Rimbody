@@ -10,14 +10,9 @@ namespace Maux36.Rimbody
 {
     internal class ThoughtWorker_RunnerHigh : ThoughtWorker
     {
-        private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
         protected override ThoughtState CurrentStateInternal(Pawn p)
         {
-            if (p.CurJobDef != DefOf_Rimbody.Rimbody_Jogging)
-            {
-                return ThoughtState.Inactive;
-            }
-            if (p?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true)
+            if (p.CurJobDef == DefOf_Rimbody.Rimbody_Jogging && p.compPhysique()?.isJogger == true)
             {
                 return true;
             }
