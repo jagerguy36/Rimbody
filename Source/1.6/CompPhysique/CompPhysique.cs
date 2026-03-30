@@ -1119,7 +1119,7 @@ namespace Maux36.Rimbody
             float fg = 1f, fl = 1f, mg = 1f, ml = 1f;
             for (int i = 0; i < genesListForReading.Count; i++)
             {
-                if (genesListForReading[i].def.shortHash == NonSenescent.shortHash && genesListForReading[i].Active)
+                if (genesListForReading[i].def == NonSenescent && genesListForReading[i].Active)
                 {
                     isNonSenInt = true;
                 }
