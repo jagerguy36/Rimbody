@@ -15,38 +15,33 @@ namespace Maux36.Rimbody
     [HarmonyPatch(typeof(Pawn_GeneTracker), "Notify_GenesChanged")]
     public static class GeneTracker_Notify_GeneChanged
     {
-
-        static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene)
+        public static bool Prepare()
         {
-            var pawnField = typeof(Pawn_GeneTracker).GetField("pawn");
-            var pawn = (Pawn)pawnField.GetValue(__instance);
-            if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.defName== "DiseaseFree")
+            if (ModsConfig.BiotechActive)
+                return true;
+            return false;
+        }
+        static void Postfix(Pawn_GeneTracker __instance, Pawn ___pawn, GeneDef addedOrRemovedGene)
+        {
+            if (___pawn?.genes == null) return;
+            if (addedOrRemovedGene.def == DefOf_Rimbody.DiseaseFree)
             {
-                var compPhysique = pawn.compPhysique();
-
-                if (compPhysique != null)
-                {
-                    compPhysique.ApplyGene();
-                }
-
+                var compPhysique = ___pawn.compPhysique();
+                compPhysique?.ApplyGene();
             }
 
-            if (ModsConfig.BiotechActive && pawn?.genes != null && addedOrRemovedGene.bodyType.HasValue)
+            else if (addedOrRemovedGene.bodyType.HasValue)
             {
-                var compPhysique = pawn.compPhysique();
-
-                if (compPhysique != null)
+                var compPhysique = ___pawn.compPhysique();
+                if (compPhysique == null) return;
+                compPhysique.ApplyGene();
+                if (compPhysique.PostGen)
                 {
-                    if (compPhysique.PostGen)
-                    {
-                        compPhysique.ApplyGene();
-                        compPhysique.ResetBody();
-                    }
-                    else
-                    {
-                        compPhysique.ApplyGene();
-                        (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
-                    }
+                    compPhysique.ResetBody();
+                }
+                else
+                {
+                    (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
                 }
             }            
         }
@@ -59,10 +54,7 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            if (compPhysique != null)
-            {
-                compPhysique.PostGen = true;
-            }
+            compPhysique?.PostGen = true;
         }
     }
 }
