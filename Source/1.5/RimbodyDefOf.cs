@@ -41,9 +41,6 @@ namespace Maux36.Rimbody
         public static ThingDef Rimbody_FlatBench;
         public static ThingDef Rimbody_ExerciseMat;
 
-        [MayRequireBiotech]
-	    public static GeneDef DiseaseFree;
-
         static DefOf_Rimbody()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf_Rimbody));
