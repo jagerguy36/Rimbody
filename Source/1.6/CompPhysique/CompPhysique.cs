@@ -15,6 +15,8 @@ namespace Maux36.Rimbody
         //Defs
         private static readonly TraitDef SpeedOffsetDef = DefDatabase<TraitDef>.GetNamed("SpeedOffset", true);
         private static readonly GeneDef NonSenescent = ModsConfig.BiotechActive ? DefDatabase<GeneDef>.GetNamed("DiseaseFree", true) : null;
+        public static bool Uninitialized => (BodyFat == -1f || MuscleMass == -1f);
+        public static bool IsValid => (BodyFat >= 0f && MuscleMass >= 0f);
 
         //Strength
         private static readonly float _fatiguelaborS = 1.4f;
@@ -149,7 +151,7 @@ namespace Maux36.Rimbody
             {
                 if (traitCacheDirty)
                 {
-                    if (parentPawn?.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true) isJoggerInt = true;
+                    if (parentPawn.story?.traits?.HasTrait(SpeedOffsetDef, 2) == true) isJoggerInt = true;
                     else isJoggerInt = false;
                 }
                 return isJoggerInt;
@@ -341,7 +343,7 @@ namespace Maux36.Rimbody
                                 }
                             }
                         }
-                        else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef && RimbodyDB.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
+                        else if (parentPawn.CurJob?.workGiverDef is { } workGiverDef && RimbodyDB.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
                         {
                             if (giverExtension.JobCategory != RimbodyJobCategory.None)
                             {
@@ -438,7 +440,7 @@ namespace Maux36.Rimbody
             }
 
             //Starving
-            if (parentPawn?.needs?.food.Starving == true)
+            if (parentPawn.needs?.food.Starving == true)
             {
                 Hediff malnutritionHediff = parentPawn.health?.hediffSet?.GetFirstHediffOfDef(HediffDefOf.Malnutrition);
                 if (malnutritionHediff != null)
@@ -698,7 +700,7 @@ namespace Maux36.Rimbody
         {
             if (BodyFat<0 || MuscleMass  < 0) return;
 
-            if(parentPawn?.story?.bodyType != null)
+            if(parentPawn.story?.bodyType != null)
             {
                 parentPawn.story.bodyType = GetValidBody();
                 parentPawn.Drawer.renderer.SetAllGraphicsDirty();
@@ -749,7 +751,7 @@ namespace Maux36.Rimbody
 
         public bool IsValidBodyType()
         {
-            if (parentPawn?.story?.bodyType != null)
+            if (parentPawn.story?.bodyType != null)
             {
                 if (parentPawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult)
                 {
@@ -793,7 +795,7 @@ namespace Maux36.Rimbody
 
         public (float, float) RandomCompPhysiqueByBodyType()
         {
-            if (parentPawn?.story?.bodyType != null)
+            if (parentPawn.story?.bodyType != null)
             {
                 var fat = parentPawn.story.bodyType == BodyTypeDefOf.Fat ? GenMath.RoundTo(Rand.Range(RimbodySettings.fatThresholdFat, 50f), 0.01f) :
                     parentPawn.story.bodyType == BodyTypeDefOf.Hulk ? GenMath.RoundTo(Rand.Range(0f, RimbodySettings.fatThresholdFat - RimbodySettings.gracePeriod), 0.01f) :
@@ -811,7 +813,7 @@ namespace Maux36.Rimbody
 
         public void PhysiqueValueSetup(bool reset = false)
         {
-            if (parentPawn != null && ((BodyFat == -1f || MuscleMass == -1f) || reset))
+            if (reset || Uninitialized)
             {
                 (BodyFat, MuscleMass) = RandomCompPhysiqueByBodyType();
             }
