@@ -19,8 +19,9 @@ namespace Maux36.Rimbody
             return false;
         }
 
-        public static bool shouldTick(Pawn pawn)
+        public static bool shouldTrack(Pawn pawn)
         {
+            if (!Rimbody_Utility.isColonyMember(pawn) && !pawn.IsPrisonerOfColony) return false;
             if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
             {
                 return true;
@@ -43,7 +44,7 @@ namespace Maux36.Rimbody
 
         public static void TryUpdateInventory(Pawn pawn)
         {
-            if (pawn.needs?.food != null && (isColonyMember(pawn) || pawn.IsPrisonerOfColony) && shouldTick(pawn))
+            if (shouldTrack(pawn))
             {
                 CompPhysique compPhysique = pawn.compPhysique();
                 if (compPhysique == null) return;

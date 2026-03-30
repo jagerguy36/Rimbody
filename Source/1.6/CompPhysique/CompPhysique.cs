@@ -168,369 +168,343 @@ namespace Maux36.Rimbody
 
         private void PhysiqueTick()
         {
-
-            if (Rimbody_Utility.isColonyMember(parentPawn) || parentPawn.IsPrisonerOfColony)
+            if (parentPawn.Deathresting || parentPawn.Suspended) return;
+            if (ModsConfig.AnomalyActive)
             {
-                if (!Rimbody_Utility.shouldTick(parentPawn)) return;
-                if (parentPawn.Deathresting || parentPawn.Suspended) return;
-                if (ModsConfig.AnomalyActive)
+                if (PlatformTarget?.CurrentlyHeldOnPlatform ?? false)
                 {
-                    if (PlatformTarget?.CurrentlyHeldOnPlatform ?? false)
+                    return;
+                }
+            }
+
+            //Set up
+            var tickRatio = RimbodySettings.CalcEveryTick / 150f;
+            var customRatio = RimbodySettings.rateFactor * 0.0025f;
+            var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevelPercentage, 0f, 1f);
+            var curJobDef = parentPawn.CurJobDef;
+            var curDriver = parentPawn.jobs?.curDriver;
+            bool restingCheck = false;
+
+            var pawnCaravan = parentPawn.GetCaravan();
+
+            float newBodyFat;
+            float newMuscleMass;
+
+            bool doingS = false;
+            bool doingB = false;
+            bool doingC = false;
+            int UIflag = 0;
+
+            float strengthFactor = _baseS; //0.1f
+            float cardioFactor = _baseC; //0.3f
+            List<float> partsToApplyFatigue = null;
+
+            float appliedEfficiency = 1;
+
+            //Factor Calculation
+            //If factor is Forced
+            var harmonyCheckInt = HarmonyCheck();
+            if (harmonyCheckInt != -1)
+            {
+                (strengthFactor, cardioFactor, partsToApplyFatigue) = HarmonyValues(harmonyCheckInt);
+            }
+            else if (forceRest)
+            {
+                strengthFactor = _lyingS; //0.0f
+                cardioFactor = _lyingC; //0.2f
+            }
+            //Get factors from dedicated Rimbody workout jobs
+            else if (jobOverride)
+            {
+                strengthFactor = strengthOverride * memoryFactorOverride;
+                cardioFactor = cardioOverride;
+                partsToApplyFatigue = partsOverride;
+                appliedEfficiency = memoryFactorOverride;
+                switch (curWorkoutCategory)
+                {
+                    case RimbodyWorkoutCategory.Strength:
+                        doingS = true;
+                        UIflag = 2;
+                        strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
+                        break;
+                    case RimbodyWorkoutCategory.Balance:
+                        doingB = true;
+                        UIflag = 2;
+                        break;
+                    case RimbodyWorkoutCategory.Cardio:
+                        doingC = true;
+                        UIflag = 2;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //Factors based on current jobs
+            else
+            {
+                //Factors for Caravan
+                if (pawnCaravan != null)
+                {
+                    //Resting
+                    if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
                     {
-                        return;
+                        strengthFactor = _lyingS; //0.0f
+                        cardioFactor = _lyingC; //0.2f
+                    }
+                    //Moving, but not boarded
+                    else if (pawnCaravan.pather.MovingNow)
+                    {
+                        strengthFactor = _movingS; //0.2f
+                        cardioFactor = _walkingC; //0.4f
                     }
                 }
-
-                //Set up
-                var tickRatio = RimbodySettings.CalcEveryTick / 150f;
-                var customRatio = RimbodySettings.rateFactor * 0.0025f;
-                var curFood = Mathf.Clamp(parentPawn.needs.food.CurLevelPercentage, 0f, 1f);
-                var curJobDef = parentPawn.CurJobDef;
-                var curDriver = parentPawn.jobs?.curDriver;
-                bool restingCheck = false;
-
-                var pawnCaravan = parentPawn.GetCaravan();
-
-                float newBodyFat;
-                float newMuscleMass;
-
-                bool doingS = false;
-                bool doingB = false;
-                bool doingC = false;
-                int UIflag = 0;
-
-                float strengthFactor = _baseS; //0.1f
-                float cardioFactor = _baseC; //0.3f
-                List<float> partsToApplyFatigue = null;
-
-                float appliedEfficiency = 1;
-
-                //Factor Calculation
-                //If factor is Forced
-                var harmonyCheckInt = HarmonyCheck();
-                if (harmonyCheckInt != -1)
+                else if (curJobDef != null && curDriver != null)
                 {
-                    (strengthFactor, cardioFactor, partsToApplyFatigue) = HarmonyValues(harmonyCheckInt);
-                }
-                else if (forceRest)
-                {
-                    strengthFactor = _lyingS; //0.0f
-                    cardioFactor = _lyingC; //0.2f
-                }
-                //Get factors from dedicated Rimbody workout jobs
-                else if (jobOverride)
-                {
-                    strengthFactor = strengthOverride * memoryFactorOverride;
-                    cardioFactor = cardioOverride;
-                    partsToApplyFatigue = partsOverride;
-                    appliedEfficiency = memoryFactorOverride;
-                    switch (curWorkoutCategory)
+                    //Special cases: moving
+                    if (parentPawn.pather?.MovingNow == true)
                     {
-                        case RimbodyWorkoutCategory.Strength:
-                            doingS = true;
-                            UIflag = 2;
-                            strengthFactor = strengthFactor * RimbodySettings.WorkOutGainEfficiency;
-                            break;
-                        case RimbodyWorkoutCategory.Balance:
-                            doingB = true;
-                            UIflag = 2;
-                            break;
-                        case RimbodyWorkoutCategory.Cardio:
-                            doingC = true;
-                            UIflag = 2;
-                            break;
-                        default:
-                            break;
+                        switch (parentPawn.jobs.curJob.locomotionUrgency)
+                        {
+                            case LocomotionUrgency.Sprint:
+                                {
+                                    strengthFactor = _sprintS;
+                                    cardioFactor = _sprintC;
+                                    //Jogging
+                                    doingC = true;
+                                    if (RimbodyDB.RunningJobHash.Contains(curJobDef.shortHash)) UIflag = 2;
+                                    if (isJogger)
+                                    {
+                                        cardioFactor = _workoutC;
+                                        partsToApplyFatigue = RimbodyDB.jogging_parts_jogger;
+                                    }
+                                    else
+                                    {
+                                        partsToApplyFatigue = RimbodyDB.jogging_parts;
+                                    }
+                                }
+                                break;
+                            case LocomotionUrgency.Jog:
+                                {
+                                    strengthFactor = _movingS;
+                                    cardioFactor = _joggingC;
+                                }
+                                break;
+                            case LocomotionUrgency.Walk:
+                                {
+                                    strengthFactor = _movingS;
+                                    cardioFactor = _walkingC;
+                                }
+                                break;
+                            default:
+                                {
+                                    strengthFactor = _ambleS;
+                                    cardioFactor = _ambleC;
+                                }
+                                break;
+                        }
+                        strengthFactor += carryFactor * RimbodySettings.carryRateMultiplier;
                     }
-                }
-                //Factors based on current jobs
-                else
-                {
-                    //Factors for Caravan
-                    if (pawnCaravan != null)
+                    //Get work factor
+                    else
                     {
-                        //Resting
-                        if (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())
+                        if (RimbodyDB.JobModExDB.TryGetValue(curJobDef.shortHash, out var jobExtension))
+                        {
+                            if (jobExtension.JobCategory != RimbodyJobCategory.None)
+                            {
+                                (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(jobExtension.JobCategory);
+                            }
+                            else
+                            {
+                                strengthFactor = jobExtension.strength;
+                                cardioFactor = jobExtension.cardio;
+                                partsToApplyFatigue = jobExtension.strengthParts;
+                            }
+                            if(partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
+                            {
+                                switch (jobExtension.TreatAs)
+                                {
+                                    case RimbodyWorkoutCategory.Job:
+                                        break;
+                                    case RimbodyWorkoutCategory.Strength:
+                                        doingS = true;
+                                        UIflag = 2;
+                                        strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
+                                        break;
+                                    case RimbodyWorkoutCategory.Balance:
+                                        doingB = true;
+                                        UIflag = 2;
+                                        break;
+                                    case RimbodyWorkoutCategory.Cardio:
+                                        doingC = true;
+                                        UIflag = 2;
+                                        break;
+                                }
+                            }
+                        }
+                        else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef && RimbodyDB.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
+                        {
+                            if (giverExtension.JobCategory != RimbodyJobCategory.None)
+                            {
+                                (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(giverExtension.JobCategory);
+                            }
+                            else
+                            {
+                                strengthFactor = giverExtension.strength;
+                                cardioFactor = giverExtension.cardio;
+                                partsToApplyFatigue = giverExtension.strengthParts;
+                            }
+                            if (partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
+                            {
+                                switch (giverExtension.TreatAs)
+                                {
+                                    case RimbodyWorkoutCategory.Job:
+                                        break;
+                                    case RimbodyWorkoutCategory.Strength:
+                                        doingS = true;
+                                        UIflag = 2;
+                                        strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
+                                        break;
+                                    case RimbodyWorkoutCategory.Balance:
+                                        doingB = true;
+                                        UIflag = 2;
+                                        break;
+                                    case RimbodyWorkoutCategory.Cardio:
+                                        doingC = true;
+                                        UIflag = 2;
+                                        break;
+                                }
+                            }
+                        }
+                        else if (parentPawn.jobs.posture != PawnPosture.Standing)
                         {
                             strengthFactor = _lyingS; //0.0f
                             cardioFactor = _lyingC; //0.2f
                         }
-                        //Moving, but not boarded
-                        else if (pawnCaravan.pather.MovingNow)
-                        {
-                            strengthFactor = _movingS; //0.2f
-                            cardioFactor = _walkingC; //0.4f
-                        }
-                    }
-                    else if (curJobDef != null && curDriver != null)
-                    {
-                        //Special cases: moving
-                        if (parentPawn.pather?.MovingNow == true)
-                        {
-                            switch (parentPawn.jobs.curJob.locomotionUrgency)
-                            {
-                                case LocomotionUrgency.Sprint:
-                                    {
-                                        strengthFactor = _sprintS;
-                                        cardioFactor = _sprintC;
-                                        //Jogging
-                                        doingC = true;
-                                        if (RimbodyDB.RunningJobHash.Contains(curJobDef.shortHash)) UIflag = 2;
-                                        if (isJogger)
-                                        {
-                                            cardioFactor = _workoutC;
-                                            partsToApplyFatigue = RimbodyDB.jogging_parts_jogger;
-                                        }
-                                        else
-                                        {
-                                            partsToApplyFatigue = RimbodyDB.jogging_parts;
-                                        }
-                                    }
-                                    break;
-                                case LocomotionUrgency.Jog:
-                                    {
-                                        strengthFactor = _movingS;
-                                        cardioFactor = _joggingC;
-                                    }
-                                    break;
-                                case LocomotionUrgency.Walk:
-                                    {
-                                        strengthFactor = _movingS;
-                                        cardioFactor = _walkingC;
-                                    }
-                                    break;
-                                default:
-                                    {
-                                        strengthFactor = _ambleS;
-                                        cardioFactor = _ambleC;
-                                    }
-                                    break;
-                            }
-                            strengthFactor += carryFactor * RimbodySettings.carryRateMultiplier;
-                        }
-                        //Get work factor
-                        else
-                        {
-                            if (RimbodyDB.JobModExDB.TryGetValue(curJobDef.shortHash, out var jobExtension))
-                            {
-                                if (jobExtension.JobCategory != RimbodyJobCategory.None)
-                                {
-                                    (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(jobExtension.JobCategory);
-                                }
-                                else
-                                {
-                                    strengthFactor = jobExtension.strength;
-                                    cardioFactor = jobExtension.cardio;
-                                    partsToApplyFatigue = jobExtension.strengthParts;
-                                }
-                                if(partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
-                                {
-                                    switch (jobExtension.TreatAs)
-                                    {
-                                        case RimbodyWorkoutCategory.Job:
-                                            break;
-                                        case RimbodyWorkoutCategory.Strength:
-                                            doingS = true;
-                                            UIflag = 2;
-                                            strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
-                                            break;
-                                        case RimbodyWorkoutCategory.Balance:
-                                            doingB = true;
-                                            UIflag = 2;
-                                            break;
-                                        case RimbodyWorkoutCategory.Cardio:
-                                            doingC = true;
-                                            UIflag = 2;
-                                            break;
-                                    }
-                                }
-                            }
-                            else if (parentPawn?.CurJob?.workGiverDef is { } workGiverDef && RimbodyDB.GiverModExDB.TryGetValue(workGiverDef.shortHash, out var giverExtension))
-                            {
-                                if (giverExtension.JobCategory != RimbodyJobCategory.None)
-                                {
-                                    (strengthFactor, cardioFactor, partsToApplyFatigue) = GetFactor(giverExtension.JobCategory);
-                                }
-                                else
-                                {
-                                    strengthFactor = giverExtension.strength;
-                                    cardioFactor = giverExtension.cardio;
-                                    partsToApplyFatigue = giverExtension.strengthParts;
-                                }
-                                if (partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
-                                {
-                                    switch (giverExtension.TreatAs)
-                                    {
-                                        case RimbodyWorkoutCategory.Job:
-                                            break;
-                                        case RimbodyWorkoutCategory.Strength:
-                                            doingS = true;
-                                            UIflag = 2;
-                                            strengthFactor *= RimbodySettings.WorkOutGainEfficiency;
-                                            break;
-                                        case RimbodyWorkoutCategory.Balance:
-                                            doingB = true;
-                                            UIflag = 2;
-                                            break;
-                                        case RimbodyWorkoutCategory.Cardio:
-                                            doingC = true;
-                                            UIflag = 2;
-                                            break;
-                                    }
-                                }
-                            }
-                            else if (parentPawn.jobs.posture != PawnPosture.Standing)
-                            {
-                                strengthFactor = _lyingS; //0.0f
-                                cardioFactor = _lyingC; //0.2f
-                            }
-                        }
                     }
                 }
-                appliedEfficiency *= ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor, (float)RimbodySettings.CalcEveryTick * 0.001f); //Apply partFatigue. Raises (partfactor * 0.001) per tick (partfactor * 2.5 per hour)
-                //Decide on the Fleck
+            }
+            appliedEfficiency *= ApplyFatigueToFactors(partsToApplyFatigue, ref strengthFactor, ref cardioFactor, (float)RimbodySettings.CalcEveryTick * 0.001f); //Apply partFatigue. Raises (partfactor * 0.001) per tick (partfactor * 2.5 per hour)
+            //Decide on the Fleck
+            if (doingS)
+            {
+                if (appliedEfficiency <= 0.9) UIflag--;
+            }
+            else if (doingC)
+            {
+                if (cardioFactor <= _workoutC * 0.9f) UIflag--;
+            }
+            //Dev Logging
+            //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. doingS: {doingS}, doingC: {doingC}. jobOverride: {jobOverride}, memoryFactorOverride: {memoryFactorOverride}, appliedEfficiency: {appliedEfficiency}. Applied Factors: s:{strengthFactor}, c:{cardioFactor} with parts: {partsToApplyFatigue != null}");
+            //string memoery_String = string.Join(", ", memory);
+            //Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
+
+            //Tiredness reduces gain
+            if (parentPawn.needs.rest != null)
+            {
+                switch (parentPawn.needs.rest.CurCategory)
+                {
+                    case RestCategory.Tired:
+                        strengthFactor -= _lightworkS;
+                        break;
+                    case RestCategory.VeryTired:
+                        strengthFactor -= _workS;
+                        break;
+                    case RestCategory.Exhausted:
+                        strengthFactor -= _hardworkS;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            //Gain and Lose Factor
+            (float fatgainF, float fatloseF, float musclegainF, float muscleloseF) = GetFactors();
+            gainF = musclegainF;
+
+            //UI
+            if (RimbodySettings.showFleck && UIflag>0 && parentPawn.IsHashIntervalTick(150))
+            {
                 if (doingS)
                 {
-                    if (appliedEfficiency <= 0.9) UIflag--;
+                    if (gain == gainMax) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_MaxGain);
+                    else if (UIflag < 2) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_GainLimited);
+                    else FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Gain);
                 }
                 else if (doingC)
                 {
-                    if (cardioFactor <= _workoutC * 0.9f) UIflag--;
+                    if (UIflag < 2) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_CardioLimited);
+                    else FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Cardio);
                 }
-                //Dev Logging
-                //Log.Message($"{parentPawn.Name} doing {curJobDef.defName}. doingS: {doingS}, doingC: {doingC}. jobOverride: {jobOverride}, memoryFactorOverride: {memoryFactorOverride}, appliedEfficiency: {appliedEfficiency}. Applied Factors: s:{strengthFactor}, c:{cardioFactor} with parts: {partsToApplyFatigue != null}");
-                //string memoery_String = string.Join(", ", memory);
-                //Log.Message($"{parentPawn.Name}'s memory: {memoery_String}");
+            }
 
-                //Tiredness reduces gain
-                if (parentPawn.needs.rest != null)
+            //Starving
+            if (parentPawn?.needs?.food.Starving == true)
+            {
+                Hediff malnutritionHediff = parentPawn.health?.hediffSet?.GetFirstHediffOfDef(HediffDefOf.Malnutrition);
+                if (malnutritionHediff != null)
                 {
-                    switch (parentPawn.needs.rest.CurCategory)
-                    {
-                        case RestCategory.Tired:
-                            strengthFactor -= _lightworkS;
-                            break;
-                        case RestCategory.VeryTired:
-                            strengthFactor -= _workS;
-                            break;
-                        case RestCategory.Exhausted:
-                            strengthFactor -= _hardworkS;
-                            break;
-                        default:
-                            break;
-                    }
+                    cardioFactor += _workoutC * malnutritionHediff.Severity;
+                    strengthFactor -= _workoutS * malnutritionHediff.Severity * malnutritionHediff.Severity;
                 }
+            }
 
-                //Gain and Lose Factor
-                (float fatgainF, float fatloseF, float musclegainF, float muscleloseF) = GetFactors();
-                gainF = musclegainF;
+            //Fat
+            float fatGain = Mathf.Pow(curFood, 0.5f);
+            float fatLoss = (BodyFat + 42.5f) * 0.025f * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
+            float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * customRatio;
+            newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
 
-                //UI
-                if (RimbodySettings.showFleck && UIflag>0 && parentPawn.IsHashIntervalTick(150))
+            //Muscle
+            float muscleGain = 0.0125f * ((MuscleMass) / (MuscleMass - 57f) + 20f);
+            float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * (0.55f + (0.5f / (curFood + 0.2f)));
+            //Mathf.Pow(x,-0.5f) approximated to 0.55f + (0.5f/(x+0.09))
+            float muscleDelta = 0f;
+
+            //exhaustion recovery
+            float exhaustionDelta = 0f;
+            if (RimbodySettings.useExhaustion)
+            {
+                exhaustionDelta = -RimbodySettings.CalcEveryTick * (0.7f - (7f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat + 100f) / 100f)) * ((MuscleMass / 50) + 1) / 1000f;
+            }
+            
+
+            if (parentPawn.needs.rest != null)
+            {
+                //Grow on sleep
+                //Rvert resting check due to Need_Sleep Resting check change in 1.6
+                //if (forceRest || parentPawn.needs.rest?.Resting == true)
+                if (forceRest || (pawnCaravan != null && (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())) || (pawnCaravan == null && parentPawn.jobs?.curDriver?.asleep == true))
                 {
-                    if (doingS)
+                    restingCheck = true;
+                    if (gain > 0f)
                     {
-                        if (gain == gainMax) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_MaxGain);
-                        else if (UIflag < 2) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_GainLimited);
-                        else FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Gain);
-                    }
-                    else if (doingC)
-                    {
-                        if (UIflag < 2) FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_CardioLimited);
-                        else FleckMaker.ThrowMetaIcon(parentPawn.Position, parentPawn.Map, DefOf_Rimbody.Mote_Cardio);
-                    }
-                }
+                        var swol = 1f;
+                        var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
+                        var bed = parentPawn.CurrentBed();
+                        var bre = (bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness);
+                        var recoveryFactor = Mathf.Max(swol * rrm * bre, 0.2f);
 
-                //Starving
-                if (parentPawn?.needs?.food.Starving == true)
-                {
-                    Hediff malnutritionHediff = parentPawn.health?.hediffSet?.GetFirstHediffOfDef(HediffDefOf.Malnutrition);
-                    if (malnutritionHediff != null)
-                    {
-                        cardioFactor += _workoutC * malnutritionHediff.Severity;
-                        strengthFactor -= _workoutS * malnutritionHediff.Severity * malnutritionHediff.Severity;
-                    }
-                }
-
-                //Fat
-                float fatGain = Mathf.Pow(curFood, 0.5f);
-                float fatLoss = (BodyFat + 42.5f) * 0.025f * cardioFactor; //float fatLoss = (BodyFat + 60f) / (50f) * cardioFactor;
-                float fatDelta = (fatGain * fatgainF - fatLoss * fatloseF) * tickRatio * customRatio;
-                newBodyFat = Mathf.Clamp(BodyFat + fatDelta, 0f, 50f);
-
-                //Muscle
-                float muscleGain = 0.0125f * ((MuscleMass) / (MuscleMass - 57f) + 20f);
-                float muscleLoss = 0.15f * (1f / (BodyFat + 50f)) * MuscleMass * (0.55f + (0.5f / (curFood + 0.2f)));
-                //Mathf.Pow(x,-0.5f) approximated to 0.55f + (0.5f/(x+0.09))
-                float muscleDelta = 0f;
-
-                //exhaustion recovery
-                float exhaustionDelta = 0f;
-                if (RimbodySettings.useExhaustion)
-                {
-                    exhaustionDelta = -RimbodySettings.CalcEveryTick * (0.7f - (7f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat + 100f) / 100f)) * ((MuscleMass / 50) + 1) / 1000f;
-                }
-                
-
-                if (parentPawn.needs.rest != null)
-                {
-                    //Grow on sleep
-                    //Rvert resting check due to Need_Sleep Resting check change in 1.6
-                    //if (forceRest || parentPawn.needs.rest?.Resting == true)
-                    if (forceRest || (pawnCaravan != null && (!pawnCaravan.pather.MovingNow || parentPawn.InCaravanBed() || parentPawn.CarriedByCaravan())) || (pawnCaravan == null && parentPawn.jobs?.curDriver?.asleep == true))
-                    {
-                        restingCheck = true;
-                        if (gain > 0f)
-                        {
-                            var swol = 1f;
-                            var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
-                            var bed = parentPawn.CurrentBed();
-                            var bre = (bed == null || !bed.def.statBases.StatListContains(StatDefOf.BedRestEffectiveness)) ? StatDefOf.BedRestEffectiveness.valueIfMissing : bed.GetStatValue(StatDefOf.BedRestEffectiveness);
-                            var recoveryFactor = Mathf.Max(swol * rrm * bre, 0.2f);
-
-                            if (gain - (recoveryFactor * tickRatio) > 0f)
-                            {
-                                gain -= recoveryFactor * tickRatio;
-                                muscleDelta += recoveryFactor * tickRatio * customRatio;
-                            }
-                            else
-                            {
-                                muscleDelta += customRatio * gain;
-                                gain = 0f;
-                            }
-                        }
-                        exhaustionDelta = 8f * exhaustionDelta;
-                    }
-                    //Awake
-                    else
-                    {
-                        //breInt = null;
-                        //Store gain
-                        gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
-                        //Grow slowly
-                        var recoveryFactor = 0.1f;
                         if (gain - (recoveryFactor * tickRatio) > 0f)
                         {
                             gain -= recoveryFactor * tickRatio;
                             muscleDelta += recoveryFactor * tickRatio * customRatio;
                         }
-                        else if (gain > 0f)
+                        else
                         {
                             muscleDelta += customRatio * gain;
                             gain = 0f;
                         }
                     }
+                    exhaustionDelta = 8f * exhaustionDelta;
                 }
-                //Sleepless pawns.
+                //Awake
                 else
                 {
-                    restingCheck = true;
+                    //breInt = null;
                     //Store gain
                     gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
-                    //Grow always
-                    var swol = 2f;
-                    var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
-                    var recoveryFactor = swol * rrm;
+                    //Grow slowly
+                    var recoveryFactor = 0.1f;
                     if (gain - (recoveryFactor * tickRatio) > 0f)
                     {
                         gain -= recoveryFactor * tickRatio;
@@ -541,65 +515,86 @@ namespace Maux36.Rimbody
                         muscleDelta += customRatio * gain;
                         gain = 0f;
                     }
-                    exhaustionDelta = 4f * exhaustionDelta;
                 }
-                muscleDelta -= muscleloseF * muscleLoss * tickRatio * customRatio;
-                newMuscleMass = Mathf.Clamp(MuscleMass + muscleDelta, 0f, 50f);
-                //BodyChange Check
-                bool checkFlag = shouldCheckBody(fatDelta, muscleDelta, newBodyFat, newMuscleMass);
-
-                //Manage fatigue and exhaustion
-                if (RimbodySettings.useFatigue)
+            }
+            //Sleepless pawns.
+            else
+            {
+                restingCheck = true;
+                //Store gain
+                gain = Mathf.Clamp(gain + (strengthFactor * musclegainF * muscleGain * tickRatio), 0f, gainMax);
+                //Grow always
+                var swol = 2f;
+                var rrm = parentPawn.GetStatValue(StatDefOf.RestRateMultiplier);
+                var recoveryFactor = swol * rrm;
+                if (gain - (recoveryFactor * tickRatio) > 0f)
                 {
-                    if (partsToApplyFatigue == null)
-                    {
-                        RestorePartFatigue(restingCheck ? RimbodySettings.CalcEveryTick * 0.00015f : RimbodySettings.CalcEveryTick * 0.00005f); //restore 1 / 20000 per tick. triple when resting. A day is 60000 ticks, so awake, a pawn can restore 3 points per day. if asleep for 7H during a day, 5point total
-                        
-                    }
+                    gain -= recoveryFactor * tickRatio;
+                    muscleDelta += recoveryFactor * tickRatio * customRatio;
                 }
-                if (RimbodySettings.useExhaustion)
+                else if (gain > 0f)
                 {
-                    if (doingS)
-                    {
-                        exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (0.5f + (5f * (MuscleMass / 100f)) + (4f * (BodyFat / 100f) * (MuscleMass / 100f)) + (2f * (BodyFat / 100f))));
-                    }
-                    else if (doingB)
-                    {
-                        exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                    }
-                    else if (doingC)
-                    {
-                        exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
-                    }
-                    var newExhaustion = exhaustion + exhaustionDelta;
-                    if (newExhaustion >= 100f)
-                    {
-                        resting = true;
-                        exhaustion = 100f;
-                    }
-                    else
-                    {
-                        exhaustion = Mathf.Max(0f, newExhaustion);
-                    }
-
-                    if (exhaustion < 40f && resting)
-                    {
-                        resting = false;
-                    }
-
+                    muscleDelta += customRatio * gain;
+                    gain = 0f;
                 }
+                exhaustionDelta = 4f * exhaustionDelta;
+            }
+            muscleDelta -= muscleloseF * muscleLoss * tickRatio * customRatio;
+            newMuscleMass = Mathf.Clamp(MuscleMass + muscleDelta, 0f, 50f);
+            //BodyChange Check
+            bool checkFlag = shouldCheckBody(fatDelta, muscleDelta, newBodyFat, newMuscleMass);
 
-
-                //Apply New Values
-                BodyFat = newBodyFat;
-                MuscleMass = newMuscleMass;
-
-                //BodyChange
-                if (checkFlag == true)
+            //Manage fatigue and exhaustion
+            if (RimbodySettings.useFatigue)
+            {
+                if (partsToApplyFatigue == null)
                 {
-                    parentPawn.story.bodyType = GetValidBody();
-                    parentPawn.Drawer.renderer.SetAllGraphicsDirty();
+                    RestorePartFatigue(restingCheck ? RimbodySettings.CalcEveryTick * 0.00015f : RimbodySettings.CalcEveryTick * 0.00005f); //restore 1 / 20000 per tick. triple when resting. A day is 60000 ticks, so awake, a pawn can restore 3 points per day. if asleep for 7H during a day, 5point total
+                    
                 }
+            }
+            if (RimbodySettings.useExhaustion)
+            {
+                if (doingS)
+                {
+                    exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (0.5f + (5f * (MuscleMass / 100f)) + (4f * (BodyFat / 100f) * (MuscleMass / 100f)) + (2f * (BodyFat / 100f))));
+                }
+                else if (doingB)
+                {
+                    exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
+                }
+                else if (doingC)
+                {
+                    exhaustionDelta = RimbodySettings.CalcEveryTick / (25f * (1f + (70f * (BodyFat) / 100f * (BodyFat - 50f) / 100f * (BodyFat - 100f) / 100f)) * (1f - ((5f * (MuscleMass / 100f) * (MuscleMass - 25f - RimbodySettings.muscleThresholdHulk)) / 100f)));
+                }
+                var newExhaustion = exhaustion + exhaustionDelta;
+                if (newExhaustion >= 100f)
+                {
+                    resting = true;
+                    exhaustion = 100f;
+                }
+                else
+                {
+                    exhaustion = Mathf.Max(0f, newExhaustion);
+                }
+
+                if (exhaustion < 40f && resting)
+                {
+                    resting = false;
+                }
+
+            }
+
+
+            //Apply New Values
+            BodyFat = newBodyFat;
+            MuscleMass = newMuscleMass;
+
+            //BodyChange
+            if (checkFlag == true)
+            {
+                parentPawn.story.bodyType = GetValidBody();
+                parentPawn.Drawer.renderer.SetAllGraphicsDirty();
             }
         }
 
@@ -678,9 +673,11 @@ namespace Maux36.Rimbody
         {
             if (BodyFat <= -1f || MuscleMass <= -1f) return;
             if (parentPawn.Dead) return;
+            if (parentPawn.needs?.food == null) return;
             if (parentPawn.IsHashIntervalTick(RimbodySettings.CalcEveryTick))
             {
-                if (parentPawn.needs?.food != null) PhysiqueTick();
+                if (Rimbody_Utility.shouldTrack(parentPawn))
+                    PhysiqueTick();
             }
         }
 
