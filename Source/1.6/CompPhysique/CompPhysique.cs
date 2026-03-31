@@ -586,8 +586,7 @@ namespace Maux36.Rimbody
 
 
             //Apply New Values
-            BodyFat = newBodyFat;
-            MuscleMass = newMuscleMass;
+            ApplyChangedPhysique(newBodyFat, newMuscleMass);
 
             //BodyChange
             if (checkFlag == true)
@@ -606,6 +605,11 @@ namespace Maux36.Rimbody
         public (float, float, List<float>) HarmonyValues(int harmonyKey)
         {
             return (0f, 0f, null); //(strengthHarmony, cardioHarmony, partsHarmony);
+        }
+        public void ApplyChangedPhysique(float newBodyFat, float newMuscleMass)
+        {
+            BodyFat = newBodyFat;
+            MuscleMass = newMuscleMass;
         }
 
         //Utilities
@@ -783,7 +787,7 @@ namespace Maux36.Rimbody
             return true;
         }
 
-        public void PhysiqueValueSetup(bool reset = false)
+        public bool PhysiqueValueSetup(bool reset = false)
         {
             if (reset || Uninitialized)
             {
@@ -805,7 +809,9 @@ namespace Maux36.Rimbody
                     BodyFat = -1f;
                     MuscleMass = -1f;
                 }
+                return true;
             }
+            return false;
         }
 
         //Memory

@@ -13,26 +13,30 @@ namespace Maux36.Rimbody_Individuality
     [HarmonyPatch(typeof(CompPhysique), "PhysiqueValueSetup")]
     public class WeightPatch
     {
-        static void Postfix(CompPhysique __instance)
+        static void Postfix(CompPhysique __instance, Pawn ___parentPawn, bool __result)
         {
+            if (!__result) return;
             var compPhysique = __instance;
-            var compIndividuality = compPhysique.parent.TryGetComp<CompIndividuality>();
-            if (compIndividuality != null && (compPhysique.BodyFat != -2))
+            var compIndividuality = ___parentPawn.TryGetComp<CompIndividuality>();
+            if (compIndividuality != null && __instance.HasPhysique)
             {
-                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
+                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (__instance.BodyFat + __instance.MuscleMass)))-20;
             }
         }
     }
 
-    [HarmonyPatch(typeof(CompPhysique), "PhysiqueTick")]
+    [HarmonyPatch(typeof(CompPhysique), "ApplyChangedPhysique")]
     public class CompPhysiqueTickPatch
     {
-        public static void Postfix(CompPhysique __instance)
+        public static void Prefix(CompPhysique __instance, Pawn ___parentPawn, float newBodyFat, float newMuscleMass)
         {
-            var compIndividuality = __instance.parent.TryGetComp<CompIndividuality>();
-            if (compIndividuality != null && __instance.BodyFat >= 0 && __instance.MuscleMass >= 0)
+            int oldWeight = Mathf.RoundToInt(0.7f * (__instance.BodyFat + __instance.MuscleMass));
+            int newWeight = Mathf.RoundToInt(0.7f * (newBodyFat + newMuscleMass));
+            if (oldWeight == newWeight) return;
+            var compIndividuality = ____parentPawn.TryGetComp<CompIndividuality>();
+            if (compIndividuality != null)
             {
-                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (__instance.BodyFat + __instance.MuscleMass)) - 20f);
+                compIndividuality.BodyWeight = newWeight -20;
             }
         }
     }
