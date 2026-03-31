@@ -25,7 +25,7 @@ namespace Maux36.Rimbody
                 // This is for babies growing up.
                 // compPhysique can be null when a pawn is generated.
                 var compPhysique = pawn.compPhysique();
-                if (compPhysique?.IsValid == true)
+                if (compPhysique?.HasPhysique == true)
                 {
                     __result = compPhysique.GetValidBody();
                     return false;

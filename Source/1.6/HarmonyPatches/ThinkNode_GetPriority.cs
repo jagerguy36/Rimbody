@@ -66,7 +66,7 @@ namespace Maux36.Rimbody
         {
             if (pawn == null) return true;
             var compPhysique = pawn.compPhysique();
-            if (compPhysique == null) return true;
+            if (compPhysique?.HasPhysique != true) return true;
             Need_Food food = pawn.needs.food;
             if (food == null)
             {
