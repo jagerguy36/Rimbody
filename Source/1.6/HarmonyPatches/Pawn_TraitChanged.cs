@@ -11,10 +11,7 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn ___pawn, Trait trait)
         {
             var compPhysique = ___pawn.compPhysique();
-            if (compPhysique != null)
-            {
-                compPhysique.DirtyTraitCache();
-            }
+            compPhysique?.DirtyTraitCache();
         }
     }
 
@@ -24,10 +21,7 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn ___pawn, Trait trait)
         {
             var compPhysique = ___pawn.compPhysique();
-            if (compPhysique != null)
-            {
-                compPhysique.DirtyTraitCache();
-            }
+            compPhysique?.DirtyTraitCache();
         }
     }
     public class CharEditorPatches
