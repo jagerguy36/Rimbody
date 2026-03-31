@@ -9,43 +9,39 @@ namespace Maux36.Rimbody
     {
         protected override bool Satisfied(Pawn pawn)
         {
-            if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
+            // if (pawn.Downed || pawn.Drafted) // Drafted Condition already handled by ThinkTree
+            //     return false;
+            var compPhysique = pawn.compPhysique();
+            if (compPhysique == null)
+                return false;
+            // if (RimbodySettings.useExhaustion && compPhysique.resting) // Exhaustion not implemented yet
+            //     return false;
+            if (pawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult)
+                return false;
+            if (Rimbody_Utility.TooTired(pawn))
+                return false;
+            if (!pawn.IsColonist && !pawn.IsPrisonerOfColony)
+                return false;
+            //Meet Goal
+            if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {
-                if (pawn.IsColonist || pawn.IsPrisonerOfColony)
+                if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
                 {
-                    if (pawn.Downed || pawn.Drafted) return false;
-                    if (Rimbody_Utility.TooTired(pawn)) return false;
-                    var compPhysique = pawn.compPhysique();
-                    if (compPhysique == null)
-                    {
-                        return false;
-                    }
-                    if (RimbodySettings.useExhaustion && compPhysique.resting)
-                    {
-                        return false;
-                    }
-                    //Meet Goal
-                    if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
-                    {
-                        if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                        {
-                            return false;
-                        }
-                        return true;
-                    }
-                    if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
-                    {
-                        if(compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
-                        {
-                            return false;
-                        }
-                        if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                        {
-                            return false;
-                        }
-                        return true;
-                    }
+                    return false;
                 }
+                return true;
+            }
+            if (compPhysique.useMuscleGoal && compPhysique.MuscleGoal > compPhysique.MuscleMass)
+            {
+                if(compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
+                {
+                    return false;
+                }
+                if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                {
+                    return false;
+                }
+                return true;
             }
             return false;
         }
