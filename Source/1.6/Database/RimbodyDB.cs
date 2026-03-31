@@ -15,7 +15,7 @@ namespace Maux36.Rimbody
         public static List<JobDef> StrengthNontargetJobs = new();
         public static List<JobDef> CardioNontargetJobs = new();
         public static List<JobDef> BalanceNontargetJobs = new();
-        public static Dicstionary<ushort, string> WorkoutNameDB = new();
+        public static Dictionary<int, string> WorkoutNameDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyTarget> ThingModExDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyJob> JobModExDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyJob> GiverModExDB = new();
@@ -99,7 +99,7 @@ namespace Maux36.Rimbody
 
         }
 
-        private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension, Dictionary<ushort,string> WorkoutNameDB, ref int woId)
+        private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension, Dictionary<int,string> WorkoutNameDB, ref int woId)
         {
             ThingModExDB[targetDef.shortHash] = targetExtension;
             foreach (var workout in targetExtension.workouts)

@@ -33,7 +33,7 @@ namespace Maux36.Rimbody_Individuality
             int oldWeight = Mathf.RoundToInt(0.7f * (__instance.BodyFat + __instance.MuscleMass));
             int newWeight = Mathf.RoundToInt(0.7f * (newBodyFat + newMuscleMass));
             if (oldWeight == newWeight) return;
-            var compIndividuality = ____parentPawn.TryGetComp<CompIndividuality>();
+            var compIndividuality = ___parentPawn.TryGetComp<CompIndividuality>();
             if (compIndividuality != null)
             {
                 compIndividuality.BodyWeight = newWeight -20;
