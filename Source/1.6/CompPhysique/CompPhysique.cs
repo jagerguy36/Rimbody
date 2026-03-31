@@ -670,7 +670,7 @@ namespace Maux36.Rimbody
 
         public override void CompTick()
         {
-            if (BodyFat <= -1f || MuscleMass <= -1f) return;
+            if (!HasPhysique) return;
             if (parentPawn.Dead) return;
             if (parentPawn.needs?.food == null) return;
             if (parentPawn.IsHashIntervalTick(RimbodySettings.CalcEveryTick))
