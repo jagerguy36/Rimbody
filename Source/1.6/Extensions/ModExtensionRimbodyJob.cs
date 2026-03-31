@@ -7,6 +7,7 @@ namespace Maux36.Rimbody
 {
     public class ModExtensionRimbodyJob : DefModExtension
     {
+        public ushort id = -1;
         public float cardio = 0.3f;
         public float strength = 0.1f;
         public List<float> strengthParts;
@@ -89,6 +90,7 @@ namespace Maux36.Rimbody
     {
         public string name;
         public string reportString;
+        public ushort id = -1;
         public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Balance;
         public float cardio = 1f;
         public float strength = 1f;
