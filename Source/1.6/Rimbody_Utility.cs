@@ -109,39 +109,18 @@ namespace Maux36.Rimbody
                 pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,scoreStageIndex));
             }
         }
-
-        public static void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, string name)
+        public static void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, ushort id)
         {
             if (compPhysique == null) return;
             if (category == RimbodyWorkoutCategory.Job) return;
+
             compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-            switch (category)
-            {
-                case RimbodyWorkoutCategory.Strength:
-                    compPhysique.AddNewMemory($"strength|{name}");
-                    break;
-                case RimbodyWorkoutCategory.Balance:
-                    compPhysique.AddNewMemory($"balance|{name}");
-                    break;
-                case RimbodyWorkoutCategory.Cardio:
-                    compPhysique.AddNewMemory($"cardio|{name}");
-                    break;
-                default:
-                    break;
-            }
+            compPhysique.AddNewMemory(((int)category << 16) | id);
         }
 
         public static bool TooTired(Pawn actor)
         {
             return actor?.needs?.rest?.CurLevel < 0.17f;
-        }
-
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
         }
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]

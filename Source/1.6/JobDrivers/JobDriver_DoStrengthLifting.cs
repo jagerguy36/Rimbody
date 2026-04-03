@@ -125,9 +125,9 @@ namespace Maux36.Rimbody
         {
             var compPhysique = pawn.compPhysique();
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
             RimbodyDB.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
@@ -195,7 +195,7 @@ namespace Maux36.Rimbody
                 thingAnimated.ghostOffset = Vector3.zero;
                 pawn.SetPawnBodyAngleOverride(-1f);
                 Rimbody_Utility.TryGainGymThought(pawn);
-                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, exWorkout.name);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, exWorkout.id);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {

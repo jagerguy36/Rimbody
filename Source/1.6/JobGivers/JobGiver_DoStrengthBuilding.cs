@@ -105,7 +105,7 @@ namespace Maux36.Rimbody
                         {
                             continue;
                         }
-                        float tmpScore = (compPhysique.memory.Contains("strength|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Strength, workout);
+                        float tmpScore = (compPhysique.InMemory(workout.id) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Strength, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -156,7 +156,7 @@ namespace Maux36.Rimbody
                         {
                             continue;
                         }
-                        float nonTarget_score = (compPhysique.memory.Contains("strength|" + strengthJobdef.defName) ? 0.9f : 1f) * compPhysique.GetStrengthJobScore(strengthEx.strengthParts, strengthEx.strength);
+                        float nonTarget_score = (compPhysique.InMemory(strengthEx.id) ? 0.9f : 1f) * compPhysique.GetStrengthJobScore(strengthEx.strengthParts, strengthEx.strength);
                         if (nonTarget_score > maxScore)
                         {
                             maxScore = nonTarget_score;

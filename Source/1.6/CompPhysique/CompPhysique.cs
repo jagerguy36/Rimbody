@@ -156,8 +156,7 @@ namespace Maux36.Rimbody
         }
 
         //Memory
-        public Queue<string> memory = [];
-        public string lastMemory = string.Empty;
+        public Queue<int> memory = [];
         public int lastWorkoutTick = 0;
         public int AssignedTick = 0;
         public float carryFactor = 0f;
@@ -815,14 +814,13 @@ namespace Maux36.Rimbody
         }
 
         //Memory
-        public void AddNewMemory(String workout)
+        public void AddNewMemory(int category_id_pack)
         {
-            this.lastMemory = workout;
-            if (this.memory.Count >= 5)
+            if (memory.Count >= 5)
             {
                 memory.Dequeue();
             }
-            memory.Enqueue(workout);
+            memory.Enqueue(category_id_pack);
         }
 
         //partFatigue
@@ -1009,13 +1007,24 @@ namespace Maux36.Rimbody
             }
         }
 
-        public bool InMemory(string workoutName)
+        public bool InMemory(ushort workoutId)
         {
-            return memory.Any(item =>
+            foreach (var item in memory)
             {
-                var parts = item.Split('|');
-                return parts.Length > 1 && parts[1] == workoutName;
-            });
+                if ((ushort)(item & 0xFFFF) == workoutId)
+                    return true;
+            }
+            return false;
+        }
+        public bool HasCategory(RimbodyWorkoutCategory category)
+        {
+            int target = (int)category;
+            foreach (var item in memory)
+            {
+                if ((item >> 16) == target)
+                    return true;
+            }
+            return false;
         }
 
         public override void Notify_AddBedThoughts(Pawn pawn)
@@ -1030,8 +1039,6 @@ namespace Maux36.Rimbody
             {
                 memory.Clear();
             }
-            lastMemory = string.Empty;
-            
         }
 
         private (float, float, float, float) GetFactors()
@@ -1171,18 +1178,53 @@ namespace Maux36.Rimbody
             {
                 partFatigue = Enumerable.Repeat(0f, RimbodySettings.PartCount).ToList();
             }
-            Scribe_Values.Look(ref lastMemory, "Physique_lastMemory", string.Empty);
             Scribe_Values.Look(ref lastWorkoutTick, "Physique_lastWorkoutTick", 0);
             Scribe_Values.Look(ref AssignedTick, "Physique_AssignedTick", 0);
             Scribe_Values.Look(ref carryFactor, "Physique_carryFactor", 0f);
-            var wo_memory_tmp = new List<string>();
-            while (memory.Any()) wo_memory_tmp.Add(memory.Dequeue());
-            Scribe_Collections.Look(ref wo_memory_tmp, "Physique_memory");
-            memory = new Queue<string>();
-            if (wo_memory_tmp!=null)
+
+
+            List<string> wo_memory_tmp = null;
+            if (Scribe.mode == LoadSaveMode.Saving)
             {
-                foreach (var mem in wo_memory_tmp) memory.Enqueue(mem);
+                wo_memory_tmp = [.. memory
+                    .Select(packed =>
+                    {
+                        var category = (RimbodyWorkoutCategory)(packed >> 16);
+                        var id = (ushort)(packed & 0xFFFF);
+
+                        // Convert ID → name via DB
+                        if (!RimbodyDB.WorkoutNameDB.TryGetValue(id, out var name))
+                            return null; // skip invalid entries
+
+                        return $"{category.ToString().ToLower()}|{name}";
+                    })
+                    .Where(x => x != null)];
             }
+            Scribe_Collections.Look(ref wo_memory_tmp, "Physique_memory", LookMode.Value);
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                memory = new Queue<int>();
+
+                if (wo_memory_tmp != null)
+                {
+                    foreach (var mem in wo_memory_tmp)
+                    {
+                        if (string.IsNullOrEmpty(mem)) continue;
+
+                        var parts = mem.Split('|');
+                        if (parts.Length < 2) continue;
+
+                        // Parse category
+                        if (!Enum.TryParse(parts[0], true, out RimbodyWorkoutCategory category)) continue;
+                        string name = parts[1];
+                        if(!RimbodyDB.WorkoutIdDB.TryGetValue(name, out ushort id)) continue;
+
+                        memory.Enqueue(((int)category << 16) | id);
+                    }
+                }
+            }
+
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 PhysiqueValueSetup();

@@ -1,8 +1,8 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
-using Verse.AI;
 using Verse;
+using Verse.AI;
 
 namespace Maux36.Rimbody
 {
@@ -27,24 +27,14 @@ namespace Maux36.Rimbody
         public static float GetActualPriority(CompPhysique compPhysique)
         {
             float result = 4.0f;
-            if(compPhysique.memory?.Count > 0)
+            var workoutMemory = compPhysique.memory;
+            int target = (int)RimbodyWorkoutCategory.Balance;
+            foreach (var item in workoutMemory)
             {
-                foreach (var item in compPhysique.memory)
-                {
-                    int delimiterIndex = item.IndexOf('|');
-                    if (delimiterIndex >= 0)
-                    {
-                        string firstPart = item.Substring(0, delimiterIndex);
-                        if (firstPart == "balance")
-                        {
-                            result -= 0.8f;
-                        }
-                        else
-                        {
-                            result += 0.4f;
-                        }
-                    }
-                }
+                if ((item >> 16) == target)
+                    result -= 0.8f;
+                else
+                    result += 0.4f;
             }
             return result;
         }
@@ -114,7 +104,7 @@ namespace Maux36.Rimbody
                         {
                             continue;
                         }
-                        float tmpScore = (compPhysique.memory.Contains("balance|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, workout);
+                        float tmpScore = (compPhysique.InMemory(workout.id) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, workout);
                         if (tmpScore > score)
                         {
                             score = tmpScore;
@@ -137,7 +127,7 @@ namespace Maux36.Rimbody
             if ((RimbodySettings.useFatigue && targethighscore < RimbodyDB.balanceHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
                 RimbodyDB.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_DoBodyWeightPlank.shortHash, out var plankjobEx);
-                float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
+                float plank_score = (compPhysique.InMemory(plankjobEx.id) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
                     workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMat, out Thing mattress, 1, 40f);

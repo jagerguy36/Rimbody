@@ -16,7 +16,6 @@ namespace Maux36.Rimbody_Individuality
         static void Postfix(CompPhysique __instance, Pawn ___parentPawn, bool __result)
         {
             if (!__result) return;
-            var compPhysique = __instance;
             var compIndividuality = ___parentPawn.TryGetComp<CompIndividuality>();
             if (compIndividuality != null && __instance.HasPhysique)
             {

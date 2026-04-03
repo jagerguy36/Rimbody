@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -39,14 +40,6 @@ namespace Maux36.Rimbody
 
         private void AddMemory(CompPhysique compPhysique)
         {
-            if (!recorded) {
-                if (compPhysique != null)
-                {
-                    compPhysique.AddNewMemory($"cardio|{job.def.defName}");
-                    recorded = true;
-                }
-            }
-            compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
         }
 
         public override void ExposeData()
@@ -65,9 +58,11 @@ namespace Maux36.Rimbody
                 joygainfactor = 0;
             }
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (ticksLeft <= 0 ? JobCondition.Succeeded : JobCondition.Ongoing));
-            EndOnTired(this);
+
+            RimbodyDB.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
             Toil findInterestingThing = FindInterestingThing();
             yield return findInterestingThing;
 
@@ -84,7 +79,12 @@ namespace Maux36.Rimbody
             toil.AddFinishAction(delegate
             {
                 compPhysique.AssignedTick = Mathf.Max(0, compPhysique.AssignedTick - (2500 - ticksLeft));
-                AddMemory(compPhysique);
+                if (!recorded)
+                {
+                    compPhysique.AddNewMemory(((int)RimbodyWorkoutCategory.Cardio << 16) | exWorkout.id);
+                    recorded = true;
+                }
+                compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
                 if (ticksLeft < 5 && compPhysique.isJogger)
                 {
                     pawn?.needs?.mood?.thoughts?.memories?.TryGainMemory(DefOf_Rimbody.Rimbody_GoodRun);
@@ -112,22 +112,6 @@ namespace Maux36.Rimbody
             wait.handlingFacing = true;
             yield return wait;
             yield return Toils_Jump.Jump(findInterestingThing);
-        }
-
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
-        }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
-                return true;
-            }
-            return false;
         }
 
         //Code from the vanilla nature running utility.

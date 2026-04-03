@@ -15,7 +15,8 @@ namespace Maux36.Rimbody
         public static List<JobDef> StrengthNontargetJobs = new();
         public static List<JobDef> CardioNontargetJobs = new();
         public static List<JobDef> BalanceNontargetJobs = new();
-        public static Dictionary<int, string> WorkoutNameDB = new();
+        public static Dictionary<ushort, string> WorkoutNameDB = new();
+        public static Dictionary<string, ushort> WorkoutIdDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyTarget> ThingModExDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyJob> JobModExDB = new();
         public static Dictionary<ushort, ModExtensionRimbodyJob> GiverModExDB = new();
@@ -40,13 +41,13 @@ namespace Maux36.Rimbody
 
         static RimbodyDB() // Static constructor
         {
-            int woId = 0;
+            ushort woId = 1;
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {
                 var buildingExtension = thingDef.GetModExtension<ModExtensionRimbodyTarget>();
                 if (buildingExtension != null)
                 {
-                    AddWorkoutTarget(thingDef, buildingExtension, WorkoutNameDB, ref woId);
+                    AddWorkoutTarget(thingDef, buildingExtension, ref woId);
                 }
             }
 
@@ -55,12 +56,13 @@ namespace Maux36.Rimbody
                 var jobExtension = jobDef.GetModExtension<ModExtensionRimbodyJob>();
                 if(jobExtension != null)
                 {
-                    jobExtension.id = woId;
-                    WorkoutNameDB[woId] = jobDef.defName;
-                    woId++;
                     if (jobExtension?.Category !=null && jobExtension?.Category != RimbodyWorkoutCategory.Job)
                     {
                         AddWorkoutJob(jobDef, jobExtension);
+                        jobExtension.id = woId;
+                        WorkoutNameDB[woId] = jobDef.defName;
+                        WorkoutIdDB[jobDef.defName] = woId;
+                        woId++;
                     }
                     JobModExDB[jobDef.shortHash] = jobExtension;
                 }
@@ -71,9 +73,6 @@ namespace Maux36.Rimbody
                 var giverExtension = giverDef.GetModExtension<ModExtensionRimbodyJob>();
                 if(giverExtension != null)
                 {
-                    giverExtension.id = woId;
-                    WorkoutNameDB[woId] = giverDef.defName;
-                    woId++;
                     GiverModExDB[giverDef.shortHash] = giverExtension;
                 }
             }
@@ -99,14 +98,22 @@ namespace Maux36.Rimbody
 
         }
 
-        private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension, Dictionary<int,string> WorkoutNameDB, ref int woId)
+        private static void AddWorkoutTarget(ThingDef targetDef, ModExtensionRimbodyTarget targetExtension, ref ushort woId)
         {
             ThingModExDB[targetDef.shortHash] = targetExtension;
             foreach (var workout in targetExtension.workouts)
             {
-                workout.id = woId;
-                WorkoutNameDB[woId] = workout.name;
-                woId++;
+                if (WorkoutIdDB.TryGetValue(workout.name, out ushort existingId))
+                {
+                    workout.id = existingId;
+                }
+                else
+                {
+                    workout.id = woId;
+                    WorkoutNameDB[woId] = workout.name;
+                    WorkoutIdDB[workout.name] = woId;
+                    woId++;
+                }
                 switch (workout.Category)
                 {
                     case RimbodyWorkoutCategory.Strength:
