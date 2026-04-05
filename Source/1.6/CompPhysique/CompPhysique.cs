@@ -44,6 +44,7 @@ namespace Maux36.Rimbody
 
         //Internals
         private bool isJoggerInt = false;
+        private bool isDeathrestingInt = false;
         public bool PostGen = false;
         public Pawn parentPawn;
         //public float? breInt;
@@ -73,7 +74,8 @@ namespace Maux36.Rimbody
 
         //Cache control
         private bool geneCacheDirty = true;
-        private bool traitCacheDirty = true;
+        private bool joggerCacheDirty = true;
+        private bool deathrestCacheDirty = true;
 
         //Fat
         public float BodyFat = -1f;
@@ -146,12 +148,25 @@ namespace Maux36.Rimbody
         {
             get
             {
-                if (traitCacheDirty)
+                if (joggerCacheDirty)
                 {
                     if (parentPawn.story?.traits?.HasTrait(DefOf_Rimbody.SpeedOffset, 2) == true) isJoggerInt = true;
                     else isJoggerInt = false;
+                    joggerCacheDirty = false;
                 }
                 return isJoggerInt;
+            }
+        }
+        public bool isDeathResting
+        {
+            get
+            {
+                if (deathrestCacheDirty)
+                {
+                    isDeathrestingInt = parentPawn.Deathresting;
+                    deathrestCacheDirty = false;
+                }
+                return isDeathrestingInt;
             }
         }
 
@@ -166,7 +181,7 @@ namespace Maux36.Rimbody
 
         private void PhysiqueTick()
         {
-            if (parentPawn.Deathresting || parentPawn.Suspended) return;
+            if (isDeathResting || parentPawn.Suspended) return;
             if (ModsConfig.AnomalyActive)
             {
                 if (PlatformTarget?.CurrentlyHeldOnPlatform ?? false)
@@ -614,7 +629,11 @@ namespace Maux36.Rimbody
         //Utilities
         public void DirtyTraitCache()
         {
-            traitCacheDirty = true;
+            joggerCacheDirty = true;
+        }
+        public void DirtyDeathrestCache()
+        {
+            deathrestCacheDirty = true;
         }
 
         public bool shouldCheckBody(float fatDelta, float muscleDelta, float newBodyFat, float newMuscleMass)
