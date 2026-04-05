@@ -9,19 +9,19 @@ namespace Maux36.Rimbody
     {
         protected override bool Satisfied(Pawn pawn)
         {
-            // if (pawn.Downed || pawn.Drafted) // Drafted Condition already handled by ThinkTree
-            //     return false;
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null)
                 return false;
             // if (RimbodySettings.useExhaustion && compPhysique.resting) // Exhaustion not implemented yet
             //     return false;
+
             if (pawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult)
                 return false;
             if (Rimbody_Utility.TooTired(pawn))
                 return false;
             if (!pawn.IsColonist && !pawn.IsPrisonerOfColony)
                 return false;
+
             //Meet Goal
             if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {

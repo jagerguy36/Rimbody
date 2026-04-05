@@ -9,14 +9,10 @@ namespace Maux36.Rimbody
     {
         protected override bool Satisfied(Pawn pawn)
         {
-            // if (pawn.Downed || pawn.Drafted) // Drafted Condition already handled by ThinkTree
-            //     return false;
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null)
                 return false;
             // if (RimbodySettings.useExhaustion && compPhysique.resting) // Exhaustion not implemented yet
-            //     return false;
-            // if (pawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult) // Already checked by whatever prompted Continue condition
             //     return false;
             
             if (compPhysique.AssignedTick <= 0)

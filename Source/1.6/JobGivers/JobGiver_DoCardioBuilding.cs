@@ -1,16 +1,12 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Verse.AI;
 using Verse;
+using Verse.AI;
 
 namespace Maux36.Rimbody
 {
-    public class JobGiver_DoCardioBuilding : ThinkNode_JobGiver
+    public class JobGiver_DoCardioBuilding : JobGiver_DoWorkoutBase
     {
-        private static List<Thing> tmpCandidates = [];
-        private static Dictionary<int, float> workoutCache = new Dictionary<int, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
@@ -20,11 +16,14 @@ namespace Maux36.Rimbody
             }
             return GetActualPriority(compPhysique);
         }
+        protected override Job TryGiveJob(Pawn pawn)
+        {
+            return TryGiveJobActual(pawn, tmpCandidates, thingWorkoutScoreCache);
+        }
 
         public static float GetActualPriority(CompPhysique compPhysique)
         {
             float result = 5.0f;
-
             if (compPhysique.useFatgoal && compPhysique.FatGoal < compPhysique.BodyFat)
             {
                 result += 0.5f + ((compPhysique.BodyFat - compPhysique.FatGoal)/100f);
@@ -35,19 +34,14 @@ namespace Maux36.Rimbody
             }
             return result;
         }
-
-        protected override Job TryGiveJob(Pawn pawn)
-        {
-            return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
-        }
-
-        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<int, float> workoutCache)
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<int, float> thingWorkoutScoreCache)
         {
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
 
             //Joggers will always try to jog if possible.
-            if (compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn))
+            bool canJogNow = JoyUtility.EnjoyableOutsideNow(pawn);
+            if (canJogNow && compPhysique.isJogger)
             {
                 if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                 {
@@ -59,79 +53,43 @@ namespace Maux36.Rimbody
 
             //If not joggers or impossible to jog outside, look for cardio targets
             tmpCandidates.Clear();
-            workoutCache.Clear();
-            GetSearchSet(pawn, tmpCandidates);
-            Predicate<Thing> predicate = delegate (Thing t)
-            {
-                if (t.IsForbidden(pawn)) return false;
-
-                RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
-                if (targetModExtension.Type == RimbodyTargetType.Building)
-                {
-                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
-                    if (pawn.Map.reservationManager.IsReserved(t)) return false;
-                    if (!pawn.CanReserve(t, ignoreOtherReservations: true)) return false;
-                    if (t.def.hasInteractionCell)
-                    {
-                        if (!pawn.CanReserveSittableOrSpot(t.InteractionCell)) return false;
-                    }
-                    else
-                    {
-                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;
-                        LocalTargetInfo target = result;
-                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false)) return false;
-                    }
-                    return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
-                }
-                else
-                {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
-                    return true;
-                }
-            };
+            thingWorkoutScoreCache.Clear();
+            GetSearchSet(pawn, RimbodyDB.CardioTargets, tmpCandidates);
             float targethighscore = 0f;
             float scoreFunc(Thing t)
             {
-                if (RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
+                RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+                if (thingWorkoutScoreCache.TryGetValue(t.def.shortHash, out float score))
                 {
-                    float score = 0f;
-                    if (workoutCache.ContainsKey(t.def.shortHash))
-                    {
-                        score = workoutCache[t.def.shortHash];
-                        if (score > targethighscore)
-                        {
-                            targethighscore = score;
-                        }
-                        return score;
-                    }
-                    foreach (WorkOut workout in targetModExtension.workouts)
-                    {
-                        if (workout.Category != RimbodyWorkoutCategory.Cardio)
-                        {
-                            continue;
-                        }
-                        float tmpScore = compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Cardio, workout);
-                        if (tmpScore > score)
-                        {
-                            score = tmpScore;
-                        }
-                    }
                     if (score > targethighscore)
                     {
                         targethighscore = score;
                     }
                     return score;
                 }
-                return 0;
+                foreach (WorkOut workout in targetModExtension.workouts)
+                {
+                    if (workout.Category != RimbodyWorkoutCategory.Cardio) continue;
+                    float tmpScore = compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Cardio, workout);
+                    if (tmpScore > score)
+                    {
+                        score = tmpScore;
+                    }
+                }
+                if (score > targethighscore)
+                {
+                    targethighscore = score;
+                }
+                thingWorkoutScoreCache[t.def.shortHash] = score;
+                return score;
             }
-            Thing thing = null;
-            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, predicate, scoreFunc);
+            Thing thing = GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, t => TargetValidator(pawn, t), scoreFunc);
             tmpCandidates.Clear();
-            workoutCache.Clear();
+            thingWorkoutScoreCache.Clear();
 
             if ((RimbodySettings.useFatigue && targethighscore < RimbodyDB.cardioHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
-                if (!compPhysique.isJogger && JoyUtility.EnjoyableOutsideNow(pawn)) //Already checked outside condition for jogger.
+                if (canJogNow && !compPhysique.isJogger) //Already checked outside condition for jogger.
                 {
                     if (JobDriver_Jogging.TryFindNatureJoggingTarget(pawn, out var interestTarget))
                     {
@@ -172,6 +130,7 @@ namespace Maux36.Rimbody
                 {
                     if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
                     {
+                        //This should never happen because TargetValidator has already checked Cell existence
                         return null;
                     }
                     LocalTargetInfo target = result;
@@ -189,16 +148,6 @@ namespace Maux36.Rimbody
                 //{
                 //    return null;
                 //}
-            }
-        }
-
-        protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
-        {
-            outCandidates.Clear();
-            if (RimbodyDB.CardioTargets == null || RimbodyDB.CardioTargets.Count == 0) return;
-            foreach (var buildingDef in RimbodyDB.CardioTargets)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
             }
         }
     }
