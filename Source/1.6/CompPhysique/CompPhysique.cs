@@ -34,7 +34,7 @@ namespace Maux36.Rimbody
         //Cardio
         private static readonly float _workoutC = 1.5f; // [Cardio]
         private static readonly float _sprintC = 1.35f; // LocomotionUrgency.Sprint
-        private static readonly float _joggingC = 0.85f; // LocomotionUrgency.Jog
+        private static readonly float _joggingC = 0.8f; // LocomotionUrgency.Jog
         private static readonly float _hardworkC = 0.5f; // [HardLabor], [Melee]
         private static readonly float _workC = 0.45f; // [NormalLabor]
         private static readonly float _walkingC = 0.4f; // LocomotionUrgency.Walk, [Light Labor]
