@@ -76,6 +76,7 @@
     <Compile Include="CompPhysique\CompToHumanlikes.cs" />
     <Compile Include="CompPhysique\PhysiqueCacheManager.cs" />
     <Compile Include="Extensions\PawnExtensions.cs" />
+    <Compile Include="HarmonyPatches\Hediff_Deathrest_Notify.cs" />
     <Compile Include="HarmonyPatches\GeneTracker_Notify_GeneChanged.cs" />
     <Compile Include="HarmonyPatches\HaulTracking.cs" />
     <Compile Include="HarmonyPatches\PawnRenderer_BodyAngle.cs" />
