@@ -10,18 +10,9 @@ namespace Maux36.Rimbody
 {
     public class Rimbody_Utility
     {
-        public static bool isColonyMember(Pawn pawn)
-        {
-            if (pawn.Faction != null && pawn.Faction.IsPlayer && pawn.RaceProps.Humanlike && !pawn.IsMutant) //The same as isColonist Check minus the slave check
-            {
-                return true;
-            }
-            return false;
-        }
-
         public static bool shouldTrack(Pawn pawn)
         {
-            if (!Rimbody_Utility.isColonyMember(pawn) && !pawn.IsPrisonerOfColony) return false;
+            if (!pawn.IsColonist && !pawn.IsPrisonerOfColony) return false;
             if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
             {
                 return true;

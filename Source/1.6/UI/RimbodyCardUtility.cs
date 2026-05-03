@@ -159,7 +159,7 @@ namespace Maux36.Rimbody
             num += rect8.height + 2f;
             var rect9 = new Rect(0f, num, rect.width - 10f, 24f);
 
-            if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
+            if (pawn.IsColonist || pawn.IsPrisonerOfColony)
             {
                 var gaingoalrect = new Rect(10f, num + 2f, 80f, 24f);
                 Widgets.Label(gaingoalrect, "└ " + "RimbodyGoal".Translate());
@@ -210,7 +210,7 @@ namespace Maux36.Rimbody
 
             num += rect10.height + 2f;
             var rect11 = new Rect(0f, num, rect.width - 10f, 24f);
-            if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
+            if (pawn.IsColonist || pawn.IsPrisonerOfColony)
             {
                 var dietgoalrect = new Rect(10f, num + 2f, 80f, 24f);
                 Widgets.Label(dietgoalrect, "└ " + "RimbodyGoal".Translate());

@@ -286,7 +286,7 @@
 						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>1.5</cardio>
+						<cardio>1.2</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
@@ -392,7 +392,7 @@
 						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>1.5</cardio>
+						<cardio>1.2</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
