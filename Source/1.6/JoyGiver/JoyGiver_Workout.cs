@@ -16,6 +16,7 @@ namespace Maux36.Rimbody
             (RimbodyWorkoutCategory.Balance, JobGiver_DoBalanceBuilding.GetActualPriority, JobGiver_DoBalanceBuilding.TryGiveJobActual),
             (RimbodyWorkoutCategory.Cardio, JobGiver_DoCardioBuilding.GetActualPriority, JobGiver_DoCardioBuilding.TryGiveJobActual)
         ];
+        private static readonly (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[] topGivers = new (RimbodyWorkoutCategory, float, Func<Pawn, List<Thing>, Dictionary<int, float>, Job>)[3];
         public override float GetChance(Pawn pawn)
         {
             if (!RimbodySettings.workoutDuringRecTime)
@@ -49,32 +50,36 @@ namespace Maux36.Rimbody
         public override Job TryGiveJob(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            var topGivers = new (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[3];
+            topGivers[0].priority = 0f;
+            topGivers[1].priority = 0f;
+            topGivers[2].priority = 0f;
             int count = 0;
 
-            foreach (var (type, getPriority, tryGiveJob) in WorkoutGivers)
+            for (int i = 0; i < 3; i++)
             {
-                float priority = getPriority(compPhysique);
+                var giver = WorkoutGivers[i];
+                float priority = giver.getPriority(compPhysique);
                 if (priority <= 0f) continue;
 
                 // Insert into top 3 list
-                for (int i = 0; i <= count; i++)
+                for (int j = 0; j <= count; j++)
                 {
-                    if (i == count || priority > topGivers[i].priority)
+                    if (j == count || priority > topGivers[j].priority)
                     {
                         if (count < 3) count++;
-                        for (int j = count - 1; j > i; j--)
-                            topGivers[j] = topGivers[j - 1];
-                        topGivers[i] = (type, priority, tryGiveJob);
+                        for (int k = count - 1; k > j; k--)
+                            topGivers[k] = topGivers[k - 1];
+
+                        topGivers[j] = (giver.type, priority, giver.tryGiveJob);
                         break;
                     }
                 }
             }
-
-            foreach (var (type, priority, tryGiveJob) in topGivers)
+            for (int i = 0; i < count; i++)
             {
-                if (tryGiveJob == null || priority <= 0f) continue;
-                Job job = tryGiveJob(pawn, tmpCandidates, workoutCache);
+                var current = topGivers[i];
+                if (current.priority <= 0f || current.tryGiveJob == null) continue;
+                Job job = current.tryGiveJob(pawn, tmpCandidates, workoutCache);
                 tmpCandidates.Clear();
                 workoutCache.Clear();
                 if (job != null)
