@@ -5,6 +5,35 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
+    public class ModExtensionRimbodyTarget : DefModExtension
+    {
+        public RimbodyTargetType Type = RimbodyTargetType.Building;
+        public bool moveBase = false;
+        public List<GraphicData> rimbodyTargetpartGraphics;
+        public List<WorkOut> workouts = new();
+    }
+    public class WorkOut
+    {
+        public string name;
+        public string reportString;
+        [Unsaved(false)]
+        public ushort id = 0;
+        public float cardio = 1f;
+        public float strength = 1f;
+        public List<float> strengthParts;
+        public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Balance;
+        public bool playSound = false;
+        public ItemSpot spot = ItemSpot.None;
+        public InteractionType animationType = InteractionType.Still;
+        public Direction pawnDirection = Direction.Center;
+        public vectorSet movingpartAnimOffset;
+        public vectorSet movingpartAnimPeak;
+        public vectorSet pawnAnimOffset;
+        public vectorSet pawnAnimPeak;
+        public WorkoutTickHandler customWorkoutTickHandler;
+    }
+    // Category assigned Extensions are collected as valid Rimbody jobs that Workout JobGiver should consider.
+    // Regular jobs that should not be considered by Workout JobGiver, but should count as working out done needs to set GiverIgnore to true
     public class ModExtensionRimbodyJob : DefModExtension
     {
         [Unsaved(false)]
@@ -13,7 +42,7 @@ namespace Maux36.Rimbody
         public float strength = 0.1f;
         public List<float> strengthParts;
         public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Job;
-        public RimbodyWorkoutCategory TreatAs = RimbodyWorkoutCategory.Job;
+        public bool GiverIgnore = false;
         public RimbodyJobCategory JobCategory = RimbodyJobCategory.None;
     }
 
@@ -85,34 +114,5 @@ namespace Maux36.Rimbody
                 _ => Vector3.zero
             };
         }
-
-    }
-    public class WorkOut
-    {
-        public string name;
-        public string reportString;
-        [Unsaved(false)]
-        public ushort id = 0;
-        public RimbodyWorkoutCategory Category = RimbodyWorkoutCategory.Balance;
-        public float cardio = 1f;
-        public float strength = 1f;
-        public bool playSound = false;
-        public ItemSpot spot = ItemSpot.None;
-        public InteractionType animationType = InteractionType.Still;
-        public Direction pawnDirection = Direction.Center;
-        public List<float> strengthParts;
-        public vectorSet movingpartAnimOffset;
-        public vectorSet movingpartAnimPeak;
-        public vectorSet pawnAnimOffset;
-        public vectorSet pawnAnimPeak;
-        public WorkoutTickHandler customWorkoutTickHandler;
-    }
-    public class ModExtensionRimbodyTarget : DefModExtension
-    {
-
-        public RimbodyTargetType Type = RimbodyTargetType.Building;
-        public bool moveBase = false;
-        public List<GraphicData> rimbodyTargetpartGraphics;
-        public List<WorkOut> workouts = new();
     }
 }

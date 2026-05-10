@@ -334,7 +334,7 @@ namespace Maux36.Rimbody
                             }
                             if(partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
                             {
-                                switch (jobExtension.TreatAs)
+                                switch (jobExtension.Category)
                                 {
                                     case RimbodyWorkoutCategory.Job:
                                         break;
@@ -368,7 +368,7 @@ namespace Maux36.Rimbody
                             }
                             if (partsToApplyFatigue != null) //Parts is needed to be treated as anything other than job.
                             {
-                                switch (giverExtension.TreatAs)
+                                switch (giverExtension.Category)
                                 {
                                     case RimbodyWorkoutCategory.Job:
                                         break;

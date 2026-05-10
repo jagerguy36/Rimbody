@@ -139,7 +139,7 @@ namespace Maux36.Rimbody
             switch (jobExtension.Category)
             {
                 case RimbodyWorkoutCategory.Strength:
-                    if (jobExtension.strengthParts != null)
+                    if (!jobExtension.GiverIgnore && jobExtension.strengthParts != null)
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         strengthHighscore = Math.Max(strengthHighscore, os);
@@ -149,7 +149,7 @@ namespace Maux36.Rimbody
                     }
                     break;
                 case RimbodyWorkoutCategory.Balance:
-                    if (jobExtension.strengthParts != null)
+                    if (!jobExtension.GiverIgnore && jobExtension.strengthParts != null)
                     {
                         var os = GetOptimalStrengthPartScore(jobExtension.strengthParts, jobExtension.strength);
                         balanceHighscore = Math.Max(balanceHighscore, os);
@@ -157,7 +157,7 @@ namespace Maux36.Rimbody
                     }
                     break;
                 case RimbodyWorkoutCategory.Cardio:
-                    if (jobExtension.strengthParts != null)
+                    if (!jobExtension.GiverIgnore && jobExtension.strengthParts != null)
                     {
                         if(jobDef == DefOf_Rimbody.Rimbody_Jogging)
                         {
