@@ -139,11 +139,11 @@ namespace Maux36.Rimbody
             Text.Anchor = TextAnchor.MiddleCenter;
             Text.Font = GameFont.Medium;
             GUI.color = Color.red;
-            Widgets.Label(warningRect, "Requires Restart");
+            Widgets.Label(warningRect, "RimbodyRestartWarn".Translate());
             GUI.color = Color.white;
             Rect rect2 = new Rect(warningRect.x, 50f, warningRect.width, 50f);
             listing_Standard.Begin(rect2);
-            if (listing_Standard.ButtonTextLabeled("Enable/Disable Rimbody Features:", "Reset"))
+            if (listing_Standard.ButtonTextLabeled("RimbodyEnableFeatures".Translate(), "RimbodyReset".Translate()))
             {
                 RimbodySettings.raceOption.Clear();
                 CompToHumanlikes.GenerateRaceSettings(false);
@@ -158,7 +158,7 @@ namespace Maux36.Rimbody
                 if (DefDatabase<ThingDef>.GetNamedSilentFail(item.defName) != null)
                 {
                     string modName = item.modName;
-                    listing_Standard.CheckboxLabeled(item.label.CapitalizeFirst(), ref item.isRimbodyEnabled, "From mod: " + modName);
+                    listing_Standard.CheckboxLabeled(item.label.CapitalizeFirst(), ref item.isRimbodyEnabled, "RimbodyFromMod".Translate(modName));
                 }
 
             }
