@@ -72,6 +72,10 @@ namespace Maux36.Rimbody
                 if (!actor.CanReserve(c)) return false;
                 if (!c.Standable(actor.Map)) return false;
                 if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
+                if (c.ContainsStaticFire(actor.Map)) return false;
+                if (actor.Map.zoneManager.ZoneAt(c) is Zone_Growing) return false;
+                Building edifice = c.GetEdifice(actor.Map);
+                if (edifice != null && edifice is Building_Trap) return false;
                 return true;
             }, pawn: actor);
             return workoutLocation;
@@ -79,19 +83,24 @@ namespace Maux36.Rimbody
 
         public static void ReturnChunk(Pawn pawn, bool shouldReturn)
         {
+            Job haulJob;
             if (shouldReturn)
             {
-                Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
+                haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
+                {
                     pawn.jobs.jobQueue.EnqueueFirst(haulJob);
-                else if (!TryFindSpotToPlaceHaulableCloseTo(pawn.carryTracker.CarriedThing, pawn, pawn.Position, out _))
-                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                    return;
+                }
             }
-            else
+            haulJob = HaulAIUtility.HaulAsideJobFor(pawn, pawn.carryTracker.CarriedThing);
+            if (haulJob != null)
             {
-                if (!TryFindSpotToPlaceHaulableCloseTo(pawn.carryTracker.CarriedThing, pawn, pawn.Position, out _))
-                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+                pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                return;
             }
+            pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+            return;
         }
 
         public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)

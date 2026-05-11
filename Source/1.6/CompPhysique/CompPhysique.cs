@@ -1130,6 +1130,7 @@ namespace Maux36.Rimbody
         private void ApplyGene()
         {
             geneCacheDirty = false;
+            isNonSenInt = false;
             _geneFatGainFactor = 1f;
             _geneFatLoseFactor = 1f;
             _geneMuscleGainFactor = 1f;
@@ -1137,20 +1138,19 @@ namespace Maux36.Rimbody
             if (!ModsConfig.BiotechActive) return;
             var genesListForReading = parentPawn.genes?.GenesListForReading;
             if (genesListForReading == null) return;
-            float fg = 1f, fl = 1f, mg = 1f, ml = 1f;
             for (int i = 0; i < genesListForReading.Count; i++)
             {
-                if (genesListForReading[i].def == DefOf_Rimbody.DiseaseFree && genesListForReading[i].Active)
+                var gene = genesListForReading[i];
+                if (gene.def == DefOf_Rimbody.DiseaseFree && gene.Active)
                 {
                     isNonSenInt = true;
                 }
-                else if (RimbodyDB.GeneFactors.TryGetValue(genesListForReading[i].def.shortHash, out (float, float, float, float) factors) && genesListForReading[i].Active)
+                else if (RimbodyDB.GeneFactors.TryGetValue(gene.def.shortHash, out (float fg, float fl, float mg, float ml) factors) && gene.Active)
 				{
-                    (fg, fl, mg, ml) = factors;
-                    _geneFatGainFactor *= fg;
-                    _geneFatLoseFactor *= fl;
-                    _geneMuscleGainFactor *= mg;
-                    _geneMuscleLoseFactor *= ml;
+                    _geneFatGainFactor *= factors.fg;
+                    _geneFatLoseFactor *= factors.fl;
+                    _geneMuscleGainFactor *= factors.mg;
+                    _geneMuscleLoseFactor *= factors.ml;
 				}
 			}
             //Log.Message($"{parentPawn.Name} gene applied: {_geneFatGainFactor} {_geneFatLoseFactor} {_geneMuscleGainFactor} {_geneMuscleLoseFactor}");
@@ -1158,7 +1158,6 @@ namespace Maux36.Rimbody
 
         public void NotifyActiveGeneCacheDirty()
         {
-            isNonSenInt = false;
             geneCacheDirty = true;
         }
 
