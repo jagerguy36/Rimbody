@@ -77,6 +77,23 @@ namespace Maux36.Rimbody
             return workoutLocation;
         }
 
+        public static void ReturnChunk(Pawn pawn, bool shouldReturn)
+        {
+            if (shouldReturn)
+            {
+                Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
+                if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
+                    pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                else if (!TryFindSpotToPlaceHaulableCloseTo(pawn.carryTracker.CarriedThing, pawn, pawn.Position, out _))
+                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+            }
+            else
+            {
+                if (!TryFindSpotToPlaceHaulableCloseTo(pawn.carryTracker.CarriedThing, pawn, pawn.Position, out _))
+                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+            }
+        }
+
         public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
         {
             foreach (IntVec3 item in t.OccupiedRect())

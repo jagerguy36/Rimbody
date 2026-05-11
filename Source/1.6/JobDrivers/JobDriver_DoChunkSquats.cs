@@ -91,16 +91,7 @@ namespace Maux36.Rimbody
             {
                 FinishWorkout(compPhysique);
                 Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, exWorkout.id);
-                if (shouldReturn)
-                {
-                    Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
-                    if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false) pawn.jobs.jobQueue.EnqueueFirst(haulJob);
-                    else pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-                }
-                else
-                {
-                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-                }
+                Rimbody_Utility.ReturnChunk(pawn, shouldReturn);
             });
             yield return workout;
         }
