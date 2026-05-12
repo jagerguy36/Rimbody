@@ -43,14 +43,15 @@ namespace Maux36.Rimbody
             }
         }
 
-        public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f)
+        public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f, Thing chunk = null)
         {
             foundSeat = null;
+            var actorMap = actor.Map
             IntVec3 workoutLocation = IntVec3.Invalid;
             if (lookForSeat)
             {
                 Thing thing = null;
-                Predicate<Thing> baseChairValidator = delegate (Thing t)
+                bool BaseChairValidator(Thing t)
                 {
                     if (t.def.building == null) return false;
                     if (t.IsForbidden(actor)) return false;
@@ -60,25 +61,40 @@ namespace Maux36.Rimbody
                     if (!actor.CanReserve(cell, maxPawns)) return false;
                     return true;
                 };
-                thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
+                thing = GenClosest.ClosestThingReachable(actor.Position, actorMap, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, (Thing t) => BaseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
                 if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
                 {
                     foundSeat = thing;
                     return workoutLocation;
                 }
             }
-            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
+            Predicate<Thing> standSpotValidator = delegate (IntVec3 c)
             {
                 if (!actor.CanReserve(c)) return false;
-                if (!c.Standable(actor.Map)) return false;
-                if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
-                if (c.ContainsStaticFire(actor.Map)) return false;
-                if (actor.Map.zoneManager.ZoneAt(c) is Zone_Growing) return false;
-                Building edifice = c.GetEdifice(actor.Map);
-                if (edifice != null && edifice is Building_Trap) return false;
+                if (!c.StandableAfterHauling(actorMap, chunk)) return false;
+                if (c.GetRegion(actorMap).type == RegionType.Portal) return false;
+                if (c.ContainsStaticFire(actorMap) || c.ContainsTrap(actorMap)) return false;
+                if (actorMap.zoneManager.ZoneAt(c) is Zone_Growing) return false;
                 return true;
-            }, pawn: actor);
+            };
+            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: (IntVec3 c) => standSpotValidator(c), pawn: actor);
             return workoutLocation;
+        }
+        public static bool StandableAfterHauling(this IntVec3 c, Map map, Thing hauled)
+        {
+            if (!c.Walkable(map))
+            {
+                return false;
+            }
+            List<Thing> list = map.thingGrid.ThingsListAt(c);
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] == hauled)
+                    continue;
+                if (list[i].def.passability != 0)
+                    return false;
+            }
+            return true;
         }
 
         public static void ReturnChunk(Pawn pawn, bool shouldReturn)
