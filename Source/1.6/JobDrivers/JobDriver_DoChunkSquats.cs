@@ -53,7 +53,7 @@ namespace Maux36.Rimbody
             });
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
-            yield return Toils_Rimbody.GotoSpotToWorkout(TargetIndex.B, ItemSpot.None);
+            yield return Toils_Rimbody.GotoSpotToWorkout(TargetIndex.B, ItemSpot.None, true);
 
             Toil workout;
             workout = ToilMaker.MakeToil("MakeNewToils");

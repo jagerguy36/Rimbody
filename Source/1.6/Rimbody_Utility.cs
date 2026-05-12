@@ -1,7 +1,7 @@
 ﻿using LudeonTK;
 using RimWorld;
 using RimWorld.Planet;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI;
@@ -46,7 +46,7 @@ namespace Maux36.Rimbody
         public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f, Thing chunk = null)
         {
             foundSeat = null;
-            var actorMap = actor.Map
+            var actorMap = actor.Map;
             IntVec3 workoutLocation = IntVec3.Invalid;
             if (lookForSeat)
             {
@@ -61,26 +61,26 @@ namespace Maux36.Rimbody
                     if (!actor.CanReserve(cell, maxPawns)) return false;
                     return true;
                 };
-                thing = GenClosest.ClosestThingReachable(actor.Position, actorMap, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, (Thing t) => BaseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
+                thing = GenClosest.ClosestThingReachable(actor.Position, actorMap, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, t => BaseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
                 if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
                 {
                     foundSeat = thing;
                     return workoutLocation;
                 }
             }
-            Predicate<Thing> standSpotValidator = delegate (IntVec3 c)
+            bool standSpotValidator(IntVec3 c)
             {
                 if (!actor.CanReserve(c)) return false;
-                if (!c.StandableAfterHauling(actorMap, chunk)) return false;
+                if (!StandableAfterHauling(c, actorMap, chunk)) return false;
                 if (c.GetRegion(actorMap).type == RegionType.Portal) return false;
                 if (c.ContainsStaticFire(actorMap) || c.ContainsTrap(actorMap)) return false;
                 if (actorMap.zoneManager.ZoneAt(c) is Zone_Growing) return false;
                 return true;
             };
-            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: (IntVec3 c) => standSpotValidator(c), pawn: actor);
+            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: c => standSpotValidator(c), pawn: actor);
             return workoutLocation;
         }
-        public static bool StandableAfterHauling(this IntVec3 c, Map map, Thing hauled)
+        public static bool StandableAfterHauling(IntVec3 c, Map map, Thing hauled)
         {
             if (!c.Walkable(map))
             {

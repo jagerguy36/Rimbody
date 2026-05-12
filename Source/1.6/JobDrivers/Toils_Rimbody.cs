@@ -6,7 +6,7 @@ namespace Maux36.Rimbody
 {
     internal class Toils_Rimbody
     {
-        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot = ItemSpot.None)
+        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot, bool considerCurrent = false)
         {
             Toil toil = new Toil();
             toil.initAction = delegate
@@ -28,7 +28,28 @@ namespace Maux36.Rimbody
                     lookForSpot = true;
                     spotThingDef = DefOf_Rimbody.Rimbody_ExerciseMat;
                 }
-                workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForSpot, spotThingDef, out Thing foundSeat, maxPawns);
+                if (considerCurrent)
+                {
+                    var actorMap = actor.Map;
+                    bool standSpotValidator(IntVec3 c)
+                    {
+                        if (!actor.CanReserve(c)) return false;
+                        if (!c.Standable(actorMap)) return false;
+                        if (c.GetRegion(actorMap).type == RegionType.Portal) return false;
+                        if (c.ContainsStaticFire(actorMap) || c.ContainsTrap(actorMap)) return false;
+                        if (actorMap.zoneManager.ZoneAt(c) is Zone_Growing) return false;
+                        return true;
+                    }
+                    if (standSpotValidator(actor.Position))
+                    {
+                        workoutLocation = actor.Position;
+                    }
+                }
+                Thing foundSeat = null;
+                if (workoutLocation == IntVec3.Invalid)
+                {
+                    workoutLocation = Rimbody_Utility.FindWorkoutSpot(actor, lookForSpot, spotThingDef, out foundSeat, maxPawns);
+                }
                 if (workoutLocation == IntVec3.Invalid)
                 {
                     actor.jobs.curDriver.EndJobWith(JobCondition.Incompletable);
