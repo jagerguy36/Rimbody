@@ -6,14 +6,14 @@ namespace Maux36.Rimbody
 {
     internal class Toils_Rimbody
     {
-        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot, bool considerCurrent = false)
+        public static Toil GotoSpotToWorkout(TargetIndex benchIndex, ItemSpot spot)
         {
             Toil toil = new Toil();
             toil.initAction = delegate
             {
                 Pawn actor = toil.actor;
                 Job curJob = actor.CurJob;
-                IntVec3 workoutLocation = IntVec3.Invalid;
+                IntVec3 workoutLocation = curJob.GetTarget(benchIndex).Cell;
                 bool lookForSpot = false;
                 ThingDef spotThingDef = null;
                 int maxPawns = 1;
@@ -28,7 +28,7 @@ namespace Maux36.Rimbody
                     lookForSpot = true;
                     spotThingDef = DefOf_Rimbody.Rimbody_ExerciseMat;
                 }
-                if (considerCurrent)
+                if (workoutLocation.IsValid)
                 {
                     var actorMap = actor.Map;
                     bool standSpotValidator(IntVec3 c)
@@ -40,9 +40,9 @@ namespace Maux36.Rimbody
                         if (actorMap.zoneManager.ZoneAt(c) is Zone_Growing) return false;
                         return true;
                     }
-                    if (standSpotValidator(actor.Position))
+                    if (!standSpotValidator(workoutLocation))
                     {
-                        workoutLocation = actor.Position;
+                        workoutLocation = IntVec3.Invalid;
                     }
                 }
                 Thing foundSeat = null;
