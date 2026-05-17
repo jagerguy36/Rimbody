@@ -18,9 +18,6 @@ namespace Maux36.Rimbody
         //Strength
         private static readonly float _fatiguelaborS = 1.4f;
         private static readonly float _workoutS = 2f; // [Strength]
-        //modern workout 1.6f
-        //primitive workout 1.5f
-        //bodyweight workout 1.4f
         private static readonly float _hardworkS = 1.2f; // [Melee], [Balance], [HardLabor]
         private static readonly float _workS = 0.8f; // [NormalLabor]
         private static readonly float _lightworkS = 0.4f; // [LightLabor]
@@ -123,6 +120,9 @@ namespace Maux36.Rimbody
                 return _geneMuscleLoseFactor;
             }
         }
+
+        //Stats
+        public float brawn = 1f;
 
         //Gain
         public float gain = 0f;
@@ -601,6 +601,10 @@ namespace Maux36.Rimbody
 
             //Apply New Values
             ApplyChangedPhysique(newBodyFat, newMuscleMass);
+            if (Rimbody.StatModuleLoaded)
+            {
+                UpdateBrawnValue();
+            }
 
             //BodyChange
             if (checkFlag == true)
@@ -1161,6 +1165,22 @@ namespace Maux36.Rimbody
             geneCacheDirty = true;
         }
 
+        public void UpdateBrawnValue()
+        {
+            var newBrawn = GenMath.RoundedHundredth(GetBrawnValue());
+            if (brawn != newBrawn)
+            {
+                brawn = newBrawn;
+                parentPawn.health.capacities.Notify_CapacityLevelsDirty();
+            }
+        }
+        public float GetBrawnValue()
+        {
+            if(MuscleMass >= 25f)
+                return (MuscleMass - 25f) * 0.04f + 1f;
+            return 1f / (2f - (0.04f * MuscleMass));
+        }
+
         //Scribe
         public override void PostExposeData()
         {
@@ -1240,6 +1260,10 @@ namespace Maux36.Rimbody
 
                         memory.Enqueue(((int)category << 16) | id);
                     }
+                }
+                if (Rimbody.StatModuleLoaded && HasPhysique)
+                {
+                    brawn = GenMath.RoundedHundredth(GetBrawnValue());
                 }
             }
 

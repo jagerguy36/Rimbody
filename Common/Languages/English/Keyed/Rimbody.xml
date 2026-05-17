@@ -96,7 +96,7 @@
   <reactivetraining_name>Reactive Training</reactivetraining_name>
   <reactivetraining_report>Doing reactive training with a spinning dummy</reactivetraining_report>
   <RimbodyRestartWarn>Requires Restart</RimbodyRestartWarn>
-  <RimbodyEnableFeatures>Enable Rimbody Features</RimbodyEnableFeatures>
+  <RimbodyRaceSettings>Alien Race Settings</RimbodyRaceSettings>
   <RimbodyReset>Reset</RimbodyReset>
   <RimbodyFromMod>From: {0}</RimbodyFromMod>
 </LanguageData>

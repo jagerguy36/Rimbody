@@ -15,6 +15,7 @@ namespace Maux36.Rimbody
         public static bool WayBetterRomanceLoaded = false;
         public static bool ExosuitFrameworkLoaded = false;
         public static bool CombatExtendedLoaded = false;
+        public static bool StatModuleLoaded = false;
 
         public Rimbody(ModContentPack content) : base(content)
         {
@@ -25,12 +26,15 @@ namespace Maux36.Rimbody
             {
                 HARCompat.Activate();
                 HARCompat.Active = true;
+                labelPCT = 0.7f;
+                divider = 0.55f;
             }
 
             if (ModsConfig.IsActive("mlie.syrindividuality")) IndividualityLoaded = true;
             if (ModsConfig.IsActive("divinederivative.romance")) WayBetterRomanceLoaded = true;
             if (ModsConfig.IsActive("aoba.exosuit.framework")) ExosuitFrameworkLoaded = true;
             if (ModsConfig.IsActive("ceteam.combatextended")) CombatExtendedLoaded = true;
+            if (ModsConfig.IsActive("maux36.rimbody.statmodule")) StatModuleLoaded = true;
         }
 
         public override string SettingsCategory()
@@ -42,8 +46,8 @@ namespace Maux36.Rimbody
         private static Vector2 rightScrollPosition = Vector2.zero;
         private static float totalContentHeight = ModsConfig.BiotechActive?820f:770f;
         private const float ScrollBarWidthMargin = 18f;
-        private const float divider = 0.55f;
-        private const float labelPCT = 0.7f;
+        private static float divider = 1f;
+        private static float labelPCT = 0.5f;
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Listing_Standard listing_Standard = new Listing_Standard();
@@ -57,7 +61,7 @@ namespace Maux36.Rimbody
 
             listing_Standard.Label("RimbodyGeneralSetting".Translate());
             listing_Standard.Gap(12f);
-            RimbodySettings.rateFactor = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyRateFactor".Translate() + " ("+"Default".Translate()+" 1): " + RimbodySettings.rateFactor, RimbodySettings.rateFactor, 0.1f, 5f, labelPCT, tooltip: "RimbodyRateFactorTooltip".Translate()), 1);
+            RimbodySettings.rateFactor = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyRateFactor".Translate() + " (" + "Default".Translate() + " 1): " + RimbodySettings.rateFactor, RimbodySettings.rateFactor, 0.1f, 5f, labelPCT, tooltip: "RimbodyRateFactorTooltip".Translate()), 1);
             listing_Standard.Gap(6f);
             RimbodySettings.WorkOutGainEfficiency = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyWorkOutGainEfficiency".Translate() + " (" + "Default".Translate() + " 1.0): " + RimbodySettings.WorkOutGainEfficiency, RimbodySettings.WorkOutGainEfficiency, 1f, 2f, labelPCT, tooltip: "RimbodyWorkOutGainEfficiencyTooltip".Translate()), 1);
             listing_Standard.Gap(6f);
@@ -101,7 +105,7 @@ namespace Maux36.Rimbody
 
             listing_Standard.Label("RimbodyThreshholdSetting".Translate());
             listing_Standard.Gap(12f);
-            RimbodySettings.fatThresholdFat = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyFatThreshholdFat".Translate()+ " (" + "Default".Translate() + " 35): " + RimbodySettings.fatThresholdFat, RimbodySettings.fatThresholdFat, 25, 50, labelPCT, tooltip: "RimbodyFatThreshholdFatTooltip".Translate()),1);
+            RimbodySettings.fatThresholdFat = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyFatThreshholdFat".Translate() + " (" + "Default".Translate() + " 35): " + RimbodySettings.fatThresholdFat, RimbodySettings.fatThresholdFat, 25, 50, labelPCT, tooltip: "RimbodyFatThreshholdFatTooltip".Translate()), 1);
             RimbodySettings.fatThresholdThin = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyFatThresholdThin".Translate() + " (" + "Default".Translate() + " 15): " + RimbodySettings.fatThresholdThin, RimbodySettings.fatThresholdThin, 0, 25, labelPCT, tooltip: "RimbodyFatThresholdThinTooltip".Translate()), 1);
             listing_Standard.Gap(6f);
             RimbodySettings.muscleThresholdHulk = (float)Math.Round(listing_Standard.SliderLabeled("RimbodyMuscleThresholdHulk".Translate() + " (" + "Default".Translate() + " 35): " + RimbodySettings.muscleThresholdHulk, RimbodySettings.muscleThresholdHulk, 25, 50, labelPCT, tooltip: "RimbodyMuscleThresholdHulkTooltip".Translate()), 1);
@@ -135,35 +139,38 @@ namespace Maux36.Rimbody
 
             listing_Standard.End();
             Widgets.EndScrollView();
-            Rect warningRect = new Rect(leftOutRect.xMax+10f, 0f, inRect.width - leftOutRect.width - 20f, 50f);
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Text.Font = GameFont.Medium;
-            GUI.color = Color.red;
-            Widgets.Label(warningRect, "RimbodyRestartWarn".Translate());
-            GUI.color = Color.white;
-            Rect rect2 = new Rect(warningRect.x, 50f, warningRect.width, 50f);
-            listing_Standard.Begin(rect2);
-            if (listing_Standard.ButtonTextLabeled("RimbodyEnableFeatures".Translate(), "RimbodyReset".Translate()))
+            if (HARCompat.Active)
             {
-                RimbodySettings.raceOption.Clear();
-                CompToHumanlikes.GenerateRaceSettings(false);
-            }
-            listing_Standard.End();
-            Rect outRect = new Rect(warningRect.x, 100f, warningRect.width, inRect.height - 10f);
-            Rect val = new Rect(0f, 0f, outRect.width - 30f, (float)RimbodySettings.raceOption.Count * 24f);
-            Widgets.BeginScrollView(outRect, ref rightScrollPosition, val);
-            listing_Standard.Begin(val);
-            foreach (RaceSetting item in RimbodySettings.raceOption.Values.OrderBy((RaceSetting x) => x.defName))
-            {
-                if (DefDatabase<ThingDef>.GetNamedSilentFail(item.defName) != null)
+                Rect warningRect = new Rect(leftOutRect.xMax + 10f, 0f, inRect.width - leftOutRect.width - 20f, 50f);
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Text.Font = GameFont.Medium;
+                GUI.color = Color.red;
+                Widgets.Label(warningRect, "RimbodyRestartWarn".Translate());
+                GUI.color = Color.white;
+                Rect rect2 = new Rect(warningRect.x, 50f, warningRect.width, 50f);
+                listing_Standard.Begin(rect2);
+                if (listing_Standard.ButtonTextLabeled("RimbodyRaceSettings".Translate(), "RimbodyReset".Translate()))
                 {
-                    string modName = item.modName;
-                    listing_Standard.CheckboxLabeled(item.label.CapitalizeFirst(), ref item.isRimbodyEnabled, "RimbodyFromMod".Translate(modName));
+                    RimbodySettings.raceOption.Clear();
+                    CompToHumanlikes.GenerateRaceSettings(false);
                 }
+                listing_Standard.End();
+                Rect outRect = new Rect(warningRect.x, 100f, warningRect.width, inRect.height - 10f);
+                Rect val = new Rect(0f, 0f, outRect.width - 30f, (float)RimbodySettings.raceOption.Count * 24f);
+                Widgets.BeginScrollView(outRect, ref rightScrollPosition, val);
+                listing_Standard.Begin(val);
+                foreach (RaceSetting item in RimbodySettings.raceOption.Values.OrderBy((RaceSetting x) => x.defName))
+                {
+                    if (DefDatabase<ThingDef>.GetNamedSilentFail(item.defName) != null)
+                    {
+                        string modName = item.modName;
+                        listing_Standard.CheckboxLabeled(item.label.CapitalizeFirst(), ref item.isRimbodyEnabled, "RimbodyFromMod".Translate(modName));
+                    }
 
+                }
+                listing_Standard.End();
+                Widgets.EndScrollView();
             }
-            listing_Standard.End();
-            Widgets.EndScrollView();
         }
     }
 }

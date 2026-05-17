@@ -96,7 +96,7 @@
   <reactivetraining_name>반응 훈련</reactivetraining_name>
   <reactivetraining_report>회전형 더미로 반응 훈련 중</reactivetraining_report>
   <RimbodyRestartWarn>재시작 필요</RimbodyRestartWarn>
-  <RimbodyEnableFeatures>림바디 활성화</RimbodyEnableFeatures>
+  <RimbodyRaceSettings>HAR 종족 설정</RimbodyRaceSettings>
   <RimbodyReset>설정 리셋</RimbodyReset>
   <RimbodyFromMod>출처: {0}</RimbodyFromMod>
 </LanguageData>
