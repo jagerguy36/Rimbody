@@ -43,6 +43,18 @@ namespace Maux36.Rimbody
         public static ThingDef Rimbody_FlatBench;
         public static ThingDef Rimbody_ExerciseMat;
 
+        public static TraitDef SpeedOffset;
+        [MayRequireBiotech]
+	    public static GeneDef DiseaseFree;
+        [MayRequireBiotech]
+        public static GeneDef Body_Fat;
+        [MayRequireBiotech]
+        public static GeneDef Body_Thin;
+        [MayRequireBiotech]
+        public static GeneDef Body_Hulk;
+        [MayRequireBiotech]
+        public static GeneDef Body_Standard;
+
         static DefOf_Rimbody()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(DefOf_Rimbody));

@@ -45,14 +45,14 @@ namespace Maux36.Rimbody
         protected override IEnumerable<Toil> MakeNewToils()
         {
             var compPhysique = pawn.compPhysique();
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
-            memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
+            RimbodyDB.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
+            memoryFactor = compPhysique.InMemory(exWorkout.id) ? 0.9f : 1f;
             yield return Toils_Reserve.ReserveDestination(TargetIndex.A);
             yield return Toils_Goto.GotoCell(TargetIndex.A, PathEndMode.OnCell);
 
@@ -102,7 +102,7 @@ namespace Maux36.Rimbody
             {
                 FinishWorkout(compPhysique);
                 Rimbody_Utility.TryGainGymThought(pawn);
-                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, job.def.defName);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, exWorkout.id);
                 pawn.jobs.posture = PawnPosture.Standing;
                 pawn.SetPawnBodyAngleOverride(-1f);
             });

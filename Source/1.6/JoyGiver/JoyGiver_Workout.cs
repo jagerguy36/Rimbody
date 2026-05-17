@@ -8,14 +8,15 @@ namespace Maux36.Rimbody
 {
     public class JoyGiver_Workout : JoyGiver
     {
-        private static List<Thing> tmpCandidates = [];
-        private static Dictionary<int, float> workoutCache = new Dictionary<int, float>();
+        private static readonly List<Thing> tmpCandidates = [];
+        private static readonly Dictionary<int, float> workoutCache = [];
         private static readonly (RimbodyWorkoutCategory type, Func<CompPhysique, float> getPriority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[] WorkoutGivers =
-        {
+        [
             (RimbodyWorkoutCategory.Strength, JobGiver_DoStrengthBuilding.GetActualPriority, JobGiver_DoStrengthBuilding.TryGiveJobActual),
             (RimbodyWorkoutCategory.Balance, JobGiver_DoBalanceBuilding.GetActualPriority, JobGiver_DoBalanceBuilding.TryGiveJobActual),
             (RimbodyWorkoutCategory.Cardio, JobGiver_DoCardioBuilding.GetActualPriority, JobGiver_DoCardioBuilding.TryGiveJobActual)
-        };
+        ];
+        private static readonly (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[] topGivers = new (RimbodyWorkoutCategory, float, Func<Pawn, List<Thing>, Dictionary<int, float>, Job>)[3];
         public override float GetChance(Pawn pawn)
         {
             if (!RimbodySettings.workoutDuringRecTime)
@@ -25,63 +26,66 @@ namespace Maux36.Rimbody
             return base.GetChance(pawn);
         }
 
+        public override bool CanBeGivenTo(Pawn pawn)
+        {
+            var compPhysique = pawn.compPhysique();
+            if (compPhysique == null)
+                return false;
+            // Exhaustion not implemented yet
+            // if (RimbodySettings.useExhaustion && compPhysique.resting)
+            //     return false;
+            if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick)
+                return false;
+            if (pawn.ageTracker?.CurLifeStage?.developmentalStage != DevelopmentalStage.Adult)
+                return false;
+            if (Rimbody_Utility.TooTired(pawn))
+                return false;
+            if (!pawn.IsColonist && !pawn.IsPrisonerOfColony)
+                return false;
+            if (HealthAIUtility.ShouldSeekMedicalRest(pawn))
+                return false;
+            return base.CanBeGivenTo(pawn);
+        }
+
         public override Job TryGiveJob(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
+            topGivers[0].priority = 0f;
+            topGivers[1].priority = 0f;
+            topGivers[2].priority = 0f;
+            int count = 0;
+
+            for (int i = 0; i < 3; i++)
             {
-                if (Rimbody_Utility.TooTired(pawn)) //Too tired
+                var giver = WorkoutGivers[i];
+                float priority = giver.getPriority(compPhysique);
+                if (priority <= 0f) continue;
+
+                // Insert into top 3 list
+                for (int j = 0; j <= count; j++)
                 {
-                    return null;
+                    if (j == count || priority > topGivers[j].priority)
+                    {
+                        if (count < 3) count++;
+                        for (int k = count - 1; k > j; k--)
+                            topGivers[k] = topGivers[k - 1];
+
+                        topGivers[j] = (giver.type, priority, giver.tryGiveJob);
+                        break;
+                    }
                 }
-                if (pawn.IsColonist || pawn.IsPrisonerOfColony)
+            }
+            for (int i = 0; i < count; i++)
+            {
+                var current = topGivers[i];
+                if (current.priority <= 0f || current.tryGiveJob == null) continue;
+                Job job = current.tryGiveJob(pawn, tmpCandidates, workoutCache);
+                tmpCandidates.Clear();
+                workoutCache.Clear();
+                if (job != null)
                 {
-                    if (compPhysique == null) return null;
-                    if (RimbodySettings.useExhaustion && compPhysique.resting) return null;
-                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick) return null;
-                    if (HealthAIUtility.ShouldSeekMedicalRest(pawn)) return null;
-                    bool noStrength = compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod;
-                    var topGivers = new (RimbodyWorkoutCategory type, float priority, Func<Pawn, List<Thing>, Dictionary<int, float>, Job> tryGiveJob)[3];
-                    int count = 0;
-
-                    foreach (var giver in WorkoutGivers)
-                    {
-                        float priority = (noStrength && giver.type == RimbodyWorkoutCategory.Strength) ? 0f : giver.getPriority(compPhysique);
-                        if (priority <= 0f)
-                            continue;
-
-                        // Insert into top 3 list
-                        for (int i = 0; i <= count; i++)
-                        {
-                            if (i == count || priority > topGivers[i].priority)
-                            {
-                                if (count < 3) count++;
-                                for (int j = count - 1; j > i; j--)
-                                    topGivers[j] = topGivers[j - 1];
-                                topGivers[i] = (giver.type, priority, giver.tryGiveJob);
-                                break;
-                            }
-                        }
-                    }
-
-                    foreach (var giver in topGivers)
-                    {
-                        if (giver.tryGiveJob == null)
-                            continue;
-                        if (giver.priority <= 0f) return null;
-
-                        tmpCandidates.Clear();
-                        workoutCache.Clear();
-
-                        Job job = giver.tryGiveJob(pawn, tmpCandidates, workoutCache);
-                        if (job != null)
-                        {
-                            compPhysique.AssignedTick = 2000;
-                            return job;
-                        }
-                    }
-
-                    return null;
+                    compPhysique.AssignedTick = 2000;
+                    return job;
                 }
             }
             return null;

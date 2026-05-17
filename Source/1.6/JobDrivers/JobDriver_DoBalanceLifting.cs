@@ -113,12 +113,12 @@ namespace Maux36.Rimbody
         {
             var compPhysique = pawn.compPhysique();
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
+            RimbodyDB.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
             Thing_WorkoutAnimated thingAnimated = (Thing_WorkoutAnimated)job.GetTarget(TargetIndex.A).Thing;
             if (workoutIndex < 0)
             {
@@ -182,7 +182,7 @@ namespace Maux36.Rimbody
                 thingAnimated.ghostOffset = Vector3.zero;
                 pawn.SetPawnBodyAngleOverride(-1f);
                 Rimbody_Utility.TryGainGymThought(pawn);
-                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Balance, exWorkout.name);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Balance, exWorkout.id);
                 Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
                 if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
                 {
@@ -196,21 +196,6 @@ namespace Maux36.Rimbody
             if (tickProgress > 0)
             {
                 drawPos += itemOffset;
-                return true;
-            }
-            return false;
-        }
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
-        }
-        public static bool TooTired(Pawn actor)
-        {
-            if (((actor != null) & (actor.needs != null)) && actor.needs.rest != null && (double)actor.needs.rest.CurLevel < 0.17f)
-            {
                 return true;
             }
             return false;

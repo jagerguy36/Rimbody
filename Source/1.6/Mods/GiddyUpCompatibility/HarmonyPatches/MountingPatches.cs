@@ -9,11 +9,12 @@ namespace Muax36.Rimbody_GiddyUpCompatibility
     [HarmonyPatch(typeof(CompPhysique), "HarmonyCheck")]
     public class CompPhysique_HarmonyCheck_Patch
     {
-        public static bool Prefix(ref string __result, Pawn ___parent)
+        private static readonly int Key = RimbodyDB.HarmonyInjectorID["GiddyUp"];
+        public static bool Prefix(ref int __result, Pawn ___parent)
         {
             if (___parent?.pather?.MovingNow == true && ExtendedDataStorage.isMounted.Contains(___parent.thingIDNumber))
             {
-                __result = "giddyup_mounted";
+                __result = Key;
                 return false;
             }
             return true;
@@ -23,9 +24,10 @@ namespace Muax36.Rimbody_GiddyUpCompatibility
     [HarmonyPatch(typeof(CompPhysique), "HarmonyValues")]
     public class CompPhysique_HarmonyValues_Patch
     {
-        public static bool Prefix(ref (float, float, List<float>) __result, string harmonyKey)
+        private static readonly int Key = RimbodyDB.HarmonyInjectorID["GiddyUp"];
+        public static bool Prefix(ref (float, float, List<float>) __result, int harmonyKey)
         {
-            if (harmonyKey == "giddyup_mounted")
+            if (harmonyKey == Key)
             {
                 __result = (0.3f, 0.35f, null); //Activity
                 return false;

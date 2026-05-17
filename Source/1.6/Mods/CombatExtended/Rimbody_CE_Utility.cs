@@ -18,11 +18,10 @@ namespace Maux36.Rimbody_CE
 
         public static void TryUpdateInventory_CE(Pawn pawn)
         {
-            if (pawn.needs?.food != null && (Rimbody_Utility.isColonyMember(pawn) || pawn.IsPrisonerOfColony) && Rimbody_Utility.shouldTick(pawn))
+            if (Rimbody_Utility.shouldTrack(pawn))
             {
                 CompPhysique compPhysique = pawn.compPhysique();
-                if (compPhysique == null) return;
-                if (compPhysique.BodyFat <= -1f || compPhysique.MuscleMass <= -1f) return;
+                if (compPhysique?.HasPhysique != true) return;
                 UpdateCarryweight_CE(pawn, compPhysique);
             }
         }

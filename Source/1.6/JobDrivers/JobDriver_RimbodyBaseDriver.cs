@@ -1,5 +1,6 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -76,16 +77,20 @@ namespace Maux36.Rimbody
             var numVarieties = ext.workouts.Count;
             if (numVarieties == 1)
             {
-                if (category == RimbodyWorkoutCategory.Strength) memoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[0].name) ? 0.9f : 1f;
-                else if (category == RimbodyWorkoutCategory.Balance) memoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[0].name) ? 0.9f : 1f;
+                if (category == RimbodyWorkoutCategory.Strength || category == RimbodyWorkoutCategory.Balance)
+                {
+                    memoryFactor = compPhysique.InMemory(ext.workouts[0].id) ? 0.9f : 1f;
+                }
                 return 0;
             }
             for (int i = 0; i < numVarieties; i++)
             {
                 if (ext.workouts[i].Category != category) continue;
                 float tmpMemoryFactor = 1f;
-                if (category == RimbodyWorkoutCategory.Strength) tmpMemoryFactor = compPhysique.memory.Contains("strength|" + ext.workouts[i].name) ? 0.9f : 1f;
-                else if (category == RimbodyWorkoutCategory.Balance) tmpMemoryFactor = compPhysique.memory.Contains("balance|" + ext.workouts[i].name) ? 0.9f : 1f;
+                if (category == RimbodyWorkoutCategory.Strength || category == RimbodyWorkoutCategory.Balance)
+                {
+                    tmpMemoryFactor = compPhysique.InMemory(ext.workouts[0].id) ? 0.9f : 1f;
+                }
                 float tmpScore = tmpMemoryFactor * compPhysique.GetWorkoutScore(category, ext.workouts[i]);
                 if (tmpScore > score)
                 {

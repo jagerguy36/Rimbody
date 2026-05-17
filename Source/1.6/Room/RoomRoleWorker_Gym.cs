@@ -13,7 +13,7 @@ namespace Maux36.Rimbody
             {
                 Thing thing = containedAndAdjacentThings[i];
                 if (thing.def.IsBed && thing.def.building.bed_humanlike) return 0f;
-                if (RimbodyDefLists.WorkoutBuildingHash.Contains(thing.def.shortHash)) num++;
+                if (RimbodyDB.WorkoutBuildingHash.Contains(thing.def.shortHash)) num++;
             }
 
             return num * 8f;

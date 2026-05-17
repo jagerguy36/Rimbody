@@ -13,26 +13,29 @@ namespace Maux36.Rimbody_Individuality
     [HarmonyPatch(typeof(CompPhysique), "PhysiqueValueSetup")]
     public class WeightPatch
     {
-        static void Postfix(CompPhysique __instance)
+        static void Postfix(CompPhysique __instance, Pawn ___parentPawn, bool __result)
         {
-            var compPhysique = __instance;
-            var compIndividuality = compPhysique.parent.TryGetComp<CompIndividuality>();
-            if (compIndividuality != null && (compPhysique.BodyFat != -2))
+            if (!__result) return;
+            var compIndividuality = ___parentPawn.TryGetComp<CompIndividuality>();
+            if (compIndividuality != null && __instance.HasPhysique)
             {
-                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (compPhysique.BodyFat + compPhysique.MuscleMass)) - 20f);
+                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (__instance.BodyFat + __instance.MuscleMass)))-20;
             }
         }
     }
 
-    [HarmonyPatch(typeof(CompPhysique), "PhysiqueTick")]
+    [HarmonyPatch(typeof(CompPhysique), "ApplyChangedPhysique")]
     public class CompPhysiqueTickPatch
     {
-        public static void Postfix(CompPhysique __instance)
+        public static void Prefix(CompPhysique __instance, Pawn ___parentPawn, float newBodyFat, float newMuscleMass)
         {
-            var compIndividuality = __instance.parent.TryGetComp<CompIndividuality>();
-            if (compIndividuality != null && __instance.BodyFat >= 0 && __instance.MuscleMass >= 0)
+            int oldWeight = Mathf.RoundToInt(0.7f * (__instance.BodyFat + __instance.MuscleMass));
+            int newWeight = Mathf.RoundToInt(0.7f * (newBodyFat + newMuscleMass));
+            if (oldWeight == newWeight) return;
+            var compIndividuality = ___parentPawn.TryGetComp<CompIndividuality>();
+            if (compIndividuality != null)
             {
-                compIndividuality.BodyWeight = Mathf.RoundToInt((0.7f * (__instance.BodyFat + __instance.MuscleMass)) - 20f);
+                compIndividuality.BodyWeight = newWeight -20;
             }
         }
     }
@@ -284,7 +287,7 @@ namespace Maux36.Rimbody_Individuality
             num += rect8.height + 2f;
             var rect9 = new Rect(0f, num, rect.width - 10f, 24f);
 
-            if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
+            if (pawn.IsColonist || pawn.IsPrisonerOfColony)
             {
                 var gaingoalrect = new Rect(10f, num + 2f, 80f, 24f);
                 Widgets.Label(gaingoalrect, "└ " + "RimbodyGoal".Translate());
@@ -335,7 +338,7 @@ namespace Maux36.Rimbody_Individuality
 
             num += rect10.height + 2f;
             var rect11 = new Rect(0f, num, rect.width - 10f, 24f);
-            if (pawn.IsColonistPlayerControlled || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
+            if (pawn.IsColonist || pawn.IsPrisonerOfColony)
             {
                 var dietgoalrect = new Rect(10f, num + 2f, 80f, 24f);
                 Widgets.Label(dietgoalrect, "└ " + "RimbodyGoal".Translate());

@@ -95,4 +95,8 @@
   <kettlebellswing_report>케틀벨 스윙 중</kettlebellswing_report>
   <reactivetraining_name>반응 훈련</reactivetraining_name>
   <reactivetraining_report>회전형 더미로 반응 훈련 중</reactivetraining_report>
+  <RimbodyRestartWarn>재시작 필요</RimbodyRestartWarn>
+  <RimbodyRaceSettings>HAR 종족 설정</RimbodyRaceSettings>
+  <RimbodyReset>설정 리셋</RimbodyReset>
+  <RimbodyFromMod>출처: {0}</RimbodyFromMod>
 </LanguageData>

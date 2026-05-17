@@ -93,10 +93,10 @@ namespace Maux36.Rimbody
             this.EndOnDespawnedOrNull(TargetIndex.A);
             this.FailOnForbidden(TargetIndex.A);
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            Rimbody_Utility.EndOnTired(this);
-            RimbodyDefLists.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
+            RimbodyDB.ThingModExDB.TryGetValue(TargetThingA.def.shortHash, out var ext);
             Building_WorkoutAnimated buildingAnimated = TargetThingA as Building_WorkoutAnimated;
 
             if (workoutIndex < 0) workoutIndex = GetWorkoutInt(compPhysique, ext, RimbodyWorkoutCategory.Strength, out memoryFactor);
@@ -151,7 +151,7 @@ namespace Maux36.Rimbody
                 pawn.SetPawnBodyAngleOverride(-1f);
                 lyingRotation = Rot4.Invalid;
                 Rimbody_Utility.TryGainGymThought(pawn);
-                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, ext.workouts[workoutIndex].name);
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, ext.workouts[workoutIndex].id);
             });
             yield return workout;
         }

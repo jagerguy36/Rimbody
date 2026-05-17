@@ -11,7 +11,7 @@
 		<leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
 		<filthLeaving>Filth_RubbleBuilding</filthLeaving>
 		<statBases>
-			<SellPriceFactor>0.70</SellPriceFactor>
+			<SellPriceFactor>0.2</SellPriceFactor>
 		</statBases>
 	</ThingDef>
 
@@ -286,7 +286,7 @@
 						<name>treadmill_name</name>
 						<reportString>treadmill_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>1.5</cardio>
+						<cardio>1.2</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
@@ -392,7 +392,7 @@
 						<name>cycling_name</name>
 						<reportString>cycling_report</reportString>
 						<Category>Cardio</Category>
-						<cardio>1.5</cardio>
+						<cardio>1.2</cardio>
 						<strength>0.25</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Still</animationType>
@@ -497,7 +497,7 @@
 						<name>benchpress_name</name>
 						<reportString>benchpress_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<pawnDirection>LyingFrontSame</pawnDirection>
 						<animationType>Building</animationType>
@@ -622,7 +622,7 @@
 						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
@@ -668,7 +668,7 @@
 						<name>squats_name</name>
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
@@ -793,7 +793,7 @@
 						<name>deadlift_name</name>
 						<reportString>deadlift_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
@@ -839,7 +839,7 @@
 						<name>squats_name</name>
 						<reportString>squats_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>1.9</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>
@@ -955,7 +955,7 @@
 						<name>pullups_name</name>
 						<reportString>pullups_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<pawnDirection>FaceOpposite</pawnDirection>
 						<animationType>Building</animationType>
@@ -994,7 +994,7 @@
 						<name>dips_name</name>
 						<reportString>dips_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<pawnDirection>FaceSame</pawnDirection>
 						<animationType>Building</animationType>

@@ -85,7 +85,7 @@ namespace Maux36.Rimbody
                 BodyTypeDefOf.Thin
             };
 
-            var human = DefDatabase<ThingDef>.GetNamed("Human", true);
+            var human = ThingDefOf.Human;
             var expectedLifestages = human.race.lifeStageAges;
 
             var allowedBodyTypes = AllowedBodyTypes(pawnDef)?.ToHashSet();
@@ -97,15 +97,35 @@ namespace Maux36.Rimbody
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
 
             var lifestages = pawnDef.race.lifeStageAges;
-            bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
+            bool ageEqual = true;
+            if (expectedLifestages.Count != lifestages.Count)
+            {
+                ageEqual = false;
+            }
+            else
+            {
+                for (int i = 0; i < expectedLifestages.Count; i++)
+                {
+                    if (lifestages[i].def != expectedLifestages[i].def || lifestages[i].minAge != expectedLifestages[i].minAge)
+                    {
+                        ageEqual = false;
+                        break;
+                    }
+                }
+            }
 
             bool isValid = allPresent && ageEqual;
             _cache[pawnDef.shortHash] = isValid;
+            //Log.Message($"{pawnDef.defName} | Validicheck:");
             //string shower = string.Join(", ", allowedBodyTypes.Select(thingDef => thingDef.defName));
-            //Log.Message(shower);
-            //string shower2 = string.Join(", ", expectedBodyTypes.Select(thingDef => thingDef.defName));
-            //Log.Message(shower2);
-            //Log.Message($"{pawn.Name} bodytypes yes: {allPresent}, life yes: {ageEqual}");
+            //Log.Message("Bodytypes: " + shower);
+            //string shower3 = string.Join(", ", lifestages.Select(stage => stage.def.defName));
+            //Log.Message("LifeStage defName: " + shower3);
+            //string shower4 = string.Join(", ", lifestages.Select(stage => stage.def.defName));
+            //Log.Message("LifeStage defName: " + shower3);
+            //string shower2 = string.Join(", ", lifestages.Select(stage => stage.minAge));
+            //Log.Message("LifeStage minAge: "+shower2);
+            //Log.Message($"{pawnDef.defName} bodytypes yes: {allPresent}, life yes: {ageEqual}");
             return isValid;
         }
 

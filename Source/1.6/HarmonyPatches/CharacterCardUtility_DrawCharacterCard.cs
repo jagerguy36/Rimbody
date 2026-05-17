@@ -33,19 +33,11 @@ namespace Maux36.Rimbody
 
         public static void RimbodyCardButton(ref float x, Rect rect, Pawn pawn, Rect creationRect)
         {
-            if (pawn == null)
-            {
-                return;
-            }
-
+            if (pawn == null) return;
             var compPhysique = pawn.compPhysique();
-            if (compPhysique == null || compPhysique.MuscleMass <= -1 || compPhysique.BodyFat <= -1)
-            {
-                return;
-            }
+            if (compPhysique?.HasPhysique != true) return;
 
             //IF Individuality loaded then return the modified one.
-
             TipSignal tip = "RimbodyTooltip".Translate();
             var rect2 = new Rect(x, 2.7f, 24f, 24f);
             x -= 40f;

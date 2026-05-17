@@ -31,17 +31,18 @@ namespace Maux36.Rimbody
         {
             var compPhysique = pawn.compPhysique();
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            //this.AddEndCondition(() => (RimbodySettings.useExhaustion && compPhysique.resting) ? JobCondition.InterruptForced : JobCondition.Ongoing);
+            this.AddEndCondition(() => (Rimbody_Utility.TooTired(pawn)) ? JobCondition.InterruptForced : JobCondition.Ongoing);
             this.AddEndCondition(() => (compPhysique.gain >= compPhysique.gainMax) ? JobCondition.InterruptForced : JobCondition.Ongoing);
-            Rimbody_Utility.EndOnTired(this);
 
             //Set up workout
-            RimbodyDefLists.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
-            memoryFactor = compPhysique.memory.Contains("strength|" + job.def.defName) ? 0.9f : 1f;
+            RimbodyDB.JobModExDB.TryGetValue(job.def.shortHash, out var exWorkout);
+            memoryFactor = compPhysique.InMemory(exWorkout.id) ? 0.9f : 1f;
             yield return Toils_General.DoAtomic(delegate
             {
                 shouldReturn = TargetThingA.IsInValidStorage();
                 job.count = 1;
+                job.SetTarget(TargetIndex.B, TargetLocA);
             });
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A).FailOnSomeonePhysicallyInteracting(TargetIndex.A);
             yield return Toils_Haul.StartCarryThing(TargetIndex.A).FailOnDestroyedNullOrForbidden(TargetIndex.A);
@@ -82,17 +83,8 @@ namespace Maux36.Rimbody
             workout.AddFinishAction(delegate
             {
                 FinishWorkout(compPhysique);
-                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, job.def.defName);
-                if (shouldReturn)
-                {
-                    Job haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
-                    if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false) pawn.jobs.jobQueue.EnqueueFirst(haulJob);
-                    else pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-                }
-                else
-                {
-                    pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
-                }
+                Rimbody_Utility.AddMemory(compPhysique, RimbodyWorkoutCategory.Strength, exWorkout.id);
+                Rimbody_Utility.ReturnChunk(pawn, shouldReturn);
             });
             yield return workout;
         }

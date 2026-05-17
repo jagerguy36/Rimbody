@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System.Collections.Generic;
+using Verse;
 
 namespace Maux36.Rimbody
 {
@@ -31,6 +32,8 @@ namespace Maux36.Rimbody
 
         public static float gainMaxGracePeriod = 0.97f;
 
+        public static Dictionary<string, RaceSetting> raceOption = new Dictionary<string, RaceSetting>();
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -44,8 +47,6 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref gracePeriod, "Rimbody_gracePeriod", 2.5f, true);
             Scribe_Values.Look(ref rateFactor, "Rimbody_rateFactor", 1f, true);
             Scribe_Values.Look(ref nonSenescentpoint, "Rimbody_nonSenescentpoint", 25, true);
-            Scribe_Values.Look(ref maleMusclegain, "Rimbody_maleMusclegain", 0.1f, true);
-            Scribe_Values.Look(ref femaleFatThreshold, "Rimbody_femaleFatThreshold", 1.5f, true);
             Scribe_Values.Look(ref genderDifference, "Rimbody_genderDifference", true, true);
             Scribe_Values.Look(ref showFleck, "Rimbody_showFleck", true, true);
             Scribe_Values.Look(ref useFatigue, "Rimbody_useFatigue", true, true);
@@ -54,6 +55,22 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref useRecToSelect, "Rimbody_useRecToSelect", false, true);
             Scribe_Values.Look(ref WorkOutGainEfficiency, "Rimbody_WorkOutGainEfficiency", 1.0f, true);
             Scribe_Values.Look(ref carryRateMultiplier, "Rimbody_carryRateMultiplier", 1.0f, true);
+            Scribe_Collections.Look<string, RaceSetting>(ref raceOption, "raceOption", LookMode.Value, LookMode.Deep);
+        }
+    }
+    public class RaceSetting : IExposable
+    {
+        public string defName;
+        public string label;
+        public string modName;
+        public bool isRimbodyEnabled;
+
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref defName, "defName");
+            Scribe_Values.Look(ref label, "label");
+            Scribe_Values.Look(ref modName, "modName");
+            Scribe_Values.Look(ref isRimbodyEnabled, "isRimbodyEnabled", defaultValue: true);
         }
     }
 }

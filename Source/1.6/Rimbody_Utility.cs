@@ -1,7 +1,7 @@
 ﻿using LudeonTK;
 using RimWorld;
 using RimWorld.Planet;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI;
@@ -10,17 +10,9 @@ namespace Maux36.Rimbody
 {
     public class Rimbody_Utility
     {
-        public static bool isColonyMember(Pawn pawn)
+        public static bool shouldTrack(Pawn pawn)
         {
-            if (pawn.Faction != null && pawn.Faction.IsPlayer && pawn.RaceProps.Humanlike && !pawn.IsMutant) //The same as isColonist Check minus the slave check
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public static bool shouldTick(Pawn pawn)
-        {
+            if (!pawn.IsColonist && !pawn.IsPrisonerOfColony) return false;
             if (pawn.SpawnedOrAnyParentSpawned || pawn.IsCaravanMember() || PawnUtility.IsTravelingInTransportPodWorldObject(pawn))
             {
                 return true;
@@ -43,23 +35,23 @@ namespace Maux36.Rimbody
 
         public static void TryUpdateInventory(Pawn pawn)
         {
-            if (pawn.needs?.food != null && (isColonyMember(pawn) || pawn.IsPrisonerOfColony) && shouldTick(pawn))
+            if (shouldTrack(pawn))
             {
                 CompPhysique compPhysique = pawn.compPhysique();
-                if (compPhysique == null) return;
-                if (compPhysique.BodyFat <= -1f || compPhysique.MuscleMass <= -1f) return;
+                if (compPhysique?.HasPhysique != true) return;
                 compPhysique.UpdateCarryweight();
             }
         }
 
-        public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f)
+        public static IntVec3 FindWorkoutSpot(Pawn actor, bool lookForSeat, ThingDef seatDef, out Thing foundSeat, int maxPawns = 1, float maxDistance = 20f, Thing chunk = null)
         {
             foundSeat = null;
+            var actorMap = actor.Map;
             IntVec3 workoutLocation = IntVec3.Invalid;
             if (lookForSeat)
             {
                 Thing thing = null;
-                Predicate<Thing> baseChairValidator = delegate (Thing t)
+                bool BaseChairValidator(Thing t)
                 {
                     if (t.def.building == null) return false;
                     if (t.IsForbidden(actor)) return false;
@@ -69,21 +61,62 @@ namespace Maux36.Rimbody
                     if (!actor.CanReserve(cell, maxPawns)) return false;
                     return true;
                 };
-                thing = GenClosest.ClosestThingReachable(actor.Position, actor.Map, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, (Thing t) => baseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
+                thing = GenClosest.ClosestThingReachable(actor.Position, actorMap, ThingRequest.ForDef(seatDef), PathEndMode.OnCell, TraverseParms.For(actor), maxDistance, t => BaseChairValidator(t) && t.Position.GetDangerFor(actor, t.Map) == Danger.None);
                 if (thing != null && TryFindFreeSittingSpotOnThing(thing, actor, out workoutLocation))
                 {
                     foundSeat = thing;
                     return workoutLocation;
                 }
             }
-            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: delegate (IntVec3 c)
+            bool standSpotValidator(IntVec3 c)
             {
                 if (!actor.CanReserve(c)) return false;
-                if (!c.Standable(actor.Map)) return false;
-                if (c.GetRegion(actor.Map).type == RegionType.Portal) return false;
+                if (!StandableAfterHauling(c, actorMap, chunk)) return false;
+                if (c.GetRegion(actorMap).type == RegionType.Portal) return false;
+                if (c.ContainsStaticFire(actorMap) || c.ContainsTrap(actorMap)) return false;
+                if (actorMap.zoneManager.ZoneAt(c) is Zone_Growing) return false;
                 return true;
-            }, pawn: actor);
+            };
+            workoutLocation = RCellFinder.SpotToStandDuringJob(extraValidator: c => standSpotValidator(c), pawn: actor);
             return workoutLocation;
+        }
+        public static bool StandableAfterHauling(IntVec3 c, Map map, Thing hauled)
+        {
+            if (!c.Walkable(map))
+            {
+                return false;
+            }
+            List<Thing> list = map.thingGrid.ThingsListAt(c);
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i] == hauled)
+                    continue;
+                if (list[i].def.passability != 0)
+                    return false;
+            }
+            return true;
+        }
+
+        public static void ReturnChunk(Pawn pawn, bool shouldReturn)
+        {
+            Job haulJob;
+            if (shouldReturn)
+            {
+                haulJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, pawn.carryTracker.CarriedThing);
+                if (haulJob?.TryMakePreToilReservations(pawn, true) ?? false)
+                {
+                    pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                    return;
+                }
+            }
+            haulJob = HaulAIUtility.HaulAsideJobFor(pawn, pawn.carryTracker.CarriedThing);
+            if (haulJob != null)
+            {
+                pawn.jobs.jobQueue.EnqueueFirst(haulJob);
+                return;
+            }
+            pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
+            return;
         }
 
         public static bool TryFindFreeSittingSpotOnThing(Thing t, Pawn pawn, out IntVec3 cell)
@@ -109,39 +142,18 @@ namespace Maux36.Rimbody
                 pawn.needs?.mood?.thoughts?.memories?.TryGainMemory(ThoughtMaker.MakeThought(DefOf_Rimbody.WorkedOutInImpressiveGym,scoreStageIndex));
             }
         }
-
-        public static void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, string name)
+        public static void AddMemory(CompPhysique compPhysique, RimbodyWorkoutCategory category, ushort id)
         {
             if (compPhysique == null) return;
             if (category == RimbodyWorkoutCategory.Job) return;
+
             compPhysique.lastWorkoutTick = Find.TickManager.TicksGame;
-            switch (category)
-            {
-                case RimbodyWorkoutCategory.Strength:
-                    compPhysique.AddNewMemory($"strength|{name}");
-                    break;
-                case RimbodyWorkoutCategory.Balance:
-                    compPhysique.AddNewMemory($"balance|{name}");
-                    break;
-                case RimbodyWorkoutCategory.Cardio:
-                    compPhysique.AddNewMemory($"cardio|{name}");
-                    break;
-                default:
-                    break;
-            }
+            compPhysique.AddNewMemory(((int)category << 16) | id);
         }
 
         public static bool TooTired(Pawn actor)
         {
             return actor?.needs?.rest?.CurLevel < 0.17f;
-        }
-
-        public static IJobEndable EndOnTired(IJobEndable f, JobCondition endCondition = JobCondition.InterruptForced)
-        {
-            Pawn actor = f.GetActor();
-            bool isTired = TooTired(actor);
-            f.AddEndCondition(() => (!isTired) ? JobCondition.Ongoing : endCondition);
-            return f;
         }
 
         [DebugAction("Pawns", actionType = DebugActionType.ToolMapForPawns, allowedGameStates = AllowedGameStates.PlayingOnMap, displayPriority = 1000)]

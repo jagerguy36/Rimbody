@@ -1,15 +1,12 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using Verse.AI;
 using Verse;
+using Verse.AI;
 
 namespace Maux36.Rimbody
 {
-    public class JobGiver_DoBalanceBuilding : ThinkNode_JobGiver
+    public class JobGiver_DoBalanceBuilding : JobGiver_DoWorkoutBase
     {
-        private static List<Thing> tmpCandidates = [];
-        private static Dictionary<int, float> workoutCache = new Dictionary<int, float>();
         public override float GetPriority(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
@@ -17,154 +14,94 @@ namespace Maux36.Rimbody
             {
                 return 0f;
             }
-            if (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod)
-            {
-                return 0f;
-            }
             return GetActualPriority(compPhysique);
+        }
+        protected override Job TryGiveJob(Pawn pawn)
+        {
+            return TryGiveJobActual(pawn, tmpCandidates, thingWorkoutScoreCache);
         }
 
         public static float GetActualPriority(CompPhysique compPhysique)
         {
+            if (compPhysique.gain >= compPhysique.gainMax * RimbodySettings.gainMaxGracePeriod) return 0f;
+            if (!compPhysique.parentPawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return 0f;
             float result = 4.0f;
-            if(compPhysique.memory?.Count > 0)
+            var workoutMemory = compPhysique.memory;
+            int target = (int)RimbodyWorkoutCategory.Balance;
+            foreach (var item in workoutMemory)
             {
-                foreach (var item in compPhysique.memory)
-                {
-                    int delimiterIndex = item.IndexOf('|');
-                    if (delimiterIndex >= 0)
-                    {
-                        string firstPart = item.Substring(0, delimiterIndex);
-                        if (firstPart == "balance")
-                        {
-                            result -= 0.8f;
-                        }
-                        else
-                        {
-                            result += 0.4f;
-                        }
-                    }
-                }
+                if ((item >> 16) == target)
+                    result -= 0.8f;
+                else
+                    result += 0.4f;
             }
             return result;
         }
-
-        protected override Job TryGiveJob(Pawn pawn)
+        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<int, float> thingWorkoutScoreCache)
         {
-            return TryGiveJobActual(pawn, tmpCandidates, workoutCache);
-        }
-        public static Job TryGiveJobActual(Pawn pawn, List<Thing> tmpCandidates, Dictionary<int, float> workoutCache)
-        {
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) return null;
             var compPhysique = pawn.compPhysique();
             if (compPhysique == null) return null;
 
             tmpCandidates.Clear();
-            workoutCache.Clear();
-            GetSearchSet(pawn, tmpCandidates);
-            Predicate<Thing> targetPredicate = delegate (Thing t)
-            {
-                if (t.IsForbidden(pawn)) return false;
-
-                RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
-                if (targetModExtension.Type == RimbodyTargetType.Building)
-                {
-                    if (pawn.Map.designationManager.DesignationOn(t, DesignationDefOf.Deconstruct) != null) return false;
-                    if (pawn.Map.reservationManager.IsReserved(t)) return false;
-                    if (!pawn.CanReserve(t, ignoreOtherReservations: true)) return false;
-                    if (t.def.hasInteractionCell)
-                    {
-                        if (!pawn.CanReserveSittableOrSpot(t.InteractionCell))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair)) return false;
-                        LocalTargetInfo target = result;
-                        if (!pawn.CanReserveAndReach(target, PathEndMode.OnCell, Danger.Some, 1, -1, null, false)) return false;
-                    }
-                    return t.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
-                }
-                else
-                {
-                    if (!pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some)) return false;
-                    return true;
-                }
-            };
+            thingWorkoutScoreCache.Clear();
             float targethighscore = 0f;
+            IntVec3 workoutLocation = IntVec3.Invalid;
+            GetSearchSet(pawn, RimbodyDB.BalanceTargets, tmpCandidates);
             float scoreFunc(Thing t)
             {
-                if (RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension))
+                RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+                if (thingWorkoutScoreCache.TryGetValue(t.def.shortHash, out float score))
                 {
-                    float score = 0f;
-                    if (workoutCache.ContainsKey(t.def.shortHash))
-                    {
-                        score = workoutCache[t.def.shortHash];
-                        if (score > targethighscore)
-                        {
-                            targethighscore = score;
-                        }
-                        return score;
-                    }
-                    foreach (WorkOut workout in targetModExtension.workouts)
-                    {
-                        if (workout.Category != RimbodyWorkoutCategory.Balance)
-                        {
-                            continue;
-                        }
-                        float tmpScore = (compPhysique.memory.Contains("balance|" + workout.name) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, workout);
-                        if (tmpScore > score)
-                        {
-                            score = tmpScore;
-                        }
-                    }
                     if (score > targethighscore)
                     {
                         targethighscore = score;
                     }
                     return score;
                 }
-                return 0;
+                foreach (WorkOut workout in targetModExtension.workouts)
+                {
+                    if (workout.Category != RimbodyWorkoutCategory.Balance) continue;
+                    float tmpScore = (compPhysique.InMemory(workout.id) ? 0.9f : 1f) * compPhysique.GetWorkoutScore(RimbodyWorkoutCategory.Balance, workout);
+                    if (tmpScore > score)
+                    {
+                        score = tmpScore;
+                    }
+                }
+                if (score > targethighscore)
+                {
+                    targethighscore = score;
+                }
+                thingWorkoutScoreCache[t.def.shortHash] = score;
+                return score;
             }
-            Thing thing = null;
-            IntVec3 workoutLocation = IntVec3.Invalid;
-            JobDef jobtogive = null;
-            thing ??= GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, targetPredicate, scoreFunc);
-            if (thing != null)
-            {
-                jobtogive = DefOf_Rimbody.Rimbody_DoBalanceBuilding;
-            }
+            Thing thing = GenClosest.ClosestThing_Global_Reachable(pawn.Position, pawn.Map, tmpCandidates, PathEndMode.OnCell, TraverseParms.For(pawn, Danger.Some), 9999f, t => TargetValidator(pawn, t), scoreFunc);
             tmpCandidates.Clear();
-            workoutCache.Clear();
+            thingWorkoutScoreCache.Clear();
 
-            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDefLists.balanceHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
+            if ((RimbodySettings.useFatigue && targethighscore < RimbodyDB.balanceHighscore) || (!RimbodySettings.useFatigue && targethighscore == 0))
             {
-                RimbodyDefLists.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_DoBodyWeightPlank.shortHash, out var plankjobEx);
-                float plank_score = (compPhysique.memory.Contains("balance|" + DefOf_Rimbody.Rimbody_DoBodyWeightPlank.defName) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
+                RimbodyDB.JobModExDB.TryGetValue(DefOf_Rimbody.Rimbody_DoBodyWeightPlank.shortHash, out var plankjobEx);
+                float plank_score = (compPhysique.InMemory(plankjobEx.id) ? 0.9f : 1f) * compPhysique.GetBalanceJobScore(plankjobEx.strengthParts, plankjobEx.strength);
                 if (targethighscore < plank_score)
                 {
                     workoutLocation = Rimbody_Utility.FindWorkoutSpot(pawn, true, DefOf_Rimbody.Rimbody_ExerciseMat, out Thing mattress, 1, 40f);
                     if (workoutLocation != IntVec3.Invalid)
                     {
-                        Job job = JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation, mattress);
-                        return job;
+                        return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBodyWeightPlank, workoutLocation, mattress);
                     }
                 }
             }
 
             if (thing != null)
             {
-                Job job = DoTryGiveTargetJob(pawn, thing);
-                return job;
+                return DoTryGiveTargetJob(pawn, thing);
             }
             return null;
         }
 
         public static Job DoTryGiveTargetJob(Pawn pawn, Thing t)
         {
-            RimbodyDefLists.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
+            RimbodyDB.ThingModExDB.TryGetValue(t.def.shortHash, out var targetModExtension);
             if (targetModExtension.Type == RimbodyTargetType.Building)
             {
                 if (t.def.hasInteractionCell)
@@ -175,6 +112,7 @@ namespace Maux36.Rimbody
                 {
                     if (!WatchBuildingUtility.TryFindBestWatchCell(t, pawn, false, out var result, out var chair))
                     {
+                        //This should never happen because TargetValidator has already checked Cell existence
                         return null;
                     }
                     LocalTargetInfo target = result;
@@ -187,22 +125,9 @@ namespace Maux36.Rimbody
             }
             else
             {
-                if (pawn.CanReserveAndReach(t, PathEndMode.OnCell, Danger.Some))
-                {
-                    return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceLifting, t);
-                }
+                return JobMaker.MakeJob(DefOf_Rimbody.Rimbody_DoBalanceLifting, t);
             }
             return null;
-        }
-
-        protected static void GetSearchSet(Pawn pawn, List<Thing> outCandidates)
-        {
-            outCandidates.Clear();
-            if (RimbodyDefLists.BalanceTargets == null || RimbodyDefLists.BalanceTargets.Count == 0) return;
-            foreach (var buildingDef in RimbodyDefLists.BalanceTargets)
-            {
-                outCandidates.AddRange(pawn.Map.listerThings.ThingsOfDef(buildingDef));
-            }
         }
     }
 }

@@ -11,13 +11,7 @@ namespace Maux36.Rimbody
         static void Postfix(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            if (pawn != null && compPhysique != null)
-            {
-                if (compPhysique.BodyFat == -1f || compPhysique.MuscleMass == -1f)
-                {
-                    (compPhysique.BodyFat, compPhysique.MuscleMass) = compPhysique.RandomCompPhysiqueByBodyType();
-                }
-            }
+            compPhysique?.PhysiqueValueSetup();
         }
     }
 
@@ -28,9 +22,10 @@ namespace Maux36.Rimbody
         {
             if (!(ModsConfig.BiotechActive && pawn.DevelopmentalStage.Juvenile()))
             {
+                // This is for babies growing up.
+                // compPhysique can be null when a pawn is generated.
                 var compPhysique = pawn.compPhysique();
-                //Can be null when a pawn is generated. This is for babies growing up.
-                if (compPhysique != null && compPhysique.BodyFat >= 0 && compPhysique.MuscleMass >= 0)
+                if (compPhysique?.HasPhysique == true)
                 {
                     __result = compPhysique.GetValidBody();
                     return false;

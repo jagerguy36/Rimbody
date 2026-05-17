@@ -9,11 +9,13 @@ namespace Maux36.Rimbody_CombatTrainingCompatibility
     [HarmonyPatch(typeof(CompPhysique), "HarmonyCheck")]
     public class CompPhysique_HarmonyCheck_Patch
     {
-        public static bool Prefix(ref string __result, Pawn ___parent)
+        private static readonly int Key = RimbodyDB.HarmonyInjectorID["CombatTraining"];
+        private static readonly int TrainOnCombatDummy_Key = DefDatabase<JobDef>.GetNamed("TrainOnCombatDummy").shortHash;
+        public static bool Prefix(ref int __result, Pawn ___parent)
         {
-            if (___parent?.jobs?.curJob?.def?.defName == "TrainOnCombatDummy" && ___parent.jobs.curJob.verbToUse?.verbProps?.IsMeleeAttack == true && ___parent.pather?.MovingNow == false)
+            if (___parent?.jobs?.curJob?.def?.shortHash == TrainOnCombatDummy_Key && ___parent.jobs.curJob.verbToUse?.verbProps?.IsMeleeAttack == true && ___parent.pather?.MovingNow == false)
             {
-                __result = "combat_training";
+                __result = Key;
                 return false;
             }
             return true;
@@ -23,9 +25,10 @@ namespace Maux36.Rimbody_CombatTrainingCompatibility
     [HarmonyPatch(typeof(CompPhysique), "HarmonyValues")]
     public class CompPhysique_HarmonyValues_Patch
     {
-        public static bool Prefix(ref (float, float, List<float>) __result, string harmonyKey)
+        private static readonly int Key = RimbodyDB.HarmonyInjectorID["CombatTraining"];
+        public static bool Prefix(ref (float, float, List<float>) __result, int harmonyKey)
         {
-            if (harmonyKey == "combat_training")
+            if (harmonyKey == Key)
             {
                 __result = (1.2f, 0.6f, [0.5f, 0.5f, 0.5f, 0.3f, 0.2f, 0.2f, 0.1f, 0.1f, 0.1f]); //Melee
                 return false;

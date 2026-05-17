@@ -12,6 +12,7 @@
     	<stackLimit>1</stackLimit>
 		<statBases>
 			<Beauty>-4</Beauty>
+			<SellPriceFactor>0.2</SellPriceFactor>
 		</statBases>
 		<comps>
 			<li Class="CompProperties_Forbiddable" />
@@ -38,7 +39,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>600</WorkToMake>
+			<WorkToMake>1200</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -82,7 +83,7 @@
 						<name>bicepcurl_name</name>
 						<reportString>dumbbells_bicepcurl_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<animationType>ItemEach</animationType>
 						<spot>FlatBench</spot>
@@ -115,7 +116,7 @@
 						<name>overheadshoulderpress_name</name>
 						<reportString>dumbbells_overheadshoulderpress_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<animationType>ItemBoth</animationType>
 						<spot>FlatBench</spot>
@@ -185,7 +186,7 @@
 						<name>bicepcurl_name</name>
 						<reportString>halteres_bicepcurl_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>1.9</strength>
 						<animationType>ItemEach</animationType>
 						<spot>FlatBench</spot>
@@ -218,7 +219,7 @@
 						<name>overheadshoulderpress_name</name>
 						<reportString>halteres_overheadshoulderpress_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>1.9</strength>
 						<animationType>ItemBoth</animationType>
 						<spot>FlatBench</spot>
@@ -264,7 +265,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>600</WorkToMake>
+			<WorkToMake>1600</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>
@@ -302,7 +303,7 @@
 						<name>kettlebellswing_name</name>
 						<reportString>kettlebellswing_report</reportString>
 						<Category>Strength</Category>
-						<cardio>0.5</cardio>
+						<cardio>0.35</cardio>
 						<strength>2</strength>
 						<animationType>Item</animationType>
 						<movingpartAnimOffset>
@@ -342,7 +343,7 @@
 		</thingCategories>
 		<techLevel>Industrial</techLevel>
 		<statBases>
-			<WorkToMake>300</WorkToMake>
+			<WorkToMake>1000</WorkToMake>
 			<MaxHitPoints>150</MaxHitPoints>
 			<Flammability>0.4</Flammability>
 			<DeteriorationRate>0</DeteriorationRate>

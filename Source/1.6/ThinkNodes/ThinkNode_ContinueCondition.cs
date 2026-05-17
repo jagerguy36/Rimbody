@@ -5,38 +5,37 @@ using System;
 
 namespace Maux36.Rimbody
 {
-    internal class ThinkNode_ContinueCondition : ThinkNode_Conditional //Satisfy goal when Idle
+    internal class ThinkNode_ContinueCondition : ThinkNode_Conditional //Continue Joy workout for assigned tick
     {
         protected override bool Satisfied(Pawn pawn)
         {
-            if (pawn != null && pawn.ageTracker?.CurLifeStage?.developmentalStage == DevelopmentalStage.Adult)
+            var compPhysique = pawn.compPhysique();
+            if (compPhysique == null)
+                return false;
+            // if (RimbodySettings.useExhaustion && compPhysique.resting) // Exhaustion not implemented yet
+            //     return false;
+            
+            if (compPhysique.AssignedTick <= 0)
+                return false;
+            if (!Rimbody_Utility.TooTired(pawn))
             {
-                if (pawn.Downed || pawn.Drafted) return false;
-                if (Rimbody_Utility.TooTired(pawn)) return false;
                 TimeAssignmentDef timeAssignmentDef = ((pawn.timetable == null) ? TimeAssignmentDefOf.Anything : pawn.timetable.CurrentAssignment);
-                var compPhysique = pawn.compPhysique();
-                if (compPhysique == null)
+                //During Idle time, or little past bed time
+                if (timeAssignmentDef == TimeAssignmentDefOf.Anything || timeAssignmentDef == TimeAssignmentDefOf.Joy || timeAssignmentDef == TimeAssignmentDefOf.Sleep)
                 {
-                    return false;
-                }
-                if (compPhysique.AssignedTick > 0)
-                {
-                    if (timeAssignmentDef == TimeAssignmentDefOf.Anything || timeAssignmentDef == TimeAssignmentDefOf.Joy || timeAssignmentDef == TimeAssignmentDefOf.Sleep)
+                    //You are still doing the "Set"
+                    if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
                     {
-                        if (Find.TickManager.TicksGame - compPhysique.lastWorkoutTick < RimbodySettings.RecoveryTick * 4f)
+                        if (!timeAssignmentDef.allowJoy || pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) || HealthAIUtility.ShouldSeekMedicalRest(pawn))
                         {
-                            if (!timeAssignmentDef.allowJoy || pawn.needs.joy.tolerances.BoredOf(DefOf_Rimbody.Rimbody_WorkoutJoy) || HealthAIUtility.ShouldSeekMedicalRest(pawn))
-                            {
-                                compPhysique.AssignedTick = 0;
-                                return false;
-                            }
-                            return true;
+                            compPhysique.AssignedTick = 0;
+                            return false;
                         }
+                        return true;
                     }
-                    compPhysique.AssignedTick = 0;
-                    return false;
                 }
             }
+            compPhysique.AssignedTick = 0;
             return false;
         }
     }
