@@ -678,10 +678,14 @@ namespace Maux36.Rimbody
             float inventoryWeight = MassUtility.GearAndInventoryMass(parentPawn);
 
             float capacityWeight = 0f;
-            for (int i = 0; i < parentPawn.carryTracker.innerContainer.Count; i++)
+            var carriedContainer = parentPawn.carryTracker?.innerContainer;
+            if (carriedContainer != null)
             {
-                Thing thing = parentPawn.carryTracker.innerContainer[i];
-                capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
+                for (int i = 0; i < carriedContainer.Count; i++)
+                {
+                    Thing thing = carriedContainer[i];
+                    capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
+                }
             }
 
             carryFactor = _lightworkS * Mathf.Clamp((inventoryWeight + capacityWeight) / pawnInventoryCapacity, 0f, 2f);
