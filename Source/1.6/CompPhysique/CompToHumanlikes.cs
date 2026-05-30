@@ -29,11 +29,11 @@ namespace Maux36.Rimbody
                                 label = (allDef.label ?? "null"),
                                 defName = allDef.defName,
                                 modName = (allDef.modContentPack?.Name ?? "null"),
-                                isRimbodyEnabled = true
+                                isRimbodyEnabled = allDef.defName == "Human"
                             };
                             dictionary.Add(raceKey, value);
                         }
-                        if (addComp)
+                        if (addComp && value.isRimbodyEnabled)
                         {
                             allDef.comps.Add(new CompProperties_Physique());
                             PhysiqueCacheManager.TrackingDefHashSet.Add(allDef.shortHash);
