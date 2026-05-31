@@ -38,10 +38,14 @@ namespace Maux36.Rimbody_CE
             var inventoryWeight = Mathf.Max(0, compInventory.currentWeight - (compInventory.capacityWeight - pawnInventoryCapacity)); // How much burden the pawn is actually under with the inventory stuff
 
             float capacityWeight = 0f;
-            for (int i = 0; i < pawn.carryTracker?.innerContainer?.Count; i++)
+            var carriedContainer = pawn.carryTracker?.innerContainer;
+            if (carriedContainer != null)
             {
-                Thing thing = pawn.carryTracker.innerContainer[i];
-                capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
+                for (int i = 0; i < carriedContainer.Count; i++)
+                {
+                    Thing thing = carriedContainer[i];
+                    capacityWeight += (float)thing.stackCount * thing.GetStatValue(StatDefOf.Mass);
+                }
             }
 
             compPhysique.carryFactor = 0.5f * Mathf.Clamp((inventoryWeight + capacityWeight) / pawnInventoryCapacity, 0f, 2f);

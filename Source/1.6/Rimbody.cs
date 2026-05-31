@@ -9,6 +9,7 @@ namespace Maux36.Rimbody
     public class Rimbody : Mod
     {
         public static RimbodySettings settings;
+        public static string currentVersion;
         public static bool BodyChangeActive;
         public static bool StaminaActive;
         public static bool IndividualityLoaded = false;
@@ -16,18 +17,18 @@ namespace Maux36.Rimbody
         public static bool ExosuitFrameworkLoaded = false;
         public static bool CombatExtendedLoaded = false;
         public static bool StatModuleLoaded = false;
+        public static bool ShowRaceSettings = false;
 
         public Rimbody(ModContentPack content) : base(content)
         {
-
+            currentVersion = content.ModMetaData.ModVersion;
+            Log.Message($"[Rimbody] Rimbody Core running with version {currentVersion}");
             settings = GetSettings<RimbodySettings>();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces"))
             {
                 HARCompat.Activate();
                 HARCompat.Active = true;
-                labelPCT = 0.7f;
-                divider = 0.55f;
             }
 
             if (ModsConfig.IsActive("mlie.syrindividuality")) IndividualityLoaded = true;
@@ -35,6 +36,21 @@ namespace Maux36.Rimbody
             if (ModsConfig.IsActive("aoba.exosuit.framework")) ExosuitFrameworkLoaded = true;
             if (ModsConfig.IsActive("ceteam.combatextended")) CombatExtendedLoaded = true;
             if (ModsConfig.IsActive("maux36.rimbody.statmodule")) StatModuleLoaded = true;
+        }
+        public static void ToggleShowRaceSettings(bool b)
+        {
+            if (b)
+            {
+                ShowRaceSettings = true;
+                labelPCT = 0.7f;
+                divider = 0.55f;
+            }
+            else
+            {
+                ShowRaceSettings = false;
+                labelPCT = 1f;
+                divider = 0.5f;
+            }
         }
 
         public override string SettingsCategory()
@@ -139,7 +155,7 @@ namespace Maux36.Rimbody
 
             listing_Standard.End();
             Widgets.EndScrollView();
-            if (HARCompat.Active)
+            if (ShowRaceSettings)
             {
                 Rect warningRect = new Rect(leftOutRect.xMax + 10f, 0f, inRect.width - leftOutRect.width - 20f, 50f);
                 Text.Anchor = TextAnchor.MiddleCenter;
