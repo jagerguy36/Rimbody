@@ -55,7 +55,11 @@ namespace Maux36.Rimbody
             Scribe_Values.Look(ref useRecToSelect, "Rimbody_useRecToSelect", false, true);
             Scribe_Values.Look(ref WorkOutGainEfficiency, "Rimbody_WorkOutGainEfficiency", 1.0f, true);
             Scribe_Values.Look(ref carryRateMultiplier, "Rimbody_carryRateMultiplier", 1.0f, true);
-            Scribe_Collections.Look<string, RaceSetting>(ref raceOption, "raceOption", LookMode.Value, LookMode.Deep);
+            Scribe_Collections.Look<string, RaceSetting>(ref raceOption, "raceOption_v1", LookMode.Value, LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                raceOption ??= new Dictionary<string, RaceSetting>();
+            }
         }
     }
     public class RaceSetting : IExposable

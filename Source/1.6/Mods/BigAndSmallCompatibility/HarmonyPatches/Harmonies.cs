@@ -44,31 +44,15 @@ namespace Maux36.Rimbody_BigAndSmall
         }
     }
 
-    [StaticConstructorOnStartup]
-    public static class RimbodyCompFixer
+    [HarmonyPatch(typeof(CompToHumanlikes), "IsValidTargetDef")]
+    public class Rimbody_CompToHumanlikes_Patch
     {
-        static RimbodyCompFixer()
+        public static void Postfix(ThingDef def, ref bool __result)
         {
-            List<ThingDef> defToRemove = new();
-            foreach (var def in DefDatabase<ThingDef>.AllDefs)
+            if (def.GetRaceExtensions().SelectMany(x => x.PawnExtensionOnRace).Any(x => x.isMechanical))
             {
-                if (!PhysiqueCacheManager.TrackingDefHashSet.Contains(def.shortHash))
-                    continue;
-                if (def.GetRaceExtensions().SelectMany(x => x.PawnExtensionOnRace).Any(x => x.isMechanical))
-                {
-                    defToRemove.Add(def);
-                }
-            }
-            foreach (var def in defToRemove)
-            {
-                var removed = def.comps.RemoveAll(c => c is CompProperties_Physique);
-                if (removed > 0)
-                {
-                    Log.Message($"[Rimbody] Big and Small's mechanical Life form {def.defName} been excluded from tracking");
-                    PhysiqueCacheManager.TrackingDefHashSet.Remove(def.shortHash);
-                }
+                __result = false;
             }
         }
     }
-
 }
