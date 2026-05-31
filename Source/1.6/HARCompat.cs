@@ -35,10 +35,14 @@ namespace Maux36.Rimbody
             alienPartGenerator = AccessTools.FieldRefAccess<object>(AccessTools.TypeByName("AlienRace.GeneralSettings"), "alienPartGenerator");
             bodyTypes = AccessTools.FieldRefAccess<List<BodyTypeDef>>(AccessTools.TypeByName("AlienRace.AlienPartGenerator"), "bodyTypes");
         }
+        public static bool IsAlienRaceDef(ThingDef pawnDef)
+        {
+            return thingDef_AlienRace.IsInstanceOfType(pawnDef);
+        }
 
         public static List<BodyTypeDef> AllowedBodyTypes(ThingDef pawnDef)
         {
-            if (thingDef_AlienRace.IsInstanceOfType(pawnDef))
+            if (IsAlienRaceDef(pawnDef))
             {
                 object obj = alienRace(pawnDef);
                 if (obj == null)
@@ -97,6 +101,7 @@ namespace Maux36.Rimbody
             bool allPresent = expectedBodyTypes.All(expected => allowedBodyTypes.Contains(expected));
 
             var lifestages = pawnDef.race.lifeStageAges;
+            //bool ageEqual = lifestages.SequenceEqual(expectedLifestages);
             bool ageEqual = true;
             if (expectedLifestages.Count != lifestages.Count)
             {
