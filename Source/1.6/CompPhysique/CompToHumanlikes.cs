@@ -68,7 +68,7 @@ namespace Maux36.Rimbody
             }
             if (invalidDefs.Count > 0)
             {
-                Log.Message($"[Rimbody] Skipped {invalidDefs.Count} invalid defs: {string.Join(", ", invalidDefs)}");
+                Log.Message($"[Rimbody] GenerateRaceSettings skipped {invalidDefs.Count} invalid defs: {string.Join(", ", invalidDefs)}");
             }
             if (addComp)
             {
