@@ -18,7 +18,7 @@ namespace Maux36.Rimbody_BigAndSmall
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
                 Log.Message("Rimbody patched BigAndSmall");
 
-                if (ModsConfig.IsActive("redmattis.bigsmall.core"))
+                if (Rimbody_Utility.IsModActive("redmattis.bigsmall.core"))
                 {
                     GeneDef geneDef;
                     geneDef = DefDatabase<GeneDef>.GetNamed("BS_NoFood", false);

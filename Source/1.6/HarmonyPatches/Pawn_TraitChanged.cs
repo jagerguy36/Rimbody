@@ -31,7 +31,7 @@ namespace Maux36.Rimbody
         {
             public static bool Prepare()
             {
-                if (ModsConfig.IsActive("void.charactereditor"))
+                if (Rimbody_Utility.IsModActive("void.charactereditor"))
                     return true;
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Maux36.Rimbody
         {
             public static bool Prepare()
             {
-                if (ModsConfig.IsActive("void.charactereditor"))
+                if (Rimbody_Utility.IsModActive("void.charactereditor"))
                     return true;
                 return false;
             }
