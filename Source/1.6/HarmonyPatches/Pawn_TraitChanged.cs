@@ -24,7 +24,7 @@ namespace Maux36.Rimbody
             compPhysique?.DirtyTraitCache();
         }
     }
-    public class CharEditorPatches
+    public static class CharEditorPatches
     {
         [HarmonyPatch]
         public static class CE_AddTrait_Patch
