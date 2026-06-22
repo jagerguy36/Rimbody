@@ -13,7 +13,7 @@ namespace Maux36.Rimbody
     public class CompPhysique : ThingComp
     {
         public bool Uninitialized => (BodyFat == -1f || MuscleMass == -1f);
-        public bool HasPhysique => (BodyFat >= 0f && MuscleMass >= 0f);
+        public bool HasPhysique => (BodyFat >= 0f && MuscleMass >= 0f); //Check for Humans whose gene blocks physique generation (VRE Androids for example)
 
         //Strength
         private static readonly float _fatiguelaborS = 1.4f;

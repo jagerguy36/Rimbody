@@ -13,6 +13,7 @@ namespace Maux36.Rimbody
             {
                 if (allDef.race is { intelligence: Intelligence.Humanlike } && !allDef.IsCorpse)
                 {
+                    //Non flesh or other mod-added defs that should not have physique.
                     if (!IsValidTargetDef(allDef))
                     {
                         invalidDefs.Add(allDef.defName);
@@ -24,13 +25,15 @@ namespace Maux36.Rimbody
                         if (addComp) AddCompPhysique(allDef);
                         continue;
                     }
-                    //With HAR, but this thingdef is not AlienRaceDef (Big and Small generated defs)
+
+                    //===== With HAR =====
+                    //This thingdef is not AlienRaceDef. They are base humanoid so assume compatibility (Big and Small generated defs)
                     if (!HARCompat.IsAlienRaceDef(allDef))
                     {
                         if (addComp) AddCompPhysique(allDef);
                         continue;
                     }
-                    //with HAR, checking in on AlienDef
+                    //This thingdef is AlienDef. Check for compat.
                     if (HARCompat.CompatibleRace(allDef))
                     {
                         //Humans go in for free
