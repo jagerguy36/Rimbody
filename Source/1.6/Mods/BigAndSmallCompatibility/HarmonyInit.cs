@@ -33,7 +33,11 @@ namespace Maux36.Rimbody_BigAndSmall
                         RimbodyDB.GeneFactors[geneDef.shortHash] = (0.85f, 1f, 1f, 1.15f);
                         RimbodyDB.ObservedGeneHash.Add(geneDef.shortHash);
                     }
-
+                    geneDef = DefDatabase<GeneDef>.GetNamed("Body_Androgynous", false);
+                    if (geneDef != null)
+                    {
+                        RimbodyDB.ObservedGeneHash.Add(geneDef.shortHash);
+                    }
                 }
             }
             catch (Exception e)
