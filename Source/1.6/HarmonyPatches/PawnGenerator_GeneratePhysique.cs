@@ -5,13 +5,16 @@ using Verse;
 
 namespace Maux36.Rimbody
 {
-    [HarmonyPatch(typeof(PawnGenerator), "GenerateBodyType")]
-    public static class PawnGenerator_GenerateBodyType
+    [HarmonyPatch(typeof(PawnGenerator), "TryGenerateNewPawnInternal")]
+    public static class PawnGenerator_TryGenerateNewPawnInternal
     {
-        static void Postfix(Pawn pawn)
+        static void Postfix(Pawn __result)
         {
-            var compPhysique = pawn.compPhysique();
-            compPhysique?.PhysiqueValueSetup();
+            var compPhysique = __result?.compPhysique();
+            if (compPhysique == null)
+                return;
+            compPhysique.PhysiqueValueSetup();
+            compPhysique.PostGen = true;
         }
     }
 

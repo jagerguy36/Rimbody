@@ -718,13 +718,12 @@ namespace Maux36.Rimbody
 
         public void ResetBody()
         {
-            if (BodyFat<0 || MuscleMass  < 0) return;
-
-            if(parentPawn.story?.bodyType != null)
-            {
-                parentPawn.story.bodyType = GetValidBody();
-                parentPawn.Drawer.renderer.SetAllGraphicsDirty();
-            }
+            if (HasPhysique == false)
+                return;
+            if(parentPawn.story?.bodyType == null)
+                return;
+            parentPawn.story.bodyType = GetValidBody();
+            parentPawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
         public virtual BodyTypeDef GetValidBody()
