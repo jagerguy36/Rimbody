@@ -10,7 +10,7 @@ namespace Maux36.Rimbody
         protected override bool Satisfied(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            if (compPhysique == null)
+            if (compPhysique?.HasPhysique != true)
                 return false;
             // if (RimbodySettings.useExhaustion && compPhysique.resting) // Exhaustion not implemented yet
             //     return false;

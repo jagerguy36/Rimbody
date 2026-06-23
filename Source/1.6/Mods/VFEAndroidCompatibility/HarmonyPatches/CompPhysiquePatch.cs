@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
-using System;
-using System.Linq;
 using Maux36.Rimbody;
+using RimWorld;
 using Verse;
+using VREAndroids;
 
 namespace Muax36.Rimbody_VFEAndroidCompatibility
 {
@@ -20,7 +20,28 @@ namespace Muax36.Rimbody_VFEAndroidCompatibility
                 return false;
             }
             return true;
+        }
+    }
 
+
+    [HarmonyPatch(typeof(Pawn_GeneTracker), "Notify_GenesChanged")]
+    public static class GeneTracker_Notify_GeneChanged
+    {
+        public static bool Prepare()
+        {
+            if (ModsConfig.BiotechActive)
+                return true;
+            return false;
+        }
+        static void Postfix(Pawn_GeneTracker __instance, GeneDef addedOrRemovedGene, Pawn ___pawn)
+        {
+            if (addedOrRemovedGene is AndroidGeneDef androidGeneDef && androidGeneDef.isCoreComponent)
+            {
+                var compPhysique = ___pawn.compPhysique();
+                if (compPhysique?.HasPhysique != true) return;
+                compPhysique.NotifyActiveGeneCacheDirty();
+                compPhysique.PhysiqueValueSetup(true);
+            }
         }
     }
 }

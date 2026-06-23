@@ -24,14 +24,14 @@ namespace Maux36.Rimbody
             compPhysique?.DirtyTraitCache();
         }
     }
-    public class CharEditorPatches
+    public static class CharEditorPatches
     {
         [HarmonyPatch]
         public static class CE_AddTrait_Patch
         {
             public static bool Prepare()
             {
-                if (ModsConfig.IsActive("void.charactereditor"))
+                if (Rimbody_Utility.IsModActive("void.charactereditor"))
                     return true;
                 return false;
             }
@@ -52,7 +52,7 @@ namespace Maux36.Rimbody
         {
             public static bool Prepare()
             {
-                if (ModsConfig.IsActive("void.charactereditor"))
+                if (Rimbody_Utility.IsModActive("void.charactereditor"))
                     return true;
                 return false;
             }

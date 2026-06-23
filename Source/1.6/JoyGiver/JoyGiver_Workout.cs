@@ -29,7 +29,7 @@ namespace Maux36.Rimbody
         public override bool CanBeGivenTo(Pawn pawn)
         {
             var compPhysique = pawn.compPhysique();
-            if (compPhysique == null)
+            if (compPhysique?.HasPhysique != true)
                 return false;
             // Exhaustion not implemented yet
             // if (RimbodySettings.useExhaustion && compPhysique.resting)

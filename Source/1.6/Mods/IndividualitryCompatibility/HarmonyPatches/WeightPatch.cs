@@ -47,15 +47,8 @@ namespace Maux36.Rimbody_Individuality
         {
             if (pawn == null) return false;
             var compPhysique = pawn.compPhysique();
-            if(compPhysique == null)
-            {
-                return true;
-            }
-            if (compPhysique.BodyFat!=-2)
-            {
-                return false;
-            }
-            return true;
+            if (compPhysique?.HasPhysique != true) return true;
+            return false;
         }
     }
 

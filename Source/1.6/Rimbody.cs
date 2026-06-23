@@ -25,17 +25,17 @@ namespace Maux36.Rimbody
             Log.Message($"[Rimbody] Rimbody Core running with version {currentVersion}");
             settings = GetSettings<RimbodySettings>();
 
-            if (ModsConfig.IsActive("erdelf.humanoidalienraces"))
+            if (Rimbody_Utility.IsModActive("erdelf.humanoidalienraces"))
             {
                 HARCompat.Activate();
                 HARCompat.Active = true;
             }
 
-            if (ModsConfig.IsActive("mlie.syrindividuality")) IndividualityLoaded = true;
-            if (ModsConfig.IsActive("divinederivative.romance")) WayBetterRomanceLoaded = true;
-            if (ModsConfig.IsActive("aoba.exosuit.framework")) ExosuitFrameworkLoaded = true;
-            if (ModsConfig.IsActive("ceteam.combatextended")) CombatExtendedLoaded = true;
-            if (ModsConfig.IsActive("maux36.rimbody.statmodule")) StatModuleLoaded = true;
+            if (Rimbody_Utility.IsModActive("mlie.syrindividuality")) IndividualityLoaded = true;
+            if (Rimbody_Utility.IsModActive("divinederivative.romance")) WayBetterRomanceLoaded = true;
+            if (Rimbody_Utility.IsModActive("aoba.exosuit.framework")) ExosuitFrameworkLoaded = true;
+            if (Rimbody_Utility.IsModActive("ceteam.combatextended")) CombatExtendedLoaded = true;
+            if (Rimbody_Utility.IsModActive("maux36.rimbody.statmodule")) StatModuleLoaded = true;
         }
         public static void ToggleShowRaceSettings(bool b)
         {

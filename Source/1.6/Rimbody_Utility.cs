@@ -10,6 +10,13 @@ namespace Maux36.Rimbody
 {
     public class Rimbody_Utility
     {
+        public static bool IsModActive(string modId)
+        {
+            if (ModLister.GetActiveModWithIdentifier(modId, ignorePostfix: true) != null)
+                return true;
+            return false;
+        }
+
         public static bool shouldTrack(Pawn pawn)
         {
             if (!pawn.IsColonist && !pawn.IsPrisonerOfColony) return false;
