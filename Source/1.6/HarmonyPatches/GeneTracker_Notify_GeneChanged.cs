@@ -24,6 +24,7 @@ namespace Maux36.Rimbody
                 if (compPhysique == null) return;
                 compPhysique.NotifyActiveGeneCacheDirty();
                 //For genes that should change bodytype immediately.
+                //There are no genes that utilize this at the moment in Core and Stats but some other mod might end up utilizing it.
                 compPhysique.ResetBody();
             }
         }
