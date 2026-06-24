@@ -42,7 +42,6 @@ namespace Maux36.Rimbody
         //Internals
         private bool isJoggerInt = false;
         private bool isDeathrestingInt = false;
-        public bool PostGen = false;
         public Pawn parentPawn;
         //public float? breInt;
         //public float bre
@@ -1188,7 +1187,6 @@ namespace Maux36.Rimbody
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref PostGen, "Physique_PostGen", true);
             Scribe_Values.Look(ref forceRest, "Physique_boarded", false);
             Scribe_Values.Look(ref pawnBodyAngleOverride, "Physique_pawnBodyAngleOverride", -1f);
 

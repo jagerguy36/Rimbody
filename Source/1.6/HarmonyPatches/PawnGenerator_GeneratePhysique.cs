@@ -14,7 +14,6 @@ namespace Maux36.Rimbody
             if (compPhysique == null)
                 return;
             compPhysique.PhysiqueValueSetup();
-            compPhysique.PostGen = true;
         }
     }
 
