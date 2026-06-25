@@ -602,7 +602,7 @@ namespace Maux36.Rimbody
             ApplyChangedPhysique(newBodyFat, newMuscleMass);
             if (Rimbody.StatModuleLoaded)
             {
-                UpdateBrawnValue();
+                brawn = GetBrawnValue();
             }
 
             //BodyChange
@@ -1167,15 +1167,6 @@ namespace Maux36.Rimbody
             geneCacheDirty = true;
         }
 
-        public void UpdateBrawnValue()
-        {
-            var newBrawn = GenMath.RoundedHundredth(GetBrawnValue());
-            if (brawn != newBrawn)
-            {
-                brawn = newBrawn;
-                parentPawn.health.capacities.Notify_CapacityLevelsDirty();
-            }
-        }
         public float GetBrawnValue()
         {
             if(MuscleMass >= 25f)
@@ -1264,7 +1255,7 @@ namespace Maux36.Rimbody
                 }
                 if (Rimbody.StatModuleLoaded && HasPhysique)
                 {
-                    brawn = GenMath.RoundedHundredth(GetBrawnValue());
+                    brawn = GetBrawnValue();
                 }
             }
 
