@@ -1167,8 +1167,9 @@ namespace Maux36.Rimbody
             geneCacheDirty = true;
         }
 
-        public float GetBrawnValue()
+        public float GetBrawnValue() // 0.5~[1]~2
         {
+            if(MuscleMass < 0f) return 1f;
             if(MuscleMass >= 25f)
                 return (MuscleMass - 25f) * 0.04f + 1f;
             return 1f / (2f - (0.04f * MuscleMass));
