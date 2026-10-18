@@ -600,10 +600,6 @@ namespace Maux36.Rimbody
 
             //Apply New Values
             ApplyChangedPhysique(newBodyFat, newMuscleMass);
-            if (Rimbody.StatModuleLoaded)
-            {
-                brawn = GetBrawnValue();
-            }
 
             //BodyChange
             if (checkFlag == true)
@@ -627,6 +623,8 @@ namespace Maux36.Rimbody
         {
             BodyFat = newBodyFat;
             MuscleMass = newMuscleMass;
+            if (Rimbody.StatModuleLoaded)
+                brawn = GetBrawnValue();
         }
 
         //Utilities
@@ -1165,6 +1163,12 @@ namespace Maux36.Rimbody
         public void NotifyActiveGeneCacheDirty()
         {
             geneCacheDirty = true;
+        }
+        public override void Notify_DuplicatedFrom(Pawn pawn)
+        {
+            CompPhysique sourceComp = pawn.compPhysique();
+            if (sourceComp == null) return;
+            ApplyChangedPhysique(sourceComp.BodyFat, sourceComp.MuscleMass);
         }
 
         public float GetBrawnValue() // 0.5~[1]~2
