@@ -23,30 +23,9 @@ namespace Maux36.Rimbody
                 var compPhysique = ___pawn.compPhysique();
                 if (compPhysique == null) return;
                 compPhysique.NotifyActiveGeneCacheDirty();
-                if (compPhysique.PostGen)
-                {
-                    //For genes that should change bodytype immediately.
-                    compPhysique.ResetBody();
-                }
-                else
-                {
-                    //During generation, recalculate body composition based on the genes.
-                    compPhysique.PhysiqueValueSetup(true);
-                }
-            }        
-        }
-    }
-
-    [HarmonyPatch(typeof(PawnGenerator), "GenerateGenes")]
-    public static class PawnGenerator_GenerateGenes
-    {
-
-        static void Postfix(Pawn pawn)
-        {
-            var compPhysique = pawn.compPhysique();
-            if (compPhysique != null)
-            {
-                compPhysique.PostGen = true;
+                //For genes that should change bodytype immediately.
+                //There are no genes that utilize this at the moment in Core and Stats but some other mod might end up utilizing it.
+                compPhysique.ResetBody();
             }
         }
     }

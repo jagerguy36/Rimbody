@@ -42,7 +42,6 @@ namespace Maux36.Rimbody
         //Internals
         private bool isJoggerInt = false;
         private bool isDeathrestingInt = false;
-        public bool PostGen = false;
         public Pawn parentPawn;
         //public float? breInt;
         //public float bre
@@ -601,10 +600,6 @@ namespace Maux36.Rimbody
 
             //Apply New Values
             ApplyChangedPhysique(newBodyFat, newMuscleMass);
-            if (Rimbody.StatModuleLoaded)
-            {
-                UpdateBrawnValue();
-            }
 
             //BodyChange
             if (checkFlag == true)
@@ -628,6 +623,8 @@ namespace Maux36.Rimbody
         {
             BodyFat = newBodyFat;
             MuscleMass = newMuscleMass;
+            if (Rimbody.StatModuleLoaded)
+                brawn = GetBrawnValue();
         }
 
         //Utilities
@@ -718,13 +715,12 @@ namespace Maux36.Rimbody
 
         public void ResetBody()
         {
-            if (BodyFat<0 || MuscleMass  < 0) return;
-
-            if(parentPawn.story?.bodyType != null)
-            {
-                parentPawn.story.bodyType = GetValidBody();
-                parentPawn.Drawer.renderer.SetAllGraphicsDirty();
-            }
+            if (HasPhysique == false)
+                return;
+            if(parentPawn.story?.bodyType == null)
+                return;
+            parentPawn.story.bodyType = GetValidBody();
+            parentPawn.Drawer.renderer.SetAllGraphicsDirty();
         }
 
         public virtual BodyTypeDef GetValidBody()
@@ -1168,18 +1164,16 @@ namespace Maux36.Rimbody
         {
             geneCacheDirty = true;
         }
-
-        public void UpdateBrawnValue()
+        public override void Notify_DuplicatedFrom(Pawn pawn)
         {
-            var newBrawn = GenMath.RoundedHundredth(GetBrawnValue());
-            if (brawn != newBrawn)
-            {
-                brawn = newBrawn;
-                parentPawn.health.capacities.Notify_CapacityLevelsDirty();
-            }
+            CompPhysique sourceComp = pawn.compPhysique();
+            if (sourceComp == null) return;
+            ApplyChangedPhysique(sourceComp.BodyFat, sourceComp.MuscleMass);
         }
-        public float GetBrawnValue()
+
+        public float GetBrawnValue() // 0.5~[1]~2
         {
+            if(MuscleMass < 0f) return 1f;
             if(MuscleMass >= 25f)
                 return (MuscleMass - 25f) * 0.04f + 1f;
             return 1f / (2f - (0.04f * MuscleMass));
@@ -1189,7 +1183,6 @@ namespace Maux36.Rimbody
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref PostGen, "Physique_PostGen", true);
             Scribe_Values.Look(ref forceRest, "Physique_boarded", false);
             Scribe_Values.Look(ref pawnBodyAngleOverride, "Physique_pawnBodyAngleOverride", -1f);
 
@@ -1267,7 +1260,7 @@ namespace Maux36.Rimbody
                 }
                 if (Rimbody.StatModuleLoaded && HasPhysique)
                 {
-                    brawn = GenMath.RoundedHundredth(GetBrawnValue());
+                    brawn = GetBrawnValue();
                 }
             }
 
